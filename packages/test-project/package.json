@@ -1,0 +1,45 @@
+{
+    "name": "@adjust/test-project",
+    "version": "0.0.0",
+    "description": "A project to test Adjust with",
+    "private": true,
+    "scripts": {
+        "test": "test",
+        "start": "electron dist/index.js --async-stack-traces",
+        "debug": "electron --inspect-brk=9229 dist/index.js",
+        "watch": "concurrently \"tsc -w\"  \"cpx \\\"src/**/*.{html,png,jpg,json}\\\" \\\"dist\\\" --watch --verbose\" \"ts-cleaner --watch\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LaunchMenu/AdjustTestProject.git"
+    },
+    "keywords": [
+        "Adjust",
+        "test",
+        "project"
+    ],
+    "author": "Tar van Krieken",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/LaunchMenu/AdjustTestProject/issues"
+    },
+    "homepage": "https://github.com/LaunchMenu/AdjustTestProject#readme",
+    "dependencies": {
+        "electron": "^5.0.1",
+        "@adjust/core": "^0.0.0",
+        "@adjust/gui": "^0.0.0",
+        "@emotion/core": "^10.0.10",
+        "@material-ui/core": "^3.9.0",
+        "@material-ui/icons": "^3.0.2",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "cross-env": "^5.2.0"
+    },
+    "devDependencies": {
+        "@types/node": "^12.0.0",
+        "concurrently": "^4.1.0",
+        "cpx": "^1.5.0",
+        "ts-cleaner": "^1.0.2",
+        "typescript": "^3.4.5"
+    }
+}

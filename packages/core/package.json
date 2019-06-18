@@ -1,0 +1,53 @@
+{
+    "name": "@adjust/core",
+    "version": "0.0.0",
+    "description": "A framework for creating highly customisable open source software",
+    "main": "dist/index.js",
+    "scripts": {
+        "unit-test": "jest",
+        "unit-test-watch": "jest --watch",
+        "unit-test-watch-debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch --config=\"jest.config.js\"",
+        "watch": "concurrently \"tsc -w\"  \"cpx \\\"src/**/*.{html,png,jpg,json}\\\" \\\"dist\\\" --watch --verbose\" \"ts-cleaner --watch\" \"node dev/aggregateTypes\"",
+        "clean": "rimraf dist/*"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LaunchMenu/Adjust.git"
+    },
+    "keywords": [
+        "Custom",
+        "Adjust"
+    ],
+    "author": "Sancarn, Tar van Krieken",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/LaunchMenu/Adjust/issues"
+    },
+    "homepage": "https://github.com/LaunchMenu/Adjust#readme",
+    "peerDependencies": {
+        "electron": "^5.0.1",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6"
+    },
+    "dependencies": {
+        "cross-env": "^5.2.0"
+    },
+    "devDependencies": {
+        "@jest-runner/electron": "^1.1.1",
+        "@types/jest": "^23.3.14",
+        "@types/react": "^16.8.17",
+        "@types/react-dom": "^16.8.4",
+        "@types/reflect-metadata": "^0.1.0",
+        "concurrently": "^4.1.0",
+        "cpx": "^1.5.0",
+        "fs-extra-cli": "0.0.4",
+        "jest": "^24.8.0",
+        "madge": "^3.4.4",
+        "npx": "^10.2.0",
+        "rimraf": "^2.6.3",
+        "rmdir-cli": "^2.0.6",
+        "source-map-support": "^0.5.12",
+        "ts-cleaner": "^1.0.1",
+        "typescript": "^3.4.5"
+    }
+}

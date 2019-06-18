@@ -1,0 +1,273 @@
+import Path from "path";
+import {DeepReadonly} from "../../utils/_types/standardTypes";
+import {ConditionalSettings} from "./_types/conditionalSettings";
+import {ConditionalSettingsDataList} from "./_types/conditionalSettingsDataList";
+import {Data} from "../data";
+import {Setters} from "../_types/setters";
+import {SettingsManager} from "./settingsManager";
+import {SettingsConfig} from "./_types/settingsConfig";
+import {SettingsData} from "./_types/settingsData";
+import {SettingsConditions} from "./settingsConditions";
+import {EventEmitter} from "../../utils/eventEmitter";
+import {ExtendedObject} from "../../utils/extendedObject";
+import {SortedList} from "../../utils/sortedList";
+import {Shape} from "./_types/shape";
+
+export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
+    protected settings: ConditionalSettingsDataList<SettingsData<S>>;
+    protected config: SettingsConfig;
+    protected path: string;
+
+    // Used to initialise new instance of SettingsData
+    protected shape: Shape<SettingsData<S>>;
+
+    /**
+     * Creates a settingsFile to store settings for a certain module class
+     * @param path The path to store the settings at
+     * @param config The settings config
+     */
+    constructor(path: string, config: S) {
+        super();
+
+        // Store the path
+        if (Path.extname(path) == "") path += ".json";
+        this.path = path;
+
+        this.config = config;
+
+        // Store the structure
+        this.shape = this.extractShape(config);
+
+        // Only the provided data will be used if no data is stored yet
+        this.reload([
+            {
+                condition: undefined,
+                data: this.extractDefault(config),
+            },
+        ]);
+    }
+
+    // Setup methods
+    /**
+     * Extracts the default values from a settings config
+     * @param config The config of which to extract the default values
+     * @returns The default values
+     */
+    protected extractDefault<C extends SettingsConfig>(config: C): SettingsData<C> {
+        const data = {};
+        ExtendedObject.forEach(config, (key, value) => {
+            if (value.default !== undefined) data[key] = value.default;
+            else data[key] = this.extractDefault(value);
+        });
+        return data as SettingsData<C>;
+    }
+
+    /**
+     * Extracts the value shape of the settings by mapping all defaults to undefined
+     * @param config The config of which to extract the shape
+     * @returns The shape of the settings
+     */
+    protected extractShape<C extends SettingsConfig>(config: C): Shape<SettingsData<S>> {
+        const data = {};
+        ExtendedObject.forEach(config, (key, value) => {
+            if (value.default !== undefined) data[key] = undefined;
+            else data[key] = this.extractShape(value);
+        });
+        return data as Shape<SettingsData<S>>;
+    }
+
+    // Retrieval methods
+    /**
+     * Returns all settings and their conditions
+     * @return All settings
+     */
+    public getAllSettings(): ConditionalSettingsDataList<SettingsData<S>> {
+        return this.settings;
+    }
+
+    /**
+     * Returns the shape of the settings data
+     * @returns The shape, with all values being undefined
+     */
+    public getStucture(): Shape<SettingsData<S>> {
+        return this.shape;
+    }
+
+    /**
+     * Gets a Data instance for the given condition
+     * @param condition The condition for which to get (or create) a Data instance
+     * @returns The retreived or created Data instance
+     */
+    public getConditionData(condition?: SettingsConditions): Data<SettingsData<S>> {
+        // Get the settingsSetData if already defined
+        let settingsSetData = this.settings
+            .get()
+            .find(settingSetData => settingSetData.condition.equals(condition));
+
+        // If not previously defined, create it
+        if (!settingsSetData) {
+            const data = new Data<SettingsData<S>>(
+                (this.shape as unknown) as SettingsData<S>,
+                false
+            );
+            data.on("change", this.valueChange.bind(this, condition), "SettingsFile");
+            settingsSetData = {
+                condition: condition,
+                data: data,
+            };
+            this.settings.push(settingsSetData);
+        }
+
+        // Return the data
+        return settingsSetData.data;
+    }
+
+    /**
+     * Gets the getter object of a Data instance for a particular condition
+     * @param condition The condition for which to get the getter
+     * @retursn The getter that was found
+     */
+    public get(condition?: SettingsConditions): DeepReadonly<SettingsData<S>> {
+        return this.getConditionData(condition).get;
+    }
+
+    // Altering settings
+    /**
+     * Gets the setter object of a Data instance for a particular condition
+     * @param condition The condition for which to get the setter
+     * @retursn The setter that was found
+     */
+    public set(condition?: SettingsConditions): DeepReadonly<Setters<SettingsData<S>>> {
+        return this.getConditionData(condition).set;
+    }
+
+    /**
+     * Processes events emitted by data objects, and forwards them to listeners (called by the data objects)
+     * @param condition The condition of the changed data
+     * @param changedProps The changed properties
+     * @param previousProps The values that the properties had before
+     */
+    protected valueChange(
+        condition: SettingsConditions,
+        changedProps: object,
+        previousProps: object
+    ) {
+        ExtendedObject.forEachPaired(
+            [changedProps, previousProps],
+            // Emit all value changes
+            (key, [newValue, oldValue], path) => {
+                this.emit("change", path, newValue, condition, oldValue);
+            },
+            // Only recurse when we haven't hit a setting value yet
+            (key, value, path) =>
+                !("default" in ExtendedObject.getField(this.config, path)),
+            true
+        );
+    }
+
+    // Saving
+    /**
+     * Saves the current data in the corresponding file
+     */
+    public save(): void {
+        const data = this.settings
+            .filter(settingsSet => Object.keys(settingsSet.data.get).length > 0)
+            .map(settingsSet => ({
+                condition: settingsSet.condition.getData(),
+                priority: settingsSet.condition.getPriority(),
+                data: settingsSet.data.serialize(),
+            }));
+        SettingsManager.saveFile(this.path, data);
+    }
+
+    /**
+     * Reloads the settings as are present in the stored file
+     * @param initialSettings The settings to load if no file is present
+     */
+    public reload(initialSettings?: ConditionalSettings<SettingsData<S>>[]): void {
+        // TODO: Only fire events of values that actually changed, and track their previous values
+        // Load the previously stored data if present
+        const storedData = SettingsManager.loadFile(this.path);
+
+        // A method to load the specified settings data
+        const getSettings = initialSettings => {
+            // Create data objects for all of them
+            const settingsData = (initialSettings || []).map(settings => {
+                const data = new Data(settings.data);
+                data.on(
+                    "change",
+                    this.valueChange.bind(this, settings.condition),
+                    "SettingsFile"
+                );
+                return {
+                    condition: new SettingsConditions(
+                        settings.condition,
+                        settings.priority || 0
+                    ),
+                    data: data,
+                };
+            });
+
+            // Create a sorted list and store all the settings in it
+            const getPriority = (condition: SettingsConditions) =>
+                condition == null ? 0 : condition.getPriority();
+            const settings: ConditionalSettingsDataList<SettingsData<S>> = new SortedList(
+                (a, b) => getPriority(b.condition) - getPriority(a.condition)
+            );
+            settings.push.apply(settings, settingsData);
+
+            // Return the settings
+            return settings;
+        };
+
+        // Try loading the stored data, load the defaults on failure
+        try {
+            if (storedData) this.settings = getSettings(storedData);
+            else this.settings = getSettings(initialSettings);
+        } catch (e) {
+            console.error("Something went wrong while loading the settings", e);
+            this.settings = getSettings(initialSettings);
+            // TODO: store backup of settings before they are overwritten by defaults
+        }
+
+        // Emit change events for all settings
+        this.settings.forEach(settings => {
+            this.valueChange(settings.condition, settings.data.get, undefined);
+        });
+    }
+
+    // Events
+    /**
+     * Adds a listener for the alteration of settings data
+     * @param type The type of listener, I.e. settings change
+     * @param listener The function to call when an event of the given type is emited
+     * @param name A name for this particular listener for identification
+     * @returns The name of the listener (generated if none was supplied
+     */
+    public on(
+        type: "change",
+        listener: (
+            path: string,
+            value: any,
+            condition: SettingsConditions,
+            previousValue: any
+        ) => void | Promise<any>,
+        name?: string
+    ): string;
+
+    /**
+     * Simply registers any event type using EventEmitter
+     */
+    public on(
+        type: string,
+        listener: (...args: any) => void | Promise<any>,
+        name?: string
+    ): string;
+    public on(
+        type: string,
+        listener: (...args: any) => void | Promise<any>,
+        name?: string
+    ): string {
+        return super.on(type, listener, name);
+    }
+}

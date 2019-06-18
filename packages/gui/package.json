@@ -1,0 +1,45 @@
+{
+    "name": "@adjust/gui",
+    "version": "0.0.0",
+    "description": "Adjust extended with base UI, making use of Material-UI components",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "concurrently \"tsc -w\"  \"cpx \\\"src/**/*.{html,png,jpg,json}\\\" \\\"dist\\\" --watch --verbose\" \"ts-cleaner --watch\" \"node dev/aggregateTypes\" \"node dev/aggregateModules\"",
+        "clean": "rimraf dist/*"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LaunchMenu/AdjustMaterialUI.git"
+    },
+    "keywords": [
+        "Adjust",
+        "Material-ui",
+        "GUI"
+    ],
+    "author": "Tar van Krieken",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/LaunchMenu/AdjustMaterialUI/issues"
+    },
+    "homepage": "https://github.com/LaunchMenu/AdjustMaterialUI#readme",
+    "peerDependencies": {
+        "@emotion/core": "^10.0.10",
+        "@material-ui/core": "^3.9.0",
+        "@material-ui/icons": "^3.0.2",
+        "@adjust/core": "^0.0.0"
+    },
+    "dependencies": {
+        "cross-env": "^5.2.0"
+    },
+    "devDependencies": {
+        "@types/node": "^12.0.0",
+        "@types/react": "^16.8.16",
+        "concurrently": "^4.1.0",
+        "cpx": "^1.5.0",
+        "delmap": "^1.0.14",
+        "rimraf": "^2.6.2",
+        "ts-cleaner": "^1.0.2",
+        "typescript": "^3.4.5"
+    }
+}

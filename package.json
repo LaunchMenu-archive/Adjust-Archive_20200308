@@ -1,0 +1,13 @@
+{
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "watchAll": "concurrently \"npm run watch --prefix packages/core\" \"npm run watch --prefix packages/gui\" \"npm run watch --prefix packages/test-project\"",
+        "start": "npm run start --prefix packages/test-project"
+    },
+    "devDependencies": {
+        "concurrently": "^4.1.0"
+    }
+}

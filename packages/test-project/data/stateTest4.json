@@ -1,0 +1,322 @@
+{
+    "maxModuleIDS": {
+        "\\singletonTest\\singletonParent\\singletonParent.js": 6,
+        "\\singletonTest\\singleton\\singleton.js": 1,
+        "MaterialUI\\location\\locationManager.js": 1,
+        "MaterialUI\\location\\locationAncestor\\types\\window.js": 2,
+        "MaterialUI\\location\\locationAncestor\\location.js": 2
+    },
+    "modules": {
+        "\\singletonTest\\singletonParent\\singletonParent.js:0": {
+            "$type": "\\singletonTest\\singletonParent\\singletonParent.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "count": 4
+                    },
+                    "openView": true,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}"
+                },
+                "parents": [],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "singleton": null,
+                    "child": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singletonParent\\singletonParent.js:1"
+                    },
+                    "text": "4"
+                }
+            }
+        },
+        "\\singletonTest\\singleton\\singleton.js:0": {
+            "$type": "\\singletonTest\\singleton\\singleton.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "text": "4"
+                    },
+                    "parent": "\\singletonTest\\singletonParent\\singletonParent.js:0",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->\\singletonTest\\singleton\\singleton.js:0:{\"text\":\"4\"}"
+                },
+                "parents": [
+                    "\\singletonTest\\singletonParent\\singletonParent.js:1",
+                    "\\singletonTest\\singletonParent\\singletonParent.js:3",
+                    "\\singletonTest\\singletonParent\\singletonParent.js:4",
+                    "\\singletonTest\\singletonParent\\singletonParent.js:5"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "text": "3"
+                }
+            }
+        },
+        "MaterialUI\\location\\locationManager.js:0": {
+            "$type": "MaterialUI\\location\\locationManager.js",
+            "data": {
+                "request": {
+                    "data": {},
+                    "parent": "\\singletonTest\\singletonParent\\singletonParent.js:0",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->MaterialUI\\location\\locationManager.js:0:{}"
+                },
+                "parents": [
+                    "\\singletonTest\\singletonParent\\singletonParent.js:0",
+                    "\\singletonTest\\singletonParent\\singletonParent.js:5"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "locations": {
+                        "13513": {
+                            "$type": "ModuleReference",
+                            "data": "MaterialUI\\location\\locationAncestor\\types\\window.js:1"
+                        },
+                        "85384": {
+                            "$type": "ModuleReference",
+                            "data": "MaterialUI\\location\\locationAncestor\\types\\window.js:0"
+                        }
+                    }
+                }
+            }
+        },
+        "\\singletonTest\\singletonParent\\singletonParent.js:1": {
+            "$type": "\\singletonTest\\singletonParent\\singletonParent.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "count": 3
+                    },
+                    "parent": "\\singletonTest\\singletonParent\\singletonParent.js:0",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->\\singletonTest\\singletonParent\\singletonParent.js:1:{\"count\":3}"
+                },
+                "parents": [
+                    "\\singletonTest\\singletonParent\\singletonParent.js:0"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "singleton": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singleton\\singleton.js:0"
+                    },
+                    "child": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singletonParent\\singletonParent.js:2"
+                    },
+                    "text": "3"
+                }
+            }
+        },
+        "MaterialUI\\location\\locationAncestor\\types\\window.js:0": {
+            "$type": "MaterialUI\\location\\locationAncestor\\types\\window.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "id": "47730"
+                    },
+                    "parent": "MaterialUI\\location\\locationManager.js:0",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->MaterialUI\\location\\locationManager.js:0:{}->MaterialUI\\location\\locationAncestor\\types\\window.js:0:{\"id\":\"47730\"}"
+                },
+                "parents": [
+                    "MaterialUI\\location\\locationManager.js:0"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "childLocationAncestor": {
+                        "$type": "ModuleReference",
+                        "data": "MaterialUI\\location\\locationAncestor\\location.js:0"
+                    }
+                }
+            }
+        },
+        "\\singletonTest\\singletonParent\\singletonParent.js:2": {
+            "$type": "\\singletonTest\\singletonParent\\singletonParent.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "count": 2
+                    },
+                    "parent": "\\singletonTest\\singletonParent\\singletonParent.js:1",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->\\singletonTest\\singletonParent\\singletonParent.js:1:{\"count\":3}->\\singletonTest\\singletonParent\\singletonParent.js:2:{\"count\":2}"
+                },
+                "parents": [
+                    "\\singletonTest\\singletonParent\\singletonParent.js:1"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "singleton": null,
+                    "child": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singletonParent\\singletonParent.js:3"
+                    },
+                    "text": "2"
+                }
+            }
+        },
+        "MaterialUI\\location\\locationAncestor\\location.js:0": {
+            "$type": "MaterialUI\\location\\locationAncestor\\location.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "id": "2961"
+                    },
+                    "parent": "MaterialUI\\location\\locationAncestor\\types\\window.js:0",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->MaterialUI\\location\\locationManager.js:0:{}->MaterialUI\\location\\locationAncestor\\types\\window.js:0:{\"id\":\"47730\"}->MaterialUI\\location\\locationAncestor\\location.js:0:{\"id\":\"2961\"}"
+                },
+                "parents": [
+                    "MaterialUI\\location\\locationAncestor\\types\\window.js:0"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "module": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singletonParent\\singletonParent.js:0"
+                    }
+                }
+            }
+        },
+        "\\singletonTest\\singletonParent\\singletonParent.js:3": {
+            "$type": "\\singletonTest\\singletonParent\\singletonParent.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "count": 1
+                    },
+                    "parent": "\\singletonTest\\singletonParent\\singletonParent.js:2",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->\\singletonTest\\singletonParent\\singletonParent.js:1:{\"count\":3}->\\singletonTest\\singletonParent\\singletonParent.js:2:{\"count\":2}->\\singletonTest\\singletonParent\\singletonParent.js:3:{\"count\":1}"
+                },
+                "parents": [
+                    "\\singletonTest\\singletonParent\\singletonParent.js:2"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "singleton": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singleton\\singleton.js:0"
+                    },
+                    "child": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singletonParent\\singletonParent.js:4"
+                    },
+                    "text": "1"
+                }
+            }
+        },
+        "\\singletonTest\\singletonParent\\singletonParent.js:4": {
+            "$type": "\\singletonTest\\singletonParent\\singletonParent.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "count": 0
+                    },
+                    "parent": "\\singletonTest\\singletonParent\\singletonParent.js:3",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->\\singletonTest\\singletonParent\\singletonParent.js:1:{\"count\":3}->\\singletonTest\\singletonParent\\singletonParent.js:2:{\"count\":2}->\\singletonTest\\singletonParent\\singletonParent.js:3:{\"count\":1}->\\singletonTest\\singletonParent\\singletonParent.js:4:{\"count\":0}"
+                },
+                "parents": [
+                    "\\singletonTest\\singletonParent\\singletonParent.js:3"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "singleton": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singleton\\singleton.js:0"
+                    },
+                    "child": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singletonParent\\singletonParent.js:5"
+                    },
+                    "text": "0"
+                }
+            }
+        },
+        "\\singletonTest\\singletonParent\\singletonParent.js:5": {
+            "$type": "\\singletonTest\\singletonParent\\singletonParent.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "count": 0
+                    },
+                    "parent": "\\singletonTest\\singletonParent\\singletonParent.js:4",
+                    "openView": true,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->\\singletonTest\\singletonParent\\singletonParent.js:1:{\"count\":3}->\\singletonTest\\singletonParent\\singletonParent.js:2:{\"count\":2}->\\singletonTest\\singletonParent\\singletonParent.js:3:{\"count\":1}->\\singletonTest\\singletonParent\\singletonParent.js:4:{\"count\":0}->\\singletonTest\\singletonParent\\singletonParent.js:5:{\"count\":0}"
+                },
+                "parents": [
+                    "\\singletonTest\\singletonParent\\singletonParent.js:4"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "singleton": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singleton\\singleton.js:0"
+                    },
+                    "child": null,
+                    "text": "0"
+                }
+            }
+        },
+        "MaterialUI\\location\\locationAncestor\\types\\window.js:1": {
+            "$type": "MaterialUI\\location\\locationAncestor\\types\\window.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "id": "49128"
+                    },
+                    "parent": "MaterialUI\\location\\locationManager.js:0",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->MaterialUI\\location\\locationManager.js:0:{}->MaterialUI\\location\\locationAncestor\\types\\window.js:1:{\"id\":\"49128\"}"
+                },
+                "parents": [
+                    "MaterialUI\\location\\locationManager.js:0"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "childLocationAncestor": {
+                        "$type": "ModuleReference",
+                        "data": "MaterialUI\\location\\locationAncestor\\location.js:1"
+                    }
+                }
+            }
+        },
+        "MaterialUI\\location\\locationAncestor\\location.js:1": {
+            "$type": "MaterialUI\\location\\locationAncestor\\location.js",
+            "data": {
+                "request": {
+                    "data": {
+                        "id": "88806"
+                    },
+                    "parent": "MaterialUI\\location\\locationAncestor\\types\\window.js:1",
+                    "openView": false,
+                    "requestPath": "\\singletonTest\\singletonParent\\singletonParent.js:0:{\"count\":4}->MaterialUI\\location\\locationManager.js:0:{}->MaterialUI\\location\\locationAncestor\\types\\window.js:1:{\"id\":\"49128\"}->MaterialUI\\location\\locationAncestor\\location.js:1:{\"id\":\"88806\"}"
+                },
+                "parents": [
+                    "MaterialUI\\location\\locationAncestor\\types\\window.js:1"
+                ],
+                "state": {
+                    "isStopping": false,
+                    "isStopped": false,
+                    "module": {
+                        "$type": "ModuleReference",
+                        "data": "\\singletonTest\\singletonParent\\singletonParent.js:5"
+                    }
+                }
+            }
+        }
+    }
+}

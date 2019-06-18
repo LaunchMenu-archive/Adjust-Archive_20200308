@@ -1,0 +1,12 @@
+import { SettingsConditions } from "../settingsConditions";
+/**
+ * The way a single value is stored together with its condition
+ */
+export declare type ConditionValue<C> = {
+    condition: SettingsConditions;
+    value: C;
+};
+/**
+ * The way a single value is stored together with its condition, witha default parameter provided
+ */
+export declare type ParameterizedConditionValue<C = any> = ConditionValue<C>;
