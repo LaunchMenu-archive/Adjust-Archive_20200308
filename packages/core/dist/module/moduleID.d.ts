@@ -6,7 +6,7 @@ import { RequestPath } from "./requestPath/requestPath";
  */
 export declare class ModuleReference {
     protected modulePath: string;
-    protected id: number;
+    protected ID: number;
     /**
      * Creates a moduleID based on a module path and a unique ID
      * @param modulePath The path to the module class
@@ -30,6 +30,12 @@ export declare class ModuleReference {
     getID(): number;
     /**@override */
     toString(): string;
+    /**
+     * Checks whether two module references are equivalent
+     * @param ref The reference to compare this to
+     * @returns Whether the references are quivalent
+     */
+    equals(ref: ModuleReference): boolean;
 }
 /**
  * The class used internally to identify modules,

@@ -17,6 +17,11 @@ exports.config = {
     type: locationAncestor_type_1.LocationAncestorID,
 };
 class WindowModule extends moduleClassCreator_1.createModule(exports.config, locationAncestor_1.default) {
+    constructor() {
+        super(...arguments);
+        // The name of this ancestor type to be used in the location path and hints
+        this.ancestorName = "window";
+    }
     /** @override */
     onInit() {
         // Open the window when it is requested
@@ -29,16 +34,21 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     }
     /** @override */
     async openModule(module, location) {
+        // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor
-            const { locationAncestor } = await this.getChildLocationAncestor(location, false);
+            const { locationAncestor, path } = await this.getChildLocationAncestor(location);
             // Store child location ancestor
             this.setState({
                 childLocationAncestor: locationAncestor,
             });
+            // Open the module in this location with the potentially newly made path
+            return this.state.childLocationAncestor.openModule(module, path);
         }
-        // Open the module in this location
-        return this.childOpenModule(module, location, this.state.childLocationAncestor, false);
+        else {
+            // Open the module in this location
+            return this.state.childLocationAncestor.openModule(module, location);
+        }
     }
     /** @override */
     async closeModule(module, location) {

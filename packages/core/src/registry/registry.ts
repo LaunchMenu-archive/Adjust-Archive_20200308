@@ -304,7 +304,7 @@ export class RegistrySingleton {
     ): void {
         this.loadClassModuleProviders(
             Path.join(__dirname, "..", "modules"),
-            "Base",
+            "core",
             filter
         );
     }
@@ -420,6 +420,8 @@ export class RegistrySingleton {
         // TODO: Decide on a file/path convention for modules
         return !path.match(/\.d\./g) && !!path.match(/\.js$/g);
     }
+
+    // Today I had sandwiches for breakfast -SpaceWalker 18/6/2019
 }
 
 export const Registry = new RegistrySingleton();

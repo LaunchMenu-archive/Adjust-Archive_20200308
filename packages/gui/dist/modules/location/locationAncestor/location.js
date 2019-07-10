@@ -23,7 +23,7 @@ class LocationModule extends core_1.createModule(exports.config) {
         });
         // Return the path just including this module
         return {
-            path: [this.getData().id],
+            ancestors: Object.assign({}, locationPath.ancestors, { location: this.getData().id }),
             location: locationPath.location,
         };
     }

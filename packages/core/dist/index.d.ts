@@ -13,5 +13,6 @@ export * from "./state/window/windowManager";
 import OrReact from "react";
 export declare const React: typeof OrReact;
 export * from "./utils/isMain";
+export * from "./utils/extendedObject";
 export * from "./communication/ipcMain";
 export * from "./communication/ipcRenderer";

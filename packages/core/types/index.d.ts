@@ -26,6 +26,7 @@ export * from "../dist/storage/settings/_types/conditionalSettingsDataList";
 export * from "../dist/storage/settings/_types/conditionalValue";
 export * from "../dist/storage/settings/_types/settingDefinition";
 export * from "../dist/storage/settings/_types/settingPriorityList";
+export * from "../dist/storage/settings/_types/settingsConditionID";
 export * from "../dist/storage/settings/_types/settingsConfig";
 export * from "../dist/storage/settings/_types/settingsData";
 export * from "../dist/storage/settings/_types/settingsPriorityList";

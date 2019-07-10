@@ -14,11 +14,7 @@ const loadDefaultClassModuleProviders = AdjustRegistry.loadDefaultClassModulePro
     filter: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean = () => true
 ) {
     loadDefaultClassModuleProviders();
-    this.loadClassModuleProviders(
-        Path.join(__dirname, "..", "modules"),
-        "MaterialUI",
-        filter
-    );
+    this.loadClassModuleProviders(Path.join(__dirname, "..", "modules"), "gui", filter);
 };
 
 export const Registry = AdjustRegistry as AdjustRegistrySingleton & {

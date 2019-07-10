@@ -1,6 +1,6 @@
 {
     "name": "@adjust/core",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "A framework for creating highly customisable open source software",
     "main": "dist/index.js",
     "scripts": {
@@ -10,6 +10,9 @@
         "watch": "concurrently \"tsc -w\"  \"cpx \\\"src/**/*.{html,png,jpg,json}\\\" \\\"dist\\\" --watch --verbose\" \"ts-cleaner --watch\" \"node dev/aggregateTypes\"",
         "clean": "rimraf dist/*"
     },
+    "files": [
+        "dist/**/*"
+    ],
     "repository": {
         "type": "git",
         "url": "git+https://github.com/LaunchMenu/Adjust.git"

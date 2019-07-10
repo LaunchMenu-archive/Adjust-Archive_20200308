@@ -14,4 +14,7 @@ export type SerializeableData =
     | number
     | {
           [key: string]: SerializeableData;
+      }
+    | {
+          [key: number]: SerializeableData;
       };

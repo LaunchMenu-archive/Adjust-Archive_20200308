@@ -18,6 +18,7 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
     type: import("@adjust/core/types").InterfaceID<import("../locationAncestor.type").LocationAncestorContract>;
 }, typeof LocationAncestorModule>;
 export default class WindowModule extends WindowModule_base implements LocationAncestor {
+    protected ancestorName: string;
     /** @override */
     onInit(): void;
     /** @override */

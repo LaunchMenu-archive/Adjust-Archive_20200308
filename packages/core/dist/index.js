@@ -25,6 +25,7 @@ const react_1 = __importDefault(require("react"));
 exports.React = react_1.default;
 // Utils
 __export(require("./utils/isMain"));
+__export(require("./utils/extendedObject"));
 // Communication
 __export(require("./communication/ipcMain"));
 __export(require("./communication/ipcRenderer"));

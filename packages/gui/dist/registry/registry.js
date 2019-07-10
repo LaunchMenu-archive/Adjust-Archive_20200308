@@ -8,7 +8,7 @@ const core_1 = require("@adjust/core");
 const loadDefaultClassModuleProviders = core_1.Registry.loadDefaultClassModuleProviders.bind(core_1.Registry);
 core_1.Registry.__proto__.loadDefaultClassModuleProviders = function (filter = () => true) {
     loadDefaultClassModuleProviders();
-    this.loadClassModuleProviders(path_1.default.join(__dirname, "..", "modules"), "MaterialUI", filter);
+    this.loadClassModuleProviders(path_1.default.join(__dirname, "..", "modules"), "gui", filter);
 };
 exports.Registry = core_1.Registry;
 //# sourceMappingURL=registry.js.map

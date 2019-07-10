@@ -21,6 +21,7 @@ class RegistrySingleton {
         this.collectionFolders = {
             default: path_1.default.join(process.cwd(), "dist", "modules"),
         };
+        // Today I had sandwiches for breakfast -SpaceWalker 18/6/2019
     }
     async request(request) {
         // Normalize the request
@@ -224,7 +225,7 @@ class RegistrySingleton {
      * Loads all of the default modules that are available
      */
     loadDefaultClassModuleProviders(filter) {
-        this.loadClassModuleProviders(path_1.default.join(__dirname, "..", "modules"), "Base", filter);
+        this.loadClassModuleProviders(path_1.default.join(__dirname, "..", "modules"), "core", filter);
     }
     /**
      * Loads all of the class module providers into the registry

@@ -40,6 +40,7 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
  * The location manager, whicih is a window manager (all windows are on the same level)
  */
 export default class LocationManagerModule extends LocationManagerModule_base implements LocationManager {
+    protected ancestorName: string;
     /** @override */
     protected onInit(): void;
     /** @override */

@@ -14,7 +14,7 @@ export class ModuleReference {
     protected modulePath: string;
 
     // The id of this instance of the module class
-    protected id: number;
+    protected ID: number;
 
     /**
      * Creates a moduleID based on a module path and a unique ID
@@ -32,12 +32,12 @@ export class ModuleReference {
         if (id !== undefined && typeof modulePath == "string") {
             // Set the path and id directly
             this.modulePath = modulePath;
-            this.id = id;
+            this.ID = id;
         } else {
             // Get the path and id if the passed data is an already existing module id
             const parts = modulePath.toString().split(separator);
             this.modulePath = parts[0];
-            this.id = Number(parts[1]);
+            this.ID = Number(parts[1]);
         }
     }
 
@@ -54,11 +54,20 @@ export class ModuleReference {
      * @returns the ID
      */
     public getID(): number {
-        return this.id;
+        return this.ID;
     }
     /**@override */
     public toString(): string {
-        return this.modulePath + separator + this.id;
+        return this.modulePath + separator + this.ID;
+    }
+
+    /**
+     * Checks whether two module references are equivalent
+     * @param ref The reference to compare this to
+     * @returns Whether the references are quivalent
+     */
+    public equals(ref: ModuleReference): boolean {
+        return ref.ID == this.ID && ref.modulePath == this.modulePath;
     }
 }
 

@@ -14,24 +14,31 @@ exports.config = {
  */
 class LocationAncestorModule extends moduleClassCreator_1.createModule(exports.config) {
     /**
-     * Either gets the next ID from the path, or generates it
+     * Either gets the next ID from the path, or generates it and stores it in the path
      * @param path The location path to get the ID from
-     * @returns the obtained or generated ID
+     * @returns the obtained or generated ID as well as the passed or updated path
      */
     getPathID(path) {
-        let id = path.path[0];
-        if (!id)
+        let id = path.ancestors[this.ancestorName];
+        // If no ID is present, generate and store it
+        if (!id) {
             id = Math.round(Math.random() * 1e5) + "";
-        return id;
+            path = {
+                ancestors: Object.assign({}, path.ancestors, { [this.ancestorName]: id }),
+                location: path.location,
+            };
+        }
+        // Return the path and the id
+        return { path, id };
     }
     /**
      * Gets the child location ancestor given a specified location path
-     * @param path The path to obtain the child by
+     * @param inpPath The path to obtain the child by
      * @returns The id of the child, as well as the child itself
      */
-    async getChildLocationAncestor(path, splits = true) {
+    async getChildLocationAncestor(inpPath) {
         // Get the ID to open
-        const id = splits ? this.getPathID(path) : this.getData().id;
+        const { id, path } = this.getPathID(inpPath);
         // Request the location
         const locationAncestor = (await this.request({
             type: locationAncestor_type_1.LocationAncestorID,
@@ -53,29 +60,9 @@ class LocationAncestorModule extends moduleClassCreator_1.createModule(exports.c
         // Return the data
         return {
             id,
+            path,
             locationAncestor,
         };
-    }
-    async childOpenModule(module, locationPath, child, splits = true) {
-        // Open the module in this location
-        const childLocationPath = await child.openModule(module, splits
-            ? {
-                path: locationPath.path.slice(1),
-                location: locationPath.location,
-            }
-            : locationPath);
-        // The module should add itself to the obtained path
-        // Check if the module's own ID should be appended
-        if (splits) {
-            const ownID = this.getData().id;
-            // Return location path prefixed by own location ID
-            return {
-                path: [ownID, ...childLocationPath.path],
-                location: childLocationPath.location,
-            };
-        }
-        else
-            return childLocationPath;
     }
 }
 exports.default = LocationAncestorModule;

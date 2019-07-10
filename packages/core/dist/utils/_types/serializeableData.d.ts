@@ -6,4 +6,6 @@ import { ModuleReference } from "../../module/moduleID";
  */
 export declare type SerializeableData = ParameterizedModule | PublicModuleMethods | ModuleReference | string | boolean | number | {
     [key: string]: SerializeableData;
+} | {
+    [key: number]: SerializeableData;
 };

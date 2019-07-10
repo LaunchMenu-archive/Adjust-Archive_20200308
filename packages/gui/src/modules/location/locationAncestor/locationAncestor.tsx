@@ -1,7 +1,14 @@
 import {ClassModuleProvider, ParameterizedModule, ModuleReference} from "@adjust/core";
 import {LocationPath} from "../_types/LocationPath";
-import {LocationAncestorID, LocationAncestor} from "./locationAncestor.type";
+import {
+    LocationAncestorID,
+    LocationAncestor,
+    LocationAncestorParent,
+} from "./locationAncestor.type";
 import {createModule} from "../../../module/moduleClassCreator";
+import {LocationsMoveData} from "../_types/LocationsMoveData";
+import {ModuleLocation} from "../../../module/_types/ModuleLocation";
+import {LocationAncestorIDs} from "../_types/LocationAncestorIDs";
 
 export const config = {
     initialState: {},
@@ -14,31 +21,71 @@ export const config = {
  * A base class for location ancestors to extend,
  * provides some common methods that location ancestors might use
  */
-export default class LocationAncestorModule extends createModule(config) {
-    /**
-     * Either gets the next ID from the path, or generates it
-     * @param path The location path to get the ID from
-     * @returns the obtained or generated ID
-     */
-    protected getPathID(path: LocationPath): string {
-        let id = path.path[0];
-        if (!id) id = Math.round(Math.random() * 1e5) + "";
+export default class LocationAncestorModule extends createModule(config)
+    implements LocationAncestorParent {
+    // The name of the ancestor module
+    protected ancestorName: string;
 
-        return id;
+    // Location creation related methods
+    /**
+     * Either gets the next ID from the path, or generates it and stores it in the path
+     * @param path The location path to get the ID from
+     * @returns the obtained or generated ID as well as the passed or updated path
+     */
+    protected getPathID(path: LocationPath): {path: LocationPath; ID: string} {
+        let ID = path.ancestors[this.ancestorName];
+
+        // If no ID is present, generate and store it
+        if (!ID) {
+            // ID = Math.round(Math.random() * 1e10) + "";
+            ID = "default";
+            path = {
+                ancestors: {...path.ancestors, [this.ancestorName]: ID},
+                location: path.location,
+            };
+        }
+
+        // Return the path and the id
+        return {path, ID};
+    }
+
+    /**
+     * Extracts the relevant hints for this ancestor from a module locatio;n
+     * @param location The location and its creation hints
+     * @returns Any hints that might have been provided
+     */
+    protected getLocationHints(location: ModuleLocation): object {
+        return location.hints[this.ancestorName];
     }
 
     /**
      * Gets the child location ancestor given a specified location path
-     * @param path The path to obtain the child by
-     * @returns The id of the child, as well as the child itself
+     * @param inpPath The path to obtain the child by
+     * @returns The ID of the child, as well as the child itself
      */
-    protected async getChildLocationAncestor(
-        path: LocationPath,
-        splits: boolean = true
-    ): Promise<{id: string; locationAncestor: LocationAncestor}> {
+    protected async getChildLocationAncestorFromPath(
+        inpPath: LocationPath
+    ): Promise<{ID: string; path: LocationPath; locationAncestor: LocationAncestor}> {
         // Get the ID to open
-        const id = splits ? this.getPathID(path) : this.getData().id;
+        const {ID, path} = this.getPathID(inpPath);
 
+        // Get the ancestor itself
+        const locationAncestor = await this.getChildLocationAncestor(ID);
+
+        // Return the data
+        return {
+            ID,
+            path,
+            locationAncestor,
+        };
+    }
+
+    /**
+     * Gets the child location ancestor given a specified location path
+     * @param ID The ID of the child
+     * @returns The child ancestor
+     */
+    protected async getChildLocationAncestor(ID: string): Promise<LocationAncestor> {
         // Request the location
         const locationAncestor = (await this.request({
             type: LocationAncestorID,
@@ -55,45 +102,38 @@ export default class LocationAncestorModule extends createModule(config) {
                 return [provider];
             },
             data: {
-                id: id,
+                id: ID,
+                ancestors: {
+                    ...this.getData().ancestors,
+                    [this.ancestorName]: ID,
+                },
             },
         }))[0];
 
-        // Return the data
-        return {
-            id,
-            locationAncestor,
-        };
+        // Return the ancestor
+        return locationAncestor;
     }
 
-    protected async childOpenModule(
-        module: ModuleReference,
-        locationPath: LocationPath,
-        child: LocationAncestor,
-        splits: boolean = true
-    ): Promise<LocationPath> {
-        // Open the module in this location
-        const childLocationPath = await child.openModule(
-            module,
-            splits
-                ? {
-                      path: locationPath.path.slice(1),
-                      location: locationPath.location,
-                  }
-                : locationPath
-        );
+    // Location moving related methods
+    /** @override */
+    public async setLocationsMoveData(data: LocationsMoveData): Promise<boolean> {
+        return this.getParent().setLocationsMoveData(data);
+    }
 
-        // The module should add itself to the obtained path
+    /** @override */
+    public async updateLocationsMoveData(data: LocationsMoveData): Promise<boolean> {
+        return this.getParent().updateLocationsMoveData(data);
+    }
 
-        // Check if the module's own ID should be appended
-        if (splits) {
-            const ownID = this.getData().id;
+    /** @override */
+    public async getLocationsMoveData(): Promise<LocationsMoveData> {
+        return this.getParent().getLocationsMoveData();
+    }
 
-            // Return location path prefixed by own location ID
-            return {
-                path: [ownID, ...childLocationPath.path],
-                location: childLocationPath.location,
-            };
-        } else return childLocationPath;
+    /** @override */
+    public async getLocationsAtPath(
+        partialPath: LocationAncestorIDs
+    ): Promise<ModuleLocation[]> {
+        return this.getParent().getLocationsAtPath(partialPath);
     }
 }

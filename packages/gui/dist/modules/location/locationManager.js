@@ -23,6 +23,11 @@ exports.config = {
  * The location manager, whicih is a window manager (all windows are on the same level)
  */
 class LocationManagerModule extends core_1.createModule(exports.config, locationAncestor_1.default) {
+    constructor() {
+        super(...arguments);
+        // The name of this ancestor type to be used in the location path and hints
+        this.ancestorName = "window";
+    }
     /** @override */
     onInit() {
         registry_1.Registry.addProvider(new core_1.InstanceModuleProvider(locationManager_type_1.LocationManagerID, this, () => 2));
@@ -37,7 +42,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
      * @returns The retrieve location path
      */
     getLocationPath(location) {
-        return this.settings.locations[location.id] || { path: [], location: location };
+        return (this.settings.locations[location.id] || { ancestors: {}, location: location });
     }
     /**
      * Updates the location path in the settings
@@ -49,13 +54,13 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
     /** @override */
     async openModule(module, location) {
         // Retrieve the location path
-        const locationPath = this.getLocationPath(location);
+        const storedPath = this.getLocationPath(location);
         // Obtain the locationAncestor
-        let id = this.getPathID(locationPath);
+        let { id, path } = this.getPathID(storedPath);
         let locationAncestor = this.state.locations[id];
         if (!locationAncestor) {
             // Get the child location ancestor
-            const data = await this.getChildLocationAncestor(locationPath);
+            const data = await this.getChildLocationAncestor(path);
             id = data.id;
             locationAncestor = data.locationAncestor;
             // Update the state to contain this location ancestor
@@ -66,10 +71,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
             });
         }
         // Open the path in the location ancestor
-        const obtainedPath = await locationAncestor.openModule(module, {
-            path: locationPath.path.slice(1),
-            location: locationPath.location,
-        });
+        const obtainedPath = await locationAncestor.openModule(module, path);
         //Update location path
         this.updateLocationPath(obtainedPath);
     }
