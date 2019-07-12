@@ -5,6 +5,7 @@ import { SettingsConditions } from "../settingsConditions";
  */
 export declare type ConditionalSettingsData<D extends object> = {
     condition: SettingsConditions;
+    ID: number;
     data: Data<D>;
 };
 /**

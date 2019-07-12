@@ -1,6 +1,5 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const data_1 = require("../data");
-const settingsManager_1 = require("./settingsManager");
 const eventEmitter_1 = require("../../utils/eventEmitter");
 const extendedObject_1 = require("../../utils/extendedObject");
 const sortedList_1 = require("../../utils/sortedList");
@@ -8,18 +7,27 @@ class Settings extends eventEmitter_1.EventEmitter {
     /**
      * Creates settings for a specific module instance
      * @param target The module instance to target
-     * @param config The configuration for the existing settings
      */
-    constructor(target, config) {
+    constructor(target) {
         super();
         this.target = target;
-        this.settingsFile = settingsManager_1.SettingsManager.getSettingsFile(target.getClass().getPath(), config);
+    }
+    /**
+     * Creates settings for a specific module instance
+     * @param target The module instance to target
+     */
+    static async createInstance(target) {
+        const settings = new this(target);
+        settings.settingsFile = await target.getClass().getSettingsFile();
         // Load the settings that apply to this target
-        this.get = this.loadApplicableSettingsFromFile();
+        // @ts-ignore
+        settings.get = settings.loadApplicableSettingsFromFile();
         // Setup the listeners
-        this.setupSettingsFileListener();
+        settings.setupSettingsFileListener();
         // Create the setters object
-        this.set = this.setupSetters();
+        // @ts-ignore
+        settings.set = settings.setupSetters();
+        return settings;
     }
     // Disposal
     /**
@@ -183,19 +191,6 @@ class Settings extends eventEmitter_1.EventEmitter {
      */
     getSettings() {
         return this.settings;
-    }
-    // Saving
-    /**
-     * Stores all the settings (including the ones that do not apply to this target) in the corresponding file
-     */
-    save() {
-        return this.settingsFile.save();
-    }
-    /**
-     * Reloads all the settings (including the ones that do not apply to this target) from the corresponding file
-     */
-    reload() {
-        return this.settingsFile.reload();
     }
     on(type, listener, name) {
         return super.on(type, listener, name);

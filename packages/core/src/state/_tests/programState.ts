@@ -33,10 +33,10 @@ function stringify(object: object) {
 
 describe("ProgramState", () => {
     describe("AddModule + GetModule", () => {
-        it("Should be able to retrieve a module by path", () => {
+        it("Should be able to retrieve a module by path", async () => {
             // Add a module
             const moduleID = ProgramState.getNextModuleID(DummyModule.getPath());
-            const module = new DummyModule(
+            const module = await DummyModule.customConstruct(
                 {
                     requestPath: new RequestPath(moduleID, {}),
                     data: {},
@@ -63,10 +63,10 @@ describe("ProgramState", () => {
         });
     });
     describe("Serialize", () => {
-        it("Should correctly serialize", () => {
+        it("Should correctly serialize", async () => {
             // Add yet another module
             const moduleID = ProgramState.getNextModuleID(DummyModule.getPath());
-            const module = new DummyModule(
+            const module = await DummyModule.customConstruct(
                 {
                     requestPath: new RequestPath(moduleID, {}),
                     data: {},
@@ -99,10 +99,10 @@ describe("ProgramState", () => {
         });
     });
     describe("Deserialize", () => {
-        it("Should correctly deserialize", () => {
+        it("Should correctly deserialize", async () => {
             // Add yet another module
             const moduleID = ProgramState.getNextModuleID(DummyModule.getPath());
-            const module = new DummyModule(
+            const module = await DummyModule.customConstruct(
                 {
                     requestPath: new RequestPath(moduleID, {}),
                     data: {},

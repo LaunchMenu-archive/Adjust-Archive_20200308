@@ -34,36 +34,42 @@ class DummyParent
     extends createModule({type: dummyInterfaceID, initialState: {}, settings: {}})
     implements dummyParentInterface {
     protected someMethod: () => void;
-    constructor(someMethod: () => void = () => {}) {
-        super(
+
+    static async createCustomInstance(someMethod: () => void = () => {}) {
+        const moduleID = new ModuleID("test", 3);
+        const instance = (await super.construct(
             {data: {}, requestPath: new RequestPath(new ModuleID("test", 0), {})},
             ProgramState.getNextModuleID(DummyParent),
             {},
             []
-        );
-        this.someMethod = someMethod;
-        ProgramState.addModule(this);
+        )) as DummyParent;
+        instance.someMethod = someMethod;
+
+        return instance;
     }
+
     async something(): Promise<void> {
         this.someMethod();
     }
 }
 // @ts-ignore
 DummyParent.path = "../module/_tests/dummyModules.helper.js"; // A path that can be imported (doesn't matter that it doesn't import this)
+let dummyParent;
 
 describe("InstanceModuleProvider", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         Registry["moduleProviders"] = {};
         Registry.addProvider(
             new ClassModuleProvider(DummyModule.getConfig().type, DummyModule)
         );
+        dummyParent = await DummyParent.createCustomInstance();
     });
     it("Should be used by the registry", async () => {
         // Retrieve such a module
         const module = await Registry.request({
             type: dummyInterfaceID,
             use: "one",
-            parent: new DummyParent(),
+            parent: dummyParent,
         });
         const m: ParameterizedModule = module as any;
 
@@ -74,7 +80,7 @@ describe("InstanceModuleProvider", () => {
         const module2 = await Registry.request({
             type: dummyInterfaceID,
             use: "one",
-            parent: new DummyParent(),
+            parent: dummyParent,
         });
 
         // Check if it's the same, by testing whether the instanceVal is shared
@@ -88,7 +94,7 @@ describe("InstanceModuleProvider", () => {
         const module = await Registry.request({
             type: dummyInterfaceID,
             use: "one",
-            parent: new DummyParent(),
+            parent: dummyParent,
         });
         const m: ParameterizedModule = module as any;
 
@@ -109,7 +115,9 @@ describe("InstanceModuleProvider", () => {
         const module2 = await Registry.request({
             type: dummyInterfaceID,
             use: "one",
-            parent: new DummyParent(() => (dummyParentCalled = true)),
+            parent: await DummyParent.createCustomInstance(
+                () => (dummyParentCalled = true)
+            ),
         });
 
         // Check if both methods are called

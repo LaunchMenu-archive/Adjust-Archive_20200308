@@ -19,11 +19,11 @@ exports.config = {
  */
 class ViewNotFoundModule extends moduleClassCreator_1.createModule(exports.config) {
     /** @override */
-    onInit() {
+    async onInit() {
         registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(viewNotFound_type_1.ViewNotFoundID, this, () => 2));
     }
     /** @override */
-    onReloadInit() {
+    async onReloadInit() {
         registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(viewNotFound_type_1.ViewNotFoundID, this, () => 2));
     }
 }

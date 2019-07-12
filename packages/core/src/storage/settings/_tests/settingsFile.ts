@@ -26,8 +26,11 @@ const config = {
 
 describe("SettingsFile", () => {
     describe("Instanciation", () => {
-        it("Should load the defaults if no file is present", () => {
-            const settingsFile = new SettingsFile("_test/dontSave", config);
+        it("Should load the defaults if no file is present", async () => {
+            const settingsFile = await SettingsFile.createInstance(
+                "_test/dontSave",
+                config
+            );
 
             expect(settingsFile.get(undefined).a).toBe(3);
             expect(settingsFile.get(undefined).b.c).toBe("test");
@@ -37,8 +40,8 @@ describe("SettingsFile", () => {
     });
     describe("Set", () => {
         let settingsFile: SettingsFile<typeof config>;
-        beforeEach(() => {
-            settingsFile = new SettingsFile("_test/dontSave", config);
+        beforeEach(async () => {
+            settingsFile = await SettingsFile.createInstance("_test/dontSave", config);
         });
 
         it("Should be able to create setter objects for new conditions", () => {
@@ -73,6 +76,65 @@ describe("SettingsFile", () => {
                 expect(changes).toContainEqual(value);
             });
         });
+        it("Should invoke config change events", async () => {
+            let args;
+            const settingsFile = await SettingsFile.createInstance("_test/dontSave", {
+                ...config,
+                f: {
+                    g: {
+                        default: 3,
+                        type: "number",
+                        onChange: (newValue, condition, oldValue, settings) => {
+                            args = {newValue, condition, oldValue, settings};
+                        },
+                    },
+                },
+            });
+
+            expect(args.newValue).toEqual(3);
+            expect(args.oldValue).toEqual(undefined);
+            expect(
+                new SettingsConditions(undefined, 0).equals(args.condition)
+            ).toBeTruthy();
+            expect(args.settings).not.toBeFalsy();
+
+            const condition = new SettingsConditions(() => true, 2);
+            settingsFile.set(condition).f.g(5);
+
+            expect(args.newValue).toEqual(5);
+            expect(args.oldValue).toEqual(undefined);
+            expect(args.condition).not.toBeFalsy();
+            expect(args.settings).not.toBeFalsy();
+        });
+        it("Should not resolve until events are finished", async () => {
+            let order = [];
+            const settingsFile = await SettingsFile.createInstance("_test/dontSave", {
+                ...config,
+                f: {
+                    g: {
+                        default: 3,
+                        type: "number",
+                        onChange: async (newValue, condition, oldValue, settings) => {
+                            if (condition.equals(undefined)) return;
+                            await new Promise(resolve => setTimeout(resolve, 20));
+                            order.push(1);
+                        },
+                    },
+                },
+            });
+            const condition = new SettingsConditions(() => true, 2);
+            await settingsFile.set(condition).f.g(5);
+            order.push(2);
+
+            settingsFile.on("change", async (path, value, cCondition, oldValue) => {
+                await new Promise(resolve => setTimeout(resolve, 60));
+                order.push(3);
+            });
+            await settingsFile.set(condition).f.g(2);
+            order.push(2);
+
+            expect(order).toEqual([1, 2, 1, 3, 2]);
+        });
         it("Should remove data if undefined", () => {
             const condition = new SettingsConditions(() => true, 2);
 
@@ -84,8 +146,8 @@ describe("SettingsFile", () => {
     });
     describe("Get", () => {
         let settingsFile: SettingsFile<typeof config>;
-        beforeEach(() => {
-            settingsFile = new SettingsFile("_test/dontSave", config);
+        beforeEach(async () => {
+            settingsFile = await SettingsFile.createInstance("_test/dontSave", config);
         });
 
         it("Should get the data corresponding with some condition", () => {
@@ -126,8 +188,8 @@ describe("SettingsFile", () => {
             return target.getClass() != null; // Should always be true also
         }, 2);
         let settingsFile: SettingsFile<typeof config>;
-        beforeEach(() => {
-            settingsFile = new SettingsFile("_tests/save1", config);
+        beforeEach(async () => {
+            settingsFile = await SettingsFile.createInstance("_tests/save1", config);
             settingsFile.set().b.c("test");
             settingsFile.set(condition).b.c("test2");
             settingsFile.set(condition2).b.c("test3");
@@ -137,10 +199,13 @@ describe("SettingsFile", () => {
             settingsFile.save();
             expect(true).toBeTruthy();
         });
-        it("Should make new instances have the same data", () => {
+        it("Should make new instances have the same data", async () => {
             settingsFile.save();
 
-            const settingsFile2 = new SettingsFile("_tests/save1", config);
+            const settingsFile2 = await SettingsFile.createInstance(
+                "_tests/save1",
+                config
+            );
             expect(settingsFile2.get(condition).b.c).toBe(
                 settingsFile.get(condition).b.c
             );
@@ -152,15 +217,15 @@ describe("SettingsFile", () => {
             return target.getClass() != null; // Should always be true also
         }, 2);
         let settingsFile: SettingsFile<typeof config>;
-        beforeEach(() => {
-            settingsFile = new SettingsFile("_tests/save2", config);
+        beforeEach(async () => {
+            settingsFile = await SettingsFile.createInstance("_tests/save2", config);
             settingsFile.set().b.c("test");
             settingsFile.set(condition).b.c("test2");
             settingsFile.set(condition2).b.c("test3");
             settingsFile.save();
         });
 
-        it("Shuld reload the previously saved settings", () => {
+        it("Should reload the previously saved settings", () => {
             settingsFile.set().b.c("hallo");
             expect(settingsFile.get().b.c).toBe("hallo");
             settingsFile.reload();

@@ -44,7 +44,7 @@ declare class ProgramStateSingleton {
      * Loads the passed data into the program state
      * @param modules The actual data to create the modules from
      */
-    deserialize(data: SerializedProgramState): void;
+    deserialize(data: SerializedProgramState): Promise<void>;
 }
 export declare const ProgramState: ProgramStateSingleton;
 export {};

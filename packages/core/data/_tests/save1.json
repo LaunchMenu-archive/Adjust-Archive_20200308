@@ -1,5 +1,23 @@
 [
     {
+        "condition": "function () {\n      return true;\n    }",
+        "priority": 2,
+        "data": {
+            "b": {
+                "c": "test"
+            }
+        }
+    },
+    {
+        "condition": "() => true",
+        "priority": 2,
+        "data": {
+            "b": {
+                "c": "test2"
+            }
+        }
+    },
+    {
         "condition": "target => {\r\n            return target.getClass() != null; // Should always be true also\r\n        }",
         "priority": 2,
         "data": {
@@ -13,25 +31,7 @@
         "priority": 2,
         "data": {
             "b": {
-                "c": "test3"
-            }
-        }
-    },
-    {
-        "condition": "function () {\n      return true;\n    }",
-        "priority": 2,
-        "data": {
-            "b": {
-                "c": "test2"
-            }
-        }
-    },
-    {
-        "condition": "() => true",
-        "priority": 2,
-        "data": {
-            "b": {
-                "c": "test2"
+                "c": "test"
             }
         }
     },

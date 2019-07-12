@@ -33,7 +33,9 @@ export class ClassModuleProvider<
     }
 
     /** @override */
-    public getModule(request: NormalizedRequest<M>): M["child"] & PublicModuleMethods {
+    public async getModule(
+        request: NormalizedRequest<M>
+    ): Promise<M["child"] & PublicModuleMethods> {
         // Create a proxy for the parent, and add to the request
         let parentProxy;
         // Make sure the request was not for a root
@@ -44,7 +46,7 @@ export class ClassModuleProvider<
 
         // Retrieve the Module type and instanciate it
         const moduleID = ProgramState.getNextModuleID(this.moduleClass.getPath());
-        const module: ParameterizedModule = this.moduleClass.createInstance(
+        const module: ParameterizedModule = await this.moduleClass.createInstance(
             request,
             moduleID
         );
@@ -57,7 +59,7 @@ export class ClassModuleProvider<
         if (parentProxy) moduleProxy.connect(parentProxy);
 
         // Call module initialisation now the connection has completed
-        module.init();
+        await module.init();
 
         // Return the module
         return moduleProxy as any;

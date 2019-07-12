@@ -18,12 +18,12 @@ export const config = {
 export default class ViewNotFoundModule extends createModule(config)
     implements ViewNotFound {
     /** @override */
-    protected onInit(): void {
+    protected async onInit() {
         Registry.addProvider(new InstanceModuleProvider(ViewNotFoundID, this, () => 2));
     }
 
     /** @override */
-    protected onReloadInit(): void {
+    protected async onReloadInit() {
         Registry.addProvider(new InstanceModuleProvider(ViewNotFoundID, this, () => 2));
     }
 }

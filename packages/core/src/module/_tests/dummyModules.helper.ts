@@ -2,6 +2,12 @@ import Path from "path";
 import {Registry} from "../../registry/registry";
 import {createModule} from "../moduleClassCreator";
 import {PublicModuleMethods} from "../_types/publicModuleMethods";
+import {ModuleState} from "../_types/moduleState";
+import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
+import {ModuleInterface} from "../_types/moduleInterface";
+import {ModuleRequestData} from "../_types/moduleRequestData";
+import {ModuleID} from "../moduleID";
+import {Module} from "../module";
 
 export type dummyInterface = {
     test: (text: string) => Promise<string>;
@@ -13,6 +19,19 @@ export const dummyInterfaceID = Registry.createInterfaceID<{
 export class DummyModule
     extends createModule({initialState: {}, settings: {}, type: dummyInterfaceID})
     implements dummyInterface {
+    public static async customConstruct<
+        S extends ModuleState,
+        C extends SettingsConfig,
+        I extends ModuleInterface
+    >(
+        request: ModuleRequestData<I>,
+        moduleID: ModuleID,
+        initialState: S,
+        parents: I["parent"][]
+    ): Promise<Module<S, C, I>> {
+        return this.construct(request, moduleID, initialState, parents);
+    }
+
     public async test(text: string): Promise<string> {
         return text;
     }

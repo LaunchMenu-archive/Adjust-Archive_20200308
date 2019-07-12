@@ -90,7 +90,7 @@ class ProgramStateSingleton {
      * Loads the passed data into the program state
      * @param modules The actual data to create the modules from
      */
-    public deserialize(data: SerializedProgramState): void {
+    public async deserialize(data: SerializedProgramState): Promise<void> {
         // Make sure the programState is currently empty
         if (Object.keys(this.modules).length != 0)
             throw new Error(
@@ -101,20 +101,27 @@ class ProgramStateSingleton {
         this.maxModuleIDs = Object.assign({}, data.maxModuleIDS);
 
         // Create the modules
-        this.modules = ExtendedObject.map(data.modules, (moduleData, moduleID) => {
+        const promises = Object.keys(data.modules).map(async moduleID => {
+            const moduleData = data.modules[moduleID];
+
             // Get the class of the module
             const moduleClass = Registry.getModuleClass(moduleData.$type);
 
             // TODO: add error handling if no moduleClass could be found
             // Create a new instance of this class, deserializing the setup related data
-            const module: ParameterizedModule = moduleClass.recreateInstance(
+            const module: ParameterizedModule = await moduleClass.recreateInstance(
                 moduleData,
                 new ModuleID(moduleID)
             );
 
             // Return the instance
-            return module;
+            return {moduleID, module};
         });
+
+        // Reconstruct the modules object from the key value pairs
+        const modules = await Promise.all(promises);
+        this.modules = {};
+        modules.forEach(({moduleID, module}) => (this.modules[moduleID] = module));
 
         // Perform deserialization of the state
         ExtendedObject.forEach(data.modules, (key, moduleData) => {

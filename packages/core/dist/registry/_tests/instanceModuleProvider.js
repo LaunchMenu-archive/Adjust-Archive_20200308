@@ -20,10 +20,11 @@ exports.DummyModule = DummyModule;
 // @ts-ignore
 DummyModule.path = "../module/_tests/dummyModules.helper.js"; // A path that can be imported (doesn't matter that it doesn't import this)
 class DummyParent extends moduleClassCreator_1.createModule({ type: exports.dummyInterfaceID, initialState: {}, settings: {} }) {
-    constructor(someMethod = () => { }) {
-        super({ data: {}, requestPath: new requestPath_1.RequestPath(new moduleID_1.ModuleID("test", 0), {}) }, programState_1.ProgramState.getNextModuleID(DummyParent), {}, []);
-        this.someMethod = someMethod;
-        programState_1.ProgramState.addModule(this);
+    static async createCustomInstance(someMethod = () => { }) {
+        const moduleID = new moduleID_1.ModuleID("test", 3);
+        const instance = (await super.construct({ data: {}, requestPath: new requestPath_1.RequestPath(new moduleID_1.ModuleID("test", 0), {}) }, programState_1.ProgramState.getNextModuleID(DummyParent), {}, []));
+        instance.someMethod = someMethod;
+        return instance;
     }
     async something() {
         this.someMethod();
@@ -31,17 +32,19 @@ class DummyParent extends moduleClassCreator_1.createModule({ type: exports.dumm
 }
 // @ts-ignore
 DummyParent.path = "../module/_tests/dummyModules.helper.js"; // A path that can be imported (doesn't matter that it doesn't import this)
+let dummyParent;
 describe("InstanceModuleProvider", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         registry_1.Registry["moduleProviders"] = {};
         registry_1.Registry.addProvider(new classModuleProvider_1.ClassModuleProvider(DummyModule.getConfig().type, DummyModule));
+        dummyParent = await DummyParent.createCustomInstance();
     });
     it("Should be used by the registry", async () => {
         // Retrieve such a module
         const module = await registry_1.Registry.request({
             type: exports.dummyInterfaceID,
             use: "one",
-            parent: new DummyParent(),
+            parent: dummyParent,
         });
         const m = module;
         // Add a instance provider
@@ -50,7 +53,7 @@ describe("InstanceModuleProvider", () => {
         const module2 = await registry_1.Registry.request({
             type: exports.dummyInterfaceID,
             use: "one",
-            parent: new DummyParent(),
+            parent: dummyParent,
         });
         // Check if it's the same, by testing whether the instanceVal is shared
         await module.test();
@@ -62,7 +65,7 @@ describe("InstanceModuleProvider", () => {
         const module = await registry_1.Registry.request({
             type: exports.dummyInterfaceID,
             use: "one",
-            parent: new DummyParent(),
+            parent: dummyParent,
         });
         const m = module;
         // Add a instance provider
@@ -74,7 +77,7 @@ describe("InstanceModuleProvider", () => {
         const module2 = await registry_1.Registry.request({
             type: exports.dummyInterfaceID,
             use: "one",
-            parent: new DummyParent(() => (dummyParentCalled = true)),
+            parent: await DummyParent.createCustomInstance(() => (dummyParentCalled = true)),
         });
         // Check if both methods are called
         expect(notifyCalled).toBeTruthy();

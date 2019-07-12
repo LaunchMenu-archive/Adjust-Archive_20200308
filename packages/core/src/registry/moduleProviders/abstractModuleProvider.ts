@@ -46,7 +46,7 @@ export abstract class AbstractModuleProvider<M extends ModuleInterface> {
      * Retrieves a module based on the request made
      * @param request The request that was sent
      */
-    public abstract getModule(
+    public abstract async getModule(
         request: NormalizedRequest<M>
-    ): M["child"] & PublicModuleMethods;
+    ): Promise<M["child"] & PublicModuleMethods>;
 }

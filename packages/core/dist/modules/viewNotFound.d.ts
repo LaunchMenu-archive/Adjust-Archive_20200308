@@ -20,9 +20,9 @@ declare const ViewNotFoundModule_base: import("../module/_types/extendedModule")
  */
 export default class ViewNotFoundModule extends ViewNotFoundModule_base implements ViewNotFound {
     /** @override */
-    protected onInit(): void;
+    protected onInit(): Promise<void>;
     /** @override */
-    protected onReloadInit(): void;
+    protected onReloadInit(): Promise<void>;
 }
 declare const ViewNotFoundView_base: import("../module/_types/extendedModuleView").ExtendedModuleViewClass<typeof ViewNotFoundModule, {}, import("../utils/_types/standardTypes").ExtendsClass<typeof import("..").ModuleView, import("..").ModuleView<{}, {}, import("..").Module<import("../module/_types/moduleState").ModuleState, import("../storage/settings/_types/settingsConfig").SettingsConfig, import("../module/_types/moduleInterface").ModuleInterface>>>>;
 /**

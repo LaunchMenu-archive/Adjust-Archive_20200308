@@ -8,17 +8,25 @@ import { SettingsData } from "./_types/settingsData";
 import { SettingsConditions } from "./settingsConditions";
 import { EventEmitter } from "../../utils/eventEmitter";
 import { Shape } from "./_types/shape";
+import { SettingsDataID } from "./_types/SettingsDataID";
 export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsData<S>>;
     protected config: SettingsConfig;
     protected path: string;
     protected shape: Shape<SettingsData<S>>;
+    protected isDirty: boolean;
     /**
      * Creates a settingsFile to store settings for a certain module class
      * @param path The path to store the settings at
      * @param config The settings config
      */
-    constructor(path: string, config: S);
+    protected constructor(path: string, config: S);
+    /**
+     * Creates a settingsFile to store settings for a certain module class
+     * @param path The path to store the settings at
+     * @param config The settings config
+     */
+    static createInstance<S extends SettingsConfig>(path: string, config: S): Promise<SettingsFile<S>>;
     /**
      * Extracts the default values from a settings config
      * @param config The config of which to extract the default values
@@ -31,6 +39,19 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * @returns The shape of the settings
      */
     protected extractShape<C extends SettingsConfig>(config: C): Shape<SettingsData<S>>;
+    protected isReady(): void;
+    /**
+     * Retrieves the settings conditions from the ID it has
+     * @param ID The ID of the settings conditions within these settings
+     * @returns The settings conditions that match this ID
+     */
+    getCondition(ID: SettingsDataID | number): SettingsConditions;
+    /**
+     * Retrieves the settings conditions' ID within these settings
+     * @param condition The conditions to retrieve the ID of
+     * @returns The ID that could be found matching
+     */
+    getConditionID(condition: SettingsConditions): number;
     /**
      * Returns all settings and their conditions
      * @return All settings
@@ -44,9 +65,9 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
     /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance
-     * @returns The retreived or created Data instance
+     * @returns The retrieved or created Data instance
      */
-    getConditionData(condition?: SettingsConditions): Data<SettingsData<S>>;
+    getConditionData(condition?: SettingsConditions | SettingsDataID | number): Data<SettingsData<S>>;
     /**
      * Gets the getter object of a Data instance for a particular condition
      * @param condition The condition for which to get the getter
@@ -65,7 +86,7 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * @param changedProps The changed properties
      * @param previousProps The values that the properties had before
      */
-    protected valueChange(condition: SettingsConditions, changedProps: object, previousProps: object): void;
+    protected valueChange(condition: SettingsConditions, changedProps: object, previousProps: object): Promise<void>;
     /**
      * Saves the current data in the corresponding file
      */
@@ -73,8 +94,14 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
     /**
      * Reloads the settings as are present in the stored file
      * @param initialSettings The settings to load if no file is present
+     * @returns A promise that resolves once all events have resolved
      */
-    reload(initialSettings?: ConditionalSettings<SettingsData<S>>[]): void;
+    reload(initialSettings?: ConditionalSettings<SettingsData<S>>[]): Promise<void>;
+    /**
+     * Changes whether or not this file is dirty
+     * @param dirty Whether or not this file is dirty
+     */
+    protected setDirty(dirty: boolean): void;
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change
@@ -88,3 +115,4 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      */
     on(type: string, listener: (...args: any) => void | Promise<any>, name?: string): string;
 }
+export declare type ParameterizedSettingsFile = SettingsFile<SettingsConfig>;

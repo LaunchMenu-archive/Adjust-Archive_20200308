@@ -4,15 +4,9 @@ declare class SettingsManagerSingleton {
     protected settings: {
         [file: string]: SettingsFile<any>;
     };
+    protected dirtySettings: SettingsFile<any>[];
     protected dataPath: string;
     constructor();
-    /**
-     * Returns the settings file for the specified path, creates it if necessary
-     * @param path The path to obtain the settings file for
-     * @param config The config of the settings
-     * @returns The settings file for the give path
-     */
-    getSettingsFile<S extends SettingsConfig>(path: string, config: S): SettingsFile<S>;
     /**
      * Returns the absolute path to the data directory
      * @param path - The path to append to the data directory
@@ -31,6 +25,33 @@ declare class SettingsManagerSingleton {
      * @returns The json data that was loaded
      */
     loadFile(path: string): any;
+    /**
+     * Check whether a settings file exists with this path
+     * @param path The path to check
+     * @returns Whether or not the settings file exists
+     */
+    fileExists(path: string): boolean;
+    /**
+     * Returns the settings file for the specified path, creates it if necessary
+     * @param path The path to obtain the settings file for
+     * @param config The config of the settings
+     * @returns The settings file for the give path
+     */
+    getSettingsFile<S extends SettingsConfig>(path: string, config: S): Promise<SettingsFile<S>>;
+    /**
+     * Marks a settings file as dirty or 'undirty'
+     * @param settingsFile The file to mark as diry
+     * @param dirty Whether or not the file should be dirty
+     */
+    setDirty(settingsFile: SettingsFile<any>, dirty: boolean): void;
+    /**
+     * Save all of the dirty settings files
+     */
+    saveAll(): void;
+    /**
+     * Reload all of the dirty settings files
+     */
+    reloadAll(): Promise<void>;
 }
 export declare const SettingsManager: SettingsManagerSingleton;
 export {};

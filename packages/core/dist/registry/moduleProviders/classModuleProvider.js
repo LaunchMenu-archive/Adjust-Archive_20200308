@@ -19,7 +19,7 @@ class ClassModuleProvider extends abstractModuleProvider_1.AbstractModuleProvide
         return this.moduleClass;
     }
     /** @override */
-    getModule(request) {
+    async getModule(request) {
         // Create a proxy for the parent, and add to the request
         let parentProxy;
         // Make sure the request was not for a root
@@ -29,7 +29,7 @@ class ClassModuleProvider extends abstractModuleProvider_1.AbstractModuleProvide
         }
         // Retrieve the Module type and instanciate it
         const moduleID = programState_1.ProgramState.getNextModuleID(this.moduleClass.getPath());
-        const module = this.moduleClass.createInstance(request, moduleID);
+        const module = await this.moduleClass.createInstance(request, moduleID);
         // Register the module
         programState_1.ProgramState.addModule(module);
         // Create the proxy for the module and connect to the parent proxy
@@ -37,7 +37,7 @@ class ClassModuleProvider extends abstractModuleProvider_1.AbstractModuleProvide
         if (parentProxy)
             moduleProxy.connect(parentProxy);
         // Call module initialisation now the connection has completed
-        module.init();
+        await module.init();
         // Return the module
         return moduleProxy;
     }

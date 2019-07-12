@@ -78,22 +78,27 @@ class ProgramStateSingleton {
      * Loads the passed data into the program state
      * @param modules The actual data to create the modules from
      */
-    deserialize(data) {
+    async deserialize(data) {
         // Make sure the programState is currently empty
         if (Object.keys(this.modules).length != 0)
             throw new Error("A previous state can only be loaded into an empty program state");
         // Load the current maximum IDs
         this.maxModuleIDs = Object.assign({}, data.maxModuleIDS);
         // Create the modules
-        this.modules = extendedObject_1.ExtendedObject.map(data.modules, (moduleData, moduleID) => {
+        const promises = Object.keys(data.modules).map(async (moduleID) => {
+            const moduleData = data.modules[moduleID];
             // Get the class of the module
             const moduleClass = registry_1.Registry.getModuleClass(moduleData.$type);
             // TODO: add error handling if no moduleClass could be found
             // Create a new instance of this class, deserializing the setup related data
-            const module = moduleClass.recreateInstance(moduleData, new moduleID_1.ModuleID(moduleID));
+            const module = await moduleClass.recreateInstance(moduleData, new moduleID_1.ModuleID(moduleID));
             // Return the instance
-            return module;
+            return { moduleID, module };
         });
+        // Reconstruct the modules object from the key value pairs
+        const modules = await Promise.all(promises);
+        this.modules = {};
+        modules.forEach(({ moduleID, module }) => (this.modules[moduleID] = module));
         // Perform deserialization of the state
         extendedObject_1.ExtendedObject.forEach(data.modules, (key, moduleData) => {
             // Get the actual module

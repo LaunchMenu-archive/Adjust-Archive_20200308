@@ -29,7 +29,7 @@ class InstanceModuleProvider extends abstractModuleProvider_1.AbstractModuleProv
         return super.getPriority(request);
     }
     /** @override */
-    getModule(request) {
+    async getModule(request) {
         // Make a copy of the request but overwrite the parent
         const parentProxy = request.parent.createProxy();
         request = Object.assign({}, request, { parent: parentProxy });

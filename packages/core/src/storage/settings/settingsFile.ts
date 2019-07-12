@@ -12,6 +12,7 @@ import {EventEmitter} from "../../utils/eventEmitter";
 import {ExtendedObject} from "../../utils/extendedObject";
 import {SortedList} from "../../utils/sortedList";
 import {Shape} from "./_types/shape";
+import {SettingsDataID} from "./_types/SettingsDataID";
 
 export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsData<S>>;
@@ -21,12 +22,15 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     // Used to initialise new instance of SettingsData
     protected shape: Shape<SettingsData<S>>;
 
+    // Whether or not settings have been changed since last save
+    protected isDirty: boolean;
+
     /**
      * Creates a settingsFile to store settings for a certain module class
      * @param path The path to store the settings at
      * @param config The settings config
      */
-    constructor(path: string, config: S) {
+    protected constructor(path: string, config: S) {
         super();
 
         // Store the path
@@ -37,14 +41,31 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
 
         // Store the structure
         this.shape = this.extractShape(config);
+    }
+
+    /**
+     * Creates a settingsFile to store settings for a certain module class
+     * @param path The path to store the settings at
+     * @param config The settings config
+     */
+    static async createInstance<S extends SettingsConfig>(
+        path: string,
+        config: S
+    ): Promise<SettingsFile<S>> {
+        const settingsFile = new this(path, config);
 
         // Only the provided data will be used if no data is stored yet
-        this.reload([
+        await settingsFile.reload([
             {
                 condition: undefined,
-                data: this.extractDefault(config),
+                priority: 0,
+                ID: 0,
+                data: settingsFile.extractDefault(config),
             },
         ]);
+
+        // Return the settings file
+        return settingsFile;
     }
 
     // Setup methods
@@ -76,6 +97,30 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         return data as Shape<SettingsData<S>>;
     }
 
+    protected isReady() {}
+
+    // Condition related methods
+    /**
+     * Retrieves the settings conditions from the ID it has
+     * @param ID The ID of the settings conditions within these settings
+     * @returns The settings conditions that match this ID
+     */
+    public getCondition(ID: SettingsDataID | number): SettingsConditions {
+        if (typeof ID == "object") ID = ID.ID;
+        const set = this.settings.get().find(set => set.ID == ID);
+        return set && set.condition;
+    }
+
+    /**
+     * Retrieves the settings conditions' ID within these settings
+     * @param condition The conditions to retrieve the ID of
+     * @returns The ID that could be found matching
+     */
+    public getConditionID(condition: SettingsConditions): number {
+        const set = this.settings.get().find(set => set.condition.equals(condition));
+        return set && set.ID;
+    }
+
     // Retrieval methods
     /**
      * Returns all settings and their conditions
@@ -96,13 +141,21 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance
-     * @returns The retreived or created Data instance
+     * @returns The retrieved or created Data instance
      */
-    public getConditionData(condition?: SettingsConditions): Data<SettingsData<S>> {
+    public getConditionData(
+        condition?: SettingsConditions | SettingsDataID | number
+    ): Data<SettingsData<S>> {
+        // Normalize the conditions
+        if (!(condition instanceof SettingsConditions) && condition !== undefined)
+            condition = this.getCondition(condition);
+
         // Get the settingsSetData if already defined
         let settingsSetData = this.settings
             .get()
-            .find(settingSetData => settingSetData.condition.equals(condition));
+            .find(settingSetData =>
+                settingSetData.condition.equals(condition as SettingsConditions)
+            );
 
         // If not previously defined, create it
         if (!settingsSetData) {
@@ -110,9 +163,16 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
                 (this.shape as unknown) as SettingsData<S>,
                 false
             );
+
+            // Setup a listener
             data.on("change", this.valueChange.bind(this, condition), "SettingsFile");
+
+            // Create the settings set data
+            const settingsDataID =
+                this.settings.get().reduce((cur, set) => Math.max(set.ID, cur), 0) + 1;
             settingsSetData = {
-                condition: condition,
+                condition: condition as SettingsConditions,
+                ID: settingsDataID,
                 data: data,
             };
             this.settings.push(settingsSetData);
@@ -147,22 +207,37 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
      * @param changedProps The changed properties
      * @param previousProps The values that the properties had before
      */
-    protected valueChange(
+    protected async valueChange(
         condition: SettingsConditions,
         changedProps: object,
         previousProps: object
-    ) {
+    ): Promise<void> {
+        // Indicate that the file is dirty now
+        this.setDirty(true);
+
+        // Call all listeners
+        const promises = [];
         ExtendedObject.forEachPaired(
-            [changedProps, previousProps],
+            [changedProps, previousProps, this.config],
             // Emit all value changes
-            (key, [newValue, oldValue], path) => {
-                this.emit("change", path, newValue, condition, oldValue);
+            (key, [newValue, oldValue, config], path) => {
+                // If the config described a change event, fire it and add it to promises to wait for
+                if (config.onChange)
+                    promises.push(config.onChange(newValue, condition, oldValue, this));
+
+                // Emit the change event, and add it to promises to wait for
+                promises.push(
+                    this.emitAsync("change", path, newValue, condition, oldValue)
+                );
             },
             // Only recurse when we haven't hit a setting value yet
             (key, value, path) =>
                 !("default" in ExtendedObject.getField(this.config, path)),
             true
         );
+
+        // Wait for the promises to resolve
+        await Promise.all(promises);
     }
 
     // Saving
@@ -172,19 +247,27 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     public save(): void {
         const data = this.settings
             .filter(settingsSet => Object.keys(settingsSet.data.get).length > 0)
-            .map(settingsSet => ({
-                condition: settingsSet.condition.getData(),
-                priority: settingsSet.condition.getPriority(),
-                data: settingsSet.data.serialize(),
-            }));
+            .map(
+                settingsSet =>
+                    ({
+                        condition: settingsSet.condition.getData(),
+                        priority: settingsSet.condition.getPriority(),
+                        ID: settingsSet.ID,
+                        data: settingsSet.data.serialize(),
+                    } as ConditionalSettings<any>)
+            );
         SettingsManager.saveFile(this.path, data);
+        this.setDirty(false);
     }
 
     /**
      * Reloads the settings as are present in the stored file
      * @param initialSettings The settings to load if no file is present
+     * @returns A promise that resolves once all events have resolved
      */
-    public reload(initialSettings?: ConditionalSettings<SettingsData<S>>[]): void {
+    public async reload(
+        initialSettings?: ConditionalSettings<SettingsData<S>>[]
+    ): Promise<void> {
         // TODO: Only fire events of values that actually changed, and track their previous values
         // Load the previously stored data if present
         const storedData = SettingsManager.loadFile(this.path);
@@ -204,6 +287,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
                         settings.condition,
                         settings.priority || 0
                     ),
+                    ID: settings.ID,
                     data: data,
                 };
             });
@@ -231,9 +315,22 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         }
 
         // Emit change events for all settings
-        this.settings.forEach(settings => {
-            this.valueChange(settings.condition, settings.data.get, undefined);
-        });
+        const promises = this.settings.map(settings =>
+            this.valueChange(settings.condition, settings.data.get, undefined)
+        );
+        await Promise.all(promises);
+        this.setDirty(false);
+    }
+
+    /**
+     * Changes whether or not this file is dirty
+     * @param dirty Whether or not this file is dirty
+     */
+    protected setDirty(dirty: boolean) {
+        if (this.isDirty != dirty) {
+            this.isDirty = dirty;
+            SettingsManager.setDirty(this, dirty);
+        }
     }
 
     // Events
@@ -271,3 +368,5 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         return super.on(type, listener, name);
     }
 }
+
+export type ParameterizedSettingsFile = SettingsFile<SettingsConfig>;

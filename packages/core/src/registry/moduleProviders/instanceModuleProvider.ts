@@ -51,7 +51,9 @@ export class InstanceModuleProvider<
     }
 
     /** @override */
-    public getModule(request: NormalizedRequest<M>): M["child"] & PublicModuleMethods {
+    public async getModule(
+        request: NormalizedRequest<M>
+    ): Promise<M["child"] & PublicModuleMethods> {
         // Make a copy of the request but overwrite the parent
         const parentProxy = request.parent.createProxy();
         request = Object.assign({}, request, {parent: parentProxy});

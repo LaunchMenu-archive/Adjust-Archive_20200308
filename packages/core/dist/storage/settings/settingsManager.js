@@ -9,24 +9,12 @@ class SettingsManagerSingleton {
     constructor() {
         // All the settings files that are opened (there should only be 1 instance per file)
         this.settings = {};
+        // All the settings that are dirty
+        this.dirtySettings = [];
         // The folder to store the data in
         this.dataPath = "data";
     }
-    /**
-     * Returns the settings file for the specified path, creates it if necessary
-     * @param path The path to obtain the settings file for
-     * @param config The config of the settings
-     * @returns The settings file for the give path
-     */
-    getSettingsFile(path, config) {
-        if (path_1.default.extname(path) == "")
-            path += ".json";
-        if (this.settings[path])
-            return this.settings[path];
-        // If the settingsFile isn't yet present, create it
-        let settingsFile = (this.settings[path] = new settingsFile_1.SettingsFile(path, config));
-        return settingsFile;
-    }
+    // Data management
     /**
      * Returns the absolute path to the data directory
      * @param path - The path to append to the data directory
@@ -76,6 +64,62 @@ class SettingsManagerSingleton {
                 console.error(`Something went wrong while retrieving ${path}:`, e);
             }
         }
+    }
+    /**
+     * Check whether a settings file exists with this path
+     * @param path The path to check
+     * @returns Whether or not the settings file exists
+     */
+    fileExists(path) {
+        path = this.getAbsoluteDataPath(path);
+        return FS_1.FS.existsSync(path);
+    }
+    // Setting files management
+    /**
+     * Returns the settings file for the specified path, creates it if necessary
+     * @param path The path to obtain the settings file for
+     * @param config The config of the settings
+     * @returns The settings file for the give path
+     */
+    async getSettingsFile(path, config) {
+        if (path_1.default.extname(path) == "")
+            path += ".json";
+        if (this.settings[path])
+            return this.settings[path];
+        // If the settingsFile isn't yet present, create it
+        let settingsFile = (this.settings[path] = await settingsFile_1.SettingsFile.createInstance(path, config));
+        return settingsFile;
+    }
+    /**
+     * Marks a settings file as dirty or 'undirty'
+     * @param settingsFile The file to mark as diry
+     * @param dirty Whether or not the file should be dirty
+     */
+    setDirty(settingsFile, dirty) {
+        if (dirty) {
+            // Remove the settings file fro the dirty settings array if present
+            const index = this.dirtySettings.indexOf(settingsFile);
+            if (index !== -1)
+                this.dirtySettings.splice(index, 1);
+        }
+        else {
+            // Add the settings file to the dirty settings array if it isn't in there yet
+            const index = this.dirtySettings.indexOf(settingsFile);
+            if (index === -1)
+                this.dirtySettings.push(settingsFile);
+        }
+    }
+    /**
+     * Save all of the dirty settings files
+     */
+    saveAll() {
+        this.dirtySettings.forEach(settingsFile => settingsFile.save());
+    }
+    /**
+     * Reload all of the dirty settings files
+     */
+    async reloadAll() {
+        await Promise.all(this.dirtySettings.map(settingsFile => settingsFile.reload()));
     }
 }
 exports.SettingsManager = new SettingsManagerSingleton();

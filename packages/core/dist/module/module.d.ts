@@ -17,6 +17,7 @@ import { ParentlessRequest, ParameterizedRequest } from "../registry/_types/requ
 import { PublicModuleMethods } from "./_types/publicModuleMethods";
 import { RequestFilter } from "../registry/_types/requestFilter";
 import { ModuleID } from "./moduleID";
+import { SettingsFile } from "../storage/settings/settingsFile";
 export declare const baseConfig: {
     settings: {};
     initialState: {
@@ -44,11 +45,18 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
     readonly stateObject: StateData<S>;
     /**
      * The core building block for Adjust applications
-     * @param request The relevant data of the request that created this instance
-     * @param moduleID The ID of this module
      * @returns An unregistered instance of this module
      */
-    constructor(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]);
+    protected constructor();
+    /**
+     * The core building block for Adjust applications
+     * @param request The relevant data of the request that created this instance
+     * @param moduleID The ID of this module
+     * @param initialState The intial state that the module should have
+     * @param parents The list of parents of the module
+     * @returns An unregistered instance of this module
+     */
+    protected static construct<S extends ModuleState, C extends SettingsConfig, I extends ModuleInterface>(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
     /**
      * Get the request path for this module based on its parent and the ID
      * @param moduleID The ID of this module
@@ -63,27 +71,27 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    static createInstance(request: ParameterizedRequest, moduleID: ModuleID): Module<ModuleState, SettingsConfig, ModuleInterface>;
+    static createInstance(request: ParameterizedRequest, moduleID: ModuleID): Promise<any>;
     /**
      * A method that gets called to perform initialisation,
      * should be called only once, after having been added to the program state
      * (will be called by external setup method, such as in classModuleProvider)
      */
-    init(): void;
+    init(): Promise<void>;
     /**
      * A method that gets called to perform any required initialization on reload
      * (will be called by internal setup method; deserialize)
      */
-    reloadInit(): void;
+    reloadInit(): Promise<void>;
     /**
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state
      */
-    protected onInit(): void;
+    protected onInit(): Promise<void>;
     /**
      * A method that gets called to perform any required initialization on reload
      */
-    protected onReloadInit(): void;
+    protected onReloadInit(): Promise<void>;
     /**
      * Retrieves the entire state object of the module
      * @returns The entire state object on which listeners could be registered
@@ -111,7 +119,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Module<{}, SettingsConfig, ModuleInterface>;
+    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig, ModuleInterface>>;
     /**
      * Deserializes the data that defines the module's own state
      * @param data The data to be deserialized
@@ -252,12 +260,22 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
     };
     /**
      * Retrieves the config of the module
-     * @returns the module's config
+     * @returns The module's config
      */
     static getConfig(): ParameterizedNormalizedModuleConfig;
     /**
+     * Retrieves an instance of the settings file for this module
+     * @returns The settings file instance
+     */
+    static getSettingsFile(): Promise<SettingsFile<any>>;
+    /**
+     * Installs the module if there is no settings file present for it
+     * @returns A promise that resolves when installation is complete, indicating whether installation happened
+     */
+    static installIfRequired(): Promise<boolean>;
+    /**
      * Retrieves the config of the module
-     * @returns the module's config
+     * @returns The module's config
      */
     getConfig(): NormalizedModuleConfig<S, C, I>;
     /**

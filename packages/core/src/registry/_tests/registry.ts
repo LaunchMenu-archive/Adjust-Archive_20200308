@@ -18,23 +18,25 @@ class P extends createModule({
     initialState: {},
     settings: {},
 }) {
-    constructor() {
+    static async createCustomInstance() {
         const moduleID = ProgramState.getNextModuleID(P.getPath());
-        super(
+        const instance = await super.construct(
             {requestPath: Module.createRequestPath(moduleID, null, {}), data: null},
             moduleID,
             {},
             []
         );
-        ProgramState.addModule(this);
+        ProgramState.addModule(instance);
+        return instance;
     }
     async someMethod() {}
 }
-const p = new P();
+let p;
 
 describe("Registry + ClassModuleProvider", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         Registry["moduleProviders"] = {};
+        p = await P.createCustomInstance();
     });
     describe("AddProvider", () => {
         it("Should add and serve the provider", async () => {

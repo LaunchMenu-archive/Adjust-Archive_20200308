@@ -19,5 +19,5 @@ export declare class InstanceModuleProvider<M extends ModuleInterface> extends A
     /** @override*/
     getPriority(request: NormalizedRequest<M>): number;
     /** @override */
-    getModule(request: NormalizedRequest<M>): M["child"] & PublicModuleMethods;
+    getModule(request: NormalizedRequest<M>): Promise<M["child"] & PublicModuleMethods>;
 }

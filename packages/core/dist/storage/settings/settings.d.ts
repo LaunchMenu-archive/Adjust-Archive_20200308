@@ -20,9 +20,13 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
     /**
      * Creates settings for a specific module instance
      * @param target The module instance to target
-     * @param config The configuration for the existing settings
      */
-    constructor(target: Module<any, C, any>, config: C);
+    protected constructor(target: Module<any, C, any>);
+    /**
+     * Creates settings for a specific module instance
+     * @param target The module instance to target
+     */
+    static createInstance<C extends SettingsConfig>(target: Module<any, C, any>): Promise<Settings<C>>;
     /**
      * Properly disposes the object
      */
@@ -68,14 +72,6 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * @returns The settings Data instance
      */
     getSettings(): Data<SettingsData<C>>;
-    /**
-     * Stores all the settings (including the ones that do not apply to this target) in the corresponding file
-     */
-    save(): void;
-    /**
-     * Reloads all the settings (including the ones that do not apply to this target) from the corresponding file
-     */
-    reload(): void;
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change

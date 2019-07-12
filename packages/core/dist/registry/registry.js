@@ -35,7 +35,7 @@ class RegistrySingleton {
         // Retrieve the providers for this request
         const providers = await this.getProviders(normalizedRequest);
         // Retrieve the modules for each of the providers that should be used
-        const modules = providers.map(provider => provider.getModule(normalizedRequest));
+        const modules = await Promise.all(providers.map(provider => provider.getModule(normalizedRequest)));
         // Only return a single module and not an array if use was set to "one"
         if (normalizedRequest.use == "one")
             return modules[0];

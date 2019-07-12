@@ -26,6 +26,8 @@ import {ExtendedObject} from "../utils/extendedObject";
 import {PublicModuleMethods} from "./_types/publicModuleMethods";
 import {RequestFilter} from "../registry/_types/requestFilter";
 import {ModuleID} from "./moduleID";
+import {SettingsManager} from "../storage/settings/settingsManager";
+import {SettingsFile} from "../storage/settings/settingsFile";
 
 export const baseConfig = {
     settings: {},
@@ -67,29 +69,52 @@ export class Module<
 
     /**
      * The core building block for Adjust applications
-     * @param request The relevant data of the request that created this instance
-     * @param moduleID The ID of this module
      * @returns An unregistered instance of this module
      */
-    constructor(
+    protected constructor() {}
+
+    /**
+     * The core building block for Adjust applications
+     * @param request The relevant data of the request that created this instance
+     * @param moduleID The ID of this module
+     * @param initialState The intial state that the module should have
+     * @param parents The list of parents of the module
+     * @returns An unregistered instance of this module
+     */
+    protected static async construct<
+        S extends ModuleState,
+        C extends SettingsConfig,
+        I extends ModuleInterface
+    >(
         request: ModuleRequestData<I>,
         moduleID: ModuleID,
         initialState: S,
         parents: I["parent"][]
-    ) {
+    ): Promise<Module<S, C, I>> {
+        const module = new this();
+
         // Setup request related data
-        this.requestData = request;
-        this.ID = moduleID;
-        this.parents = parents;
-        this.parent = this.parents[0];
+        // @ts-ignore
+        module.requestData = request;
+        // @ts-ignore
+        module.ID = moduleID;
+        // @ts-ignore
+        module.parents = parents;
+        module.parent = module.parents[0];
 
         // Settings initialization
-        this.settingsObject = new Settings(this, this.getConfig().settings);
-        this.settings = this.settingsObject.get;
+        // @ts-ignore
+        module.settingsObject = await Settings.createInstance(module);
+        // @ts-ignore
+        module.settings = module.settingsObject.get;
 
         // State initialization
-        this.stateObject = new StateData(initialState);
-        this.state = this.stateObject.get;
+        // @ts-ignore
+        module.stateObject = new StateData(initialState);
+        // @ts-ignore
+        module.state = module.stateObject.get;
+
+        return module as any;
     }
 
     /**
@@ -120,7 +145,10 @@ export class Module<
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    public static createInstance(request: ParameterizedRequest, moduleID: ModuleID) {
+    public static async createInstance(
+        request: ParameterizedRequest,
+        moduleID: ModuleID
+    ): Promise<any> {
         // Obtain the required data to instanciate the module
         const initialState = this.getConfig().initialState;
         (request as any).requestPath = this.createRequestPath(
@@ -131,7 +159,7 @@ export class Module<
         const parents = request.parent ? [request.parent] : [];
 
         // Create the instance
-        return new this(request as any, moduleID, initialState, parents);
+        return this.construct(request as any, moduleID, initialState, parents);
     }
 
     // Initialisation
@@ -140,7 +168,7 @@ export class Module<
      * should be called only once, after having been added to the program state
      * (will be called by external setup method, such as in classModuleProvider)
      */
-    public init(): void {
+    public async init(): Promise<void> {
         this.onInit();
     }
 
@@ -148,7 +176,7 @@ export class Module<
      * A method that gets called to perform any required initialization on reload
      * (will be called by internal setup method; deserialize)
      */
-    public reloadInit(): void {
+    public async reloadInit(): Promise<void> {
         this.onReloadInit();
     }
 
@@ -156,12 +184,12 @@ export class Module<
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state
      */
-    protected onInit(): void {}
+    protected async onInit(): Promise<void> {}
 
     /**
      * A method that gets called to perform any required initialization on reload
      */
-    protected onReloadInit(): void {}
+    protected async onReloadInit(): Promise<void> {}
 
     // State related methods
     /**
@@ -220,7 +248,10 @@ export class Module<
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    public static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID) {
+    public static async recreateInstance(
+        serializedData: SerializedModule,
+        moduleID: ModuleID
+    ) {
         // The data is a serialized module
         const data = serializedData.data;
 
@@ -231,7 +262,7 @@ export class Module<
         };
 
         // Create the instance
-        return new this(request, moduleID, {}, []);
+        return await this.construct(request, moduleID, {}, []);
     }
 
     /**
@@ -517,15 +548,34 @@ export class Module<
 
     /**
      * Retrieves the config of the module
-     * @returns the module's config
+     * @returns The module's config
      */
     public static getConfig(): ParameterizedNormalizedModuleConfig {
         return this.config;
     }
 
     /**
+     * Retrieves an instance of the settings file for this module
+     * @returns The settings file instance
+     */
+    public static async getSettingsFile(): Promise<SettingsFile<any>> {
+        return SettingsManager.getSettingsFile(this.getPath(), this.getConfig().settings);
+    }
+
+    /**
+     * Installs the module if there is no settings file present for it
+     * @returns A promise that resolves when installation is complete, indicating whether installation happened
+     */
+    public static async installIfRequired(): Promise<boolean> {
+        // Check if an install is required or whether the mdoule has been isntalled already
+        if (!SettingsManager.fileExists(this.getPath())) {
+            return true;
+        } else return false;
+    }
+
+    /**
      * Retrieves the config of the module
-     * @returns the module's config
+     * @returns The module's config
      */
     public getConfig(): NormalizedModuleConfig<S, C, I> {
         return this.getClass().config as any;

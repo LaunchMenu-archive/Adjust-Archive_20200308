@@ -19,5 +19,5 @@ export declare class ClassModuleProvider<M extends ModuleInterface> extends Abst
      */
     getModuleClass(): ExtendsClass<typeof Module>;
     /** @override */
-    getModule(request: NormalizedRequest<M>): M["child"] & PublicModuleMethods;
+    getModule(request: NormalizedRequest<M>): Promise<M["child"] & PublicModuleMethods>;
 }

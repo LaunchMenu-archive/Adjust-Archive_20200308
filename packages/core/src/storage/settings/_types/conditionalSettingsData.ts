@@ -6,6 +6,7 @@ import {SettingsConditions} from "../settingsConditions";
  */
 export type ConditionalSettingsData<D extends object> = {
     condition: SettingsConditions;
+    ID: number;
     data: Data<D>;
 };
 

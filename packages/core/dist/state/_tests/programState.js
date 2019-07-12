@@ -31,10 +31,10 @@ function stringify(object) {
 }
 describe("ProgramState", () => {
     describe("AddModule + GetModule", () => {
-        it("Should be able to retrieve a module by path", () => {
+        it("Should be able to retrieve a module by path", async () => {
             // Add a module
             const moduleID = programState_1.ProgramState.getNextModuleID(dummyModules_helper_1.DummyModule.getPath());
-            const module = new dummyModules_helper_1.DummyModule({
+            const module = await dummyModules_helper_1.DummyModule.customConstruct({
                 requestPath: new requestPath_1.RequestPath(moduleID, {}),
                 data: {},
             }, moduleID, {}, []);
@@ -53,10 +53,10 @@ describe("ProgramState", () => {
         });
     });
     describe("Serialize", () => {
-        it("Should correctly serialize", () => {
+        it("Should correctly serialize", async () => {
             // Add yet another module
             const moduleID = programState_1.ProgramState.getNextModuleID(dummyModules_helper_1.DummyModule.getPath());
-            const module = new dummyModules_helper_1.DummyModule({
+            const module = await dummyModules_helper_1.DummyModule.customConstruct({
                 requestPath: new requestPath_1.RequestPath(moduleID, {}),
                 data: {},
             }, moduleID, {}, []);
@@ -76,10 +76,10 @@ describe("ProgramState", () => {
         });
     });
     describe("Deserialize", () => {
-        it("Should correctly deserialize", () => {
+        it("Should correctly deserialize", async () => {
             // Add yet another module
             const moduleID = programState_1.ProgramState.getNextModuleID(dummyModules_helper_1.DummyModule.getPath());
-            const module = new dummyModules_helper_1.DummyModule({
+            const module = await dummyModules_helper_1.DummyModule.customConstruct({
                 requestPath: new requestPath_1.RequestPath(moduleID, {}),
                 data: {},
             }, moduleID, {}, []);

@@ -7,6 +7,7 @@ const requestPath_1 = require("./requestPath/requestPath");
 const registry_1 = require("../registry/registry");
 const moduleProxy_1 = require("./moduleProxy");
 const extendedObject_1 = require("../utils/extendedObject");
+const settingsManager_1 = require("../storage/settings/settingsManager");
 exports.baseConfig = {
     settings: {},
     initialState: {
@@ -26,22 +27,38 @@ exports.baseConfig = {
 class Module {
     /**
      * The core building block for Adjust applications
-     * @param request The relevant data of the request that created this instance
-     * @param moduleID The ID of this module
      * @returns An unregistered instance of this module
      */
-    constructor(request, moduleID, initialState, parents) {
+    constructor() { }
+    /**
+     * The core building block for Adjust applications
+     * @param request The relevant data of the request that created this instance
+     * @param moduleID The ID of this module
+     * @param initialState The intial state that the module should have
+     * @param parents The list of parents of the module
+     * @returns An unregistered instance of this module
+     */
+    static async construct(request, moduleID, initialState, parents) {
+        const module = new this();
         // Setup request related data
-        this.requestData = request;
-        this.ID = moduleID;
-        this.parents = parents;
-        this.parent = this.parents[0];
+        // @ts-ignore
+        module.requestData = request;
+        // @ts-ignore
+        module.ID = moduleID;
+        // @ts-ignore
+        module.parents = parents;
+        module.parent = module.parents[0];
         // Settings initialization
-        this.settingsObject = new settings_1.Settings(this, this.getConfig().settings);
-        this.settings = this.settingsObject.get;
+        // @ts-ignore
+        module.settingsObject = await settings_1.Settings.createInstance(module);
+        // @ts-ignore
+        module.settings = module.settingsObject.get;
         // State initialization
-        this.stateObject = new stateData_1.StateData(initialState);
-        this.state = this.stateObject.get;
+        // @ts-ignore
+        module.stateObject = new stateData_1.StateData(initialState);
+        // @ts-ignore
+        module.state = module.stateObject.get;
+        return module;
     }
     /**
      * Get the request path for this module based on its parent and the ID
@@ -67,13 +84,13 @@ class Module {
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    static createInstance(request, moduleID) {
+    static async createInstance(request, moduleID) {
         // Obtain the required data to instanciate the module
         const initialState = this.getConfig().initialState;
         request.requestPath = this.createRequestPath(moduleID, request.parent, request.data);
         const parents = request.parent ? [request.parent] : [];
         // Create the instance
-        return new this(request, moduleID, initialState, parents);
+        return this.construct(request, moduleID, initialState, parents);
     }
     // Initialisation
     /**
@@ -81,25 +98,25 @@ class Module {
      * should be called only once, after having been added to the program state
      * (will be called by external setup method, such as in classModuleProvider)
      */
-    init() {
+    async init() {
         this.onInit();
     }
     /**
      * A method that gets called to perform any required initialization on reload
      * (will be called by internal setup method; deserialize)
      */
-    reloadInit() {
+    async reloadInit() {
         this.onReloadInit();
     }
     /**
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state
      */
-    onInit() { }
+    async onInit() { }
     /**
      * A method that gets called to perform any required initialization on reload
      */
-    onReloadInit() { }
+    async onReloadInit() { }
     // State related methods
     /**
      * Retrieves the entire state object of the module
@@ -146,13 +163,13 @@ class Module {
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    static recreateInstance(serializedData, moduleID) {
+    static async recreateInstance(serializedData, moduleID) {
         // The data is a serialized module
         const data = serializedData.data;
         // Obtain the required data to instanciate the module
         const request = Object.assign({}, data.request, { requestPath: new requestPath_1.RequestPath(data.request.requestPath) });
         // Create the instance
-        return new this(request, moduleID, {}, []);
+        return await this.construct(request, moduleID, {}, []);
     }
     /**
      * Deserializes the data that defines the module's own state
@@ -363,14 +380,33 @@ class Module {
     }
     /**
      * Retrieves the config of the module
-     * @returns the module's config
+     * @returns The module's config
      */
     static getConfig() {
         return this.config;
     }
     /**
+     * Retrieves an instance of the settings file for this module
+     * @returns The settings file instance
+     */
+    static async getSettingsFile() {
+        return settingsManager_1.SettingsManager.getSettingsFile(this.getPath(), this.getConfig().settings);
+    }
+    /**
+     * Installs the module if there is no settings file present for it
+     * @returns A promise that resolves when installation is complete, indicating whether installation happened
+     */
+    static async installIfRequired() {
+        // Check if an install is required or whether the mdoule has been isntalled already
+        if (!settingsManager_1.SettingsManager.fileExists(this.getPath())) {
+            return true;
+        }
+        else
+            return false;
+    }
+    /**
      * Retrieves the config of the module
-     * @returns the module's config
+     * @returns The module's config
      */
     getConfig() {
         return this.getClass().config;

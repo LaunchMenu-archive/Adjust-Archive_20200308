@@ -7,6 +7,9 @@ const registry_1 = require("../../registry/registry");
 const moduleClassCreator_1 = require("../moduleClassCreator");
 exports.dummyInterfaceID = registry_1.Registry.createInterfaceID(__filename + "1");
 class DummyModule extends moduleClassCreator_1.createModule({ initialState: {}, settings: {}, type: exports.dummyInterfaceID }) {
+    static async customConstruct(request, moduleID, initialState, parents) {
+        return this.construct(request, moduleID, initialState, parents);
+    }
     async test(text) {
         return text;
     }
