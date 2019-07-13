@@ -2,6 +2,7 @@ import Path from "path";
 import {FS} from "../../utils/FS";
 import {SettingsFile} from "./settingsFile";
 import {SettingsConfig} from "./_types/settingsConfig";
+import {ExtendedObject} from "../../utils/extendedObject";
 
 class SettingsManagerSingleton {
     // All the settings files that are opened (there should only be 1 instance per file)
@@ -102,6 +103,34 @@ class SettingsManagerSingleton {
             config
         ));
         return settingsFile;
+    }
+
+    /**
+     * Removes a settings file for if it is no longer being used
+     * @param path The path of the settings file
+     * @param settingsFile The instance of the settings file
+     * @returns Whether or not the settings file instance was removed
+     */
+    public removeSettingsFile(path: string, settingsFile: SettingsFile<any>): boolean {
+        if (Path.extname(path) == "") path += ".json";
+        if (this.settings[path] && this.settings[path] == settingsFile) {
+            const isDirty = this.dirtySettings.indexOf(settingsFile) === -1;
+            if (isDirty) return false;
+
+            delete this.settings[path];
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Destroys all settings file instances that have no listeners
+     */
+    public destroySettingsFiles(): void {
+        ExtendedObject.forEach(this.settings, (path, settingsFile) => {
+            settingsFile.destroy();
+        });
     }
 
     /**

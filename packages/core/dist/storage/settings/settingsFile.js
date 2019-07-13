@@ -44,7 +44,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         // Return the settings file
         return settingsFile;
     }
-    // Setup methods
+    // Setup/teardown methods
     /**
      * Extracts the default values from a settings config
      * @param config The config of which to extract the default values
@@ -75,7 +75,13 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         });
         return data;
     }
-    isReady() { }
+    /**
+     * Destroys this settings file instance, if there are no more listeners
+     */
+    destroy() {
+        if (this.listeners["change"].length == 0)
+            settingsManager_1.SettingsManager.removeSettingsFile(this.path, this);
+    }
     // Condition related methods
     /**
      * Retrieves the settings conditions from the ID it has

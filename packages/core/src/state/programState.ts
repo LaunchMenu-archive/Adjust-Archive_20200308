@@ -101,11 +101,11 @@ class ProgramStateSingleton {
         this.maxModuleIDs = Object.assign({}, data.maxModuleIDS);
 
         // Create the modules
-        const promises = Object.keys(data.modules).map(async moduleID => {
+        const instanciatePromises = Object.keys(data.modules).map(async moduleID => {
             const moduleData = data.modules[moduleID];
 
             // Get the class of the module
-            const moduleClass = Registry.getModuleClass(moduleData.$type);
+            const moduleClass = await Registry.getModuleClass(moduleData.$type);
 
             // TODO: add error handling if no moduleClass could be found
             // Create a new instance of this class, deserializing the setup related data
@@ -119,18 +119,20 @@ class ProgramStateSingleton {
         });
 
         // Reconstruct the modules object from the key value pairs
-        const modules = await Promise.all(promises);
+        const modules = await Promise.all(instanciatePromises);
         this.modules = {};
         modules.forEach(({moduleID, module}) => (this.modules[moduleID] = module));
 
         // Perform deserialization of the state
+        const deserializePromises = [];
         ExtendedObject.forEach(data.modules, (key, moduleData) => {
             // Get the actual module
             const module = this.modules[key];
 
             // Deserialize the data
-            module.deserialize(moduleData.data);
+            deserializePromises.push(module.deserialize(moduleData.data));
         });
+        await Promise.all(deserializePromises);
     }
 }
 export const ProgramState = new ProgramStateSingleton();

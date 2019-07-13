@@ -24,6 +24,7 @@ export declare const baseConfig: {
         isStopping: boolean;
         isStopped: boolean;
     };
+    onInstall: () => void;
     abstract: boolean;
     type: any;
     viewClass: any;
@@ -124,7 +125,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * Deserializes the data that defines the module's own state
      * @param data The data to be deserialized
      */
-    deserialize(data: SerializedModule["data"]): void;
+    deserialize(data: SerializedModule["data"]): Promise<void>;
     /**
      * Returns the ID of this module
      * @returns The ID
@@ -253,6 +254,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
             isStopping: boolean;
             isStopped: boolean;
         };
+        onInstall: () => void;
         abstract: boolean;
         type: any;
         viewClass: any;

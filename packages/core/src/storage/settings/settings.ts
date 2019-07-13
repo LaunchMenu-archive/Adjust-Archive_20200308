@@ -67,6 +67,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      */
     public destroy(): void {
         this.settingsFile.off("change", this.settingsFileListener);
+        this.settingsFile.destroy(); // Only destroys if there are no more listeners
     }
 
     // Setup methods

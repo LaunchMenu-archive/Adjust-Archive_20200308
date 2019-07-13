@@ -14,6 +14,7 @@ import {ExtendsClass} from "../utils/_types/standardTypes";
 import {PublicModuleMethods} from "../module/_types/publicModuleMethods";
 import {ExtendedObject} from "../utils/extendedObject";
 import {ModuleView} from "../module/moduleView";
+import {SettingsManager} from "../storage/settings/settingsManager";
 
 /**
  * Keeps track of all modules classes and module providers
@@ -201,7 +202,7 @@ export class RegistrySingleton {
     // Module loading related methods
     /**
      * Retrieves the module object of which Adjust is a depedency
-     * The node module that's not part of adjust (node as in node.js)
+     * @returns The node module that's not part of adjust (node as in node.js)
      */
     protected getParentNodeModule(): NodeModule {
         // Find the last module that's located in the running process
@@ -247,7 +248,7 @@ export class RegistrySingleton {
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule
      * @returns A module class, or undefined
      */
-    public getModuleClass(modulePath: string): typeof Module {
+    public async getModuleClass(modulePath: string): Promise<typeof Module> {
         // Extract the collection name from the path
         const dirs = modulePath.split(Path.sep);
         const collectionName = dirs.shift() || "default";
@@ -278,6 +279,9 @@ export class RegistrySingleton {
                     if (viewClass) def.getConfig().viewClass = viewClass;
                 }
 
+                // Install the class if required
+                await def.installIfRequired();
+
                 // Return the module
                 return def;
             }
@@ -301,10 +305,10 @@ export class RegistrySingleton {
     /**
      * Loads all of the default modules that are available
      */
-    public loadDefaultClassModuleProviders(
+    public async loadDefaultClassModuleProviders(
         filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean
-    ): void {
-        this.loadClassModuleProviders(
+    ): Promise<void> {
+        await this.loadClassModuleProviders(
             Path.join(__dirname, "..", "modules"),
             "core",
             filter
@@ -317,16 +321,16 @@ export class RegistrySingleton {
      * @param collectionName The name of the collection you are defining, is "default" by default
      * @param filter An optional function that decides what module classes to load (return true to be used)
      */
-    public loadClassModuleProviders(
+    public async loadClassModuleProviders(
         folder: string = this.collectionFolders.default,
         collectionName: string = "default",
         filter: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean = () => true
-    ): void {
+    ): Promise<void> {
         // Store the collection
         this.collectionFolders[collectionName] = folder;
 
         // Obtain all of the module classes
-        let moduleClasses = this.loadModuleClasses(collectionName, filter);
+        let moduleClasses = await this.loadModuleClasses(collectionName, filter);
 
         // Filter out any module classes without an interface (probably a class to be extended)
         moduleClasses = moduleClasses.filter(
@@ -348,12 +352,12 @@ export class RegistrySingleton {
      * @param filter An optional function that decides what module classes to load (return true to be used)
      * @returns All the Module classes that could be found
      */
-    protected loadModuleClasses(
+    protected async loadModuleClasses(
         collectionName: string = "default",
         filter: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean = () => true
-    ): (typeof Module)[] {
+    ): Promise<(typeof Module)[]> {
         // The module classes to return
-        const outModules: (typeof Module)[] = [];
+        const outModules: Promise<typeof Module>[] = [];
 
         // The root path to look at
         const startPath = this.collectionFolders[collectionName];
@@ -390,8 +394,12 @@ export class RegistrySingleton {
         // Start the recursion
         readDir(startPath);
 
+        // Save all settings that were created by modules being installed
+        SettingsManager.saveAll();
+        SettingsManager.destroySettingsFiles();
+
         // Return the loaded configs
-        return outModules;
+        return await Promise.all(outModules);
     }
 
     /**

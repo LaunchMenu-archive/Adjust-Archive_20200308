@@ -10,6 +10,7 @@ const ipcMain_1 = require("../communication/ipcMain");
 const ipcRenderer_1 = require("../communication/ipcRenderer");
 const extendedObject_1 = require("../utils/extendedObject");
 const moduleView_1 = require("../module/moduleView");
+const settingsManager_1 = require("../storage/settings/settingsManager");
 /**
  * Keeps track of all modules classes and module providers
  */
@@ -146,7 +147,7 @@ class RegistrySingleton {
     // Module loading related methods
     /**
      * Retrieves the module object of which Adjust is a depedency
-     * The node module that's not part of adjust (node as in node.js)
+     * @returns The node module that's not part of adjust (node as in node.js)
      */
     getParentNodeModule() {
         // Find the last module that's located in the running process
@@ -184,7 +185,7 @@ class RegistrySingleton {
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule
      * @returns A module class, or undefined
      */
-    getModuleClass(modulePath) {
+    async getModuleClass(modulePath) {
         // Extract the collection name from the path
         const dirs = modulePath.split(path_1.default.sep);
         const collectionName = dirs.shift() || "default";
@@ -208,6 +209,8 @@ class RegistrySingleton {
                     if (viewClass)
                         def.getConfig().viewClass = viewClass;
                 }
+                // Install the class if required
+                await def.installIfRequired();
                 // Return the module
                 return def;
             }
@@ -224,8 +227,8 @@ class RegistrySingleton {
     /**
      * Loads all of the default modules that are available
      */
-    loadDefaultClassModuleProviders(filter) {
-        this.loadClassModuleProviders(path_1.default.join(__dirname, "..", "modules"), "core", filter);
+    async loadDefaultClassModuleProviders(filter) {
+        await this.loadClassModuleProviders(path_1.default.join(__dirname, "..", "modules"), "core", filter);
     }
     /**
      * Loads all of the class module providers into the registry
@@ -233,11 +236,11 @@ class RegistrySingleton {
      * @param collectionName The name of the collection you are defining, is "default" by default
      * @param filter An optional function that decides what module classes to load (return true to be used)
      */
-    loadClassModuleProviders(folder = this.collectionFolders.default, collectionName = "default", filter = () => true) {
+    async loadClassModuleProviders(folder = this.collectionFolders.default, collectionName = "default", filter = () => true) {
         // Store the collection
         this.collectionFolders[collectionName] = folder;
         // Obtain all of the module classes
-        let moduleClasses = this.loadModuleClasses(collectionName, filter);
+        let moduleClasses = await this.loadModuleClasses(collectionName, filter);
         // Filter out any module classes without an interface (probably a class to be extended)
         moduleClasses = moduleClasses.filter(moduleClass => moduleClass.getConfig().type != undefined &&
             !moduleClass.getConfig().abstract);
@@ -252,7 +255,7 @@ class RegistrySingleton {
      * @param filter An optional function that decides what module classes to load (return true to be used)
      * @returns All the Module classes that could be found
      */
-    loadModuleClasses(collectionName = "default", filter = () => true) {
+    async loadModuleClasses(collectionName = "default", filter = () => true) {
         // The module classes to return
         const outModules = [];
         // The root path to look at
@@ -284,8 +287,11 @@ class RegistrySingleton {
         };
         // Start the recursion
         readDir(startPath);
+        // Save all settings that were created by modules being installed
+        settingsManager_1.SettingsManager.saveAll();
+        settingsManager_1.SettingsManager.destroySettingsFiles();
         // Return the loaded configs
-        return outModules;
+        return await Promise.all(outModules);
     }
     /**
      * Checks whether a given object (class) is a sub type of the Module class

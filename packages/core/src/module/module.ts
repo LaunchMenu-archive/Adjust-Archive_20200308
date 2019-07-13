@@ -35,6 +35,7 @@ export const baseConfig = {
         isStopping: false,
         isStopped: false,
     },
+    onInstall: () => {},
     abstract: true,
     type: null,
     viewClass: undefined,
@@ -269,7 +270,7 @@ export class Module<
      * Deserializes the data that defines the module's own state
      * @param data The data to be deserialized
      */
-    public deserialize(data: SerializedModule["data"]): void {
+    public async deserialize(data: SerializedModule["data"]): Promise<void> {
         // Update the parents
         const parents = data.parents.map(parent =>
             ProgramState.getModule(parent).createProxy()
@@ -281,7 +282,7 @@ export class Module<
         this.stateObject.deserialize(data.state, this);
 
         // Finish by calling the init hook
-        this.reloadInit();
+        await this.reloadInit();
     }
 
     // Request related methods
@@ -569,8 +570,16 @@ export class Module<
     public static async installIfRequired(): Promise<boolean> {
         // Check if an install is required or whether the mdoule has been isntalled already
         if (!SettingsManager.fileExists(this.getPath())) {
+            // Create the settings file once to call all listeners
+            await this.getSettingsFile();
+
+            // Call the installation method
+            await this.getConfig().onInstall();
+
             return true;
-        } else return false;
+        }
+
+        return false;
     }
 
     /**

@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const FS_1 = require("../../utils/FS");
 const settingsFile_1 = require("./settingsFile");
+const extendedObject_1 = require("../../utils/extendedObject");
 class SettingsManagerSingleton {
     constructor() {
         // All the settings files that are opened (there should only be 1 instance per file)
@@ -89,6 +90,32 @@ class SettingsManagerSingleton {
         // If the settingsFile isn't yet present, create it
         let settingsFile = (this.settings[path] = await settingsFile_1.SettingsFile.createInstance(path, config));
         return settingsFile;
+    }
+    /**
+     * Removes a settings file for if it is no longer being used
+     * @param path The path of the settings file
+     * @param settingsFile The instance of the settings file
+     * @returns Whether or not the settings file instance was removed
+     */
+    removeSettingsFile(path, settingsFile) {
+        if (path_1.default.extname(path) == "")
+            path += ".json";
+        if (this.settings[path] && this.settings[path] == settingsFile) {
+            const isDirty = this.dirtySettings.indexOf(settingsFile) === -1;
+            if (isDirty)
+                return false;
+            delete this.settings[path];
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Destroys all settings file instances that have no listeners
+     */
+    destroySettingsFiles() {
+        extendedObject_1.ExtendedObject.forEach(this.settings, (path, settingsFile) => {
+            settingsFile.destroy();
+        });
     }
     /**
      * Marks a settings file as dirty or 'undirty'

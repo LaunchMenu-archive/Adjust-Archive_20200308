@@ -14,6 +14,7 @@ exports.baseConfig = {
         isStopping: false,
         isStopped: false,
     },
+    onInstall: () => { },
     abstract: true,
     type: null,
     viewClass: undefined,
@@ -175,7 +176,7 @@ class Module {
      * Deserializes the data that defines the module's own state
      * @param data The data to be deserialized
      */
-    deserialize(data) {
+    async deserialize(data) {
         // Update the parents
         const parents = data.parents.map(parent => programState_1.ProgramState.getModule(parent).createProxy());
         this.parents.push.apply(this.parents, parents);
@@ -183,7 +184,7 @@ class Module {
         // Deserialize the state
         this.stateObject.deserialize(data.state, this);
         // Finish by calling the init hook
-        this.reloadInit();
+        await this.reloadInit();
     }
     // Request related methods
     /**
@@ -399,10 +400,13 @@ class Module {
     static async installIfRequired() {
         // Check if an install is required or whether the mdoule has been isntalled already
         if (!settingsManager_1.SettingsManager.fileExists(this.getPath())) {
+            // Create the settings file once to call all listeners
+            await this.getSettingsFile();
+            // Call the installation method
+            await this.getConfig().onInstall();
             return true;
         }
-        else
-            return false;
+        return false;
     }
     /**
      * Retrieves the config of the module

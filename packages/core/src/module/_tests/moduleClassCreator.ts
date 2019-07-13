@@ -53,6 +53,8 @@ describe("ModuleClassCreator", () => {
                 settings: {
                     val: {default: 3, type: "number"},
                 },
+                onInstall: expect.any(Function),
+                abstract: undefined,
                 type: dummyInterfaceID,
                 viewClass: undefined,
                 getPriority: expect.any(Function),
@@ -111,6 +113,8 @@ describe("ModuleClassCreator", () => {
                         val: {default: true as any, type: "number"},
                     },
                 },
+                onInstall: expect.any(Function),
+                abstract: undefined,
                 type: dummyInterfaceID,
                 viewClass: undefined,
                 getPriority: expect.any(Function),

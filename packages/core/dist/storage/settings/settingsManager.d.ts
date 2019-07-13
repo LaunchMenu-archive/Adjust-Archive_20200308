@@ -39,6 +39,17 @@ declare class SettingsManagerSingleton {
      */
     getSettingsFile<S extends SettingsConfig>(path: string, config: S): Promise<SettingsFile<S>>;
     /**
+     * Removes a settings file for if it is no longer being used
+     * @param path The path of the settings file
+     * @param settingsFile The instance of the settings file
+     * @returns Whether or not the settings file instance was removed
+     */
+    removeSettingsFile(path: string, settingsFile: SettingsFile<any>): boolean;
+    /**
+     * Destroys all settings file instances that have no listeners
+     */
+    destroySettingsFiles(): void;
+    /**
      * Marks a settings file as dirty or 'undirty'
      * @param settingsFile The file to mark as diry
      * @param dirty Whether or not the file should be dirty

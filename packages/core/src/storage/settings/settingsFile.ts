@@ -68,7 +68,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         return settingsFile;
     }
 
-    // Setup methods
+    // Setup/teardown methods
     /**
      * Extracts the default values from a settings config
      * @param config The config of which to extract the default values
@@ -97,7 +97,13 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         return data as Shape<SettingsData<S>>;
     }
 
-    protected isReady() {}
+    /**
+     * Destroys this settings file instance, if there are no more listeners
+     */
+    public destroy(): void {
+        if (this.listeners["change"].length == 0)
+            SettingsManager.removeSettingsFile(this.path, this);
+    }
 
     // Condition related methods
     /**

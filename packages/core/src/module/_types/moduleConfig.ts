@@ -17,6 +17,7 @@ export type ModuleConfig<
     settings: C;
     initialState: S;
     type: InterfaceID<I>;
+    onInstall?: () => Promise<void> | void;
     abstract?: boolean;
     viewClass?: ExtendsClass<typeof ModuleView, any>;
     getPriority?: (request: ModuleRequestData<I>) => number;

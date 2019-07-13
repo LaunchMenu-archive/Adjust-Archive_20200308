@@ -35,6 +35,7 @@ class Settings extends eventEmitter_1.EventEmitter {
      */
     destroy() {
         this.settingsFile.off("change", this.settingsFileListener);
+        this.settingsFile.destroy(); // Only destroys if there are no more listeners
     }
     // Setup methods
     /**

@@ -12,6 +12,7 @@ export declare type ModuleConfig<S extends ModuleState, C extends SettingsConfig
     settings: C;
     initialState: S;
     type: InterfaceID<I>;
+    onInstall?: () => Promise<void> | void;
     abstract?: boolean;
     viewClass?: ExtendsClass<typeof ModuleView, any>;
     getPriority?: (request: ModuleRequestData<I>) => number;

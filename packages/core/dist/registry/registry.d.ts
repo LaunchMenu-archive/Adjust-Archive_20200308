@@ -63,7 +63,7 @@ export declare class RegistrySingleton {
     createInterfaceID<M extends ModuleInterface = null>(location: string & (M extends null ? "You must provide a generic type parameter" : string)): InterfaceID<M>;
     /**
      * Retrieves the module object of which Adjust is a depedency
-     * The node module that's not part of adjust (node as in node.js)
+     * @returns The node module that's not part of adjust (node as in node.js)
      */
     protected getParentNodeModule(): NodeModule;
     /**
@@ -78,7 +78,7 @@ export declare class RegistrySingleton {
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule
      * @returns A module class, or undefined
      */
-    getModuleClass(modulePath: string): typeof Module;
+    getModuleClass(modulePath: string): Promise<typeof Module>;
     /**
      * Maps module classes to module providers
      * @param moduleClasses The module classes to create module providers for
@@ -88,21 +88,21 @@ export declare class RegistrySingleton {
     /**
      * Loads all of the default modules that are available
      */
-    loadDefaultClassModuleProviders(filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean): void;
+    loadDefaultClassModuleProviders(filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean): Promise<void>;
     /**
      * Loads all of the class module providers into the registry
      * @param folder The folder to load the modules from
      * @param collectionName The name of the collection you are defining, is "default" by default
      * @param filter An optional function that decides what module classes to load (return true to be used)
      */
-    loadClassModuleProviders(folder?: string, collectionName?: string, filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean): void;
+    loadClassModuleProviders(folder?: string, collectionName?: string, filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean): Promise<void>;
     /**
      * Loads all modules from the given collection
      * @param collectionName The collection to load from
      * @param filter An optional function that decides what module classes to load (return true to be used)
      * @returns All the Module classes that could be found
      */
-    protected loadModuleClasses(collectionName?: string, filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean): (typeof Module)[];
+    protected loadModuleClasses(collectionName?: string, filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean): Promise<(typeof Module)[]>;
     /**
      * Checks whether a given object (class) is a sub type of the Module class
      * @param object The object to check

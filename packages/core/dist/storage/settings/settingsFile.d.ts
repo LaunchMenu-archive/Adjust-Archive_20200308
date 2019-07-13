@@ -39,7 +39,10 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * @returns The shape of the settings
      */
     protected extractShape<C extends SettingsConfig>(config: C): Shape<SettingsData<S>>;
-    protected isReady(): void;
+    /**
+     * Destroys this settings file instance, if there are no more listeners
+     */
+    destroy(): void;
     /**
      * Retrieves the settings conditions from the ID it has
      * @param ID The ID of the settings conditions within these settings
