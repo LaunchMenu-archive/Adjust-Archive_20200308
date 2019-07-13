@@ -12,12 +12,16 @@ import {EventEmitter} from "../../utils/eventEmitter";
 import {ExtendedObject} from "../../utils/extendedObject";
 import {SortedList} from "../../utils/sortedList";
 import {Shape} from "./_types/shape";
-import {SettingsDataID} from "./_types/SettingsDataID";
+import {SettingsDataID} from "./SettingsDataID";
+import {Module} from "../../module/module";
 
 export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsData<S>>;
     protected config: SettingsConfig;
     protected path: string;
+
+    // The module class that these are the settings for, may be undefined if not associated with module
+    protected moduleClass: typeof Module;
 
     // Used to initialise new instance of SettingsData
     protected shape: Shape<SettingsData<S>>;
@@ -27,7 +31,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
 
     /**
      * Creates a settingsFile to store settings for a certain module class
-     * @param path The path to store the settings at
+     * @param module The path to store the settings at
      * @param config The settings config
      */
     protected constructor(path: string, config: S) {
@@ -51,8 +55,36 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     static async createInstance<S extends SettingsConfig>(
         path: string,
         config: S
+    ): Promise<SettingsFile<S>>;
+
+    /**
+     * Creates a settingsFile to store settings for a certain module class
+     * @param moduleClass The module class to create the settings for
+     */
+    static async createInstance<S extends SettingsConfig>(
+        moduleClass: typeof Module
+    ): Promise<SettingsFile<S>>;
+
+    /**
+     * Creates a settingsFile to store settings for a certain module class
+     * @param path The path to store the settings at
+     * @param config The settings config
+     */
+    static async createInstance<S extends SettingsConfig>(
+        path: string | typeof Module,
+        config?: S
     ): Promise<SettingsFile<S>> {
+        // Normalize the data
+        let moduleClass: typeof Module;
+        if (typeof path == "function") {
+            moduleClass = path;
+            config = moduleClass.getConfig().settings as S;
+            path = moduleClass.getPath();
+        }
+
+        //  Create an instance
         const settingsFile = new this(path, config);
+        settingsFile.moduleClass = moduleClass;
 
         // Only the provided data will be used if no data is stored yet
         await settingsFile.reload([
@@ -129,7 +161,15 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
 
     // Retrieval methods
     /**
-     * Returns all settings and their conditions
+     * Retrieves the module class that these settings are for if any
+     * @returns The associated module class
+     */
+    public getModuleClass(): typeof Module {
+        return this.moduleClass;
+    }
+
+    /**
+     * Retrieves all settings and their conditions
      * @return All settings
      */
     public getAllSettings(): ConditionalSettingsDataList<SettingsData<S>> {
@@ -137,7 +177,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     }
 
     /**
-     * Returns the shape of the settings data
+     * Retrieves the shape of the settings data
      * @returns The shape, with all values being undefined
      */
     public getStucture(): Shape<SettingsData<S>> {

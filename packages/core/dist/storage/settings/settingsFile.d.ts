@@ -8,16 +8,18 @@ import { SettingsData } from "./_types/settingsData";
 import { SettingsConditions } from "./settingsConditions";
 import { EventEmitter } from "../../utils/eventEmitter";
 import { Shape } from "./_types/shape";
-import { SettingsDataID } from "./_types/SettingsDataID";
+import { SettingsDataID } from "./SettingsDataID";
+import { Module } from "../../module/module";
 export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsData<S>>;
     protected config: SettingsConfig;
     protected path: string;
+    protected moduleClass: typeof Module;
     protected shape: Shape<SettingsData<S>>;
     protected isDirty: boolean;
     /**
      * Creates a settingsFile to store settings for a certain module class
-     * @param path The path to store the settings at
+     * @param module The path to store the settings at
      * @param config The settings config
      */
     protected constructor(path: string, config: S);
@@ -27,6 +29,11 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * @param config The settings config
      */
     static createInstance<S extends SettingsConfig>(path: string, config: S): Promise<SettingsFile<S>>;
+    /**
+     * Creates a settingsFile to store settings for a certain module class
+     * @param moduleClass The module class to create the settings for
+     */
+    static createInstance<S extends SettingsConfig>(moduleClass: typeof Module): Promise<SettingsFile<S>>;
     /**
      * Extracts the default values from a settings config
      * @param config The config of which to extract the default values
@@ -56,12 +63,17 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      */
     getConditionID(condition: SettingsConditions): number;
     /**
-     * Returns all settings and their conditions
+     * Retrieves the module class that these settings are for if any
+     * @returns The associated module class
+     */
+    getModuleClass(): typeof Module;
+    /**
+     * Retrieves all settings and their conditions
      * @return All settings
      */
     getAllSettings(): ConditionalSettingsDataList<SettingsData<S>>;
     /**
-     * Returns the shape of the settings data
+     * Retrieves the shape of the settings data
      * @returns The shape, with all values being undefined
      */
     getStucture(): Shape<SettingsData<S>>;

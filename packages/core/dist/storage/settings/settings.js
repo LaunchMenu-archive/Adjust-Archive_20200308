@@ -29,15 +29,7 @@ class Settings extends eventEmitter_1.EventEmitter {
         settings.set = settings.setupSetters();
         return settings;
     }
-    // Disposal
-    /**
-     * Properly disposes the object
-     */
-    destroy() {
-        this.settingsFile.off("change", this.settingsFileListener);
-        this.settingsFile.destroy(); // Only destroys if there are no more listeners
-    }
-    // Setup methods
+    // Setup methods/teardown
     /**
      * Gets the settings from the settings file and loads the ones that apply to this target
      * @returns The getter object for the settings
@@ -123,6 +115,13 @@ class Settings extends eventEmitter_1.EventEmitter {
             }
         };
         this.settingsFile.on("change", this.settingsFileListener);
+    }
+    /**
+     * Properly disposes the object
+     */
+    destroy() {
+        this.settingsFile.off("change", this.settingsFileListener);
+        this.settingsFile.destroy(); // Only destroys if there are no more listeners
     }
     // Altering settings setup methods
     /**

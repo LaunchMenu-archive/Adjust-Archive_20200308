@@ -75,21 +75,31 @@ class SettingsManagerSingleton {
         path = this.getAbsoluteDataPath(path);
         return FS_1.FS.existsSync(path);
     }
-    // Setting files management
     /**
-     * Returns the settings file for the specified path, creates it if necessary
-     * @param path The path to obtain the settings file for
+     * Retrieves the settings file for the specified path, creates it if necessary
+     * @param path The path to obtain the settings file for, or a module class itself
      * @param config The config of the settings
      * @returns The settings file for the give path
      */
     async getSettingsFile(path, config) {
+        // Check if a module class was provided
+        let moduleClass;
+        if (typeof path == "function") {
+            moduleClass = path;
+            path = moduleClass.getPath();
+        }
         if (path_1.default.extname(path) == "")
             path += ".json";
+        // Check if the settings file already existed
         if (this.settings[path])
             return this.settings[path];
         // If the settingsFile isn't yet present, create it
-        let settingsFile = (this.settings[path] = await settingsFile_1.SettingsFile.createInstance(path, config));
-        return settingsFile;
+        if (moduleClass) {
+            return (this.settings[path] = await settingsFile_1.SettingsFile.createInstance(moduleClass));
+        }
+        else {
+            return (this.settings[path] = await settingsFile_1.SettingsFile.createInstance(path, config));
+        }
     }
     /**
      * Removes a settings file for if it is no longer being used

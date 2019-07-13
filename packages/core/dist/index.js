@@ -29,4 +29,10 @@ __export(require("./utils/extendedObject"));
 // Communication
 __export(require("./communication/ipcMain"));
 __export(require("./communication/ipcRenderer"));
+// Settings class
+__export(require("./storage/settings/settingsManager"));
+__export(require("./storage/settings/settingsDataID"));
+__export(require("./storage/settings/settingsFile"));
+__export(require("./storage/settings/settings"));
+__export(require("./storage/settings/settingsConditions"));
 //# sourceMappingURL=index.js.map

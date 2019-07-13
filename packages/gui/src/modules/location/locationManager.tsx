@@ -4,7 +4,7 @@ import {
     ModuleReference,
     ExtendedObject,
 } from "@adjust/core";
-import {SettingsConditionID} from "@adjust/core/types";
+import {SettingsDataID} from "@adjust/core";
 import {LocationManagerID, LocationManager} from "./locationManager.type";
 import {ModuleLocation} from "../../module/_types/ModuleLocation";
 import {Registry} from "../../registry/registry";
@@ -34,7 +34,7 @@ export const config = {
             default: {} as {
                 [locationID: string]: {
                     path: LocationPath;
-                    modules: SettingsConditionID[]; // Setting IDs of the modules that are opened here
+                    modules: SettingsDataID[]; // Setting IDs of the modules that are opened here
                 };
             },
             type: "locationPaths",
@@ -61,14 +61,14 @@ export default class LocationManagerModule
     protected ancestorName: string = "window";
 
     /** @override */
-    protected onInit() {
+    protected async onInit() {
         Registry.addProvider(
             new InstanceModuleProvider(LocationManagerID, this, () => 2)
         );
     }
 
     /** @override */
-    protected onReloadInit() {
+    protected async onReloadInit() {
         Registry.addProvider(
             new InstanceModuleProvider(LocationManagerID, this, () => 2)
         );
@@ -179,19 +179,26 @@ export default class LocationManagerModule
 
     /** @override */
     public async updateModuleLocation(
-        moduleSetting: SettingsConditionID,
-        newLocationID: string,
-        oldLocationID: string
+        settingsDataID: SettingsDataID,
+        newLocationIDs: string[],
+        oldLocationIDs: string[]
     ): Promise<void> {
+        // Normalize the location ids
+        if (!newLocationIDs) newLocationIDs = [];
+        if (!oldLocationIDs) oldLocationIDs = [];
+
         // Remove the module from the old location
-        if (oldLocationID) {
+        const removePromises = oldLocationIDs.map(async oldLocationID => {
+            // Only remove locations that got removed
+            if (newLocationIDs.includes(oldLocationID)) return;
+
             let current = this.settings.locations[oldLocationID];
             if (current) {
                 this.settingsObject.set.locations({
                     ...this.settings.locations,
                     [oldLocationID]: {
                         path: current.path,
-                        modules: current.modules.filter(ms => !ms.equals(moduleSetting)),
+                        modules: current.modules.filter(ms => !ms.equals(settingsDataID)),
                     },
                 });
 
@@ -207,19 +214,23 @@ export default class LocationManagerModule
                     locationAncestor.removeLocation(storedPath);
                 }
             }
-        }
+        });
+        await Promise.all(removePromises);
 
         // Add the module to the new location
-        if (newLocationID) {
-            let current = this.settings.locations[oldLocationID];
+        newLocationIDs.forEach(newLocationID => {
+            // Only remove locations that got removed
+            if (oldLocationIDs.includes(newLocationID)) return;
+
+            let current = this.settings.locations[newLocationID];
             this.settingsObject.set.locations({
                 ...this.settings.locations,
-                [oldLocationID]: {
+                [newLocationID]: {
                     path: current && current.path,
-                    modules: [...(current && current.modules), moduleSetting],
+                    modules: [...(current && current.modules), settingsDataID],
                 },
             });
-        }
+        });
     }
 
     // Location editing

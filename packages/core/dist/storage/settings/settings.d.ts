@@ -28,10 +28,6 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      */
     static createInstance<C extends SettingsConfig>(target: Module<any, C, any>): Promise<Settings<C>>;
     /**
-     * Properly disposes the object
-     */
-    destroy(): void;
-    /**
      * Gets the settings from the settings file and loads the ones that apply to this target
      * @returns The getter object for the settings
      */
@@ -40,6 +36,10 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * Adds the necessary listeners to the settings file, to keep the data in this bject synchronised
      */
     protected setupSettingsFileListener(): void;
+    /**
+     * Properly disposes the object
+     */
+    destroy(): void;
     /**
      * Creates setter methods for all of the settings
      * @returns A setter object that takes a condition as a second argument

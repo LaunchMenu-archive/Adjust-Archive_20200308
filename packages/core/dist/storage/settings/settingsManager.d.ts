@@ -1,5 +1,6 @@
 import { SettingsFile } from "./settingsFile";
 import { SettingsConfig } from "./_types/settingsConfig";
+import { Module } from "../../module/module";
 declare class SettingsManagerSingleton {
     protected settings: {
         [file: string]: SettingsFile<any>;
@@ -32,12 +33,18 @@ declare class SettingsManagerSingleton {
      */
     fileExists(path: string): boolean;
     /**
-     * Returns the settings file for the specified path, creates it if necessary
+     * Retrieves the settings file for the specified path, creates it if necessary
      * @param path The path to obtain the settings file for
      * @param config The config of the settings
      * @returns The settings file for the give path
      */
     getSettingsFile<S extends SettingsConfig>(path: string, config: S): Promise<SettingsFile<S>>;
+    /**
+     * Retrieves the settings file for the specified path, creates it if necessary
+     * @param moduleClass The module class to retrieve the settings file for
+     * @returns The settings file for the give path
+     */
+    getSettingsFile<S extends SettingsConfig>(moduleClass: typeof Module): Promise<SettingsFile<S>>;
     /**
      * Removes a settings file for if it is no longer being used
      * @param path The path of the settings file

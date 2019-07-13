@@ -560,7 +560,7 @@ export class Module<
      * @returns The settings file instance
      */
     public static async getSettingsFile(): Promise<SettingsFile<any>> {
-        return SettingsManager.getSettingsFile(this.getPath(), this.getConfig().settings);
+        return SettingsManager.getSettingsFile(this);
     }
 
     /**

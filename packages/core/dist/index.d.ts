@@ -16,3 +16,8 @@ export * from "./utils/isMain";
 export * from "./utils/extendedObject";
 export * from "./communication/ipcMain";
 export * from "./communication/ipcRenderer";
+export * from "./storage/settings/settingsManager";
+export * from "./storage/settings/settingsDataID";
+export * from "./storage/settings/settingsFile";
+export * from "./storage/settings/settings";
+export * from "./storage/settings/settingsConditions";

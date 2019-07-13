@@ -12,7 +12,7 @@ const sortedList_1 = require("../../utils/sortedList");
 class SettingsFile extends eventEmitter_1.EventEmitter {
     /**
      * Creates a settingsFile to store settings for a certain module class
-     * @param path The path to store the settings at
+     * @param module The path to store the settings at
      * @param config The settings config
      */
     constructor(path, config) {
@@ -31,7 +31,16 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
      * @param config The settings config
      */
     static async createInstance(path, config) {
+        // Normalize the data
+        let moduleClass;
+        if (typeof path == "function") {
+            moduleClass = path;
+            config = moduleClass.getConfig().settings;
+            path = moduleClass.getPath();
+        }
+        //  Create an instance
         const settingsFile = new this(path, config);
+        settingsFile.moduleClass = moduleClass;
         // Only the provided data will be used if no data is stored yet
         await settingsFile.reload([
             {
@@ -105,14 +114,21 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
     }
     // Retrieval methods
     /**
-     * Returns all settings and their conditions
+     * Retrieves the module class that these settings are for if any
+     * @returns The associated module class
+     */
+    getModuleClass() {
+        return this.moduleClass;
+    }
+    /**
+     * Retrieves all settings and their conditions
      * @return All settings
      */
     getAllSettings() {
         return this.settings;
     }
     /**
-     * Returns the shape of the settings data
+     * Retrieves the shape of the settings data
      * @returns The shape, with all values being undefined
      */
     getStucture() {

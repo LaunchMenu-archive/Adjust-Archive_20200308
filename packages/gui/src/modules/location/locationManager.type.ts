@@ -1,5 +1,5 @@
-import {Registry, ModuleReference} from "@adjust/core";
-import {PublicModuleMethods, SettingsConditionID} from "@adjust/core/types";
+import {Registry, ModuleReference, SettingsDataID} from "@adjust/core";
+import {PublicModuleMethods} from "@adjust/core/types";
 import {ModuleLocation} from "../../module/_types/ModuleLocation";
 
 export type LocationManager = {
@@ -35,14 +35,14 @@ export type LocationManager = {
 
     /**
      * Updates the stored location of the module under this setting, doesn't alter the actual location
-     * @param moduleSetting The setting to update the location for
-     * @param newLocationID The new location that is stored in settings, or undefined if the setting got removed
-     * @param oldLocationID The old location that was stored in settings, or undefined if the setting is new
+     * @param settingsDataID The setting to update the location for
+     * @param newLocationIDs The new locations that is stored in settings, or undefined if the setting got removed
+     * @param oldLocationIDs The old locations that was stored in settings, or undefined if the setting is new
      */
     updateModuleLocation(
-        moduleSetting: SettingsConditionID,
-        newLocationID: string,
-        oldLocationID: string
+        settingsDataID: SettingsDataID,
+        newLocationIDs: string[],
+        oldLocationIDs: string[]
     ): Promise<void>;
 
     /**

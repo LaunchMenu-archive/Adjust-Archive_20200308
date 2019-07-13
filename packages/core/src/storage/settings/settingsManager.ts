@@ -3,6 +3,7 @@ import {FS} from "../../utils/FS";
 import {SettingsFile} from "./settingsFile";
 import {SettingsConfig} from "./_types/settingsConfig";
 import {ExtendedObject} from "../../utils/extendedObject";
+import {Module} from "../../module/module";
 
 class SettingsManagerSingleton {
     // All the settings files that are opened (there should only be 1 instance per file)
@@ -85,7 +86,7 @@ class SettingsManagerSingleton {
 
     // Setting files management
     /**
-     * Returns the settings file for the specified path, creates it if necessary
+     * Retrieves the settings file for the specified path, creates it if necessary
      * @param path The path to obtain the settings file for
      * @param config The config of the settings
      * @returns The settings file for the give path
@@ -93,16 +94,47 @@ class SettingsManagerSingleton {
     public async getSettingsFile<S extends SettingsConfig>(
         path: string,
         config: S
+    ): Promise<SettingsFile<S>>;
+
+    /**
+     * Retrieves the settings file for the specified path, creates it if necessary
+     * @param moduleClass The module class to retrieve the settings file for
+     * @returns The settings file for the give path
+     */
+    public async getSettingsFile<S extends SettingsConfig>(
+        moduleClass: typeof Module
+    ): Promise<SettingsFile<S>>;
+
+    /**
+     * Retrieves the settings file for the specified path, creates it if necessary
+     * @param path The path to obtain the settings file for, or a module class itself
+     * @param config The config of the settings
+     * @returns The settings file for the give path
+     */
+    public async getSettingsFile<S extends SettingsConfig>(
+        path: string | typeof Module,
+        config?: S
     ): Promise<SettingsFile<S>> {
+        // Check if a module class was provided
+        let moduleClass: typeof Module;
+        if (typeof path == "function") {
+            moduleClass = path;
+            path = moduleClass.getPath();
+        }
         if (Path.extname(path) == "") path += ".json";
+
+        // Check if the settings file already existed
         if (this.settings[path]) return this.settings[path];
 
         // If the settingsFile isn't yet present, create it
-        let settingsFile = (this.settings[path] = await SettingsFile.createInstance(
-            path,
-            config
-        ));
-        return settingsFile;
+        if (moduleClass) {
+            return (this.settings[path] = await SettingsFile.createInstance(moduleClass));
+        } else {
+            return (this.settings[path] = await SettingsFile.createInstance(
+                path,
+                config
+            ));
+        }
     }
 
     /**

@@ -391,7 +391,7 @@ class Module {
      * @returns The settings file instance
      */
     static async getSettingsFile() {
-        return settingsManager_1.SettingsManager.getSettingsFile(this.getPath(), this.getConfig().settings);
+        return settingsManager_1.SettingsManager.getSettingsFile(this);
     }
     /**
      * Installs the module if there is no settings file present for it

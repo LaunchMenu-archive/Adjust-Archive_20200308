@@ -20,17 +20,17 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     // The name of this ancestor type to be used in the location path and hints
     protected ancestorName: string = "window";
 
-    /** @override */
-    onInit() {
-        // Open the window when it is requested
-        WindowManager.openWindow(this.getData().id, this.getID());
-    }
+    // /** @override */
+    // public async onInit(): Promise<void> {
+    //     // Open the window when it is requested
+    //     WindowManager.openWindow(this.getData().id, this.getID());
+    // }
 
-    /** @override */
-    onReloadInit() {
-        // Open the window when it is requested
-        WindowManager.openWindow(this.getData().id, this.getID());
-    }
+    // /** @override */
+    // public async onReloadInit(): Promise<void> {
+    //     // Open the window when it is requested
+    //     WindowManager.openWindow(this.getData().id, this.getID());
+    // }
 
     /** @override */
     async openModule(
@@ -40,7 +40,7 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor
-            const {locationAncestor, path} = await this.getChildLocationAncestor(
+            const {locationAncestor, path} = await this.getChildLocationAncestorFromPath(
                 location
             );
 

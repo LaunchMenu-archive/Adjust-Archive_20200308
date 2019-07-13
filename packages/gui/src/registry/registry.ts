@@ -10,11 +10,15 @@ import {ExtendsClass} from "@adjust/core/types";
 const loadDefaultClassModuleProviders = AdjustRegistry.loadDefaultClassModuleProviders.bind(
     AdjustRegistry
 );
-(AdjustRegistry as any).__proto__.loadDefaultClassModuleProviders = function(
+(AdjustRegistry as any).__proto__.loadDefaultClassModuleProviders = async function(
     filter: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean = () => true
 ) {
-    loadDefaultClassModuleProviders();
-    this.loadClassModuleProviders(Path.join(__dirname, "..", "modules"), "gui", filter);
+    await loadDefaultClassModuleProviders();
+    await this.loadClassModuleProviders(
+        Path.join(__dirname, "..", "modules"),
+        "gui",
+        filter
+    );
 };
 
 export const Registry = AdjustRegistry as AdjustRegistrySingleton & {
@@ -24,5 +28,5 @@ export const Registry = AdjustRegistry as AdjustRegistrySingleton & {
      */
     loadDefaultClassModuleProviders(
         filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean
-    ): void;
+    ): Promise<void>;
 };
