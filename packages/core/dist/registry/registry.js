@@ -185,7 +185,7 @@ class RegistrySingleton {
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule
      * @returns A module class, or undefined
      */
-    async getModuleClass(modulePath) {
+    getModuleClass(modulePath) {
         // Extract the collection name from the path
         const dirs = modulePath.split(path_1.default.sep);
         const collectionName = dirs.shift() || "default";
@@ -209,8 +209,6 @@ class RegistrySingleton {
                     if (viewClass)
                         def.getConfig().viewClass = viewClass;
                 }
-                // Install the class if required
-                await def.installIfRequired();
                 // Return the module
                 return def;
             }
@@ -248,6 +246,10 @@ class RegistrySingleton {
         const moduleProviders = this.createClassModuleProviders(moduleClasses);
         // Add all of the module providers to the registry
         moduleProviders.forEach(moduleProvider => this.addProvider(moduleProvider));
+        // Install all modules that require it, and save their settings
+        await Promise.all(moduleClasses.map(moduleClass => moduleClass.installIfRequired()));
+        settingsManager_1.SettingsManager.saveAll();
+        settingsManager_1.SettingsManager.destroySettingsFiles();
     }
     /**
      * Loads all modules from the given collection
@@ -255,7 +257,7 @@ class RegistrySingleton {
      * @param filter An optional function that decides what module classes to load (return true to be used)
      * @returns All the Module classes that could be found
      */
-    async loadModuleClasses(collectionName = "default", filter = () => true) {
+    loadModuleClasses(collectionName = "default", filter = () => true) {
         // The module classes to return
         const outModules = [];
         // The root path to look at
@@ -287,11 +289,8 @@ class RegistrySingleton {
         };
         // Start the recursion
         readDir(startPath);
-        // Save all settings that were created by modules being installed
-        settingsManager_1.SettingsManager.saveAll();
-        settingsManager_1.SettingsManager.destroySettingsFiles();
         // Return the loaded configs
-        return await Promise.all(outModules);
+        return outModules;
     }
     /**
      * Checks whether a given object (class) is a sub type of the Module class

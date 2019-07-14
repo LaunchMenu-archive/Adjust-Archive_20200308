@@ -78,7 +78,7 @@ export declare class RegistrySingleton {
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule
      * @returns A module class, or undefined
      */
-    getModuleClass(modulePath: string): Promise<typeof Module>;
+    getModuleClass(modulePath: string): typeof Module;
     /**
      * Maps module classes to module providers
      * @param moduleClasses The module classes to create module providers for
@@ -102,7 +102,7 @@ export declare class RegistrySingleton {
      * @param filter An optional function that decides what module classes to load (return true to be used)
      * @returns All the Module classes that could be found
      */
-    protected loadModuleClasses(collectionName?: string, filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean): Promise<(typeof Module)[]>;
+    protected loadModuleClasses(collectionName?: string, filter?: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean): (typeof Module)[];
     /**
      * Checks whether a given object (class) is a sub type of the Module class
      * @param object The object to check

@@ -81,10 +81,7 @@ export class ModuleID extends ModuleReference {
      * @returns The module class
      */
     public getModuleClass(): typeof Module {
-        let moduleClass: typeof Module;
-        // Assume getModuleClass to behave syncrhonously, since install should have already occured
-        Registry.getModuleClass(this.modulePath).then(mc => (moduleClass = mc));
-        return moduleClass;
+        return Registry.getModuleClass(this.modulePath);
     }
 
     /**

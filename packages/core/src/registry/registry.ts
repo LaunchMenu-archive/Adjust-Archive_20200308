@@ -248,7 +248,7 @@ export class RegistrySingleton {
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule
      * @returns A module class, or undefined
      */
-    public async getModuleClass(modulePath: string): Promise<typeof Module> {
+    public getModuleClass(modulePath: string): typeof Module {
         // Extract the collection name from the path
         const dirs = modulePath.split(Path.sep);
         const collectionName = dirs.shift() || "default";
@@ -278,9 +278,6 @@ export class RegistrySingleton {
                     );
                     if (viewClass) def.getConfig().viewClass = viewClass;
                 }
-
-                // Install the class if required
-                await def.installIfRequired();
 
                 // Return the module
                 return def;
@@ -344,6 +341,13 @@ export class RegistrySingleton {
 
         // Add all of the module providers to the registry
         moduleProviders.forEach(moduleProvider => this.addProvider(moduleProvider));
+
+        // Install all modules that require it, and save their settings
+        await Promise.all(
+            moduleClasses.map(moduleClass => moduleClass.installIfRequired())
+        );
+        SettingsManager.saveAll();
+        SettingsManager.destroySettingsFiles();
     }
 
     /**
@@ -352,12 +356,12 @@ export class RegistrySingleton {
      * @param filter An optional function that decides what module classes to load (return true to be used)
      * @returns All the Module classes that could be found
      */
-    protected async loadModuleClasses(
+    protected loadModuleClasses(
         collectionName: string = "default",
         filter: (moduleClass: ExtendsClass<ParameterizedModule>) => boolean = () => true
-    ): Promise<(typeof Module)[]> {
+    ): (typeof Module)[] {
         // The module classes to return
-        const outModules: Promise<typeof Module>[] = [];
+        const outModules: typeof Module[] = [];
 
         // The root path to look at
         const startPath = this.collectionFolders[collectionName];
@@ -394,12 +398,8 @@ export class RegistrySingleton {
         // Start the recursion
         readDir(startPath);
 
-        // Save all settings that were created by modules being installed
-        SettingsManager.saveAll();
-        SettingsManager.destroySettingsFiles();
-
         // Return the loaded configs
-        return await Promise.all(outModules);
+        return outModules;
     }
 
     /**

@@ -4,6 +4,7 @@ import {
     SettingsConfig,
     ModuleState,
 } from "@adjust/core/types";
+import {ModuleLocation} from "./ModuleLocation";
 
 /**
  * The config type for all Adjust GUI modules
@@ -14,10 +15,7 @@ export type ModuleConfig<
     I extends ModuleInterface
 > = AdjustModuleConfig<S, C, I> & {
     // Allows new locations to be defined upon install
-    defineLocation?: {
-        name: string;
-        hints: object;
-    };
+    defineLocation?: ModuleLocation;
 };
 
 /**

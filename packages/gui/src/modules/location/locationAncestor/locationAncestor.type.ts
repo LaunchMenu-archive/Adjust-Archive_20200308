@@ -12,7 +12,10 @@ export type LocationAncestor = {
      * @param location The location to open it in, and the path of nodes along the way
      * @returns The location path that ended up being used (including own data)
      */
-    openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
+    openModule(
+        module: ModuleReference,
+        locationPath: LocationPath
+    ): Promise<LocationPath>;
 
     /**
      * Close a module from the given location
@@ -88,7 +91,8 @@ export type LocationAncestorContract = {
     parent: LocationAncestorParent;
     child: LocationAncestor;
     data: {
-        id: string; // The ID of this location ancestor itself
+        role: string; // The role of this ancestor in relation to its parent, e.g. windowChild
+        ID: string; // The ID of this location ancestor itself
         ancestors: LocationAncestorIDs; // The IDs of locationAncestor along the way to the location, including ID of location ancestor itself
     };
 };

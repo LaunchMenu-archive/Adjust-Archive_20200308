@@ -58,10 +58,7 @@ class ModuleID extends ModuleReference {
      * @returns The module class
      */
     getModuleClass() {
-        let moduleClass;
-        // Assume getModuleClass to behave syncrhonously, since install should have already occured
-        registry_1.Registry.getModuleClass(this.modulePath).then(mc => (moduleClass = mc));
-        return moduleClass;
+        return registry_1.Registry.getModuleClass(this.modulePath);
     }
     /**
      * Retrieves the request path that corresponds to this module ID

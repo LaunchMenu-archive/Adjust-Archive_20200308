@@ -14,4 +14,4 @@ class SettingsDataID {
     }
 }
 exports.SettingsDataID = SettingsDataID;
-//# sourceMappingURL=settingsDataID.js.map
+//# sourceMappingURL=SettingsDataID.js.map

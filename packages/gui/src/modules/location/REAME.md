@@ -44,3 +44,7 @@ When moving 'locations' we can actually attempt to do 1 of 2 things: Moving an a
 -   Settings store one or more location ids
 -   Location manager tracks modulesettings using the location, in order to detect when a location is no longer used and can be destroyed
 -   Location module can obtain the settings condition to change, through the ModuleReference (by converting it to a ModuleID and obtaining the module)
+
+## TODO:
+
+Change location path to an array form, rather than labeled ancestors (since a location ancestor doesn't know the label of its child)

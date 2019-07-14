@@ -88,7 +88,7 @@ class ProgramStateSingleton {
         const instanciatePromises = Object.keys(data.modules).map(async (moduleID) => {
             const moduleData = data.modules[moduleID];
             // Get the class of the module
-            const moduleClass = await registry_1.Registry.getModuleClass(moduleData.$type);
+            const moduleClass = registry_1.Registry.getModuleClass(moduleData.$type);
             // TODO: add error handling if no moduleClass could be found
             // Create a new instance of this class, deserializing the setup related data
             const module = await moduleClass.recreateInstance(moduleData, new moduleID_1.ModuleID(moduleID));

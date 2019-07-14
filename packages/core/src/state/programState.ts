@@ -105,7 +105,7 @@ class ProgramStateSingleton {
             const moduleData = data.modules[moduleID];
 
             // Get the class of the module
-            const moduleClass = await Registry.getModuleClass(moduleData.$type);
+            const moduleClass = Registry.getModuleClass(moduleData.$type);
 
             // TODO: add error handling if no moduleClass could be found
             // Create a new instance of this class, deserializing the setup related data

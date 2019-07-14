@@ -102,7 +102,8 @@ export default class LocationAncestorModule extends createModule(config)
                 return [provider];
             },
             data: {
-                id: ID,
+                role: this.ancestorName + "Child",
+                ID: ID,
                 ancestors: {
                     ...this.getData().ancestors,
                     [this.ancestorName]: ID,

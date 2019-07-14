@@ -6,6 +6,8 @@ import {ExtendsClass, ModuleInterface, ExtendedModuleClass} from "@adjust/core/t
 import {Module} from "./module";
 import {ModuleLocation} from "./_types/ModuleLocation";
 import {ParameterizedModuleConfig} from "./_types/ModuleConfig";
+import {Registry} from "../registry/registry";
+import {LocationManagerID} from "../modules/location/locationManager.type";
 
 // Specify that the default module to be used is our extend module
 export class ModuleClassCreator extends AdjustModuleClassCreator {
@@ -31,7 +33,11 @@ export class ModuleClassCreator extends AdjustModuleClassCreator {
         if (config.defineLocation) {
             const install = config.onInstall;
             config.onInstall = async () => {
-                // TODO: make install happen after loading all modules, not while loading modules
+                // Obtain the location manager instance
+                const locationManager = await Registry.createRoot({
+                    type: LocationManagerID,
+                });
+                await locationManager.updateLocation(config.defineLocation);
 
                 // Call the original install function
                 if (install) return install();

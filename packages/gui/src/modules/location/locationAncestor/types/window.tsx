@@ -6,6 +6,7 @@ import {createModule} from "../../../../module/moduleClassCreator";
 import LocationAncestorModule from "../locationAncestor";
 import {LocationPath} from "../../_types/LocationPath";
 import {React} from "../../../../React";
+import {ModuleLocation} from "src/module/_types/ModuleLocation";
 
 export const config = {
     initialState: {
@@ -20,6 +21,9 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     // The name of this ancestor type to be used in the location path and hints
     protected ancestorName: string = "window";
 
+    // The window in which this module is shown
+    protected window: Promise<Electron.BrowserWindow>;
+
     // /** @override */
     // public async onInit(): Promise<void> {
     //     // Open the window when it is requested
@@ -32,8 +36,60 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     //     WindowManager.openWindow(this.getData().id, this.getID());
     // }
 
+    // Window management
+    /**
+     * Opens the window that this module instance represents
+     * @returns The opened or retrieved window
+     */
+    protected async openWindow(): Promise<Electron.BrowserWindow> {
+        if (this.window) return this.window;
+        return (this.window = WindowManager.openWindow(this.getData().ID, this.getID()));
+    }
+
+    /**
+     * Closes the window if it had been opened already
+     */
+    protected async closeWindow(): Promise<void> {
+        // Check if the window has been opened
+        if (this.window) {
+            const window = await this.window;
+
+            // Close the window
+            window.close();
+            this.window = null;
+        }
+    }
+
+    // Location management
     /** @override */
-    async openModule(
+    public async createLocation(location: ModuleLocation): Promise<LocationPath> {}
+
+    /** @override */
+    public async removeLocation(locationPath: LocationPath): Promise<boolean> {}
+
+    /**
+     * Opens the child location ancestor given a location path
+     * @param location
+     */
+    protected async getChild(location: LocationPath): Promise<LocationAncestor> {
+        // If this module has no child location ancestor yet, obtain it
+        if (!this.state.childLocationAncestor) {
+            // Get child location ancestor
+            const locationAncestor = await this.getChildLocationAncestor(
+                this.getData().ID
+            );
+
+            // Store child location ancestor
+            this.setState({
+                childLocationAncestor: locationAncestor,
+            });
+        }
+        return this.state.childLocationAncestor;
+    }
+
+    // Module management
+    /** @override */
+    public async openModule(
         module: ModuleReference,
         location: LocationPath
     ): Promise<LocationPath> {
@@ -58,9 +114,27 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     }
 
     /** @override */
-    async closeModule(module: ModuleReference, location: LocationPath): Promise<boolean> {
+    public async closeModule(
+        module: ModuleReference,
+        location: LocationPath
+    ): Promise<boolean> {
         return false;
     }
+
+    /** @override */
+    public async showModule(
+        module: ModuleReference,
+        location: LocationPath
+    ): Promise<boolean> {
+        return false;
+    }
+
+    // Edit magement
+    /** @override */
+    public async setEditMode(edit: boolean): Promise<void> {}
+
+    /** @override */
+    public async setDropMode(drop: boolean): Promise<void> {}
 }
 
 export class WindowView extends createModuleView(WindowModule) {

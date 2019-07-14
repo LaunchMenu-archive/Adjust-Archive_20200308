@@ -107,7 +107,7 @@ export default class LocationModule extends createModule(config)
 
         // Return the path just including this module
         return {
-            ancestors: {location: this.getData().id},
+            ancestors: {location: this.getData().ID},
             location: location,
         };
     }
