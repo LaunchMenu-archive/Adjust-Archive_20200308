@@ -91,9 +91,8 @@ export type LocationAncestorContract = {
     parent: LocationAncestorParent;
     child: LocationAncestor;
     data: {
-        role: string; // The role of this ancestor in relation to its parent, e.g. windowChild
         ID: string; // The ID of this location ancestor itself
-        ancestors: LocationAncestorIDs; // The IDs of locationAncestor along the way to the location, including ID of location ancestor itself
+        path: string[]; // The IDs of locationAncestor along the way to the location, including ID of location ancestor itself
     };
 };
 

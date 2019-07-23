@@ -30,16 +30,23 @@ class InstanceModuleProvider extends abstractModuleProvider_1.AbstractModuleProv
     }
     /** @override */
     async getModule(request) {
-        // Make a copy of the request but overwrite the parent
-        const parentProxy = request.parent.createProxy();
-        request = Object.assign({}, request, { parent: parentProxy });
+        // Create a proxy for the parent, and add to the request
+        let parentProxy;
+        // Make sure the request was not for a root
+        if (request.parent) {
+            parentProxy = request.parent.createProxy();
+            request = Object.assign({}, request, { parent: parentProxy });
+        }
         // Create the proxy for the module
         const moduleProxy = this.module.createProxy();
-        // Connect the proxies and add this as a parent
-        moduleProxy.connect(parentProxy);
-        this.module.addParent(parentProxy);
-        // Inform the module of a newly made connection
-        this.connectionListener(parentProxy);
+        // Only connect and inform the module of a connection if a parent was specified
+        if (parentProxy) {
+            // Connect the proxies and add this as a parent
+            moduleProxy.connect(parentProxy);
+            this.module.addParent(parentProxy);
+            // Inform the module of a newly made connection
+            this.connectionListener(parentProxy);
+        }
         // Return the module
         return moduleProxy;
     }

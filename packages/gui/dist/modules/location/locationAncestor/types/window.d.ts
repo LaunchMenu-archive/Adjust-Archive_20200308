@@ -3,6 +3,7 @@ import { ModuleReference } from "@adjust/core";
 import { LocationAncestor } from "../locationAncestor.type";
 import LocationAncestorModule from "../locationAncestor";
 import { LocationPath } from "../../_types/LocationPath";
+import { ModuleLocation } from "../../../../module/_types/ModuleLocation";
 export declare const config: {
     initialState: {
         childLocationAncestor: LocationAncestor;
@@ -19,14 +20,35 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
 }, typeof LocationAncestorModule>;
 export default class WindowModule extends WindowModule_base implements LocationAncestor {
     protected ancestorName: string;
+    protected window: Promise<Electron.BrowserWindow>;
+    /**
+     * Opens the window that this module instance represents
+     * @returns The opened or retrieved window
+     */
+    protected openWindow(): Promise<Electron.BrowserWindow>;
+    /**
+     * Closes the window if it had been opened already
+     */
+    protected closeWindow(): Promise<void>;
     /** @override */
-    onInit(): void;
+    createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */
-    onReloadInit(): void;
+    removeLocation(locationPath: LocationPath): Promise<boolean>;
+    /**
+     * Opens the child location ancestor and returns it
+     * @returns The child location ancestor
+     */
+    protected getChild(): Promise<LocationAncestor>;
     /** @override */
     openModule(module: ModuleReference, location: LocationPath): Promise<LocationPath>;
     /** @override */
     closeModule(module: ModuleReference, location: LocationPath): Promise<boolean>;
+    /** @override */
+    showModule(module: ModuleReference, location: LocationPath): Promise<boolean>;
+    /** @override */
+    setEditMode(edit: boolean): Promise<void>;
+    /** @override */
+    setDropMode(drop: boolean): Promise<void>;
 }
 declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>>>>;
 export declare class WindowView extends WindowView_base {

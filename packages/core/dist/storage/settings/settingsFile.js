@@ -18,6 +18,8 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
     constructor(path, config) {
         super();
         // Store the path
+        if (path_1.default.extname(path) == "js")
+            path = path_1.default.resolve(path_1.default.dirname(path), path_1.default.basename(path));
         if (path_1.default.extname(path) == "")
             path += ".json";
         this.path = path;
@@ -88,7 +90,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
      * Destroys this settings file instance, if there are no more listeners
      */
     destroy() {
-        if (this.listeners["change"].length == 0)
+        if (this.listeners["change"] && this.listeners["change"].length == 0)
             settingsManager_1.SettingsManager.removeSettingsFile(this.path, this);
     }
     // Condition related methods

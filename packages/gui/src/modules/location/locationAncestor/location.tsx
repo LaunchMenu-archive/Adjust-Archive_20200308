@@ -46,7 +46,7 @@ export default class LocationModule extends createModule(config)
             locations: {
                 [locationID]: {
                     path: locationPath,
-                    modules: [module, ...(locData ? locData.modules : null)],
+                    modules: [module, ...(locData ? locData.modules : [])],
                 },
             },
         });
@@ -107,7 +107,7 @@ export default class LocationModule extends createModule(config)
 
         // Return the path just including this module
         return {
-            ancestors: {location: this.getData().ID},
+            nodes: this.getData().path,
             location: location,
         };
     }

@@ -3,7 +3,7 @@ import { SettingsConfig } from "./_types/settingsConfig";
 import { Module } from "../../module/module";
 declare class SettingsManagerSingleton {
     protected settings: {
-        [file: string]: SettingsFile<any>;
+        [file: string]: Promise<SettingsFile<any>>;
     };
     protected dirtySettings: SettingsFile<any>[];
     protected dataPath: string;
@@ -51,11 +51,11 @@ declare class SettingsManagerSingleton {
      * @param settingsFile The instance of the settings file
      * @returns Whether or not the settings file instance was removed
      */
-    removeSettingsFile(path: string, settingsFile: SettingsFile<any>): boolean;
+    removeSettingsFile(path: string, settingsFile: SettingsFile<any>): Promise<boolean>;
     /**
      * Destroys all settings file instances that have no listeners
      */
-    destroySettingsFiles(): void;
+    destroySettingsFiles(): Promise<void>;
     /**
      * Marks a settings file as dirty or 'undirty'
      * @param settingsFile The file to mark as diry

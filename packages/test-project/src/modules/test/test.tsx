@@ -11,8 +11,6 @@ export const config = {
 export default class TestModule extends createModule(config) implements Test {
     /** @override */
     public async onInit() {
-        WindowManager.openWindow("test", this.getID());
-
         this.setState({
             child: await this.request({
                 type: EmbedID,

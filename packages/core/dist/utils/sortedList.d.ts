@@ -7,11 +7,17 @@ export declare class SortedList<T> {
      */
     constructor(sortFunction: (a: T, b: T) => number);
     /**
-     * Either adds a single value or an array of values to the list
-     * @param value The value(s) to add
+     * Adds a single value to the list
+     * @param value The value to add
      * @returns The index that the value was inserted at
      */
-    push(value: T, ...values: T[]): number | number[];
+    push(value: T): number;
+    /**
+     * Adds an array of values to the list
+     * @param values The values to add
+     * @returns The indices that the value were inserted at
+     */
+    push(...values: T[]): number[];
     /**
      * Either removes a single value or an array of values from the list
      * @param value The value(s) to remove, or a function to match values that should be removed

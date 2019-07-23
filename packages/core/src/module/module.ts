@@ -568,7 +568,7 @@ export class Module<
      * @returns A promise that resolves when installation is complete, indicating whether installation happened
      */
     public static async installIfRequired(): Promise<boolean> {
-        // Check if an install is required or whether the mdoule has been isntalled already
+        // Check if an install is required or whether the mdoule has been installed already
         if (!SettingsManager.fileExists(this.getPath())) {
             // Create the settings file once to call all listeners
             await this.getSettingsFile();

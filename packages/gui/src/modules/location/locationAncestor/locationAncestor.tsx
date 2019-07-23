@@ -1,11 +1,11 @@
-import {ClassModuleProvider, ParameterizedModule, ModuleReference} from "@adjust/core";
+import {ClassModuleProvider, createModule as createAdjustCoreModule} from "@adjust/core";
 import {LocationPath} from "../_types/LocationPath";
 import {
     LocationAncestorID,
     LocationAncestor,
     LocationAncestorParent,
 } from "./locationAncestor.type";
-import {createModule} from "../../../module/moduleClassCreator";
+// import {createModule} from "../../../module/moduleClassCreator";
 import {LocationsMoveData} from "../_types/LocationsMoveData";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
 import {LocationAncestorIDs} from "../_types/LocationAncestorIDs";
@@ -20,8 +20,9 @@ export const config = {
 /**
  * A base class for location ancestors to extend,
  * provides some common methods that location ancestors might use
+ * Note that we use adjust core's createModule, since location ancestors shouldn't have any location data themselves
  */
-export default class LocationAncestorModule extends createModule(config)
+export default class LocationAncestorModule extends createAdjustCoreModule(config)
     implements LocationAncestorParent {
     // The name of the ancestor module
     protected ancestorName: string;
@@ -32,21 +33,23 @@ export default class LocationAncestorModule extends createModule(config)
      * @param path The location path to get the ID from
      * @returns the obtained or generated ID as well as the passed or updated path
      */
-    protected getPathID(path: LocationPath): {path: LocationPath; ID: string} {
-        let ID = path.ancestors[this.ancestorName];
+    protected getExtractID(path: LocationPath): {path: LocationPath; ID: string} {
+        let ID = path.nodes[0];
 
         // If no ID is present, generate and store it
         if (!ID) {
             // ID = Math.round(Math.random() * 1e10) + "";
             ID = "default";
-            path = {
-                ancestors: {...path.ancestors, [this.ancestorName]: ID},
-                location: path.location,
-            };
         }
 
         // Return the path and the id
-        return {path, ID};
+        return {
+            path: {
+                ...path,
+                nodes: path.nodes.slice(1),
+            },
+            ID,
+        };
     }
 
     /**
@@ -67,7 +70,7 @@ export default class LocationAncestorModule extends createModule(config)
         inpPath: LocationPath
     ): Promise<{ID: string; path: LocationPath; locationAncestor: LocationAncestor}> {
         // Get the ID to open
-        const {ID, path} = this.getPathID(inpPath);
+        const {ID, path} = this.getExtractID(inpPath);
 
         // Get the ancestor itself
         const locationAncestor = await this.getChildLocationAncestor(ID);
@@ -82,10 +85,15 @@ export default class LocationAncestorModule extends createModule(config)
 
     /**
      * Gets the child location ancestor given a specified location path
-     * @param ID The ID of the child
+     * @param ID The ID of the child, may be left out if the child has the same ID
+     * Leaving it out would result in this instance and child sharing the same ID and path
      * @returns The child ancestor
      */
-    protected async getChildLocationAncestor(ID: string): Promise<LocationAncestor> {
+    protected async getChildLocationAncestor(ID?: string): Promise<LocationAncestor> {
+        // Determine the ID if not present
+        const isNewID = ID != undefined;
+        if (ID == undefined) ID = this.getData().ID;
+
         // Request the location
         const locationAncestor = (await this.request({
             type: LocationAncestorID,
@@ -102,12 +110,10 @@ export default class LocationAncestorModule extends createModule(config)
                 return [provider];
             },
             data: {
-                role: this.ancestorName + "Child",
                 ID: ID,
-                ancestors: {
-                    ...this.getData().ancestors,
-                    [this.ancestorName]: ID,
-                },
+                path: isNewID
+                    ? [...(this.getData().path || []), ID]
+                    : this.getData().path,
             },
         }))[0];
 

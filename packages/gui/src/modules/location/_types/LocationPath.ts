@@ -1,10 +1,9 @@
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
-import {LocationAncestorIDs} from "./LocationAncestorIDs";
 
 /**
  * A type indicationg the location path for a module location
  */
 export type LocationPath = {
-    ancestors: LocationAncestorIDs;
+    nodes: string[]; // The actual path, ordered from root to leave
     location: ModuleLocation; // The actual location that was requested
 };

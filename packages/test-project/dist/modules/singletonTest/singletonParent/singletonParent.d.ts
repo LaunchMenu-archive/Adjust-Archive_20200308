@@ -8,8 +8,14 @@ export declare const config: {
         text: string;
     };
     settings: {};
-    location: {
-        id: string;
+    location: string;
+    defineLocation: {
+        ID: string;
+        hints: {
+            window: {
+                ID: string;
+            };
+        };
     };
     type: import("@adjust/core/types").InterfaceID<import("./singletonParent.type").SingletonParentContract>;
 };
@@ -20,8 +26,14 @@ declare const SingletonParentModule_base: import("@adjust/core/types").ExtendedM
         text: string;
     };
     settings: {};
-    location: {
-        id: string;
+    location: string;
+    defineLocation: {
+        ID: string;
+        hints: {
+            window: {
+                ID: string;
+            };
+        };
     };
     type: import("@adjust/core/types").InterfaceID<import("./singletonParent.type").SingletonParentContract>;
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").Module, import("@adjust/gui").Module>>;

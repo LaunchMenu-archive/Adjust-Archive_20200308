@@ -9,8 +9,14 @@ exports.config = {
         text: "test",
     },
     settings: {},
-    location: {
-        id: "test",
+    location: "test",
+    defineLocation: {
+        ID: "test",
+        hints: {
+            window: {
+                ID: "window1",
+            },
+        },
     },
     type: singletonParent_type_1.SingletonParentID,
 };

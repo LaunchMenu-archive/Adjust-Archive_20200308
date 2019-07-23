@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const FS_1 = require("../../utils/FS");
 const settingsFile_1 = require("./settingsFile");
-const extendedObject_1 = require("../../utils/extendedObject");
 class SettingsManagerSingleton {
     constructor() {
         // All the settings files that are opened (there should only be 1 instance per file)
@@ -88,6 +87,8 @@ class SettingsManagerSingleton {
             moduleClass = path;
             path = moduleClass.getPath();
         }
+        if (path_1.default.extname(path) == "js")
+            path = path_1.default.resolve(path_1.default.dirname(path), path_1.default.basename(path));
         if (path_1.default.extname(path) == "")
             path += ".json";
         // Check if the settings file already existed
@@ -95,10 +96,10 @@ class SettingsManagerSingleton {
             return this.settings[path];
         // If the settingsFile isn't yet present, create it
         if (moduleClass) {
-            return (this.settings[path] = await settingsFile_1.SettingsFile.createInstance(moduleClass));
+            return (this.settings[path] = settingsFile_1.SettingsFile.createInstance(moduleClass));
         }
         else {
-            return (this.settings[path] = await settingsFile_1.SettingsFile.createInstance(path, config));
+            return (this.settings[path] = settingsFile_1.SettingsFile.createInstance(path, config));
         }
     }
     /**
@@ -107,10 +108,12 @@ class SettingsManagerSingleton {
      * @param settingsFile The instance of the settings file
      * @returns Whether or not the settings file instance was removed
      */
-    removeSettingsFile(path, settingsFile) {
+    async removeSettingsFile(path, settingsFile) {
+        if (path_1.default.extname(path) == "js")
+            path = path_1.default.resolve(path_1.default.dirname(path), path_1.default.basename(path));
         if (path_1.default.extname(path) == "")
             path += ".json";
-        if (this.settings[path] && this.settings[path] == settingsFile) {
+        if (this.settings[path] && (await this.settings[path]) == settingsFile) {
             const isDirty = this.dirtySettings.indexOf(settingsFile) === -1;
             if (isDirty)
                 return false;
@@ -122,10 +125,11 @@ class SettingsManagerSingleton {
     /**
      * Destroys all settings file instances that have no listeners
      */
-    destroySettingsFiles() {
-        extendedObject_1.ExtendedObject.forEach(this.settings, (path, settingsFile) => {
-            settingsFile.destroy();
+    async destroySettingsFiles() {
+        const promises = Object.values(this.settings).map(async (settingsFile) => {
+            return (await settingsFile).destroy();
         });
+        await Promise.all(promises);
     }
     /**
      * Marks a settings file as dirty or 'undirty'

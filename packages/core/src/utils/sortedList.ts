@@ -14,26 +14,45 @@ export class SortedList<T> {
     }
 
     /**
-     * Either adds a single value or an array of values to the list
-     * @param value The value(s) to add
+     * Adds a single value to the list
+     * @param value The value to add
      * @returns The index that the value was inserted at
      */
+    public push(value: T): number;
+
+    /**
+     * Adds an array of values to the list
+     * @param values The values to add
+     * @returns The indices that the value were inserted at
+     */
+    public push(...values: T[]): number[];
     public push(value: T, ...values: T[]): number | number[] {
-        if (values.length > 0) {
-            // Push all of the remaining items into the array
-            values.map(v => this.push(v));
-        }
+        // Don't add an undefined value
+        if (value === undefined) return undefined;
+
+        // Keep track of the index it was inserted at
+        let index: number;
 
         // Find the index after which to insert the element
-        for (let i = 0; i < this.array.length; i++) {
+        for (let i = 0; i < this.array.length && index === undefined; i++) {
             if (this.sortFunction(value, this.array[i]) < 0) {
                 // Insert the element
                 this.array.splice(i, 0, value);
-                return i;
+                index = i;
             }
         }
+
         // If no element was found that the value should be inserted in front of, insert at the end
-        this.array.push(value);
+        if (index === undefined) this.array.push(value);
+
+        // Push all of the remaining items into the array
+        if (values.length > 1) {
+            return [index, ...this.push.apply(values)];
+        } else if (values.length == 1) {
+            return [index, this.push(values[0])];
+        }
+
+        return index;
     }
 
     /**

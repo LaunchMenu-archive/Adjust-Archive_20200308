@@ -10,7 +10,6 @@ exports.config = {
 class TestModule extends gui_1.createModule(exports.config) {
     /** @override */
     async onInit() {
-        gui_1.WindowManager.openWindow("test", this.getID());
         this.setState({
             child: await this.request({
                 type: embed_type_1.EmbedID,

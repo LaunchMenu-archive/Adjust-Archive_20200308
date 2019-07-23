@@ -1,5 +1,8 @@
 import { LocationPath } from "../_types/LocationPath";
-import { LocationAncestor } from "./locationAncestor.type";
+import { LocationAncestor, LocationAncestorParent } from "./locationAncestor.type";
+import { LocationsMoveData } from "../_types/LocationsMoveData";
+import { ModuleLocation } from "../../../module/_types/ModuleLocation";
+import { LocationAncestorIDs } from "../_types/LocationAncestorIDs";
 export declare const config: {
     initialState: {};
     settings: {};
@@ -11,31 +14,56 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
     abstract: boolean;
-}, import("@adjust/core/types").ExtendsClass<typeof import("../../..").Module, import("../../..").Module>>;
+}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
+    isStopping: boolean;
+    isStopped: boolean;
+}, {}, import("@adjust/core/types").ModuleInterface>>>;
 /**
  * A base class for location ancestors to extend,
  * provides some common methods that location ancestors might use
+ * Note that we use adjust core's createModule, since location ancestors shouldn't have any location data themselves
  */
-export default class LocationAncestorModule extends LocationAncestorModule_base {
+export default class LocationAncestorModule extends LocationAncestorModule_base implements LocationAncestorParent {
     protected ancestorName: string;
     /**
      * Either gets the next ID from the path, or generates it and stores it in the path
      * @param path The location path to get the ID from
      * @returns the obtained or generated ID as well as the passed or updated path
      */
-    protected getPathID(path: LocationPath): {
+    protected getExtractID(path: LocationPath): {
         path: LocationPath;
-        id: string;
+        ID: string;
     };
+    /**
+     * Extracts the relevant hints for this ancestor from a module locatio;n
+     * @param location The location and its creation hints
+     * @returns Any hints that might have been provided
+     */
+    protected getLocationHints(location: ModuleLocation): object;
     /**
      * Gets the child location ancestor given a specified location path
      * @param inpPath The path to obtain the child by
-     * @returns The id of the child, as well as the child itself
+     * @returns The ID of the child, as well as the child itself
      */
-    protected getChildLocationAncestor(inpPath: LocationPath): Promise<{
-        id: string;
+    protected getChildLocationAncestorFromPath(inpPath: LocationPath): Promise<{
+        ID: string;
         path: LocationPath;
         locationAncestor: LocationAncestor;
     }>;
+    /**
+     * Gets the child location ancestor given a specified location path
+     * @param ID The ID of the child, may be left out if the child has the same ID
+     * Leaving it out would result in this instance and child sharing the same ID and path
+     * @returns The child ancestor
+     */
+    protected getChildLocationAncestor(ID?: string): Promise<LocationAncestor>;
+    /** @override */
+    setLocationsMoveData(data: LocationsMoveData): Promise<boolean>;
+    /** @override */
+    updateLocationsMoveData(data: LocationsMoveData): Promise<boolean>;
+    /** @override */
+    getLocationsMoveData(): Promise<LocationsMoveData>;
+    /** @override */
+    getLocationsAtPath(partialPath: LocationAncestorIDs): Promise<ModuleLocation[]>;
 }
 export {};

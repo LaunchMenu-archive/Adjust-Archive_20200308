@@ -54,19 +54,26 @@ export class InstanceModuleProvider<
     public async getModule(
         request: NormalizedRequest<M>
     ): Promise<M["child"] & PublicModuleMethods> {
-        // Make a copy of the request but overwrite the parent
-        const parentProxy = request.parent.createProxy();
-        request = Object.assign({}, request, {parent: parentProxy});
+        // Create a proxy for the parent, and add to the request
+        let parentProxy;
+        // Make sure the request was not for a root
+        if (request.parent) {
+            parentProxy = request.parent.createProxy();
+            request = Object.assign({}, request, {parent: parentProxy});
+        }
 
         // Create the proxy for the module
         const moduleProxy = this.module.createProxy();
 
-        // Connect the proxies and add this as a parent
-        moduleProxy.connect(parentProxy);
-        this.module.addParent(parentProxy as any);
+        // Only connect and inform the module of a connection if a parent was specified
+        if (parentProxy) {
+            // Connect the proxies and add this as a parent
+            moduleProxy.connect(parentProxy);
+            this.module.addParent(parentProxy as any);
 
-        // Inform the module of a newly made connection
-        this.connectionListener(parentProxy as any);
+            // Inform the module of a newly made connection
+            this.connectionListener(parentProxy as any);
+        }
 
         // Return the module
         return moduleProxy as any;

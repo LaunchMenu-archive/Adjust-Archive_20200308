@@ -38,6 +38,8 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         super();
 
         // Store the path
+        if (Path.extname(path) == "js")
+            path = Path.resolve(Path.dirname(path), Path.basename(path));
         if (Path.extname(path) == "") path += ".json";
         this.path = path;
 
@@ -133,7 +135,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
      * Destroys this settings file instance, if there are no more listeners
      */
     public destroy(): void {
-        if (this.listeners["change"].length == 0)
+        if (this.listeners["change"] && this.listeners["change"].length == 0)
             SettingsManager.removeSettingsFile(this.path, this);
     }
 
@@ -341,6 +343,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
             // Create a sorted list and store all the settings in it
             const getPriority = (condition: SettingsConditions) =>
                 condition == null ? 0 : condition.getPriority();
+
             const settings: ConditionalSettingsDataList<SettingsData<S>> = new SortedList(
                 (a, b) => getPriority(b.condition) - getPriority(a.condition)
             );

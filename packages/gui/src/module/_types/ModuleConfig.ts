@@ -16,6 +16,8 @@ export type ModuleConfig<
 > = AdjustModuleConfig<S, C, I> & {
     // Allows new locations to be defined upon install
     defineLocation?: ModuleLocation;
+    // Define the location it should take in a cleaner way than through settings
+    location?: string | string[];
 };
 
 /**

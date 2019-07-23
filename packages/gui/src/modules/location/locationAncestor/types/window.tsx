@@ -6,7 +6,7 @@ import {createModule} from "../../../../module/moduleClassCreator";
 import LocationAncestorModule from "../locationAncestor";
 import {LocationPath} from "../../_types/LocationPath";
 import {React} from "../../../../React";
-import {ModuleLocation} from "src/module/_types/ModuleLocation";
+import {ModuleLocation} from "../../../../module/_types/ModuleLocation";
 
 export const config = {
     initialState: {
@@ -62,22 +62,26 @@ export default class WindowModule extends createModule(config, LocationAncestorM
 
     // Location management
     /** @override */
-    public async createLocation(location: ModuleLocation): Promise<LocationPath> {}
+    public async createLocation(location: ModuleLocation): Promise<LocationPath> {
+        const child = await this.getChild();
+        return child.createLocation(location);
+    }
 
     /** @override */
-    public async removeLocation(locationPath: LocationPath): Promise<boolean> {}
+    public async removeLocation(locationPath: LocationPath): Promise<boolean> {
+        const child = await this.getChild();
+        return child.removeLocation(locationPath);
+    }
 
     /**
-     * Opens the child location ancestor given a location path
-     * @param location
+     * Opens the child location ancestor and returns it
+     * @returns The child location ancestor
      */
-    protected async getChild(location: LocationPath): Promise<LocationAncestor> {
+    protected async getChild(): Promise<LocationAncestor> {
         // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor
-            const locationAncestor = await this.getChildLocationAncestor(
-                this.getData().ID
-            );
+            const locationAncestor = await this.getChildLocationAncestor();
 
             // Store child location ancestor
             this.setState({
@@ -93,6 +97,9 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         module: ModuleReference,
         location: LocationPath
     ): Promise<LocationPath> {
+        // Open the actual window
+        this.openWindow();
+
         // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor

@@ -86,10 +86,10 @@ export default class LocationManagerModule
             const data = this.settings.locations[location];
             return data && data.path
                 ? data.path
-                : {ancestors: {}, location: {ID: location, hints: {}}};
+                : {nodes: [], location: {ID: location, hints: {}}};
         } else {
             const data = this.settings.locations[location.ID];
-            return data && data.path ? data.path : {ancestors: {}, location: location};
+            return data && data.path ? data.path : {nodes: [], location: location};
         }
     }
 
@@ -119,7 +119,7 @@ export default class LocationManagerModule
 
         if (!locationAncestor) {
             // Get the child location ancestor
-            const locationAncestor = await this.getChildLocationAncestor(ancestorID);
+            locationAncestor = await this.getChildLocationAncestor(ancestorID);
 
             // Update the state to contain this location ancestor
             this.setState({
@@ -141,7 +141,7 @@ export default class LocationManagerModule
             const storedPath = this.getLocationPath(location);
 
             // Obtain the locationAncestor
-            let {ID, path} = this.getPathID(storedPath);
+            let {ID, path} = this.getExtractID(storedPath);
             const oldLocationAncestor = await this.getAncestor(ID);
 
             // Remove the location from this ancestor
@@ -155,7 +155,7 @@ export default class LocationManagerModule
             const hints = this.getLocationHints(location);
             if ("sameAs" in hints) {
                 const path = this.getLocationPath(hints["sameAs"]);
-                windowID = path.ancestors[this.ancestorName];
+                windowID = path.nodes[0];
             } else if ("ID" in hints) {
                 windowID = hints["ID"];
             }
@@ -165,8 +165,9 @@ export default class LocationManagerModule
             // Obtain the ancestor
             const locationAncestor = await this.getAncestor(windowID);
 
-            // Create the new location
-            locationAncestor.createLocation(location);
+            // Create the new location path, and store it
+            const locationPath = await locationAncestor.createLocation(location);
+            this.updateLocationPath(locationPath);
         }
 
         // Reopen the modules from this location
@@ -175,6 +176,7 @@ export default class LocationManagerModule
             this.openModule(moduleReference, location.ID)
         );
         await Promise.all(promises);
+        console.log(this.settings.locations);
     }
 
     /** @override */
@@ -207,7 +209,7 @@ export default class LocationManagerModule
                 if (current.modules.length == 0) {
                     // Retrieve the location path and obtain the locationAncestor
                     const storedPath = this.getLocationPath(oldLocationID);
-                    const {ID} = this.getPathID(storedPath);
+                    const {ID} = this.getExtractID(storedPath);
                     const locationAncestor = await this.getAncestor(ID);
 
                     // Remove the location
@@ -227,7 +229,7 @@ export default class LocationManagerModule
                 ...this.settings.locations,
                 [newLocationID]: {
                     path: current && current.path,
-                    modules: [...(current && current.modules), settingsDataID],
+                    modules: [...((current && current.modules) || []), settingsDataID],
                 },
             });
         });
@@ -331,7 +333,8 @@ export default class LocationManagerModule
         const storedPath = this.getLocationPath(location);
 
         // Obtain the locationAncestor
-        const {ID, path} = this.getPathID(storedPath);
+        const {ID, path} = this.getExtractID(storedPath);
+        console.log(location, "open", storedPath, ID, path);
         const locationAncestor = await this.getAncestor(ID);
 
         // Open the path in the location ancestor
@@ -351,6 +354,7 @@ export default class LocationManagerModule
                 },
             },
         });
+        debugger;
     }
 
     /** @override */

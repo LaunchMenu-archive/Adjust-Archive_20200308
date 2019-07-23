@@ -4,7 +4,6 @@ import {
 } from "@adjust/core";
 import {ExtendsClass, ModuleInterface, ExtendedModuleClass} from "@adjust/core/types";
 import {Module} from "./module";
-import {ModuleLocation} from "./_types/ModuleLocation";
 import {ParameterizedModuleConfig} from "./_types/ModuleConfig";
 import {Registry} from "../registry/registry";
 import {LocationManagerID} from "../modules/location/locationManager.type";
@@ -13,7 +12,7 @@ import {LocationManagerID} from "../modules/location/locationManager.type";
 export class ModuleClassCreator extends AdjustModuleClassCreator {
     /** @override */
     public static createModule<
-        MC extends ParameterizedModuleConfig & {location?: ModuleLocation},
+        MC extends ParameterizedModuleConfig,
         // Can't use Module<{}, {}, any> instead of {}, due to it expecting private members
         X extends ExtendsClass<typeof AdjustModule, {}> = ExtendsClass<
             typeof Module,
@@ -22,12 +21,6 @@ export class ModuleClassCreator extends AdjustModuleClassCreator {
     >(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X> {
         // Set the module class to the default module if not specified
         if (!moduleClass) moduleClass = Module as any;
-
-        // If a module location is provided, assign it to the settings
-        if (config.location)
-            (config.settings as any).location = {
-                default: config.location,
-            };
 
         // Add location definition to the install method if present
         if (config.defineLocation) {
@@ -42,7 +35,15 @@ export class ModuleClassCreator extends AdjustModuleClassCreator {
                 // Call the original install function
                 if (install) return install();
             };
+
+            if (!config.location) config.location = config.defineLocation.ID;
         }
+
+        // If a module location is provided, assign it to the settings
+        if (config.location)
+            (config.settings as any).location = {
+                default: config.location,
+            };
 
         // Call the method as per usual
         return super.createModule(config, moduleClass);

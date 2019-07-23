@@ -22,22 +22,74 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         // The name of this ancestor type to be used in the location path and hints
         this.ancestorName = "window";
     }
+    // /** @override */
+    // public async onInit(): Promise<void> {
+    //     // Open the window when it is requested
+    //     WindowManager.openWindow(this.getData().id, this.getID());
+    // }
+    // /** @override */
+    // public async onReloadInit(): Promise<void> {
+    //     // Open the window when it is requested
+    //     WindowManager.openWindow(this.getData().id, this.getID());
+    // }
+    // Window management
+    /**
+     * Opens the window that this module instance represents
+     * @returns The opened or retrieved window
+     */
+    async openWindow() {
+        if (this.window)
+            return this.window;
+        return (this.window = core_2.WindowManager.openWindow(this.getData().ID, this.getID()));
+    }
+    /**
+     * Closes the window if it had been opened already
+     */
+    async closeWindow() {
+        // Check if the window has been opened
+        if (this.window) {
+            const window = await this.window;
+            // Close the window
+            window.close();
+            this.window = null;
+        }
+    }
+    // Location management
     /** @override */
-    onInit() {
-        // Open the window when it is requested
-        core_2.WindowManager.openWindow(this.getData().id, this.getID());
+    async createLocation(location) {
+        const child = await this.getChild();
+        return child.createLocation(location);
     }
     /** @override */
-    onReloadInit() {
-        // Open the window when it is requested
-        core_2.WindowManager.openWindow(this.getData().id, this.getID());
+    async removeLocation(locationPath) {
+        const child = await this.getChild();
+        return child.removeLocation(locationPath);
     }
-    /** @override */
-    async openModule(module, location) {
+    /**
+     * Opens the child location ancestor and returns it
+     * @returns The child location ancestor
+     */
+    async getChild() {
         // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor
-            const { locationAncestor, path } = await this.getChildLocationAncestor(location);
+            const locationAncestor = await this.getChildLocationAncestor();
+            // Store child location ancestor
+            this.setState({
+                childLocationAncestor: locationAncestor,
+            });
+        }
+        return this.state.childLocationAncestor;
+    }
+    // Module management
+    /** @override */
+    async openModule(module, location) {
+        // Open the actual window
+        this.openWindow();
+        // If this module has no child location ancestor yet, obtain it
+        if (!this.state.childLocationAncestor) {
+            // Get child location ancestor
+            const { locationAncestor, path } = await this.getChildLocationAncestorFromPath(location);
             // Store child location ancestor
             this.setState({
                 childLocationAncestor: locationAncestor,
@@ -54,6 +106,15 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     async closeModule(module, location) {
         return false;
     }
+    /** @override */
+    async showModule(module, location) {
+        return false;
+    }
+    // Edit magement
+    /** @override */
+    async setEditMode(edit) { }
+    /** @override */
+    async setDropMode(drop) { }
 }
 exports.default = WindowModule;
 class WindowView extends core_2.createModuleView(WindowModule) {
