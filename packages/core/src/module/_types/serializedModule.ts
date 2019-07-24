@@ -9,7 +9,7 @@ export type SerializedModule = {
         request: {
             requestPath: string;
             parent: string;
-            data: Json;
+            data: {[key: string]: Json};
             openView?: boolean;
         };
         parents: string[];

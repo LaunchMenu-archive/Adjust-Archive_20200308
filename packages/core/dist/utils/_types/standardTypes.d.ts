@@ -20,6 +20,9 @@ export declare type IfRequired<K extends string, O extends object, T extends any
 export declare type ExtendsClass<K, X = void> = Omit<K, "new" | "prototype"> & (X extends void ? any : Constructor<X>);
 export declare type Json = null | string | boolean | number | {
     [key: string]: Json;
+} | {
+    length: number;
+    [key: number]: Json;
 };
 export declare type Valueof<T> = T[keyof T];
 export declare type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;

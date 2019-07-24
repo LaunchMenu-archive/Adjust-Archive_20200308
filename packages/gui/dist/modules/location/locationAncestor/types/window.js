@@ -9,6 +9,7 @@ const locationAncestor_type_1 = require("../locationAncestor.type");
 const moduleClassCreator_1 = require("../../../../module/moduleClassCreator");
 const locationAncestor_1 = __importDefault(require("../locationAncestor"));
 const React_1 = require("../../../../React");
+const locationManager_type_1 = require("../../locationManager.type");
 exports.config = {
     initialState: {
         childLocationAncestor: null,
@@ -22,16 +23,6 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         // The name of this ancestor type to be used in the location path and hints
         this.ancestorName = "window";
     }
-    // /** @override */
-    // public async onInit(): Promise<void> {
-    //     // Open the window when it is requested
-    //     WindowManager.openWindow(this.getData().id, this.getID());
-    // }
-    // /** @override */
-    // public async onReloadInit(): Promise<void> {
-    //     // Open the window when it is requested
-    //     WindowManager.openWindow(this.getData().id, this.getID());
-    // }
     // Window management
     /**
      * Opens the window that this module instance represents
@@ -73,34 +64,23 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor
-            const locationAncestor = await this.getChildLocationAncestor();
+            const locationAncestor = this.getChildLocationAncestor();
             // Store child location ancestor
             this.setState({
                 childLocationAncestor: locationAncestor,
             });
         }
-        return this.state.childLocationAncestor;
+        return await this.state.childLocationAncestor;
     }
     // Module management
     /** @override */
     async openModule(module, location) {
         // Open the actual window
         this.openWindow();
-        // If this module has no child location ancestor yet, obtain it
-        if (!this.state.childLocationAncestor) {
-            // Get child location ancestor
-            const { locationAncestor, path } = await this.getChildLocationAncestorFromPath(location);
-            // Store child location ancestor
-            this.setState({
-                childLocationAncestor: locationAncestor,
-            });
-            // Open the module in this location with the potentially newly made path
-            return this.state.childLocationAncestor.openModule(module, path);
-        }
-        else {
-            // Open the module in this location
-            return this.state.childLocationAncestor.openModule(module, location);
-        }
+        // Obtain the child ancestor
+        const child = await this.getChild();
+        // Forward opening the module to the child
+        return child.openModule(module, location);
     }
     /** @override */
     async closeModule(module, location) {
@@ -112,12 +92,36 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     }
     // Edit magement
     /** @override */
-    async setEditMode(edit) { }
+    async setEditMode(edit) {
+        if (this.state.childLocationAncestor) {
+            const child = await this.getChild();
+            child.setEditMode(edit);
+        }
+    }
     /** @override */
-    async setDropMode(drop) { }
+    async setDropMode(drop) {
+        if (this.state.childLocationAncestor) {
+            const child = await this.getChild();
+            child.setDropMode(drop);
+        }
+    }
+    // Testing TODO: remove this
+    async setEdit() {
+        const LM = await this.request({ type: locationManager_type_1.LocationManagerID });
+        LM.setEditMode(true);
+    }
 }
 exports.default = WindowModule;
 class WindowView extends core_2.createModuleView(WindowModule) {
+    /**@override */
+    componentWillMount() {
+        super.componentWillMount();
+        document.addEventListener("keyup", e => {
+            if (e.key == "e") {
+                this.module.setEdit();
+            }
+        });
+    }
     /**
      * Renders the header with the window's controls
      */
@@ -125,7 +129,8 @@ class WindowView extends core_2.createModuleView(WindowModule) {
         return (React_1.React.createElement(core_1.Grid, { container: true, direction: "row-reverse" },
             React_1.React.createElement(core_1.Grid, { item: true },
                 React_1.React.createElement(core_1.Button, null,
-                    React_1.React.createElement(icons_1.Close, null)))));
+                    React_1.React.createElement(icons_1.Close, null))),
+            React_1.React.createElement(core_1.Grid, { item: true }, this.data.ID)));
     }
     /**@override */
     renderView() {

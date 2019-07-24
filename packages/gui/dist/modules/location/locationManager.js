@@ -133,7 +133,6 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         const modules = this.getModulesAtLocation(location.ID);
         const promises = modules.map(moduleReference => this.openModule(moduleReference, location.ID));
         await Promise.all(promises);
-        console.log(this.settings.locations);
     }
     /** @override */
     async updateModuleLocation(settingsDataID, newLocationIDs, oldLocationIDs) {
@@ -151,7 +150,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
             if (current) {
                 this.settingsObject.set.locations(Object.assign({}, this.settings.locations, { [oldLocationID]: {
                         path: current.path,
-                        modules: current.modules.filter(ms => !ms.equals(settingsDataID)),
+                        modules: current.modules.filter(ms => !settingsDataID.equals(ms)),
                     } }));
                 // Check if there are still modules at this location, if not, remove it
                 current = this.settings.locations[oldLocationID];
@@ -174,7 +173,12 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
             let current = this.settings.locations[newLocationID];
             this.settingsObject.set.locations(Object.assign({}, this.settings.locations, { [newLocationID]: {
                     path: current && current.path,
-                    modules: [...((current && current.modules) || []), settingsDataID],
+                    modules: [
+                        // Keep everything that is not the new ID to prevent duplicates
+                        ...((current && current.modules) || []).filter(ms => !settingsDataID.equals(ms)),
+                        // Add the new ID
+                        settingsDataID,
+                    ],
                 } }));
         });
     }
@@ -255,7 +259,6 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         const storedPath = this.getLocationPath(location);
         // Obtain the locationAncestor
         const { ID, path } = this.getExtractID(storedPath);
-        console.log(location, "open", storedPath, ID, path);
         const locationAncestor = await this.getAncestor(ID);
         // Open the path in the location ancestor
         const obtainedPath = await locationAncestor.openModule(module, path);
@@ -272,7 +275,6 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
                 },
             },
         });
-        debugger;
     }
     /** @override */
     async closeModule(module, location) {

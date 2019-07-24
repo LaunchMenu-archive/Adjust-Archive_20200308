@@ -1,6 +1,9 @@
 import {Json} from "../utils/_types/standardTypes";
 import {ProgramState} from "./programState";
-import {SerializeableData} from "../utils/_types/serializeableData";
+import {
+    SerializeableData,
+    AsyncSerializeableData,
+} from "../utils/_types/serializeableData";
 import {Data} from "../storage/data";
 import {Serialize} from "../utils/serialize";
 import {ModuleProxy} from "../module/moduleProxy";
@@ -8,12 +11,18 @@ import {ParameterizedModule} from "../module/module";
 
 export class StateData<
     S extends {
-        [key: string]: SerializeableData;
+        [key: string]: AsyncSerializeableData | Promise<AsyncSerializeableData>;
     }
 > extends Data<S> {
-    /**@override  */
-    public serialize(): Json {
-        return Serialize.serialize(this.get as SerializeableData);
+    /**
+     * Serializes the data in order to store it
+     * @param asyncCallback A callback for any promises within the data that could resolve
+     * @returns The data of the module
+     */
+    public serialize(
+        asyncCallback: (path: string, value: AsyncSerializeableData) => void = () => {}
+    ): Json {
+        return Serialize.serialize(this.get as SerializeableData, asyncCallback);
     }
 
     /**

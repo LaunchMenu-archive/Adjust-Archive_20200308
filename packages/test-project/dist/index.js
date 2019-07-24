@@ -11,6 +11,7 @@ const singletonParent_type_1 = require("./modules/singletonTest/singletonParent/
 (async () => {
     await gui_1.Registry.loadDefaultClassModuleProviders();
     await gui_1.Registry.loadClassModuleProviders();
+    console.log("start");
     let test = 3;
     if (test == 1) {
         //TODO: reject interfaces that require a parent as the root
@@ -29,7 +30,7 @@ const singletonParent_type_1 = require("./modules/singletonTest/singletonParent/
         await gui_1.Registry.createRoot({
             type: singletonParent_type_1.SingletonParentID,
             openView: true,
-            data: { count: 4 },
+            data: { count: 1 },
         });
         gui_1.Registry.createRoot({ type: test_type_1.TestID, openView: true }).then(root => {
             setTimeout(() => {

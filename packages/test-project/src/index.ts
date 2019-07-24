@@ -16,6 +16,7 @@ import {SingletonParentID} from "./modules/singletonTest/singletonParent/singlet
     await Registry.loadDefaultClassModuleProviders();
     await Registry.loadClassModuleProviders();
 
+    console.log("start");
     let test = 3;
 
     if (test == 1) {
@@ -33,7 +34,7 @@ import {SingletonParentID} from "./modules/singletonTest/singletonParent/singlet
         await Registry.createRoot({
             type: SingletonParentID,
             openView: true,
-            data: {count: 4},
+            data: {count: 1},
         });
         Registry.createRoot({type: TestID, openView: true}).then(root => {
             setTimeout(() => {

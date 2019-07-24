@@ -44,8 +44,8 @@ exports.baseConfig = {
  */
 class Module extends core_1.createModule(exports.baseConfig) {
     /** @override */
-    async init() {
-        await super.init();
+    async init(fromReload) {
+        await super.init(fromReload);
         // Open the module if it's requested to do so
         if (this.getRequest().openView)
             this.openView();

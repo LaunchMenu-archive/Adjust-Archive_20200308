@@ -118,6 +118,8 @@ class LocationModule extends core_1.createModule(exports.config) {
 exports.default = LocationModule;
 class LocationView extends core_1.createModuleView(LocationModule) {
     renderView() {
+        if (this.state.editMode)
+            return React_1.React.createElement("div", null, "Shiit");
         return React_1.React.createElement("div", null, this.state.modules[0]);
     }
 }

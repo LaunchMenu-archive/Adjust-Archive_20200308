@@ -420,7 +420,7 @@ class ExtendedObject extends Object {
         // Go through all the fields in the model
         this.forEach(copyModel, (key, value) => {
             // Check whether the value is a plain object, or an end point
-            if (!value || value.__proto__ != Object.prototype) {
+            if (value == undefined || value.__proto__ != Object.prototype) {
                 // Get the actual value from the source
                 value = src[key];
                 // Check whether to store the value

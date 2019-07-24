@@ -1,4 +1,4 @@
-import {dummyInterfaceID} from "./dummyModules.helper";
+import {dummyInterfaceID, dummyInterfaceID2} from "./dummyModules.helper";
 import {createModule} from "../moduleClassCreator";
 import {createModuleView} from "../moduleViewClassCreator";
 
@@ -10,7 +10,7 @@ const config = {
     settings: {
         val: {default: 3, type: "number"},
     },
-    type: dummyInterfaceID,
+    type: dummyInterfaceID2,
 };
 
 // Note that a lot of these 'test' are typescript tests to check how intellisense deals with stuff, not runtime tests
@@ -52,7 +52,7 @@ describe("ModuleViewClassCreator", () => {
                     this.setState({stuff: 3});
 
                     /* Can use settings from state (intellisense doesn't work because of contravariances...) */
-                    this.setState((state: any) => ({stuff: state._settings.val}));
+                    this.setState((state: any) => ({stuff: state["~settings"].val}));
                 }
                 componentDidCatch = () => {};
                 protected renderView(): JSX.Element {
@@ -71,6 +71,8 @@ describe("ModuleViewClassCreator", () => {
         it("Should be able to be used to extend any moduleView class", () => {
             class SomeModuleView extends createModuleView(SomeModule, {stuff: 3}) {
                 doSomething(): string {
+                    this.data.shit;
+                    // this.data.crap; // Errors since crap doesn't exist on request data
                     return "test";
                 }
                 doSomethingElse() {}

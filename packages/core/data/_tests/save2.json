@@ -1,21 +1,21 @@
 [
     {
-        "condition": "target => {\r\n            return target.getClass() != null; // Should always be true also\r\n        }",
-        "priority": 2,
-        "ID": 2,
-        "data": {
-            "b": {
-                "c": "test3"
-            }
-        }
-    },
-    {
         "condition": "() => true",
         "priority": 2,
         "ID": 1,
         "data": {
             "b": {
                 "c": "test2"
+            }
+        }
+    },
+    {
+        "condition": "target => {\r\n            return target.getClass() != null; // Should always be true also\r\n        }",
+        "priority": 2,
+        "ID": 2,
+        "data": {
+            "b": {
+                "c": "test3"
             }
         }
     },

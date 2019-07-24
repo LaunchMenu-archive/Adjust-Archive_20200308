@@ -12,6 +12,8 @@ import {ExtractModuleState} from "./extendedModule";
 import {Settings} from "../../storage/settings/settings";
 import {ModuleViewProps} from "./moduleViewProps";
 import {ModuleViewState} from "./moduleViewState";
+import {ModuleInterface} from "./moduleInterface";
+import {ModuleRequestData} from "./moduleRequestData";
 
 /**
  * Extracts the settingsConfig type from a given module
@@ -21,11 +23,22 @@ export type ExtractModuleSettingsConfig<
 > = M["settingsObject"] extends Settings<infer C> ? C : never;
 
 /**
+ * Extracts the request data type from a given module
+ */
+export type ExtractModuleData<M extends {type: ModuleInterface}> = ModuleRequestData<
+    M["type"]
+> extends {
+    data: infer D;
+}
+    ? D
+    : undefined;
+
+/**
  * Extracts the assignable state type from a given module view
  */
 export type ExtractModuleViewState<
     V extends {state: any}
-> = V["state"] extends ModuleViewState<infer S, any> ? S : void;
+> = V["state"] extends ModuleViewState<infer S, any, any> ? S : void;
 
 /**
  * Filters out any methods from a module view that should be overwritten
@@ -50,7 +63,8 @@ export type ExtendedModuleView<
                           ExtractModuleViewState<V> &
                           ModuleViewState<
                               S & ExtractModuleState<M>,
-                              ExtractModuleSettingsConfig<M>
+                              ExtractModuleSettingsConfig<M>,
+                              ExtractModuleData<M>
                           >
                   >,
                   props: ModuleViewProps<M>
@@ -59,8 +73,12 @@ export type ExtendedModuleView<
         callback?: () => any
     ): void;
 } & V &
-    FilterModuleView<
-        ModuleView<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>, M>
+    // FilterModuleView<ModuleView<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>, M>>
+    ModuleView<
+        S & ExtractModuleState<M>,
+        ExtractModuleSettingsConfig<M>,
+        M,
+        ExtractModuleData<M>
     >;
 
 /**

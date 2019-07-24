@@ -1,8 +1,4 @@
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
 const data_1 = require("../data");
 const settingsManager_1 = require("./settingsManager");
 const settingsConditions_1 = require("./settingsConditions");
@@ -18,10 +14,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
     constructor(path, config) {
         super();
         // Store the path
-        if (path_1.default.extname(path) == "js")
-            path = path_1.default.resolve(path_1.default.dirname(path), path_1.default.basename(path));
-        if (path_1.default.extname(path) == "")
-            path += ".json";
+        path = settingsManager_1.SettingsManager.normalizeExtension(path);
         this.path = path;
         this.config = config;
         // Store the structure
@@ -44,7 +37,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         const settingsFile = new this(path, config);
         settingsFile.moduleClass = moduleClass;
         // Only the provided data will be used if no data is stored yet
-        await settingsFile.reload([
+        await settingsFile.reload(() => [
             {
                 condition: undefined,
                 priority: 0,
@@ -101,7 +94,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
      */
     getCondition(ID) {
         if (typeof ID == "object")
-            ID = ID.ID;
+            ID = ID.settingsID;
         const set = this.settings.get().find(set => set.ID == ID);
         return set && set.condition;
     }
@@ -188,10 +181,12 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
      * @param condition The condition of the changed data
      * @param changedProps The changed properties
      * @param previousProps The values that the properties had before
+     * @param fromLoad Whether the value changed by loading it the first time this session
      */
-    async valueChange(condition, changedProps, previousProps) {
-        // Indicate that the file is dirty now
-        this.setDirty(true);
+    async valueChange(condition, changedProps, previousProps, fromLoad = false) {
+        if (!fromLoad)
+            // Indicate that the file is dirty now
+            this.setDirty(true);
         // Call all listeners
         const promises = [];
         extendedObject_1.ExtendedObject.forEachPaired([changedProps, previousProps, this.config], 
@@ -199,7 +194,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         (key, [newValue, oldValue, config], path) => {
             // If the config described a change event, fire it and add it to promises to wait for
             if (config.onChange)
-                promises.push(config.onChange(newValue, condition, oldValue, this));
+                promises.push(config.onChange(newValue, condition, oldValue, this, fromLoad));
             // Emit the change event, and add it to promises to wait for
             promises.push(this.emitAsync("change", path, newValue, condition, oldValue));
         }, 
@@ -226,10 +221,10 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
     }
     /**
      * Reloads the settings as are present in the stored file
-     * @param initialSettings The settings to load if no file is present
+     * @param getInitialSettings A getter for the settings to load if no file is present
      * @returns A promise that resolves once all events have resolved
      */
-    async reload(initialSettings) {
+    async reload(getInitialSettings) {
         // TODO: Only fire events of values that actually changed, and track their previous values
         // Load the previously stored data if present
         const storedData = settingsManager_1.SettingsManager.loadFile(this.path);
@@ -257,17 +252,17 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
             if (storedData)
                 this.settings = getSettings(storedData);
             else
-                this.settings = getSettings(initialSettings);
+                this.settings = getSettings(getInitialSettings());
         }
         catch (e) {
             console.error("Something went wrong while loading the settings", e);
-            this.settings = getSettings(initialSettings);
+            this.settings = getSettings(getInitialSettings());
             // TODO: store backup of settings before they are overwritten by defaults
         }
         // Emit change events for all settings
-        const promises = this.settings.map(settings => this.valueChange(settings.condition, settings.data.get, undefined));
-        await Promise.all(promises);
         this.setDirty(false);
+        const promises = this.settings.map(settings => this.valueChange(settings.condition, settings.data.get, undefined, true));
+        await Promise.all(promises);
     }
     /**
      * Changes whether or not this file is dirty

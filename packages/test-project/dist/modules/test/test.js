@@ -3,8 +3,17 @@ const gui_1 = require("@adjust/gui");
 const test_type_1 = require("./test.type");
 const embed_type_1 = require("../embed/embed.type");
 exports.config = {
-    initialState: { stuff: "test", child: undefined },
-    settings: {},
+    initialState: {
+        stuff: "test",
+        child: undefined,
+        somethingAsync: undefined,
+    },
+    settings: {
+        stuff: {
+            default: false,
+            type: "boolean",
+        },
+    },
     type: test_type_1.TestID,
 };
 class TestModule extends gui_1.createModule(exports.config) {
@@ -34,6 +43,12 @@ class TestModule extends gui_1.createModule(exports.config) {
         if (this.state.child)
             this.state.child.close();
     }
+    setStuff() {
+        this.settingsObject.set.stuff(true);
+        this.setState({
+            somethingAsync: new Promise(res => setTimeout(() => res(10), 1000)),
+        });
+    }
 }
 exports.default = TestModule;
 class TestView extends gui_1.createModuleView(TestModule) {
@@ -46,7 +61,12 @@ class TestView extends gui_1.createModuleView(TestModule) {
             gui_1.React.createElement("br", null),
             this.state.child,
             gui_1.React.createElement("button", { onClick: e => this.module.changeChildText() }, "Change child text"),
-            gui_1.React.createElement("button", { onClick: e => this.module.closeChild() }, "Close child")));
+            gui_1.React.createElement("button", { onClick: e => this.module.closeChild() }, "Close child"),
+            gui_1.React.createElement("button", { onClick: e => this.module.setStuff() },
+                "Stuff is ",
+                this.settings.stuff + " ",
+                " ",
+                this.state.somethingAsync)));
     }
 }
 exports.TestView = TestView;

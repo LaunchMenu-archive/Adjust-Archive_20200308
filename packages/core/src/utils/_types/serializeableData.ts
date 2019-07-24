@@ -16,5 +16,24 @@ export type SerializeableData =
           [key: string]: SerializeableData;
       }
     | {
+          length: number;
           [key: number]: SerializeableData;
+      };
+
+/**
+ * Data that can be serialized to json, when including a promise callback
+ */
+export type AsyncSerializeableData =
+    | ParameterizedModule
+    | PublicModuleMethods
+    | ModuleReference
+    | string
+    | boolean
+    | number
+    | {
+          [key: string]: AsyncSerializeableData | Promise<AsyncSerializeableData>;
+      }
+    | {
+          length: number;
+          [key: number]: AsyncSerializeableData | Promise<AsyncSerializeableData>;
       };

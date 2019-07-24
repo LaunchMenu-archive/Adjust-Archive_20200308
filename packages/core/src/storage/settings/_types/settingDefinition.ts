@@ -13,7 +13,8 @@ export type SettingDefinition<V> = {
         value: any,
         condition: SettingsConditions,
         oldValue: any,
-        settings: ParameterizedSettingsFile
+        settings: ParameterizedSettingsFile,
+        fromLoad: boolean
     ) => void | Promise<void>;
 };
 

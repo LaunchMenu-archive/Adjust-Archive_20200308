@@ -25,8 +25,14 @@ export class SortedList<T> {
      * @param values The values to add
      * @returns The indices that the value were inserted at
      */
-    public push(...values: T[]): number[];
-    public push(value: T, ...values: T[]): number | number[] {
+    public push(...values: T[]);
+    public push(value: T): number | void {
+        // If multiple values were passed
+        if (arguments.length > 1) {
+            [...arguments].forEach(value => this.push(value));
+            return;
+        }
+
         // Don't add an undefined value
         if (value === undefined) return undefined;
 
@@ -44,13 +50,6 @@ export class SortedList<T> {
 
         // If no element was found that the value should be inserted in front of, insert at the end
         if (index === undefined) this.array.push(value);
-
-        // Push all of the remaining items into the array
-        if (values.length > 1) {
-            return [index, ...this.push.apply(values)];
-        } else if (values.length == 1) {
-            return [index, this.push(values[0])];
-        }
 
         return index;
     }

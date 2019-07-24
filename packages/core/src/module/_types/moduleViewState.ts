@@ -5,8 +5,13 @@ import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
 /**
  * A base interface for the react state of the view
  */
-export type ModuleViewState<S extends ModuleState, C extends SettingsConfig> = S & {
+export type ModuleViewState<
+    S extends ModuleState,
+    C extends SettingsConfig,
+    D extends any
+> = S & {
     "~settings": SettingsData<C>;
+    "~data": D;
 };
 
 /**
@@ -14,5 +19,6 @@ export type ModuleViewState<S extends ModuleState, C extends SettingsConfig> = S
  */
 export type ParameterizedModuleViewState<
     S extends ModuleState = ModuleState,
-    C extends SettingsConfig = SettingsConfig
-> = ModuleViewState<S, C>;
+    C extends SettingsConfig = SettingsConfig,
+    D extends any = undefined
+> = ModuleViewState<S, C, D>;

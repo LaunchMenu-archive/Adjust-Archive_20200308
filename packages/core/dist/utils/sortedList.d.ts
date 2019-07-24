@@ -17,7 +17,7 @@ export declare class SortedList<T> {
      * @param values The values to add
      * @returns The indices that the value were inserted at
      */
-    push(...values: T[]): number[];
+    push(...values: T[]): any;
     /**
      * Either removes a single value or an array of values from the list
      * @param value The value(s) to remove, or a function to match values that should be removed

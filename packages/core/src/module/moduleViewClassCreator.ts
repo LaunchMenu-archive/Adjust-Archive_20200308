@@ -29,7 +29,7 @@ export class ModuleViewClassCreator {
         // Can't use ModuleView<{}, {}, ParameterizedModule> instead of {}, due to it expecting private members
         V extends ExtendsClass<typeof ModuleView, {}> = ExtendsClass<
             typeof ModuleView,
-            ModuleView<{}, {}, ParameterizedModule>
+            ModuleView<{}, {}, ParameterizedModule, {}>
         >
     >(module: M, initialState?: S, moduleView?: V): ExtendedModuleViewClass<M, S, V> {
         // Set the initialState to the default state if not specified

@@ -59,6 +59,7 @@ export class Module<
     private readonly requestData: ModuleRequestData<I>;
     parent: I["parent"];
     readonly parents: I["parent"][]; // A list of all 'parents'
+    readonly type: I; // Only used to extract information, no value gets assigned
 
     // Settings
     readonly settings: DeepReadonly<SettingsData<C>>;
@@ -168,29 +169,17 @@ export class Module<
      * A method that gets called to perform initialisation,
      * should be called only once, after having been added to the program state
      * (will be called by external setup method, such as in classModuleProvider)
+     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
-    public async init(): Promise<void> {
-        this.onInit();
+    public async init(fromReload: boolean): Promise<void> {
+        this.onInit(fromReload);
     }
-
-    /**
-     * A method that gets called to perform any required initialization on reload
-     * (will be called by internal setup method; deserialize)
-     */
-    public async reloadInit(): Promise<void> {
-        this.onReloadInit();
-    }
-
     /**
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state
+     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
-    protected async onInit(): Promise<void> {}
-
-    /**
-     * A method that gets called to perform any required initialization on reload
-     */
-    protected async onReloadInit(): Promise<void> {}
+    protected async onInit(fromReload: boolean): Promise<void> {}
 
     // State related methods
     /**
@@ -282,7 +271,7 @@ export class Module<
         this.stateObject.deserialize(data.state, this);
 
         // Finish by calling the init hook
-        await this.reloadInit();
+        await this.init(true);
     }
 
     // Request related methods
@@ -570,8 +559,9 @@ export class Module<
     public static async installIfRequired(): Promise<boolean> {
         // Check if an install is required or whether the mdoule has been installed already
         if (!SettingsManager.fileExists(this.getPath())) {
-            // Create the settings file once to call all listeners
-            await this.getSettingsFile();
+            // Create the settings file once to call all listeners and save it
+            const settingsFile = await this.getSettingsFile();
+            settingsFile.setDirty(true);
 
             // Call the installation method
             await this.getConfig().onInstall();

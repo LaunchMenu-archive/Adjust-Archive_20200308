@@ -16,6 +16,8 @@ class ViewManagerSingleton {
     constructor() {
         // Stores all of the views in this window
         this.views = {};
+        // Store views that are currently being loaded
+        this.loadingViews = {};
         // Listen for the main thread sending updates
         ipcRenderer_1.IpcRenderer.on("ViewManager.sendUpdate", (moduleID, data) => {
             const stateChange = this.deserializeData(data);
@@ -34,7 +36,7 @@ class ViewManagerSingleton {
      * Obtains the list of module views
      * @param moduleID The moduleID to get the views for
      * @param create Whether or not to create the list if absent
-     * @returns The list of module views
+     * @returns The list of module views, or undefined if there is no such list
      */
     getViews(moduleID, create = false) {
         // Normalize  the request path
@@ -67,31 +69,47 @@ class ViewManagerSingleton {
      * @param moduleID The moduleID of the module that the view represents
      * @returns The initial data for the module
      */
-    async registerView(view, moduleID) {
+    registerView(view, moduleID) {
         // Get the list of module views for this specific request path
         const moduleViews = this.getViews(moduleID, true);
-        // Get the initial state of the view
-        let initialState;
-        if (moduleViews.length) {
-            // Get the state from an existing module
-            const existingView = moduleViews[0];
-            initialState = existingView.state;
-        }
-        else {
-            // Get the initial state from the window manager
-            const stateData = (await ipcRenderer_1.IpcRenderer.send("WindowManager.getState", moduleID.toString()))[0];
-            initialState = this.deserializeData(stateData);
-        }
-        // Make sure the module hasn't updated its path by now (became a view for another module)
-        // and hasn't been completed unmounted yet
-        if (view.props.moduleID == moduleID && !view.unmounted) {
-            // Update the state
-            view.loadInitialState(initialState);
-            // Add the module view
-            moduleViews.push(view);
-            // Update the module count
-            this.updateWindowModuleCount(moduleID);
-        }
+        // Store the new promise that will resolve in a view
+        let promise = new Promise(async (resolve, reject) => {
+            // Get the initial state of the view
+            let initialState;
+            if (moduleViews.length) {
+                // Get the state from an existing module
+                try {
+                    const existingView = await moduleViews[0];
+                    initialState = existingView.state;
+                }
+                catch (e) { }
+            }
+            // If either now such view existed, or it was removed before resolving
+            if (!initialState) {
+                // Get the initial state from the window manager
+                const stateData = (await ipcRenderer_1.IpcRenderer.send("WindowManager.getState", moduleID.toString(), windowID))[0];
+                initialState = this.deserializeData(stateData);
+            }
+            // Make sure the module hasn't updated its path by now (became a view for another module)
+            // and hasn't been completed unmounted yet
+            if (view.props.moduleID == moduleID && !view.unmounted) {
+                // Update the state
+                view.loadInitialState(initialState);
+                // Resolve in to this view
+                resolve(view);
+            }
+            else {
+                // Otherwise, don't even resolve the promise,
+                // and make sure it is removed (should already be the case because of unmount)
+                reject();
+                this.deregisterView(promise, moduleID);
+            }
+        });
+        moduleViews.push(promise);
+        // Update the module count
+        this.updateWindowModuleCount(moduleID);
+        // Return the promise
+        return promise;
     }
     /**
      * Deregisters a view such that it no longer receives updates
@@ -179,7 +197,7 @@ class ViewManagerSingleton {
         if (!moduleViews)
             return;
         // Update the state
-        moduleViews.forEach(moduleView => moduleView.updateState(updatedData));
+        moduleViews.forEach(async (moduleView) => (await moduleView).updateState(updatedData));
     }
     /**
      * Deserializes json data (Adding jsx elements)

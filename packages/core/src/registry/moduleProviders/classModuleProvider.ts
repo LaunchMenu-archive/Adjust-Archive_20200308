@@ -59,7 +59,7 @@ export class ClassModuleProvider<
         if (parentProxy) moduleProxy.connect(parentProxy);
 
         // Call module initialisation now the connection has completed
-        await module.init();
+        await module.init(false);
 
         // Return the module
         return moduleProxy as any;

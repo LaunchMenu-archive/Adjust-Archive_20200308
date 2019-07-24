@@ -1,16 +1,8 @@
 [
     {
-        "condition": "function () {\n      return true;\n    }",
-        "priority": 2,
-        "data": {
-            "b": {
-                "c": "test"
-            }
-        }
-    },
-    {
         "condition": "() => true",
         "priority": 2,
+        "ID": 1,
         "data": {
             "b": {
                 "c": "test2"
@@ -20,6 +12,7 @@
     {
         "condition": "target => {\r\n            return target.getClass() != null; // Should always be true also\r\n        }",
         "priority": 2,
+        "ID": 2,
         "data": {
             "b": {
                 "c": "test3"
@@ -27,16 +20,8 @@
         }
     },
     {
-        "condition": "function (target) {\n      return target.getClass() != null; // Should always be true also\n    }",
-        "priority": 2,
-        "data": {
-            "b": {
-                "c": "test"
-            }
-        }
-    },
-    {
         "priority": 0,
+        "ID": 0,
         "data": {
             "a": 3,
             "b": {

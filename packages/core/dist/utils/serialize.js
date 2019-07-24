@@ -7,12 +7,7 @@ function isModule(data) {
     return data instanceof module_1.Module || data instanceof moduleProxy_1.ModuleProxy;
 }
 class Serialize {
-    /**
-     * Serializes a passed value
-     * @param data The data to serialize
-     * @returns The serialized data
-     */
-    static serialize(data) {
+    static serialize(data, asyncCallback = () => { }, path) {
         // Check if the data has to be serialized
         if (data == null) {
             return null;
@@ -30,10 +25,20 @@ class Serialize {
                     $type: "ModuleReference",
                     data: data.toString(),
                 };
+            // If the data is a promise, await it
+            if (data instanceof Promise) {
+                data.then(value => {
+                    asyncCallback(path, value);
+                });
+                return undefined;
+            }
+            // If the data is an array, map it
+            if (data instanceof Array)
+                return data.map((value, index) => this.serialize(value, asyncCallback, path ? path + "." + index : index + ""));
             // If it is an arbitrary object, map its values
             return extendedObject_1.ExtendedObject.mapPairs(data, (key, value) => [
                 key.replace(/^(\$*type)/g, "$$$1"),
-                this.serialize(value),
+                this.serialize(value, asyncCallback, path ? path + "." + key : key + ""),
             ]);
         }
         else {
@@ -60,6 +65,9 @@ class Serialize {
                     return getModule(data.data);
                 }
             }
+            // If it is an array, map it
+            if (data instanceof Array)
+                return data.map(value => this.deserialize(value, getModule));
             // If it is an arbitrary object, map its values
             return extendedObject_1.ExtendedObject.mapPairs(data, (key, value) => [
                 key.replace(/^\$(\$*type)/g, "$1"),

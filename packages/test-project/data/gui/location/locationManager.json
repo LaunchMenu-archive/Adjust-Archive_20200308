@@ -1,0 +1,47 @@
+[
+    {
+        "priority": 0,
+        "ID": 0,
+        "data": {
+            "locations": {
+                "root": {
+                    "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\embed\\embed.js"
+                        },
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\singletonTest\\singleton\\singleton.js"
+                        },
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\test\\test.js"
+                        }
+                    ]
+                },
+                "test": {
+                    "path": {
+                        "nodes": [
+                            "window1"
+                        ],
+                        "location": {
+                            "ID": "test",
+                            "hints": {
+                                "window": {
+                                    "ID": "window1"
+                                }
+                            }
+                        }
+                    },
+                    "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+]

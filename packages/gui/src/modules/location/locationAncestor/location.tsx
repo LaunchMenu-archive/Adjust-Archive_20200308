@@ -152,6 +152,7 @@ export default class LocationModule extends createModule(config)
 
 export class LocationView extends createModuleView(LocationModule) {
     protected renderView(): JSX.Element {
+        if (this.state.editMode) return <div>Shiit</div>;
         return <div>{this.state.modules[0]}</div>;
     }
 }

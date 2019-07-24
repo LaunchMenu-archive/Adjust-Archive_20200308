@@ -10,6 +10,11 @@ import { ModuleID, ModuleReference } from "../../module/moduleID";
 declare class ViewManagerSingleton {
     protected readonly views: {
         [modulePath: string]: {
+            [moduleID: string]: Promise<ParameterizedModuleView>[];
+        };
+    };
+    protected readonly loadingViews: {
+        [modulePath: string]: {
             [moduleID: string]: ParameterizedModuleView[];
         };
     };
@@ -27,22 +32,22 @@ declare class ViewManagerSingleton {
      * Obtains the list of module views
      * @param moduleID The moduleID to get the views for
      * @param create Whether or not to create the list if absent
-     * @returns The list of module views
+     * @returns The list of module views, or undefined if there is no such list
      */
-    protected getViews(moduleID: ModuleReference | string, create?: boolean): ParameterizedModuleView[];
+    protected getViews(moduleID: ModuleReference | string, create?: boolean): Promise<ParameterizedModuleView>[] | undefined;
     /**
      * Registers a view such that it will receive updates
      * @param view The view to register
      * @param moduleID The moduleID of the module that the view represents
      * @returns The initial data for the module
      */
-    registerView(view: ParameterizedModuleView, moduleID: ModuleReference): Promise<void>;
+    registerView(view: ParameterizedModuleView, moduleID: ModuleReference): Promise<ParameterizedModuleView>;
     /**
      * Deregisters a view such that it no longer receives updates
      * @param view The view to deregister
      * @param moduleID The moduleID of the module that the view represents
      */
-    deregisterView(view: ParameterizedModuleView, moduleID: ModuleReference): void;
+    deregisterView(view: Promise<ParameterizedModuleView>, moduleID: ModuleReference): void;
     /**
      * Updates the module count in the WindowManager for a given module instance
      * @param moduleID The module to update the count for

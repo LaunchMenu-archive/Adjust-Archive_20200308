@@ -71,8 +71,21 @@ class SettingsManagerSingleton {
      * @returns Whether or not the settings file exists
      */
     fileExists(path) {
+        path = this.normalizeExtension(path);
         path = this.getAbsoluteDataPath(path);
         return FS_1.FS.existsSync(path);
+    }
+    /**
+     * Makes sure that the path has a valid extension
+     * @param path The path to normalize
+     * @returns The normalized path
+     */
+    normalizeExtension(path) {
+        if (path_1.default.extname(path) == ".js")
+            path = path.substring(0, path.length - path_1.default.extname(path).length);
+        if (path_1.default.extname(path) == "")
+            path += ".json";
+        return path;
     }
     /**
      * Retrieves the settings file for the specified path, creates it if necessary
@@ -87,10 +100,7 @@ class SettingsManagerSingleton {
             moduleClass = path;
             path = moduleClass.getPath();
         }
-        if (path_1.default.extname(path) == "js")
-            path = path_1.default.resolve(path_1.default.dirname(path), path_1.default.basename(path));
-        if (path_1.default.extname(path) == "")
-            path += ".json";
+        path = this.normalizeExtension(path);
         // Check if the settings file already existed
         if (this.settings[path])
             return this.settings[path];
@@ -109,10 +119,7 @@ class SettingsManagerSingleton {
      * @returns Whether or not the settings file instance was removed
      */
     async removeSettingsFile(path, settingsFile) {
-        if (path_1.default.extname(path) == "js")
-            path = path_1.default.resolve(path_1.default.dirname(path), path_1.default.basename(path));
-        if (path_1.default.extname(path) == "")
-            path += ".json";
+        path = this.normalizeExtension(path);
         if (this.settings[path] && (await this.settings[path]) == settingsFile) {
             const isDirty = this.dirtySettings.indexOf(settingsFile) === -1;
             if (isDirty)
@@ -137,8 +144,8 @@ class SettingsManagerSingleton {
      * @param dirty Whether or not the file should be dirty
      */
     setDirty(settingsFile, dirty) {
-        if (dirty) {
-            // Remove the settings file fro the dirty settings array if present
+        if (!dirty) {
+            // Remove the settings file from the dirty settings array if present
             const index = this.dirtySettings.indexOf(settingsFile);
             if (index !== -1)
                 this.dirtySettings.splice(index, 1);
@@ -154,7 +161,12 @@ class SettingsManagerSingleton {
      * Save all of the dirty settings files
      */
     saveAll() {
-        this.dirtySettings.forEach(settingsFile => settingsFile.save());
+        // Make a copy of the dirty settings since items will be removed by saving
+        const copy = [...this.dirtySettings];
+        if (copy.length > 0)
+            console.log("saved:", copy.map(sf => sf["path"]));
+        // Save the settings
+        copy.forEach(settingsFile => settingsFile.save());
     }
     /**
      * Reload all of the dirty settings files

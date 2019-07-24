@@ -33,6 +33,12 @@ declare class SettingsManagerSingleton {
      */
     fileExists(path: string): boolean;
     /**
+     * Makes sure that the path has a valid extension
+     * @param path The path to normalize
+     * @returns The normalized path
+     */
+    normalizeExtension(path: string): string;
+    /**
      * Retrieves the settings file for the specified path, creates it if necessary
      * @param path The path to obtain the settings file for
      * @param config The config of the settings

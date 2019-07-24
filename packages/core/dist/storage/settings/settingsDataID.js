@@ -1,7 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class SettingsDataID {
     constructor(ID, modulePath) {
-        this.ID = ID;
+        this.settingsID = ID;
         this.modulePath = modulePath;
     }
     /**
@@ -10,7 +10,8 @@ class SettingsDataID {
      * @returns Whether they refer to the same data
      */
     equals(settingsDataID) {
-        return (this.ID == settingsDataID.ID && this.modulePath == settingsDataID.modulePath);
+        return (this.settingsID == settingsDataID.settingsID &&
+            this.modulePath == settingsDataID.modulePath);
     }
 }
 exports.SettingsDataID = SettingsDataID;

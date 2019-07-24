@@ -15,16 +15,23 @@ import {SettingsData} from "../storage/settings/_types/settingsData";
 export abstract class ModuleView<
     S extends ModuleState,
     C extends SettingsConfig,
-    M extends ParameterizedModule
-> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C>> {
+    M extends ParameterizedModule,
+    D extends any
+> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
     // Indicates whether this react component has been completely unmounted
-    unmounted: boolean = false;
+    public unmounted: boolean = false;
+
+    // A promise that resolves in this instance once it finished loading
+    protected self: Promise<this>;
 
     // A proxy to the module that this view is representing
-    readonly module: RemoteModule<M>;
+    protected readonly module: RemoteModule<M>;
 
     // The settings of the module
-    readonly settings: DeepReadonly<SettingsData<C>>;
+    protected readonly settings: DeepReadonly<SettingsData<C>>;
+
+    // The data that the module received when requested
+    protected readonly data: DeepReadonly<D>;
 
     /**
      * Creates an instance of the module view
@@ -45,14 +52,14 @@ export abstract class ModuleView<
      * @override Will load the initial state and start listening for updates
      */
     public componentWillMount(): void {
-        ViewManager.registerView(this, this.props.moduleID);
+        this.self = ViewManager.registerView(this, this.props.moduleID) as any;
     }
 
     /**
      * @override Will stop listening for updates
      */
     public componentWillUnmount(): void {
-        ViewManager.deregisterView(this, this.props.moduleID);
+        ViewManager.deregisterView(this.self, this.props.moduleID);
         this.unmounted = true;
     }
 
@@ -67,19 +74,23 @@ export abstract class ModuleView<
      * Loads the initial state into the view
      * @param state The state to load
      */
-    public loadInitialState(state: ModuleViewState<S, C>): void {
-        this.setState(state);
-
+    public loadInitialState(state: ModuleViewState<S, C, D>): void {
         // @ts-ignore
         this.settings = state["~settings"];
+
+        // @ts-ignore
+        this.data = state["~data"];
+
+        this.setState(state);
     }
 
     /**
      * Updates the state of the view
      * @param state The parts of the state to update
      */
-    public updateState(state: ModuleViewState<S, C>): void {
-        this.setState(state);
+    public updateState(state: ModuleViewState<S, C, D>): void {
+        // @ts-ignore
+        this.setState(state, () => (this.settings = this.state["~settings"]));
     }
 
     // Error related methods
@@ -140,5 +151,6 @@ export abstract class ModuleView<
 export type ParameterizedModuleView = ModuleView<
     ModuleState,
     SettingsConfig,
-    ParameterizedModule
+    ParameterizedModule,
+    any
 >;

@@ -37,7 +37,7 @@ class ClassModuleProvider extends abstractModuleProvider_1.AbstractModuleProvide
         if (parentProxy)
             moduleProxy.connect(parentProxy);
         // Call module initialisation now the connection has completed
-        await module.init();
+        await module.init(false);
         // Return the module
         return moduleProxy;
     }

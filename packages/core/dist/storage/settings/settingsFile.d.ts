@@ -100,23 +100,24 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * @param condition The condition of the changed data
      * @param changedProps The changed properties
      * @param previousProps The values that the properties had before
+     * @param fromLoad Whether the value changed by loading it the first time this session
      */
-    protected valueChange(condition: SettingsConditions, changedProps: object, previousProps: object): Promise<void>;
+    protected valueChange(condition: SettingsConditions, changedProps: object, previousProps: object, fromLoad?: boolean): Promise<void>;
     /**
      * Saves the current data in the corresponding file
      */
     save(): void;
     /**
      * Reloads the settings as are present in the stored file
-     * @param initialSettings The settings to load if no file is present
+     * @param getInitialSettings A getter for the settings to load if no file is present
      * @returns A promise that resolves once all events have resolved
      */
-    reload(initialSettings?: ConditionalSettings<SettingsData<S>>[]): Promise<void>;
+    reload(getInitialSettings?: () => ConditionalSettings<SettingsData<S>>[]): Promise<void>;
     /**
      * Changes whether or not this file is dirty
      * @param dirty Whether or not this file is dirty
      */
-    protected setDirty(dirty: boolean): void;
+    setDirty(dirty: boolean): void;
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change

@@ -40,6 +40,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
     private readonly requestData;
     parent: I["parent"];
     readonly parents: I["parent"][];
+    readonly type: I;
     readonly settings: DeepReadonly<SettingsData<C>>;
     readonly settingsObject: Settings<C>;
     readonly state: DeepReadonly<S>;
@@ -77,22 +78,15 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * A method that gets called to perform initialisation,
      * should be called only once, after having been added to the program state
      * (will be called by external setup method, such as in classModuleProvider)
+     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
-    init(): Promise<void>;
-    /**
-     * A method that gets called to perform any required initialization on reload
-     * (will be called by internal setup method; deserialize)
-     */
-    reloadInit(): Promise<void>;
+    init(fromReload: boolean): Promise<void>;
     /**
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state
+     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
-    protected onInit(): Promise<void>;
-    /**
-     * A method that gets called to perform any required initialization on reload
-     */
-    protected onReloadInit(): Promise<void>;
+    protected onInit(fromReload: boolean): Promise<void>;
     /**
      * Retrieves the entire state object of the module
      * @returns The entire state object on which listeners could be registered

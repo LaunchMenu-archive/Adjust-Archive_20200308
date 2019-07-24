@@ -7,7 +7,7 @@ export declare type SettingDefinition<V> = {
     default: V;
     type: string | Object;
     validation?: (value: any) => Error | void;
-    onChange?: (value: any, condition: SettingsConditions, oldValue: any, settings: ParameterizedSettingsFile) => void | Promise<void>;
+    onChange?: (value: any, condition: SettingsConditions, oldValue: any, settings: ParameterizedSettingsFile, fromLoad: boolean) => void | Promise<void>;
 };
 /**
  * The keys that are part of a settings definition

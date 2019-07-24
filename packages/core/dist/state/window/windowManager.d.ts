@@ -2,6 +2,7 @@ import { BrowserWindow } from "electron";
 import { ModuleViewData } from "../../module/_types/moduleViewData";
 import { ModuleID } from "../../module/moduleID";
 import { ViewNotFound } from "../../modules/viewNotFound.type";
+import { AsyncSerializeableData } from "../../utils/_types/serializeableData";
 /**
  * Keeps track of all windows and is able to create new ones
  * Also takes care of sending module updates to windows
@@ -47,6 +48,13 @@ declare class WindowManagerSingleton {
      */
     protected listenToModule(moduleID: ModuleID | string, windowID: string): void;
     /**
+     * Sends the state data to a given window for a given module
+     * @param moduleID The ID of the module to which this data belongs
+     * @param window The window that the module is located in
+     * @param data The data to be send
+     */
+    protected sendStateData(moduleID: ModuleID | string, window: BrowserWindow, data: AsyncSerializeableData): void;
+    /**
      * Removes the listeners from the module to stop forwarding its data to a window's GuiManager
      * @param moduleID The moduleID of the module that is forwarding to a window
      * @param windowID The id of the window the module is forwarding the data to
@@ -55,9 +63,10 @@ declare class WindowManagerSingleton {
     /**
      * Obtains the current data of the module
      * @param moduleID The moduleID of the module to get the data for
+     * @param window The window that the module is located in
      * @returns The data of the module data
      */
-    protected getModuleData(moduleID: ModuleID | string): ModuleViewData;
+    protected getModuleData(moduleID: ModuleID | string, window: BrowserWindow): ModuleViewData;
 }
 export declare const WindowManager: WindowManagerSingleton;
 export {};

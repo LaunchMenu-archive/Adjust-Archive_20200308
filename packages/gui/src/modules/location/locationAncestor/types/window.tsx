@@ -7,10 +7,11 @@ import LocationAncestorModule from "../locationAncestor";
 import {LocationPath} from "../../_types/LocationPath";
 import {React} from "../../../../React";
 import {ModuleLocation} from "../../../../module/_types/ModuleLocation";
+import {LocationManagerID} from "../../locationManager.type";
 
 export const config = {
     initialState: {
-        childLocationAncestor: null as LocationAncestor,
+        childLocationAncestor: null as Promise<LocationAncestor>,
     },
     settings: {},
     type: LocationAncestorID,
@@ -23,18 +24,6 @@ export default class WindowModule extends createModule(config, LocationAncestorM
 
     // The window in which this module is shown
     protected window: Promise<Electron.BrowserWindow>;
-
-    // /** @override */
-    // public async onInit(): Promise<void> {
-    //     // Open the window when it is requested
-    //     WindowManager.openWindow(this.getData().id, this.getID());
-    // }
-
-    // /** @override */
-    // public async onReloadInit(): Promise<void> {
-    //     // Open the window when it is requested
-    //     WindowManager.openWindow(this.getData().id, this.getID());
-    // }
 
     // Window management
     /**
@@ -81,14 +70,15 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor
-            const locationAncestor = await this.getChildLocationAncestor();
+            const locationAncestor = this.getChildLocationAncestor();
 
             // Store child location ancestor
             this.setState({
                 childLocationAncestor: locationAncestor,
             });
         }
-        return this.state.childLocationAncestor;
+
+        return await this.state.childLocationAncestor;
     }
 
     // Module management
@@ -100,24 +90,11 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         // Open the actual window
         this.openWindow();
 
-        // If this module has no child location ancestor yet, obtain it
-        if (!this.state.childLocationAncestor) {
-            // Get child location ancestor
-            const {locationAncestor, path} = await this.getChildLocationAncestorFromPath(
-                location
-            );
+        // Obtain the child ancestor
+        const child = await this.getChild();
 
-            // Store child location ancestor
-            this.setState({
-                childLocationAncestor: locationAncestor,
-            });
-
-            // Open the module in this location with the potentially newly made path
-            return this.state.childLocationAncestor.openModule(module, path);
-        } else {
-            // Open the module in this location
-            return this.state.childLocationAncestor.openModule(module, location);
-        }
+        // Forward opening the module to the child
+        return child.openModule(module, location);
     }
 
     /** @override */
@@ -138,13 +115,39 @@ export default class WindowModule extends createModule(config, LocationAncestorM
 
     // Edit magement
     /** @override */
-    public async setEditMode(edit: boolean): Promise<void> {}
+    public async setEditMode(edit: boolean): Promise<void> {
+        if (this.state.childLocationAncestor) {
+            const child = await this.getChild();
+            child.setEditMode(edit);
+        }
+    }
 
     /** @override */
-    public async setDropMode(drop: boolean): Promise<void> {}
+    public async setDropMode(drop: boolean): Promise<void> {
+        if (this.state.childLocationAncestor) {
+            const child = await this.getChild();
+            child.setDropMode(drop);
+        }
+    }
+
+    // Testing TODO: remove this
+    public async setEdit(): Promise<void> {
+        const LM = await this.request({type: LocationManagerID});
+        LM.setEditMode(true);
+    }
 }
 
 export class WindowView extends createModuleView(WindowModule) {
+    /**@override */
+    public componentWillMount(): void {
+        super.componentWillMount();
+        document.addEventListener("keyup", e => {
+            if (e.key == "e") {
+                this.module.setEdit();
+            }
+        });
+    }
+
     /**
      * Renders the header with the window's controls
      */
@@ -156,6 +159,7 @@ export class WindowView extends createModuleView(WindowModule) {
                         <Close />
                     </Button>
                 </Grid>
+                <Grid item>{this.data.ID}</Grid>
             </Grid>
         );
     }

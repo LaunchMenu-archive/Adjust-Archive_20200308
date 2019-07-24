@@ -44,7 +44,7 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
 export declare abstract class Module extends Module_base {
     protected locationManager: LocationManager;
     /** @override */
-    init(): Promise<void>;
+    init(fromReload: boolean): Promise<void>;
     /**
      * Opens the module view using the location manager, according to the module's settings
      */

@@ -17,6 +17,13 @@ class ViewManagerSingleton {
     // Stores all of the views in this window
     protected readonly views: {
         [modulePath: string]: {
+            [moduleID: string]: Promise<ParameterizedModuleView>[];
+        };
+    } = {};
+
+    // Store views that are currently being loaded
+    protected readonly loadingViews: {
+        [modulePath: string]: {
             [moduleID: string]: ParameterizedModuleView[];
         };
     } = {};
@@ -51,12 +58,12 @@ class ViewManagerSingleton {
      * Obtains the list of module views
      * @param moduleID The moduleID to get the views for
      * @param create Whether or not to create the list if absent
-     * @returns The list of module views
+     * @returns The list of module views, or undefined if there is no such list
      */
     protected getViews(
         moduleID: ModuleReference | string,
         create: boolean = false
-    ): ParameterizedModuleView[] {
+    ): Promise<ParameterizedModuleView>[] | undefined {
         // Normalize  the request path
         if (typeof moduleID == "string") moduleID = new ModuleReference(moduleID);
 
@@ -87,38 +94,59 @@ class ViewManagerSingleton {
      * @param moduleID The moduleID of the module that the view represents
      * @returns The initial data for the module
      */
-    public async registerView(view: ParameterizedModuleView, moduleID: ModuleReference) {
+    public registerView(
+        view: ParameterizedModuleView,
+        moduleID: ModuleReference
+    ): Promise<ParameterizedModuleView> {
         // Get the list of module views for this specific request path
         const moduleViews = this.getViews(moduleID, true);
 
-        // Get the initial state of the view
-        let initialState: ParameterizedModuleViewState;
-        if (moduleViews.length) {
-            // Get the state from an existing module
-            const existingView = moduleViews[0];
-            initialState = existingView.state;
-        } else {
-            // Get the initial state from the window manager
-            const stateData = (await IpcRenderer.send(
-                "WindowManager.getState",
-                moduleID.toString()
-            ))[0];
+        // Store the new promise that will resolve in a view
+        let promise = new Promise(async (resolve, reject) => {
+            // Get the initial state of the view
+            let initialState: ParameterizedModuleViewState;
+            if (moduleViews.length) {
+                // Get the state from an existing module
+                try {
+                    const existingView = await moduleViews[0];
+                    initialState = existingView.state;
+                } catch (e) {}
+            }
 
-            initialState = this.deserializeData(stateData) as any;
-        }
+            // If either now such view existed, or it was removed before resolving
+            if (!initialState) {
+                // Get the initial state from the window manager
+                const stateData = (await IpcRenderer.send(
+                    "WindowManager.getState",
+                    moduleID.toString(),
+                    windowID
+                ))[0];
 
-        // Make sure the module hasn't updated its path by now (became a view for another module)
-        // and hasn't been completed unmounted yet
-        if (view.props.moduleID == moduleID && !view.unmounted) {
-            // Update the state
-            view.loadInitialState(initialState);
+                initialState = this.deserializeData(stateData) as any;
+            }
 
-            // Add the module view
-            moduleViews.push(view);
+            // Make sure the module hasn't updated its path by now (became a view for another module)
+            // and hasn't been completed unmounted yet
+            if (view.props.moduleID == moduleID && !view.unmounted) {
+                // Update the state
+                view.loadInitialState(initialState);
 
-            // Update the module count
-            this.updateWindowModuleCount(moduleID);
-        }
+                // Resolve in to this view
+                resolve(view);
+            } else {
+                // Otherwise, don't even resolve the promise,
+                // and make sure it is removed (should already be the case because of unmount)
+                reject();
+                this.deregisterView(promise, moduleID);
+            }
+        }) as Promise<ParameterizedModuleView>;
+        moduleViews.push(promise);
+
+        // Update the module count
+        this.updateWindowModuleCount(moduleID);
+
+        // Return the promise
+        return promise;
     }
 
     /**
@@ -127,7 +155,7 @@ class ViewManagerSingleton {
      * @param moduleID The moduleID of the module that the view represents
      */
     public deregisterView(
-        view: ParameterizedModuleView,
+        view: Promise<ParameterizedModuleView>,
         moduleID: ModuleReference
     ): void {
         // Get the list of module views for this specific request path
@@ -242,7 +270,9 @@ class ViewManagerSingleton {
         if (!moduleViews) return;
 
         // Update the state
-        moduleViews.forEach(moduleView => moduleView.updateState(updatedData));
+        moduleViews.forEach(async moduleView =>
+            (await moduleView).updateState(updatedData)
+        );
     }
 
     /**

@@ -1,12 +1,12 @@
 export class SettingsDataID {
     // The ID of the individual data
-    public ID: number;
+    public settingsID: number;
 
     // The path to module class
     public modulePath: string;
 
     constructor(ID: number, modulePath: string) {
-        this.ID = ID;
+        this.settingsID = ID;
         this.modulePath = modulePath;
     }
 
@@ -17,7 +17,8 @@ export class SettingsDataID {
      */
     public equals(settingsDataID: SettingsDataID): boolean {
         return (
-            this.ID == settingsDataID.ID && this.modulePath == settingsDataID.modulePath
+            this.settingsID == settingsDataID.settingsID &&
+            this.modulePath == settingsDataID.modulePath
         );
     }
 }

@@ -3,8 +3,17 @@ import {TestID, Test} from "./test.type";
 import {EmbedID, Embed} from "../embed/embed.type";
 
 export const config = {
-    initialState: {stuff: "test", child: undefined as Embed},
-    settings: {},
+    initialState: {
+        stuff: "test",
+        child: undefined as Embed,
+        somethingAsync: undefined as Promise<number>,
+    },
+    settings: {
+        stuff: {
+            default: false,
+            type: "boolean",
+        },
+    },
     type: TestID,
 };
 
@@ -37,6 +46,12 @@ export default class TestModule extends createModule(config) implements Test {
     public closeChild() {
         if (this.state.child) this.state.child.close();
     }
+    public setStuff() {
+        this.settingsObject.set.stuff(true);
+        this.setState({
+            somethingAsync: new Promise(res => setTimeout(() => res(10), 1000)),
+        });
+    }
 }
 
 export class TestView extends createModuleView(TestModule) {
@@ -55,6 +70,9 @@ export class TestView extends createModuleView(TestModule) {
                     Change child text
                 </button>
                 <button onClick={e => this.module.closeChild()}>Close child</button>
+                <button onClick={e => this.module.setStuff()}>
+                    Stuff is {this.settings.stuff + " "} {this.state.somethingAsync}
+                </button>
             </div>
         );
     }

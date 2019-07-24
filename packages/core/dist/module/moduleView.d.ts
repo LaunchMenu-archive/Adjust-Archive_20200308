@@ -10,10 +10,12 @@ import { SettingsData } from "../storage/settings/_types/settingsData";
 /**
  * A class that can visually represent the module
  */
-export declare abstract class ModuleView<S extends ModuleState, C extends SettingsConfig, M extends ParameterizedModule> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C>> {
+export declare abstract class ModuleView<S extends ModuleState, C extends SettingsConfig, M extends ParameterizedModule, D extends any> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
     unmounted: boolean;
-    readonly module: RemoteModule<M>;
-    readonly settings: DeepReadonly<SettingsData<C>>;
+    protected self: Promise<this>;
+    protected readonly module: RemoteModule<M>;
+    protected readonly settings: DeepReadonly<SettingsData<C>>;
+    protected readonly data: DeepReadonly<D>;
     /**
      * Creates an instance of the module view
      * @param props The properties of this element
@@ -33,12 +35,12 @@ export declare abstract class ModuleView<S extends ModuleState, C extends Settin
      * Loads the initial state into the view
      * @param state The state to load
      */
-    loadInitialState(state: ModuleViewState<S, C>): void;
+    loadInitialState(state: ModuleViewState<S, C, D>): void;
     /**
      * Updates the state of the view
      * @param state The parts of the state to update
      */
-    updateState(state: ModuleViewState<S, C>): void;
+    updateState(state: ModuleViewState<S, C, D>): void;
     /**@override */
     static getDerivedStateFromError(error: Error): {
         error: Error;
@@ -68,4 +70,4 @@ export declare abstract class ModuleView<S extends ModuleState, C extends Settin
 /**
  * A type representing a module view, where the generic parameter arguments can be left out
  */
-export declare type ParameterizedModuleView = ModuleView<ModuleState, SettingsConfig, ParameterizedModule>;
+export declare type ParameterizedModuleView = ModuleView<ModuleState, SettingsConfig, ParameterizedModule, any>;

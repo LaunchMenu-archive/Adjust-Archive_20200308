@@ -3,9 +3,13 @@ const programState_1 = require("./programState");
 const data_1 = require("../storage/data");
 const serialize_1 = require("../utils/serialize");
 class StateData extends data_1.Data {
-    /**@override  */
-    serialize() {
-        return serialize_1.Serialize.serialize(this.get);
+    /**
+     * Serializes the data in order to store it
+     * @param asyncCallback A callback for any promises within the data that could resolve
+     * @returns The data of the module
+     */
+    serialize(asyncCallback = () => { }) {
+        return serialize_1.Serialize.serialize(this.get, asyncCallback);
     }
     /**
      * Loads the passed data into the module

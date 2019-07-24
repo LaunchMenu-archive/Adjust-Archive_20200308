@@ -72,8 +72,8 @@ export abstract class Module extends adjustCreateModule(baseConfig) {
     protected locationManager: LocationManager;
 
     /** @override */
-    public async init(): Promise<void> {
-        await super.init();
+    public async init(fromReload: boolean): Promise<void> {
+        await super.init(fromReload);
 
         // Open the module if it's requested to do so
         if (this.getRequest().openView) this.openView();

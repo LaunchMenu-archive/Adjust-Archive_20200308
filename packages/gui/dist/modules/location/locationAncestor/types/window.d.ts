@@ -6,14 +6,14 @@ import { LocationPath } from "../../_types/LocationPath";
 import { ModuleLocation } from "../../../../module/_types/ModuleLocation";
 export declare const config: {
     initialState: {
-        childLocationAncestor: LocationAncestor;
+        childLocationAncestor: Promise<LocationAncestor>;
     };
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("../locationAncestor.type").LocationAncestorContract>;
 };
 declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
-        childLocationAncestor: LocationAncestor;
+        childLocationAncestor: Promise<LocationAncestor>;
     };
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("../locationAncestor.type").LocationAncestorContract>;
@@ -49,9 +49,12 @@ export default class WindowModule extends WindowModule_base implements LocationA
     setEditMode(edit: boolean): Promise<void>;
     /** @override */
     setDropMode(drop: boolean): Promise<void>;
+    setEdit(): Promise<void>;
 }
-declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>>>>;
+declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>, {}>>>;
 export declare class WindowView extends WindowView_base {
+    /**@override */
+    componentWillMount(): void;
     /**
      * Renders the header with the window's controls
      */

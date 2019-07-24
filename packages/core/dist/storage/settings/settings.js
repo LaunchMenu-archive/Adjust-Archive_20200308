@@ -173,7 +173,7 @@ class Settings extends eventEmitter_1.EventEmitter {
         // Check if the condition applies to this target, if not throw an error
         if (!this.satisfiesCondition(condition))
             throw new Error("The target of these settings doesn't satisfy the given condition");
-        // Return the setter object from the settingsFile
+        // Change the data on the condition of the settings file
         return this.settingsFile.getConditionData(condition).changeData(data);
     }
     /**

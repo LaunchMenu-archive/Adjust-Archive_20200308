@@ -26,13 +26,13 @@ class ModuleView extends react_1.default.Component {
      * @override Will load the initial state and start listening for updates
      */
     componentWillMount() {
-        viewManager_1.ViewManager.registerView(this, this.props.moduleID);
+        this.self = viewManager_1.ViewManager.registerView(this, this.props.moduleID);
     }
     /**
      * @override Will stop listening for updates
      */
     componentWillUnmount() {
-        viewManager_1.ViewManager.deregisterView(this, this.props.moduleID);
+        viewManager_1.ViewManager.deregisterView(this.self, this.props.moduleID);
         this.unmounted = true;
     }
     // State methods
@@ -44,16 +44,19 @@ class ModuleView extends react_1.default.Component {
      * @param state The state to load
      */
     loadInitialState(state) {
-        this.setState(state);
         // @ts-ignore
         this.settings = state["~settings"];
+        // @ts-ignore
+        this.data = state["~data"];
+        this.setState(state);
     }
     /**
      * Updates the state of the view
      * @param state The parts of the state to update
      */
     updateState(state) {
-        this.setState(state);
+        // @ts-ignore
+        this.setState(state, () => (this.settings = this.state["~settings"]));
     }
     // Error related methods
     /**@override */

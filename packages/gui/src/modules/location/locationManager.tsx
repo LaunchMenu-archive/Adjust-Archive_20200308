@@ -176,7 +176,6 @@ export default class LocationManagerModule
             this.openModule(moduleReference, location.ID)
         );
         await Promise.all(promises);
-        console.log(this.settings.locations);
     }
 
     /** @override */
@@ -200,7 +199,7 @@ export default class LocationManagerModule
                     ...this.settings.locations,
                     [oldLocationID]: {
                         path: current.path,
-                        modules: current.modules.filter(ms => !ms.equals(settingsDataID)),
+                        modules: current.modules.filter(ms => !settingsDataID.equals(ms)),
                     },
                 });
 
@@ -229,7 +228,15 @@ export default class LocationManagerModule
                 ...this.settings.locations,
                 [newLocationID]: {
                     path: current && current.path,
-                    modules: [...((current && current.modules) || []), settingsDataID],
+                    modules: [
+                        // Keep everything that is not the new ID to prevent duplicates
+                        ...((current && current.modules) || []).filter(
+                            ms => !settingsDataID.equals(ms)
+                        ),
+
+                        // Add the new ID
+                        settingsDataID,
+                    ],
                 },
             });
         });
@@ -334,7 +341,6 @@ export default class LocationManagerModule
 
         // Obtain the locationAncestor
         const {ID, path} = this.getExtractID(storedPath);
-        console.log(location, "open", storedPath, ID, path);
         const locationAncestor = await this.getAncestor(ID);
 
         // Open the path in the location ancestor
@@ -354,7 +360,6 @@ export default class LocationManagerModule
                 },
             },
         });
-        debugger;
     }
 
     /** @override */

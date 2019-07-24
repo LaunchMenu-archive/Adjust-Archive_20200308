@@ -1,5 +1,5 @@
 import {Json} from "./_types/standardTypes";
-import {SerializeableData} from "./_types/serializeableData";
+import {SerializeableData, AsyncSerializeableData} from "./_types/serializeableData";
 import {Module, ParameterizedModule} from "../module/module";
 import {ExtendedObject} from "./extendedObject";
 import {ModuleProxy} from "../module/moduleProxy";
@@ -16,7 +16,26 @@ export class Serialize {
      * @param data The data to serialize
      * @returns The serialized data
      */
-    public static serialize(data: SerializeableData): Json {
+    public static serialize(data: SerializeableData): Json;
+
+    /**
+     * Serializes a passed value
+     * @param data The data to serialize, which may contain promises
+     * @param asyncCallback The callback for when the promise resolves with the data
+     * @param path The path of the data that is being serialized (if it's a sub object)
+     * @returns The serialized data
+     */
+    public static serialize(
+        data: AsyncSerializeableData,
+        asyncCallback: (path: string, value: AsyncSerializeableData) => void,
+        path?: string
+    ): Json;
+
+    public static serialize(
+        data: SerializeableData,
+        asyncCallback: (path: string, value: AsyncSerializeableData) => void = () => {},
+        path?: string
+    ): Json {
         // Check if the data has to be serialized
         if (data == null) {
             return null;
@@ -35,10 +54,28 @@ export class Serialize {
                     data: data.toString(),
                 };
 
+            // If the data is a promise, await it
+            if (data instanceof Promise) {
+                data.then(value => {
+                    asyncCallback(path, value);
+                });
+                return undefined;
+            }
+
+            // If the data is an array, map it
+            if (data instanceof Array)
+                return data.map((value, index) =>
+                    this.serialize(
+                        value,
+                        asyncCallback,
+                        path ? path + "." + index : index + ""
+                    )
+                );
+
             // If it is an arbitrary object, map its values
             return ExtendedObject.mapPairs(data, (key, value) => [
                 key.replace(/^(\$*type)/g, "$$$1"),
-                this.serialize(value),
+                this.serialize(value, asyncCallback, path ? path + "." + key : key + ""),
             ]) as Json;
         } else {
             // Simply return the data
@@ -67,6 +104,10 @@ export class Serialize {
                     return getModule(data.data as string);
                 }
             }
+
+            // If it is an array, map it
+            if (data instanceof Array)
+                return data.map(value => this.deserialize(value, getModule));
 
             // If it is an arbitrary object, map its values
             return ExtendedObject.mapPairs(data, (key, value) => [

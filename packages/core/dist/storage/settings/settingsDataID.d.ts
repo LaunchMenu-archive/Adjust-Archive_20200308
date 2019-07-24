@@ -1,5 +1,5 @@
 export declare class SettingsDataID {
-    ID: number;
+    settingsID: number;
     modulePath: string;
     constructor(ID: number, modulePath: string);
     /**

@@ -43,7 +43,7 @@ export default class SingletonParentModule extends SingletonParentModule_base im
     changeText(): void;
     closeSingleton(): Promise<void>;
 }
-declare const SingletonParentView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SingletonParentModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>>>>;
+declare const SingletonParentView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SingletonParentModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>, {}>>>;
 export declare class SingletonParentView extends SingletonParentView_base {
     protected renderView(): JSX.Element;
 }

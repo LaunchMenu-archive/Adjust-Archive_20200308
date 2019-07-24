@@ -98,26 +98,17 @@ class Module {
      * A method that gets called to perform initialisation,
      * should be called only once, after having been added to the program state
      * (will be called by external setup method, such as in classModuleProvider)
+     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
-    async init() {
-        this.onInit();
-    }
-    /**
-     * A method that gets called to perform any required initialization on reload
-     * (will be called by internal setup method; deserialize)
-     */
-    async reloadInit() {
-        this.onReloadInit();
+    async init(fromReload) {
+        this.onInit(fromReload);
     }
     /**
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state
+     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
-    async onInit() { }
-    /**
-     * A method that gets called to perform any required initialization on reload
-     */
-    async onReloadInit() { }
+    async onInit(fromReload) { }
     // State related methods
     /**
      * Retrieves the entire state object of the module
@@ -184,7 +175,7 @@ class Module {
         // Deserialize the state
         this.stateObject.deserialize(data.state, this);
         // Finish by calling the init hook
-        await this.reloadInit();
+        await this.init(true);
     }
     // Request related methods
     /**
@@ -400,8 +391,9 @@ class Module {
     static async installIfRequired() {
         // Check if an install is required or whether the mdoule has been installed already
         if (!settingsManager_1.SettingsManager.fileExists(this.getPath())) {
-            // Create the settings file once to call all listeners
-            await this.getSettingsFile();
+            // Create the settings file once to call all listeners and save it
+            const settingsFile = await this.getSettingsFile();
+            settingsFile.setDirty(true);
             // Call the installation method
             await this.getConfig().onInstall();
             return true;
