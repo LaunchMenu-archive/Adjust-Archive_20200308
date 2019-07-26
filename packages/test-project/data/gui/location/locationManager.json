@@ -5,6 +5,15 @@
         "data": {
             "locations": {
                 "root": {
+                    "path": {
+                        "nodes": [
+                            "default"
+                        ],
+                        "location": {
+                            "ID": "root",
+                            "hints": {}
+                        }
+                    },
                     "modules": [
                         {
                             "settingsID": 0,

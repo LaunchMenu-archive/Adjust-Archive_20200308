@@ -1,6 +1,11 @@
-import {Grid, Button} from "@material-ui/core";
+import {Grid, Button, Box} from "@material-ui/core";
 import {Close} from "@material-ui/icons";
-import {WindowManager, createModuleView, ModuleReference} from "@adjust/core";
+import {
+    WindowManager,
+    createModuleView,
+    ModuleReference,
+    SettingsManager,
+} from "@adjust/core";
 import {LocationAncestorID, LocationAncestor} from "../locationAncestor.type";
 import {createModule} from "../../../../module/moduleClassCreator";
 import LocationAncestorModule from "../locationAncestor";
@@ -102,6 +107,13 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         module: ModuleReference,
         location: LocationPath
     ): Promise<boolean> {
+        if (this.window) {
+            // Obtain the child ancestor
+            const child = await this.getChild();
+
+            // Forward opening the module to the child
+            return child.closeModule(module, location);
+        }
         return false;
     }
 
@@ -131,9 +143,13 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     }
 
     // Testing TODO: remove this
-    public async setEdit(): Promise<void> {
+    public async setEdit(enabled: boolean): Promise<void> {
         const LM = await this.request({type: LocationManagerID});
-        LM.setEditMode(true);
+        LM.setEditMode(enabled);
+    }
+
+    public async saveSettings(): Promise<void> {
+        SettingsManager.saveAll();
     }
 }
 
@@ -141,9 +157,19 @@ export class WindowView extends createModuleView(WindowModule) {
     /**@override */
     public componentWillMount(): void {
         super.componentWillMount();
+        document.addEventListener("keydown", e => {
+            if (e.key == "e") {
+                this.module.setEdit(true);
+            }
+        });
         document.addEventListener("keyup", e => {
             if (e.key == "e") {
-                this.module.setEdit();
+                this.module.setEdit(false);
+            }
+        });
+        document.addEventListener("keyup", e => {
+            if (e.key == "s") {
+                this.module.saveSettings();
             }
         });
     }
@@ -167,10 +193,15 @@ export class WindowView extends createModuleView(WindowModule) {
     /**@override */
     protected renderView(): JSX.Element {
         return (
-            <div>
-                {this.renderHeader()}
-                {this.state.childLocationAncestor}
-            </div>
+            <Box
+                display="flex"
+                flexDirection="column"
+                css={{width: "100%", height: "100%"}}>
+                <Box display="flex">{this.renderHeader()}</Box>
+                <Box flex={1} css={{position: "relative" as any}}>
+                    {this.state.childLocationAncestor}
+                </Box>
+            </Box>
         );
     }
 }

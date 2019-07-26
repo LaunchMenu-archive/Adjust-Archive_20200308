@@ -70,9 +70,7 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
 export default class LocationManagerModule extends LocationManagerModule_base implements LocationManager {
     protected ancestorName: string;
     /** @override */
-    protected onInit(): Promise<void>;
-    /** @override */
-    protected onReloadInit(): Promise<void>;
+    protected onInit(fromReload: boolean): Promise<void>;
     /**
      * Retrieves a location path for the given location
      * @param location The module location to get the path for
@@ -99,7 +97,7 @@ export default class LocationManagerModule extends LocationManagerModule_base im
      * - User enables edit mode
      * - User selects some locationAncestor to move by dragging (which calls setLocationsMoveData)
      * - User selects a target by dropping (which calls getLocationsMoveData and updateLocationsMoveData)
-     * - updateMovedLocations is striggered by the drop/mouse up event
+     * - updateMovedLocations to finalize the movement of data
      */
     /** @override */
     setEditMode(edit: boolean): Promise<boolean>;
@@ -111,10 +109,8 @@ export default class LocationManagerModule extends LocationManagerModule_base im
     getLocationsMoveData(): Promise<LocationsMoveData>;
     /** @override */
     getLocationsAtPath(partialPath: LocationAncestorIDs): Promise<ModuleLocation[]>;
-    /**
-     * Updates the actual locations that were just moved (update the actual ancestors representing them)
-     */
-    protected updateMovedLocations(): Promise<void>;
+    /** @override */
+    updateMovedLocations(): Promise<void>;
     /** @override */
     openModule(module: ModuleReference, location: string): Promise<void>;
     /** @override */

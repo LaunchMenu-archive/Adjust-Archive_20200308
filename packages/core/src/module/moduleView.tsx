@@ -8,6 +8,7 @@ import {RemoteModule} from "./_types/remoteModule";
 import {ModuleViewProps} from "./_types/moduleViewProps";
 import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
 import {SettingsData} from "../storage/settings/_types/settingsData";
+import {ExtendedObject} from "../utils/extendedObject";
 
 /**
  * A class that can visually represent the module
@@ -53,6 +54,9 @@ export abstract class ModuleView<
      */
     public componentWillMount(): void {
         this.self = ViewManager.registerView(this, this.props.moduleID) as any;
+        this.self.catch(() => {
+            // Unmounted before having been initalized
+        });
     }
 
     /**
@@ -81,7 +85,7 @@ export abstract class ModuleView<
         // @ts-ignore
         this.data = state["~data"];
 
-        this.setState(state);
+        this.setState(curState => this.getNewState(curState, state));
     }
 
     /**
@@ -89,8 +93,43 @@ export abstract class ModuleView<
      * @param state The parts of the state to update
      */
     public updateState(state: ModuleViewState<S, C, D>): void {
-        // @ts-ignore
-        this.setState(state, () => (this.settings = this.state["~settings"]));
+        this.setState(
+            curState => this.getNewState(curState, state),
+            // @ts-ignore
+            () => (this.settings = this.state["~settings"])
+        );
+    }
+
+    /**
+     * Augments the state changes to full state fields
+     * ({something:{stuff:3}} to {something:{stuff:3, otherCurVal:5}})
+     * @param oldState The current state data
+     * @param changes The changed path values
+     * @modifies changes
+     */
+    protected getNewState(
+        oldState: ModuleViewState<S, C, D>,
+        changes: ModuleViewState<S, C, D>
+    ): ModuleViewState<S, C, D> {
+        return ExtendedObject.map(changes, ((value, key) => {
+            const curValue = oldState[key] as any;
+            // Copy the missing values from current into the changes
+            if (
+                value &&
+                curValue &&
+                value.__proto__ == Object.prototype &&
+                curValue.__proto__ == Object.prototype
+            )
+                return ExtendedObject.copyData(
+                    value,
+                    ExtendedObject.copyData(curValue, {}),
+                    undefined,
+                    false
+                );
+
+            // If either the new or old value is not a plain object, return it
+            return value;
+        }) as any) as any;
     }
 
     // Error related methods

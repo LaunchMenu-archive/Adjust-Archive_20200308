@@ -84,6 +84,12 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     }
     /** @override */
     async closeModule(module, location) {
+        if (this.window) {
+            // Obtain the child ancestor
+            const child = await this.getChild();
+            // Forward opening the module to the child
+            return child.closeModule(module, location);
+        }
         return false;
     }
     /** @override */
@@ -106,9 +112,12 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         }
     }
     // Testing TODO: remove this
-    async setEdit() {
+    async setEdit(enabled) {
         const LM = await this.request({ type: locationManager_type_1.LocationManagerID });
-        LM.setEditMode(true);
+        LM.setEditMode(enabled);
+    }
+    async saveSettings() {
+        core_2.SettingsManager.saveAll();
     }
 }
 exports.default = WindowModule;
@@ -116,9 +125,19 @@ class WindowView extends core_2.createModuleView(WindowModule) {
     /**@override */
     componentWillMount() {
         super.componentWillMount();
+        document.addEventListener("keydown", e => {
+            if (e.key == "e") {
+                this.module.setEdit(true);
+            }
+        });
         document.addEventListener("keyup", e => {
             if (e.key == "e") {
-                this.module.setEdit();
+                this.module.setEdit(false);
+            }
+        });
+        document.addEventListener("keyup", e => {
+            if (e.key == "s") {
+                this.module.saveSettings();
             }
         });
     }
@@ -134,9 +153,9 @@ class WindowView extends core_2.createModuleView(WindowModule) {
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement("div", null,
-            this.renderHeader(),
-            this.state.childLocationAncestor));
+        return (React_1.React.createElement(core_1.Box, { display: "flex", flexDirection: "column", css: { width: "100%", height: "100%" } },
+            React_1.React.createElement(core_1.Box, { display: "flex" }, this.renderHeader()),
+            React_1.React.createElement(core_1.Box, { flex: 1, css: { position: "relative" } }, this.state.childLocationAncestor)));
     }
 }
 exports.WindowView = WindowView;

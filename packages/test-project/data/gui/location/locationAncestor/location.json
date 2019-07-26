@@ -4,7 +4,8 @@
         "ID": 0,
         "data": {
             "locations": [
-                "test"
+                "test",
+                "root"
             ]
         }
     }

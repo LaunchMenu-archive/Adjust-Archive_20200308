@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const viewManager_1 = require("../state/window/viewManager");
+const extendedObject_1 = require("../utils/extendedObject");
 /**
  * A class that can visually represent the module
  */
@@ -27,6 +28,9 @@ class ModuleView extends react_1.default.Component {
      */
     componentWillMount() {
         this.self = viewManager_1.ViewManager.registerView(this, this.props.moduleID);
+        this.self.catch(() => {
+            // Unmounted before having been initalized
+        });
     }
     /**
      * @override Will stop listening for updates
@@ -48,15 +52,36 @@ class ModuleView extends react_1.default.Component {
         this.settings = state["~settings"];
         // @ts-ignore
         this.data = state["~data"];
-        this.setState(state);
+        this.setState(curState => this.getNewState(curState, state));
     }
     /**
      * Updates the state of the view
      * @param state The parts of the state to update
      */
     updateState(state) {
+        this.setState(curState => this.getNewState(curState, state), 
         // @ts-ignore
-        this.setState(state, () => (this.settings = this.state["~settings"]));
+        () => (this.settings = this.state["~settings"]));
+    }
+    /**
+     * Augments the state changes to full state fields
+     * ({something:{stuff:3}} to {something:{stuff:3, otherCurVal:5}})
+     * @param oldState The current state data
+     * @param changes The changed path values
+     * @modifies changes
+     */
+    getNewState(oldState, changes) {
+        return extendedObject_1.ExtendedObject.map(changes, ((value, key) => {
+            const curValue = oldState[key];
+            // Copy the missing values from current into the changes
+            if (value &&
+                curValue &&
+                value.__proto__ == Object.prototype &&
+                curValue.__proto__ == Object.prototype)
+                return extendedObject_1.ExtendedObject.copyData(value, extendedObject_1.ExtendedObject.copyData(curValue, {}), undefined, false);
+            // If either the new or old value is not a plain object, return it
+            return value;
+        }));
     }
     // Error related methods
     /**@override */

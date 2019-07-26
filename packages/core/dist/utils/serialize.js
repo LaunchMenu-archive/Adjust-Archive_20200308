@@ -9,8 +9,14 @@ function isModule(data) {
 class Serialize {
     static serialize(data, asyncCallback = () => { }, path) {
         // Check if the data has to be serialized
-        if (data == null) {
+        if (data === null) {
             return null;
+            // Transform undefined, since it doesn't exist in json
+        }
+        else if (data === undefined) {
+            return {
+                $type: "undefined",
+            };
         }
         else if (typeof data == "object") {
             // If the data is a module, serialize it
@@ -54,16 +60,18 @@ class Serialize {
      */
     static deserialize(data, getModule) {
         // Check if the data has to be deserialized
-        if (data == null) {
+        if (data === null) {
             return null;
         }
         else if (typeof data == "object") {
-            // Check if the data is a module
-            if ("$type" in data && "data" in data) {
-                // Check if the type is a module reference
-                if (data.$type == "ModuleReference") {
+            // Cjecl of the data is some custom type
+            if ("$type" in data) {
+                // Check if the data is constant 'undefined'
+                if (data.$type == "undefined")
+                    return undefined;
+                // Check if the data is a module
+                if (data.$type == "ModuleReference" && "data" in data)
                     return getModule(data.data);
-                }
             }
             // If it is an array, map it
             if (data instanceof Array)

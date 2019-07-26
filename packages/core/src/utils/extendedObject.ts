@@ -541,41 +541,100 @@ export class ExtendedObject extends Object {
      * @param src The object to get the data from
      * @param dest The object to transfer the data to
      * @param copyModel The model of the data to copy (an object that contains a subset of the paths of src, where final values are ignored)
+     * May also be a function that decides whether or not to copy a value from src
      * @param keepUndefined Whether or not to explicitely keep 'undefined' values in the output, and keep empty objects in the output
+     * @param path The path of the data so far (used by copyModel if it's a function)
      * @returns Just another reference to the passed dest object
      */
     public static copyData<S extends Map<any>, D extends object, C extends Map<any> = S>(
         src: S,
         dest: D,
-        copyModel?: C,
-        keepUndefined: boolean = true
+        copyModel?:
+            | C
+            | ((data: {
+                  path: string;
+                  srcValue: any;
+                  destValue: any;
+                  hasSrcValue: boolean;
+                  hasDestValue: boolean;
+                  recursing: boolean;
+                  key: string;
+              }) => boolean),
+        keepUndefined: boolean = true,
+        path?: string
     ): D & PartialObject<S, C, keyof C> {
         // If no copyModel was provided, use the full src
-        if (!copyModel) copyModel = <any>src;
+        if (!copyModel) copyModel = src as any;
+
+        // Get the check function if present, which checks whether a value should be copied
+        let check: (data: {
+            path: string;
+            srcValue: any;
+            destValue: any;
+            hasSrcValue: boolean;
+            hasDestValue: boolean;
+            recursing: boolean;
+            key: string;
+        }) => boolean;
+        if (copyModel instanceof Function) {
+            check = copyModel;
+            copyModel = src as any;
+        }
 
         // Go through all the fields in the model
         this.forEach(copyModel, (key, value) => {
-            // Check whether the value is a plain object, or an end point
-            if (value == undefined || value.__proto__ != Object.prototype) {
-                // Get the actual value from the source
-                value = src[key];
+            // Get the actual values from the source and destionation
+            const srcValue = src[key];
+            let destValue = dest[key];
 
+            // Check whether we will need to recurse
+            const recurse =
+                value != undefined &&
+                value.__proto__ == Object.prototype &&
+                srcValue != undefined &&
+                srcValue.__proto__ == Object.prototype &&
+                srcValue.$$typeof != Symbol.for("react.element"); // Don't touch react elements
+
+            // Check whether this value should be copied
+            if (
+                check &&
+                !check({
+                    path: path ? path + "." + key : key,
+                    srcValue,
+                    destValue,
+                    hasSrcValue: key in src,
+                    hasDestValue: key in dest,
+                    recursing: recurse,
+                    key,
+                })
+            )
+                return;
+
+            // Check whether the value is a plain object, or an end point
+            if (!recurse) {
                 // Check whether to store the value
-                if (value !== undefined || keepUndefined) dest[key] = value;
+                if (srcValue !== undefined || keepUndefined) dest[key] = srcValue;
                 else delete dest[key];
             } else {
                 // Recurse on the field
 
                 // Make sure the destination exists
-                if (!dest[key]) dest[key] = {};
+                if (!destValue || destValue.__proto__ != Object.prototype)
+                    destValue = dest[key] = {};
 
                 // Only recurse if the src exists
-                if (src[key]) {
-                    this.copyData(src[key], dest[key], copyModel[key], keepUndefined);
+                if (srcValue) {
+                    this.copyData(
+                        srcValue,
+                        destValue,
+                        check || value,
+                        keepUndefined,
+                        check ? (path ? path + "." + key : key) : undefined
+                    );
                 }
 
                 // Check if the object should be deleted
-                if (!keepUndefined && Object.keys(dest[key]).length == 0)
+                if (!keepUndefined && Object.keys(destValue).length == 0)
                     delete dest[key];
             }
         });

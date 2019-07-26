@@ -57,7 +57,7 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
     /**
      * Changes the data for a passed condition
      * @param data The fields to change
-     * @param condition The condition to change them fore
+     * @param condition The condition to change them for
      * @returns A promise that resolves when all listeners resolved
      */
     changeData(data: JsonPartial<SettingsData<C>>, condition?: SettingsConditions): Promise<void>;
@@ -72,6 +72,12 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * @returns The settings Data instance
      */
     getSettings(): Data<SettingsData<C>>;
+    /**
+     * Retrieves the data for a passed condition
+     * @param condition The condition to retrieve the data for
+     * @returns The settings condition data
+     */
+    getData(condition?: SettingsConditions): Data<SettingsData<C>>;
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change

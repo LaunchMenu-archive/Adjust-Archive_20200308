@@ -25,15 +25,17 @@
     },
     "homepage": "https://github.com/LaunchMenu/AdjustTestProject#readme",
     "dependencies": {
-        "electron": "^5.0.1",
         "@adjust/core": "^0.0.0",
         "@adjust/gui": "^0.0.0",
         "@emotion/core": "^10.0.10",
-        "@material-ui/core": "^3.9.0",
-        "@material-ui/icons": "^3.0.2",
+        "@emotion/styled": "^10.0.14",
+        "@material-ui/core": "^4.2.1",
+        "@material-ui/icons": "^4.2.1",
+        "@material-ui/system": "^4.3.1",
+        "cross-env": "^5.2.0",
+        "electron": "^5.0.1",
         "react": "^16.8.6",
-        "react-dom": "^16.8.6",
-        "cross-env": "^5.2.0"
+        "react-dom": "^16.8.6"
     },
     "devDependencies": {
         "@types/node": "^12.0.0",

@@ -1,0 +1,80 @@
+Arguments: 
+  I:\programs\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @material-ui/system
+
+PATH: 
+  I:\programs\ConEmu\ConEmu\Scripts;I:\programs\ConEmu;I:\programs\ConEmu\ConEmu;C:\Program Files\Oculus\Support\oculus-runtime;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;E:\Programs\TortoiseHg\;C:\Program Files\dotnet\;C:\Program Files (x86)\Microsoft Emulator Manager\1.0\;C:\Program Files (x86)\Yarn\bin\;I:\programs\nodejs\;C:\Users\Tar van Krieken\AppData\Local\Microsoft\WindowsApps;C:\Users\Tar van Krieken\AppData\Local\Microsoft\WindowsApps;C:\Users\Tar van Krieken\AppData\Local\GitHubDesktop\bin;C:\Users\Tar van Krieken\AppData\Local\atom\bin;I:\programs\visual studio\Microsoft VS Code\bin;C:\Users\Tar van Krieken\AppData\Local\Yarn\bin;C:\Users\Tar van Krieken\AppData\Roaming\npm
+
+Yarn version: 
+  1.13.0
+
+Node version: 
+  12.1.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.2.1.tgz: ESOCKETTIMEDOUT
+      at ClientRequest.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:130024:19)
+      at Object.onceWrapper (events.js:284:20)
+      at ClientRequest.emit (events.js:196:13)
+      at TLSSocket.emitRequestTimeout (_http_client.js:674:40)
+      at Object.onceWrapper (events.js:284:20)
+      at TLSSocket.emit (events.js:196:13)
+      at TLSSocket.Socket._onTimeout (net.js:432:8)
+      at listOnTimeout (internal/timers.js:531:17)
+      at processTimers (internal/timers.js:475:7)
+
+npm manifest: 
+  {
+      "name": "@adjust/test-project",
+      "version": "0.0.0",
+      "description": "A project to test Adjust with",
+      "private": true,
+      "scripts": {
+          "test": "test",
+          "start": "electron dist/index.js --async-stack-traces",
+          "debug": "electron --inspect-brk=9229 dist/index.js",
+          "watch": "concurrently \"tsc -w\"  \"cpx \\\"src/**/*.{html,png,jpg,json}\\\" \\\"dist\\\" --watch --verbose\" \"ts-cleaner --watch\""
+      },
+      "repository": {
+          "type": "git",
+          "url": "git+https://github.com/LaunchMenu/AdjustTestProject.git"
+      },
+      "keywords": [
+          "Adjust",
+          "test",
+          "project"
+      ],
+      "author": "Tar van Krieken",
+      "license": "MIT",
+      "bugs": {
+          "url": "https://github.com/LaunchMenu/AdjustTestProject/issues"
+      },
+      "homepage": "https://github.com/LaunchMenu/AdjustTestProject#readme",
+      "dependencies": {
+          "electron": "^5.0.1",
+          "@adjust/core": "^0.0.0",
+          "@adjust/gui": "^0.0.0",
+          "@emotion/core": "^10.0.10",
+          "@material-ui/core": "^4.2.1",
+          "@material-ui/icons": "^4.2.1",
+          "@emotion/styled": "^10.0.14",
+          "react": "^16.8.6",
+          "react-dom": "^16.8.6",
+          "cross-env": "^5.2.0"
+      },
+      "devDependencies": {
+          "@types/node": "^12.0.0",
+          "concurrently": "^4.1.0",
+          "cpx": "^1.5.0",
+          "ts-cleaner": "^1.0.2",
+          "typescript": "^3.4.5"
+      }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

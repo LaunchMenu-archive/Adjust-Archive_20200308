@@ -192,6 +192,9 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         extendedObject_1.ExtendedObject.forEachPaired([changedProps, previousProps, this.config], 
         // Emit all value changes
         (key, [newValue, oldValue, config], path) => {
+            // Make sure the value is in the config (might not be the cas for arbitraray top level values)
+            if (!config)
+                return;
             // If the config described a change event, fire it and add it to promises to wait for
             if (config.onChange)
                 promises.push(config.onChange(newValue, condition, oldValue, this, fromLoad));

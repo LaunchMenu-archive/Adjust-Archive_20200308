@@ -92,7 +92,7 @@ class ViewManagerSingleton {
             }
             // Make sure the module hasn't updated its path by now (became a view for another module)
             // and hasn't been completed unmounted yet
-            if (view.props.moduleID == moduleID && !view.unmounted) {
+            if (moduleID.equals(view.props.moduleID) && !view.unmounted) {
                 // Update the state
                 view.loadInitialState(initialState);
                 // Resolve in to this view
@@ -101,7 +101,7 @@ class ViewManagerSingleton {
             else {
                 // Otherwise, don't even resolve the promise,
                 // and make sure it is removed (should already be the case because of unmount)
-                reject();
+                reject("test");
                 this.deregisterView(promise, moduleID);
             }
         });

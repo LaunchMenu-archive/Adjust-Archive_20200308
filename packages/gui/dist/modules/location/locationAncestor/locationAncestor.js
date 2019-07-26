@@ -38,7 +38,16 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
      * @returns Any hints that might have been provided
      */
     getLocationHints(location) {
-        return location.hints[this.ancestorName];
+        if (location.hints) {
+            // If there is a path ID node for this ancestor's child in the hints, return it
+            const thisPath = this.getData().path || [];
+            if (location.hints.path && location.hints.path.length >= thisPath.length)
+                return { ID: location.hints.path[thisPath.length] };
+            // Otherwise return the hints targeted to this ancestor type
+            return location.hints[this.ancestorName] || {};
+        }
+        // If there are no hints, just return an empty object
+        return {};
     }
     /**
      * Gets the child location ancestor given a specified location path
@@ -108,6 +117,10 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
     /** @override */
     async getLocationsAtPath(partialPath) {
         return this.getParent().getLocationsAtPath(partialPath);
+    }
+    /** @override */
+    async updateMovedLocations() {
+        return this.getParent().updateMovedLocations();
     }
 }
 exports.default = LocationAncestorModule;

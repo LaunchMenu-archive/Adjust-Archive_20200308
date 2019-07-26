@@ -86,6 +86,11 @@ export type LocationAncestorParent = {
      * @returns The module locations at the path
      */
     getLocationsAtPath(partialPath: LocationAncestorIDs): Promise<ModuleLocation[]>;
+
+    /**
+     * Make use of the location move data in order to actually move the locations
+     */
+    updateMovedLocations(): Promise<void>;
 };
 export type LocationAncestorContract = {
     parent: LocationAncestorParent;

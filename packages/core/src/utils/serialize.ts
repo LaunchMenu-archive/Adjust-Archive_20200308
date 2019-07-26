@@ -37,8 +37,13 @@ export class Serialize {
         path?: string
     ): Json {
         // Check if the data has to be serialized
-        if (data == null) {
+        if (data === null) {
             return null;
+            // Transform undefined, since it doesn't exist in json
+        } else if (data === undefined) {
+            return {
+                $type: "undefined",
+            };
         } else if (typeof data == "object") {
             // If the data is a module, serialize it
             if (isModule(data))
@@ -94,15 +99,17 @@ export class Serialize {
         getModule: (path: string) => any
     ): SerializeableData {
         // Check if the data has to be deserialized
-        if (data == null) {
+        if (data === null) {
             return null;
         } else if (typeof data == "object") {
-            // Check if the data is a module
-            if ("$type" in data && "data" in data) {
-                // Check if the type is a module reference
-                if (data.$type == "ModuleReference") {
+            // Cjecl of the data is some custom type
+            if ("$type" in data) {
+                // Check if the data is constant 'undefined'
+                if (data.$type == "undefined") return undefined;
+
+                // Check if the data is a module
+                if (data.$type == "ModuleReference" && "data" in data)
                     return getModule(data.data as string);
-                }
             }
 
             // If it is an array, map it

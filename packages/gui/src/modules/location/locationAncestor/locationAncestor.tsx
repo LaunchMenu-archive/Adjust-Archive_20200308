@@ -58,7 +58,18 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
      * @returns Any hints that might have been provided
      */
     protected getLocationHints(location: ModuleLocation): object {
-        return location.hints[this.ancestorName];
+        if (location.hints) {
+            // If there is a path ID node for this ancestor's child in the hints, return it
+            const thisPath = this.getData().path || [];
+            if (location.hints.path && location.hints.path.length >= thisPath.length)
+                return {ID: location.hints.path[thisPath.length]};
+
+            // Otherwise return the hints targeted to this ancestor type
+            return (location.hints[this.ancestorName] as any) || {};
+        }
+
+        // If there are no hints, just return an empty object
+        return {};
     }
 
     /**
@@ -142,5 +153,10 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
         partialPath: LocationAncestorIDs
     ): Promise<ModuleLocation[]> {
         return this.getParent().getLocationsAtPath(partialPath);
+    }
+
+    /** @override */
+    public async updateMovedLocations(): Promise<void> {
+        return this.getParent().updateMovedLocations();
     }
 }

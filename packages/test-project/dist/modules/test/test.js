@@ -7,6 +7,7 @@ exports.config = {
         stuff: "test",
         child: undefined,
         somethingAsync: undefined,
+        smth: 0,
     },
     settings: {
         stuff: {
@@ -25,6 +26,14 @@ class TestModule extends gui_1.createModule(exports.config) {
                 data: { text: "hello", count: 3 },
             }),
         });
+        this.intervalID = setInterval(() => {
+            this.setState({
+                smth: (this.state.smth + 1) % 100,
+            });
+        }, 100);
+    }
+    async onStop() {
+        clearInterval(this.intervalID);
     }
     /** @override */
     async testSomething() {
@@ -46,7 +55,7 @@ class TestModule extends gui_1.createModule(exports.config) {
     setStuff() {
         this.settingsObject.set.stuff(true);
         this.setState({
-            somethingAsync: new Promise(res => setTimeout(() => res(10), 1000)),
+            somethingAsync: new Promise(res => setTimeout(() => res(9), 1000)),
         });
     }
 }
@@ -66,7 +75,8 @@ class TestView extends gui_1.createModuleView(TestModule) {
                 "Stuff is ",
                 this.settings.stuff + " ",
                 " ",
-                this.state.somethingAsync)));
+                this.state.somethingAsync + 3),
+            this.state.smth));
     }
 }
 exports.TestView = TestView;

@@ -1,8 +1,16 @@
-import {createModule, ModuleReference, createModuleView} from "@adjust/core";
+import {
+    createModule,
+    ModuleReference,
+    createModuleView,
+    ModuleID,
+    ExtendedObject,
+} from "@adjust/core";
 import {React} from "../../../React";
+import {DragEvent} from "react";
 import {LocationPath} from "../_types/LocationPath";
 import {LocationAncestorID, LocationAncestor} from "./locationAncestor.type";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
+import {Box} from "@material-ui/core";
 
 export const config = {
     initialState: {
@@ -10,12 +18,17 @@ export const config = {
         locations: {} as {
             [locationID: string]: {
                 path: LocationPath;
-                modules: ModuleReference[];
+                modules: {ID: string; module: ModuleReference}[];
             };
         },
         modules: [] as ModuleReference[], // The opened modules in order
-        editMode: false,
-        dropMode: false,
+        isEditMode: false,
+        isDropMode: false,
+        draggingModule: null as {
+            moduleID: string;
+            locationID: string;
+            newLocationID: string;
+        },
     },
     getPriority: () => 0.1,
     settings: {
@@ -46,7 +59,10 @@ export default class LocationModule extends createModule(config)
             locations: {
                 [locationID]: {
                     path: locationPath,
-                    modules: [module, ...(locData ? locData.modules : [])],
+                    modules: [
+                        {ID: module.toString(), module},
+                        ...(locData ? locData.modules : []),
+                    ],
                 },
             },
         });
@@ -62,13 +78,16 @@ export default class LocationModule extends createModule(config)
     ): Promise<boolean> {
         const locationID = locationPath.location.ID;
         const locData = this.state.locations[locationID];
-        const contains = this.state.modules.indexOf(module) != -1;
+        const l = this.state.modules.length;
+        const contains = this.state.modules.find(m => m.equals(module)) != null;
         this.setState({
-            modules: this.state.modules.filter(m => m != module),
+            modules: this.state.modules.filter(m => !m.equals(module)),
             locations: {
                 [locationID]: {
                     path: locationPath,
-                    modules: locData ? locData.modules.filter(m => m != module) : [],
+                    modules: locData
+                        ? locData.modules.filter(m => !m.module.equals(module))
+                        : [],
                 },
             },
         });
@@ -82,11 +101,11 @@ export default class LocationModule extends createModule(config)
         module: ModuleReference,
         locationPath: LocationPath
     ): Promise<boolean> {
-        const contains = this.state.modules.indexOf(module) != -1;
+        const contains = this.state.modules.find(m => m.equals(module)) != null;
         if (contains) {
             // Bring the module to the top
             this.setState({
-                modules: [module, ...this.state.modules.filter(m => m != module)],
+                modules: [module, ...this.state.modules.filter(m => !m.equals(module))],
             });
 
             // Return whether or not the locatin contains the module, and brought it to the front
@@ -120,7 +139,10 @@ export default class LocationModule extends createModule(config)
         // Remove the data from the state if present
         if (locData) {
             this.setState({
-                modules: this.state.modules.filter(m => locData.modules.indexOf(m) == -1),
+                // Keep all modules that weren't present in this location
+                modules: this.state.modules.filter(
+                    m => locData.modules.find(lm => m.equals(lm.module)) == undefined
+                ),
                 locations: {
                     [locationID]: undefined,
                 },
@@ -139,20 +161,194 @@ export default class LocationModule extends createModule(config)
         return contained;
     }
 
+    // Drag and drop methods
     /** @override */
     public async setEditMode(edit: boolean): Promise<void> {
-        return this.setState({editMode: edit});
+        return this.setState({isEditMode: edit});
     }
 
     /** @override */
     public async setDropMode(drop: boolean): Promise<void> {
-        return this.setState({dropMode: drop});
+        // If we dragged a module that was located here, change its location
+        if (!drop && this.state.draggingModule) {
+            // Obtain the module from the ID
+            const moduleID = new ModuleID(this.state.draggingModule.moduleID);
+            const module = moduleID.getModule();
+
+            // Obtain location data and remove it
+            const oldLocationID = this.state.draggingModule.locationID;
+            const newLocationID = this.state.draggingModule.newLocationID;
+            this.setState({
+                draggingModule: null,
+            });
+
+            // Obtain the ccondition to change the location for TODO: show a GUI fo rthe user to choose
+            const condition = undefined;
+            // await new Promise(res => setTimeout(res, 1000)); // Emulate something async
+
+            // Change the location for the condition
+            const so = module.settingsObject;
+            try {
+                const data = so.getData(condition);
+                let currentLocations = (data.get as any).location;
+                if (!(currentLocations instanceof Array))
+                    currentLocations = [currentLocations];
+
+                // Replace the dragged location by the new location
+                await data.changeData({
+                    location: [
+                        ...currentLocations.filter(
+                            loc => loc != oldLocationID && loc != newLocationID
+                        ),
+                        newLocationID,
+                    ],
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        return this.setState({isDropMode: drop});
+    }
+
+    /**
+     * Starts moving a module to another location
+     * @param locationID The ID of the location of the module being dragged
+     * @param moduleID The ID of the module being dragged
+     */
+    public async onDragStart(locationID: string, moduleID: string): Promise<void> {
+        const newLocationID = Math.floor(Math.random() * Math.pow(10, 8)) + "";
+        const path = this.getData().path;
+        this.getParent().setLocationsMoveData({
+            locations: [{ID: newLocationID, hints: {path: [...path]}}],
+        });
+        this.setState({
+            draggingModule: {
+                moduleID,
+                locationID,
+                newLocationID,
+            },
+        });
+    }
+
+    /**
+     * Handles dropping of a module at this location
+     */
+    public async onDrop(): Promise<void> {
+        // Retrieve the move data
+        const parent = this.getParent();
+        const currentData = await parent.getLocationsMoveData();
+
+        // Set all hints to a path pointing at this location
+        const path = this.getData().path;
+        currentData.locations.forEach(loc => {
+            loc.hints = {
+                path: [...path],
+            };
+        });
+
+        // Update the data
+        await parent.updateLocationsMoveData(currentData);
+    }
+
+    /**
+     * Moves the locations when the drag ends
+     */
+    public async onDragEnd(): Promise<void> {
+        this.getParent().updateMovedLocations();
     }
 }
 
 export class LocationView extends createModuleView(LocationModule) {
+    // Drag and drop methods
+    /**
+     * Starts the dragging of a location
+     * @param event The DOM event that starts the dragging
+     * @param locationID The location that is dragged from
+     * @param module The data of the module being dragged
+     */
+    protected onDragStart(
+        event: DragEvent,
+        locationID: string,
+        module: {ID: string; module: JSX.Element}
+    ): void {
+        event.dataTransfer.setData("text", "Adjust drop");
+        this.module.onDragStart(locationID, module.ID);
+    }
+
+    /**
+     * Checks whether this is valid data for a drop
+     * @param event The DOM event of the user dragging data
+     */
+    protected onDragOver(event: DragEvent): void {
+        if (this.state.isDropMode) event.preventDefault(); // Allows for dropping
+    }
+
+    /**
+     * Updates the locations when draging a location finishes
+     * @param event The DOM event of the user dragging data
+     */
+    protected onDragEnd(event: DragEvent): void {
+        this.module.onDragEnd();
+    }
+
+    /**
+     * Handles the dropping of data
+     * @param event The DOM event of the user dragging data
+     */
+    protected onDrop(event: DragEvent): void {
+        event.preventDefault(); // Allows for dropping
+        const data = event.dataTransfer.getData("text");
+        if (data == "Adjust drop" && this.state.isDropMode) {
+            this.module.onDrop();
+        }
+    }
+
+    // Rendering methods
+    cover = {position: "absolute" as any, left: 0, top: 0, right: 0, bottom: 0};
+
+    /**
+     * Renders a daragable box for every module in edit mode
+     */
+    protected renderModuleBoxes(): JSX.Element[] {
+        const boxes = [];
+        Object.entries(this.state.locations).forEach(([locationID, location]) => {
+            location.modules.forEach(module => {
+                boxes.push(
+                    <Box
+                        mt={1}
+                        width="100%"
+                        height="30px"
+                        bgcolor="blue"
+                        color="white"
+                        key={module.ID}
+                        onDragStart={e => this.onDragStart(e, locationID, module)}
+                        onDragOver={e => this.onDragOver(e)}
+                        onDrop={e => this.onDrop(e)}
+                        onDragEnd={e => this.onDragEnd(e)}
+                        draggable>
+                        {locationID} {module.ID}
+                    </Box>
+                );
+            });
+        });
+        return boxes;
+    }
+
+    /**@override */
     protected renderView(): JSX.Element {
-        if (this.state.editMode) return <div>Shiit</div>;
-        return <div>{this.state.modules[0]}</div>;
+        return (
+            <Box css={this.cover}>
+                {this.state.isEditMode && (
+                    <Box
+                        css={this.cover}
+                        p={1}
+                        onDragOver={e => this.onDragOver(e)}
+                        onDrop={e => this.onDrop(e)}>
+                        {this.renderModuleBoxes()}
+                    </Box>
+                )}
+                {this.state.modules[0]}
+            </Box>
+        );
     }
 }

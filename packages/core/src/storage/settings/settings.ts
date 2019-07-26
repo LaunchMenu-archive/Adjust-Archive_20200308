@@ -255,21 +255,15 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
     /**
      * Changes the data for a passed condition
      * @param data The fields to change
-     * @param condition The condition to change them fore
+     * @param condition The condition to change them for
      * @returns A promise that resolves when all listeners resolved
      */
     public changeData(
         data: JsonPartial<SettingsData<C>>,
         condition?: SettingsConditions
     ): Promise<void> {
-        // Check if the condition applies to this target, if not throw an error
-        if (!this.satisfiesCondition(condition))
-            throw new Error(
-                "The target of these settings doesn't satisfy the given condition"
-            );
-
         // Change the data on the condition of the settings file
-        return this.settingsFile.getConditionData(condition).changeData(data);
+        return this.getData(condition).changeData(data);
     }
 
     /**
@@ -288,6 +282,22 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      */
     public getSettings(): Data<SettingsData<C>> {
         return this.settings;
+    }
+
+    /**
+     * Retrieves the data for a passed condition
+     * @param condition The condition to retrieve the data for
+     * @returns The settings condition data
+     */
+    public getData(condition?: SettingsConditions): Data<SettingsData<C>> {
+        // Check if the condition applies to this target, if not throw an error
+        if (!this.satisfiesCondition(condition))
+            throw new Error(
+                "The target of these settings doesn't satisfy the given condition"
+            );
+
+        // Retrieve the data on the condition of the settings file
+        return this.settingsFile.getConditionData(condition);
     }
 
     // Events

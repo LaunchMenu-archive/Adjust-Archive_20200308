@@ -114,6 +114,7 @@ export abstract class Module extends adjustCreateModule(baseConfig) {
                         !newLocations.includes(location) &&
                         this.locationManager.closeModule(this.getID(), location)
                 );
+
                 // Open all added locations
                 const openPromises = newLocations.map(
                     location =>

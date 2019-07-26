@@ -4,11 +4,17 @@ export type DeepReadonly<T> = T extends Function
     ? T
     : T extends Array<any>
     ? T
+    : T extends Promise<any>
+    ? T
     : T extends object
     ? {readonly [P in keyof T]: DeepReadonly<T[P]>}
     : T;
 
-export type DeepPartial<T> = T extends object ? {[P in keyof T]?: DeepPartial<T[P]>} : T;
+export type DeepPartial<T> = T extends object
+    ? T extends Promise<any>
+        ? T
+        : {[P in keyof T]?: DeepPartial<T[P]>}
+    : T;
 
 // From: https://stackoverflow.com/a/49579497/8521718
 export type RequiredKeys<T> = {

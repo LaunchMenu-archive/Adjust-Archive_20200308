@@ -6,6 +6,7 @@ export declare const config: {
         stuff: string;
         child: Embed;
         somethingAsync: Promise<number>;
+        smth: number;
     };
     settings: {
         stuff: {
@@ -20,6 +21,7 @@ declare const TestModule_base: import("@adjust/core/types").ExtendedModuleClass<
         stuff: string;
         child: Embed;
         somethingAsync: Promise<number>;
+        smth: number;
     };
     settings: {
         stuff: {
@@ -30,8 +32,10 @@ declare const TestModule_base: import("@adjust/core/types").ExtendedModuleClass<
     type: import("@adjust/core/types").InterfaceID<import("./test.type").TestContract>;
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").Module, import("@adjust/gui").Module>>;
 export default class TestModule extends TestModule_base implements Test {
+    intervalID: number;
     /** @override */
     onInit(): Promise<void>;
+    onStop(): Promise<void>;
     /** @override */
     testSomething(): Promise<number>;
     /** @override */

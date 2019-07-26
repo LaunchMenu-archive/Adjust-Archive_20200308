@@ -61,14 +61,7 @@ export default class LocationManagerModule
     protected ancestorName: string = "window";
 
     /** @override */
-    protected async onInit() {
-        Registry.addProvider(
-            new InstanceModuleProvider(LocationManagerID, this, () => 2)
-        );
-    }
-
-    /** @override */
-    protected async onReloadInit() {
+    protected async onInit(fromReload: boolean): Promise<void> {
         Registry.addProvider(
             new InstanceModuleProvider(LocationManagerID, this, () => 2)
         );
@@ -152,14 +145,15 @@ export default class LocationManagerModule
         {
             // Get the ID of new ancestor for the module, using the new hints
             let windowID;
-            const hints = this.getLocationHints(location);
+            let hints = this.getLocationHints(location);
             if ("sameAs" in hints) {
-                const path = this.getLocationPath(hints["sameAs"]);
-                windowID = path.nodes[0];
+                const locationPath = this.getLocationPath(hints["sameAs"]);
+                windowID = locationPath.nodes[0];
             } else if ("ID" in hints) {
                 windowID = hints["ID"];
             }
 
+            // Default to default
             if (!windowID) windowID = "default";
 
             // Obtain the ancestor
@@ -248,11 +242,13 @@ export default class LocationManagerModule
      * - User enables edit mode
      * - User selects some locationAncestor to move by dragging (which calls setLocationsMoveData)
      * - User selects a target by dropping (which calls getLocationsMoveData and updateLocationsMoveData)
-     * - updateMovedLocations is striggered by the drop/mouse up event
+     * - updateMovedLocations to finalize the movement of data
      */
 
     /** @override */
     public async setEditMode(edit: boolean): Promise<boolean> {
+        if (this.state.editMode == edit) return false;
+
         // Update own state
         this.setState({editMode: edit});
 
@@ -267,16 +263,17 @@ export default class LocationManagerModule
 
     /** @override */
     public async setLocationsMoveData(data: LocationsMoveData): Promise<boolean> {
-        // Make sure there is no current data
-        if (this.state.locationMoveData) return false;
+        // Make sure there is no current data, if replacing it with data
+        if (this.state.locationMoveData && data) return false;
 
         // Update own state
         this.setState({locationMoveData: data});
 
         // Update whether we are able to drop elements now
-        ExtendedObject.forEach(this.state.locationAncestors, (ID, ancestor) => {
-            ancestor.setDropMode(data != null);
-        });
+        const promises = Object.values(this.state.locationAncestors).map(ancestor =>
+            ancestor.setDropMode(data != null)
+        );
+        await Promise.all(promises);
 
         // Return that the movement data was successfully set
         return true;
@@ -284,7 +281,7 @@ export default class LocationManagerModule
 
     /** @override */
     public async updateLocationsMoveData(data: LocationsMoveData): Promise<boolean> {
-        // Make sure there is no current data
+        // Make sure there is current data
         if (!this.state.locationMoveData) return false;
 
         // Update state
@@ -316,16 +313,14 @@ export default class LocationManagerModule
             .map(location => location.path.location);
     }
 
-    /**
-     * Updates the actual locations that were just moved (update the actual ancestors representing them)
-     */
-    protected async updateMovedLocations(): Promise<void> {
+    /** @override */
+    public async updateMovedLocations(): Promise<void> {
         // Uses own locations move cata to create these new locations
         const moveData = this.state.locationMoveData;
         if (!moveData) return;
 
         // Remove the move data
-        this.setState({locationMoveData: null});
+        await this.setLocationsMoveData(undefined);
 
         // Create the locations
         moveData.locations.forEach(location => {
@@ -364,7 +359,26 @@ export default class LocationManagerModule
 
     /** @override */
     public async closeModule(module: ModuleReference, location: string) {
-        // TODO:
+        // Retrieve the location path
+        const storedPath = this.getLocationPath(location);
+
+        // Obtain the locationAncestor
+        const {ID, path} = this.getExtractID(storedPath);
+        const locationAncestor = await this.getAncestor(ID);
+        // Open the path in the location ancestor
+        const closed = await locationAncestor.closeModule(module, path);
+
+        // Store the module at this path
+        if (closed)
+            this.setState({
+                locations: {
+                    [location]: {
+                        modules: (
+                            this.state.locations[location] || {modules: []}
+                        ).modules.filter(m => !m.equals(module)),
+                    },
+                },
+            });
     }
 
     /** @override */

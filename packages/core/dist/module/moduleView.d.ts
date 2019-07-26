@@ -41,6 +41,14 @@ export declare abstract class ModuleView<S extends ModuleState, C extends Settin
      * @param state The parts of the state to update
      */
     updateState(state: ModuleViewState<S, C, D>): void;
+    /**
+     * Augments the state changes to full state fields
+     * ({something:{stuff:3}} to {something:{stuff:3, otherCurVal:5}})
+     * @param oldState The current state data
+     * @param changes The changed path values
+     * @modifies changes
+     */
+    protected getNewState(oldState: ModuleViewState<S, C, D>, changes: ModuleViewState<S, C, D>): ModuleViewState<S, C, D>;
     /**@override */
     static getDerivedStateFromError(error: Error): {
         error: Error;

@@ -7,6 +7,7 @@ export const config = {
         stuff: "test",
         child: undefined as Embed,
         somethingAsync: undefined as Promise<number>,
+        smth: 0 as number,
     },
     settings: {
         stuff: {
@@ -18,6 +19,7 @@ export const config = {
 };
 
 export default class TestModule extends createModule(config) implements Test {
+    intervalID: number;
     /** @override */
     public async onInit() {
         this.setState({
@@ -26,6 +28,14 @@ export default class TestModule extends createModule(config) implements Test {
                 data: {text: "hello", count: 3},
             }),
         });
+        this.intervalID = setInterval(() => {
+            this.setState({
+                smth: (this.state.smth + 1) % 100,
+            });
+        }, 100) as any;
+    }
+    public async onStop() {
+        clearInterval(this.intervalID);
     }
 
     /** @override */
@@ -49,7 +59,7 @@ export default class TestModule extends createModule(config) implements Test {
     public setStuff() {
         this.settingsObject.set.stuff(true);
         this.setState({
-            somethingAsync: new Promise(res => setTimeout(() => res(10), 1000)),
+            somethingAsync: new Promise(res => setTimeout(() => res(9), 1000)),
         });
     }
 }
@@ -71,8 +81,9 @@ export class TestView extends createModuleView(TestModule) {
                 </button>
                 <button onClick={e => this.module.closeChild()}>Close child</button>
                 <button onClick={e => this.module.setStuff()}>
-                    Stuff is {this.settings.stuff + " "} {this.state.somethingAsync}
+                    Stuff is {this.settings.stuff + " "} {this.state.somethingAsync + 3}
                 </button>
+                {this.state.smth}
             </div>
         );
     }
