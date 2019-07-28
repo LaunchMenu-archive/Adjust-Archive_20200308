@@ -180,7 +180,7 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
     }
 
     /** @override */
-    public async updateMovedLocations(): Promise<void> {
-        return this.getParent().updateMovedLocations();
+    public async updateMovedLocations(delay?: number): Promise<void> {
+        return this.getParent().updateMovedLocations(delay);
     }
 }

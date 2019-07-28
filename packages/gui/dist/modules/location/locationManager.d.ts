@@ -115,7 +115,7 @@ export default class LocationManagerModule extends LocationManagerModule_base im
     /** @override */
     getLocationsAtPath(partialPath: string[]): Promise<ModuleLocation[]>;
     /** @override */
-    updateMovedLocations(): Promise<void>;
+    updateMovedLocations(delay?: number): Promise<void>;
     /** @override */
     openModule(module: ModuleReference, location: string): Promise<void>;
     /** @override */

@@ -347,10 +347,13 @@ export default class LocationManagerModule
     }
 
     /** @override */
-    public async updateMovedLocations(): Promise<void> {
+    public async updateMovedLocations(delay: number = 100): Promise<void> {
         // Uses own locations move cata to create these new locations
         const moveData = this.state.locationMoveData;
         if (!moveData) return;
+
+        // Give some time for ancestors to register their moved locations updates
+        await new Promise(r => setTimeout(r, delay));
 
         // Create the locations
         const promises = moveData.locations.map(location =>

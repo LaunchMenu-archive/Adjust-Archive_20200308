@@ -140,8 +140,8 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
         return this.getParent().getModulesAtPath(partialPath);
     }
     /** @override */
-    async updateMovedLocations() {
-        return this.getParent().updateMovedLocations();
+    async updateMovedLocations(delay) {
+        return this.getParent().updateMovedLocations(delay);
     }
 }
 exports.default = LocationAncestorModule;

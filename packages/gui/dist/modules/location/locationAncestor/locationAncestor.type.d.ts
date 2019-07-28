@@ -83,8 +83,9 @@ export declare type LocationAncestorParent = {
     getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]>;
     /**
      * Make use of the location move data in order to actually move the locations
+     * @param delay The number of miliseconds that should be waited to perform updateLocationsMoveData calls
      */
-    updateMovedLocations(): Promise<void>;
+    updateMovedLocations(delay?: number): Promise<void>;
 };
 export declare type LocationAncestorContract = {
     parent: LocationAncestorParent;

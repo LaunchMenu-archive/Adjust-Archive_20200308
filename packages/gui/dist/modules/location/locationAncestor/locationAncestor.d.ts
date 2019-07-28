@@ -78,6 +78,6 @@ export default class LocationAncestorModule extends LocationAncestorModule_base 
     /** @override */
     getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]>;
     /** @override */
-    updateMovedLocations(): Promise<void>;
+    updateMovedLocations(delay?: number): Promise<void>;
 }
 export {};
