@@ -31,6 +31,8 @@ export default class WindowModule extends WindowModule_base implements LocationA
      */
     protected closeWindow(): Promise<void>;
     /** @override */
+    protected onStop(): Promise<void>;
+    /** @override */
     createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */
     removeLocation(locationPath: LocationPath): Promise<boolean>;
@@ -49,7 +51,7 @@ export default class WindowModule extends WindowModule_base implements LocationA
     setEditMode(edit: boolean): Promise<void>;
     /** @override */
     setDropMode(drop: boolean): Promise<void>;
-    setEdit(enabled: boolean): Promise<void>;
+    setEdit(edit: boolean): Promise<void>;
     saveSettings(): Promise<void>;
 }
 declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>, {}>>>;

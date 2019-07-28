@@ -26,6 +26,10 @@
                         {
                             "settingsID": 0,
                             "modulePath": "\\test\\test.js"
+                        },
+                        {
+                            "settingsID": 0,
+                            "modulePath": "gui\\location\\windowSelector\\windowSelector.js"
                         }
                     ]
                 },

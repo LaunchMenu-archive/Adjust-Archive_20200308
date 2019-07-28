@@ -39,11 +39,14 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     async closeWindow() {
         // Check if the window has been opened
         if (this.window) {
-            const window = await this.window;
             // Close the window
-            window.close();
+            core_2.WindowManager.closeWindow(this.getData().ID);
             this.window = null;
         }
+    }
+    /** @override */
+    async onStop() {
+        await this.closeWindow();
     }
     // Location management
     /** @override */
@@ -87,34 +90,43 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         if (this.window) {
             // Obtain the child ancestor
             const child = await this.getChild();
-            // Forward opening the module to the child
-            return child.closeModule(module, location);
+            // Forward closing the module to the child
+            return await child.closeModule(module, location);
         }
         return false;
     }
     /** @override */
     async showModule(module, location) {
+        if (this.window) {
+            // Obtain the child ancestor
+            const child = await this.getChild();
+            // Forward showing the module to the child
+            return child.showModule(module, location);
+        }
         return false;
     }
     // Edit magement
     /** @override */
     async setEditMode(edit) {
+        await super.setEditMode(edit);
         if (this.state.childLocationAncestor) {
             const child = await this.getChild();
-            child.setEditMode(edit);
+            return child.setEditMode(edit);
         }
     }
     /** @override */
     async setDropMode(drop) {
+        await super.setDropMode(drop);
         if (this.state.childLocationAncestor) {
             const child = await this.getChild();
-            child.setDropMode(drop);
+            return child.setDropMode(drop);
         }
     }
     // Testing TODO: remove this
-    async setEdit(enabled) {
+    async setEdit(edit) {
         const LM = await this.request({ type: locationManager_type_1.LocationManagerID });
-        LM.setEditMode(enabled);
+        await LM.setEditMode(edit);
+        LM.close();
     }
     async saveSettings() {
         core_2.SettingsManager.saveAll();

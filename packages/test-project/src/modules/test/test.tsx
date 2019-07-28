@@ -29,6 +29,7 @@ export default class TestModule extends createModule(config) implements Test {
             }),
         });
         this.intervalID = setInterval(() => {
+            if (this.state.smth == 0) this.show();
             this.setState({
                 smth: (this.state.smth + 1) % 100,
             });

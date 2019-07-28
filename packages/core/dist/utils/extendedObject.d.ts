@@ -154,7 +154,8 @@ export declare class ExtendedObject extends Object {
      * @param dest The object to transfer the data to
      * @param copyModel The model of the data to copy (an object that contains a subset of the paths of src, where final values are ignored)
      * May also be a function that decides whether or not to copy a value from src
-     * @param keepUndefined Whether or not to explicitely keep 'undefined' values in the output, and keep empty objects in the output
+     * @param keepUndefined Whether or not to explicitely keep 'undefined' values in the output
+     * @param keepEmpty Whether or not to explicitely keep empty objects in the output
      * @param path The path of the data so far (used by copyModel if it's a function)
      * @returns Just another reference to the passed dest object
      */
@@ -166,7 +167,7 @@ export declare class ExtendedObject extends Object {
         hasDestValue: boolean;
         recursing: boolean;
         key: string;
-    }) => boolean), keepUndefined?: boolean, path?: string): D & PartialObject<S, C, keyof C>;
+    }) => boolean), keepUndefined?: boolean, keepEmpty?: boolean, path?: string): D & PartialObject<S, C, keyof C>;
     /**
      * Checks if the contents of object 1 and 2 are equal, except for subobjects
      * @param obj1 The first object

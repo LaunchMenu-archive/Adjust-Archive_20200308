@@ -13,10 +13,11 @@ import {TestID} from "./modules/test/test.type";
 import {SingletonParentID} from "./modules/singletonTest/singletonParent/singletonParent.type";
 
 (async () => {
+    console.log("loading");
     await Registry.loadDefaultClassModuleProviders();
     await Registry.loadClassModuleProviders();
 
-    console.log("start");
+    console.log("starting");
     let test = 3;
 
     if (test == 1) {

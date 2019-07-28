@@ -4,6 +4,13 @@ const data_1 = require("../storage/data");
 const serialize_1 = require("../utils/serialize");
 class StateData extends data_1.Data {
     /**
+     * A class that stores state data and emit events on changes of the data
+     * @param initialData The initial data to store in the system, the set structure will also be based on this
+     */
+    constructor(initialData) {
+        super(initialData, false);
+    }
+    /**
      * Serializes the data in order to store it
      * @param asyncCallback A callback for any promises within the data that could resolve
      * @returns The data of the module

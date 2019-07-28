@@ -67,7 +67,7 @@ class WindowManagerSingleton {
             const window = windowData && windowData.window;
 
             // Get the data (and make it forward any promises that get resolved)
-            return this.getModuleData(moduleID, window);
+            return this.getModuleData(moduleID, window, windowID);
         });
 
         // Listen for module calls
@@ -155,12 +155,12 @@ class WindowManagerSingleton {
 
             // Set the root view of the window and assign a viewNotFound view of the window
             const promises = [
-                IpcMain.send(browserWindow, "WindowIndex.setRoot", moduleID.toString()),
                 IpcMain.send(
                     browserWindow,
                     "WindowIndex.setViewNotFound",
                     this.viewNotFoundModule.toString()
                 ),
+                IpcMain.send(browserWindow, "WindowIndex.setRoot", moduleID.toString()),
             ];
             await Promise.all(promises);
 
@@ -211,7 +211,7 @@ class WindowManagerSingleton {
             .getStateObject()
             .on(
                 "change",
-                this.sendStateData.bind(this, moduleID, window),
+                this.sendStateData.bind(this, moduleID, window, windowID),
                 `windowManager.${windowID}`
             );
 
@@ -219,15 +219,23 @@ class WindowManagerSingleton {
         module.getSettingsObject().on(
             "change",
             (prop, value) => {
-                IpcMain.send(
-                    window,
-                    "ViewManager.sendUpdate",
-                    moduleID.toString(),
-                    Serialize.serialize(ExtendedObject.translatePathToObject(
-                        `~settings.${prop}`,
-                        value
-                    ) as any)
-                );
+                // Make sure the window isn't closed
+                if (!this.windows[windowID]) return;
+
+                try {
+                    // Send the data
+                    IpcMain.send(
+                        window,
+                        "ViewManager.sendUpdate",
+                        moduleID.toString(),
+                        Serialize.serialize(ExtendedObject.translatePathToObject(
+                            `~settings.${prop}`,
+                            value
+                        ) as any)
+                    );
+                } catch (e) {
+                    console.error(e, this.windows, windowID);
+                }
             },
             `windowManager.${windowID}`
         );
@@ -237,13 +245,19 @@ class WindowManagerSingleton {
      * Sends the state data to a given window for a given module
      * @param moduleID The ID of the module to which this data belongs
      * @param window The window that the module is located in
+     * @param windowID The ID of the window that the module is located in
      * @param data The data to be send
      */
     protected sendStateData(
         moduleID: ModuleID | string,
         window: BrowserWindow,
+        windowID: string,
         data: AsyncSerializeableData
     ): void {
+        // Make sure the window isn't closed
+        if (!this.windows[windowID]) return;
+
+        // Send the data
         IpcMain.send(
             window,
             "ViewManager.sendUpdate",
@@ -251,10 +265,12 @@ class WindowManagerSingleton {
             Serialize.serialize(data, (path, value) => {
                 // IF a promise resolves, translate the path of the value into an object again
                 // And also send this data
-                this.sendStateData(moduleID, window, ExtendedObject.translatePathToObject(
-                    path,
-                    value
-                ) as any);
+                this.sendStateData(
+                    moduleID,
+                    window,
+                    windowID,
+                    ExtendedObject.translatePathToObject(path, value) as any
+                );
             })
         );
     }
@@ -286,11 +302,13 @@ class WindowManagerSingleton {
      * Obtains the current data of the module
      * @param moduleID The moduleID of the module to get the data for
      * @param window The window that the module is located in
+     * @param windowID The ID of the window that the module is located in
      * @returns The data of the module data
      */
     protected getModuleData(
         moduleID: ModuleID | string,
-        window: BrowserWindow
+        window: BrowserWindow,
+        windowID: string
     ): ModuleViewData {
         // Get the module instance
         const module = ProgramState.getModule(moduleID) as ParameterizedModule;
@@ -305,6 +323,7 @@ class WindowManagerSingleton {
                     this.sendStateData(
                         moduleID,
                         window,
+                        windowID,
                         ExtendedObject.translatePathToObject(path, value) as any
                     )
             );

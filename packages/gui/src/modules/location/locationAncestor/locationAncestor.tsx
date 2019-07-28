@@ -1,4 +1,8 @@
-import {ClassModuleProvider, createModule as createAdjustCoreModule} from "@adjust/core";
+import {
+    ClassModuleProvider,
+    createModule as createAdjustCoreModule,
+    ModuleReference,
+} from "@adjust/core";
 import {LocationPath} from "../_types/LocationPath";
 import {
     LocationAncestorID,
@@ -8,10 +12,12 @@ import {
 // import {createModule} from "../../../module/moduleClassCreator";
 import {LocationsMoveData} from "../_types/LocationsMoveData";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
-import {LocationAncestorIDs} from "../_types/LocationAncestorIDs";
 
 export const config = {
-    initialState: {},
+    initialState: {
+        inEditMode: false,
+        inDropMode: false,
+    },
     settings: {},
     type: LocationAncestorID,
     abstract: true, // This is just inteded as module to be extended
@@ -128,8 +134,23 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
             },
         }))[0];
 
+        // Make sure to initialise the correct state
+        if (this.state.inEditMode) locationAncestor.setEditMode(true);
+        if (this.state.inDropMode) locationAncestor.setDropMode(true);
+
         // Return the ancestor
         return locationAncestor;
+    }
+
+    // State related methods
+    /** @override */
+    public async setEditMode(edit: boolean): Promise<any> {
+        await this.setState({inEditMode: edit});
+    }
+
+    /** @override */
+    public async setDropMode(drop: boolean): Promise<void> {
+        await this.setState({inDropMode: drop});
     }
 
     // Location moving related methods
@@ -149,10 +170,13 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
     }
 
     /** @override */
-    public async getLocationsAtPath(
-        partialPath: LocationAncestorIDs
-    ): Promise<ModuleLocation[]> {
+    public async getLocationsAtPath(partialPath: string[]): Promise<ModuleLocation[]> {
         return this.getParent().getLocationsAtPath(partialPath);
+    }
+
+    /** @override */
+    public async getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]> {
+        return this.getParent().getModulesAtPath(partialPath);
     }
 
     /** @override */

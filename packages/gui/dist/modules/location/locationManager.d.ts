@@ -6,19 +6,19 @@ import LocationAncestorModule from "./locationAncestor/locationAncestor";
 import { LocationPath } from "./_types/LocationPath";
 import { LocationAncestor } from "./locationAncestor/locationAncestor.type";
 import { LocationsMoveData } from "./_types/LocationsMoveData";
-import { LocationAncestorIDs } from "./_types/LocationAncestorIDs";
+import { WindowSelector } from "./windowSelector/windowSelector.type";
 export declare const config: {
     initialState: {
         locationAncestors: {
-            [locationAncestorID: string]: LocationAncestor;
+            [locationAncestorID: string]: Promise<LocationAncestor>;
         };
         locations: {
             [locationID: string]: {
                 modules: ModuleReference[];
             };
         };
-        editMode: boolean;
         locationMoveData: LocationsMoveData;
+        windowSelector: WindowSelector;
     };
     settings: {
         locations: {
@@ -36,15 +36,15 @@ export declare const config: {
 declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
         locationAncestors: {
-            [locationAncestorID: string]: LocationAncestor;
+            [locationAncestorID: string]: Promise<LocationAncestor>;
         };
         locations: {
             [locationID: string]: {
                 modules: ModuleReference[];
             };
         };
-        editMode: boolean;
         locationMoveData: LocationsMoveData;
+        windowSelector: WindowSelector;
     };
     settings: {
         locations: {
@@ -88,6 +88,11 @@ export default class LocationManagerModule extends LocationManagerModule_base im
      * @returns The ancestor that was either already loaded, or was just opened
      */
     protected getAncestor(ancestorID: string): Promise<LocationAncestor>;
+    /**
+     * Closes the location ancestor with a given ID if currently opened
+     * @param ancestorID The ID of the location ancestor to close
+     */
+    protected closeAncestor(ancestorID: string): Promise<void>;
     /** @override */
     updateLocation(location: ModuleLocation): Promise<void>;
     /** @override */
@@ -108,7 +113,7 @@ export default class LocationManagerModule extends LocationManagerModule_base im
     /** @override */
     getLocationsMoveData(): Promise<LocationsMoveData>;
     /** @override */
-    getLocationsAtPath(partialPath: LocationAncestorIDs): Promise<ModuleLocation[]>;
+    getLocationsAtPath(partialPath: string[]): Promise<ModuleLocation[]>;
     /** @override */
     updateMovedLocations(): Promise<void>;
     /** @override */
@@ -125,5 +130,7 @@ export default class LocationManagerModule extends LocationManagerModule_base im
      * @returns The modules that are opened at this location in this settions
      */
     protected getModulesAtLocation(location: string): ModuleReference[];
+    /** @override */
+    getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]>;
 }
 export {};

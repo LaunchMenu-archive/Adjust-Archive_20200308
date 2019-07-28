@@ -9,9 +9,10 @@ const modules_1 = require("@adjust/gui/modules");
 const test_type_1 = require("./modules/test/test.type");
 const singletonParent_type_1 = require("./modules/singletonTest/singletonParent/singletonParent.type");
 (async () => {
+    console.log("loading");
     await gui_1.Registry.loadDefaultClassModuleProviders();
     await gui_1.Registry.loadClassModuleProviders();
-    console.log("start");
+    console.log("starting");
     let test = 3;
     if (test == 1) {
         //TODO: reject interfaces that require a parent as the root

@@ -6,13 +6,17 @@ const core_1 = require("@adjust/core");
 const locationManager_type_1 = require("./locationManager.type");
 const registry_1 = require("../../registry/registry");
 const locationAncestor_1 = __importDefault(require("./locationAncestor/locationAncestor"));
+const windowSelector_type_1 = require("./windowSelector/windowSelector.type");
 exports.config = {
     initialState: {
+        // Keep track of currently opened child ancestors
         locationAncestors: {},
         // Keep track of currently used locations, and modules opened here in this session
         locations: {},
-        editMode: false,
+        // The data of locations currently being moved
         locationMoveData: null,
+        // The window selector to handle windpws that are currently not opened
+        windowSelector: null,
     },
     settings: {
         // Keeps permanent track of all locations and modules that should be opened here
@@ -41,6 +45,11 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
     /** @override */
     async onInit(fromReload) {
         registry_1.Registry.addProvider(new core_1.InstanceModuleProvider(locationManager_type_1.LocationManagerID, this, () => 2));
+        // Load the window selector
+        if (!fromReload)
+            this.setState({
+                windowSelector: await this.request({ type: windowSelector_type_1.WindowSelectorID }),
+            });
     }
     // Path/locations management
     /**
@@ -82,7 +91,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         let locationAncestor = this.state.locationAncestors[ancestorID];
         if (!locationAncestor) {
             // Get the child location ancestor
-            locationAncestor = await this.getChildLocationAncestor(ancestorID);
+            locationAncestor = this.getChildLocationAncestor(ancestorID);
             // Update the state to contain this location ancestor
             this.setState({
                 locationAncestors: {
@@ -91,7 +100,25 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
             });
         }
         // Return the ancestor
-        return locationAncestor;
+        return await locationAncestor;
+    }
+    /**
+     * Closes the location ancestor with a given ID if currently opened
+     * @param ancestorID The ID of the location ancestor to close
+     */
+    async closeAncestor(ancestorID) {
+        // Get the ancestor if opened
+        let locationAncestor = await this.state.locationAncestors[ancestorID];
+        if (locationAncestor) {
+            // Remove it from the state
+            this.setState({
+                locationAncestors: {
+                    [ancestorID]: undefined,
+                },
+            });
+            // Close it
+            await locationAncestor.close();
+        }
     }
     /** @override */
     async updateLocation(location) {
@@ -189,14 +216,15 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
      */
     /** @override */
     async setEditMode(edit) {
-        if (this.state.editMode == edit)
+        if (this.state.inEditMode == edit)
             return false;
-        // Update own state
-        this.setState({ editMode: edit });
+        // Update the state
+        await super.setEditMode(edit);
         // Inform ancestors
-        core_1.ExtendedObject.forEach(this.state.locationAncestors, (ID, ancestor) => {
-            ancestor.setEditMode(edit);
+        const promises = Object.values(this.state.locationAncestors).map(async (ancestor) => {
+            (await ancestor).setEditMode(edit);
         });
+        await Promise.all(promises);
         // Return that the change was successful
         return true;
     }
@@ -208,8 +236,10 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         // Update own state
         this.setState({ locationMoveData: data });
         // Update whether we are able to drop elements now
-        const promises = Object.values(this.state.locationAncestors).map(ancestor => ancestor.setDropMode(data != null));
+        const promises = Object.values(this.state.locationAncestors).map(async (ancestor) => (await ancestor).setDropMode(data != null));
         await Promise.all(promises);
+        // Enable or disable the window selector
+        this.state.windowSelector.setEnabled(data != null);
         // Return that the movement data was successfully set
         return true;
     }
@@ -232,7 +262,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         return Object.values(this.settings.locations)
             .filter(location => 
         // Make sure all the parts of the path correspond
-        core_1.ExtendedObject.reduce(partialPath, (res, ancestorID, ancestorType) => location[ancestorType] == ancestorID && res, true))
+        partialPath.reduce((res, ancestorID, index) => location.path && location.path.nodes[index] == ancestorID && res, true))
             .map(location => location.path.location);
     }
     /** @override */
@@ -241,12 +271,11 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         const moveData = this.state.locationMoveData;
         if (!moveData)
             return;
+        // Create the locations
+        const promises = moveData.locations.map(location => this.updateLocation(location));
+        await Promise.all(promises);
         // Remove the move data
         await this.setLocationsMoveData(undefined);
-        // Create the locations
-        moveData.locations.forEach(location => {
-            this.updateLocation(location);
-        });
     }
     // Opening/closing modules
     /** @override */
@@ -256,10 +285,6 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         // Obtain the locationAncestor
         const { ID, path } = this.getExtractID(storedPath);
         const locationAncestor = await this.getAncestor(ID);
-        // Open the path in the location ancestor
-        const obtainedPath = await locationAncestor.openModule(module, path);
-        // Update location path
-        this.updateLocationPath(obtainedPath);
         // Store the module at this path
         this.setState({
             locations: {
@@ -271,6 +296,10 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
                 },
             },
         });
+        // Open the path in the location ancestor
+        const obtainedPath = await locationAncestor.openModule(module, path);
+        // Update location path
+        this.updateLocationPath(obtainedPath);
     }
     /** @override */
     async closeModule(module, location) {
@@ -282,7 +311,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         // Open the path in the location ancestor
         const closed = await locationAncestor.closeModule(module, path);
         // Store the module at this path
-        if (closed)
+        if (closed) {
             this.setState({
                 locations: {
                     [location]: {
@@ -290,11 +319,20 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
                     },
                 },
             });
+            // Close the window if there are no more modules opened in it
+            if ((await this.getModulesAtPath([ID])).length == 0)
+                await this.closeAncestor(ID);
+        }
     }
     /** @override */
     async showModule(module, location) {
-        // TODO:
-        return false;
+        // Retrieve the location path
+        const storedPath = this.getLocationPath(location);
+        // Obtain the locationAncestor
+        const { ID, path } = this.getExtractID(storedPath);
+        const locationAncestor = await this.getAncestor(ID);
+        // Attempt to show the module
+        return locationAncestor.showModule(module, path);
     }
     /** @override */
     async isModuleOpened(module, locationID) {
@@ -308,6 +346,17 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
     getModulesAtLocation(location) {
         const locData = this.state.locations[location];
         return (locData && locData.modules) || [];
+    }
+    /** @override */
+    async getModulesAtPath(partialPath) {
+        // Define the modules to retrieve
+        const modules = [];
+        // Get all locations, and retriev its modules
+        (await this.getLocationsAtPath(partialPath)).forEach(location => {
+            modules.push(...this.getModulesAtLocation(location.ID));
+        });
+        // Return all modules
+        return modules;
     }
 }
 exports.default = LocationManagerModule;

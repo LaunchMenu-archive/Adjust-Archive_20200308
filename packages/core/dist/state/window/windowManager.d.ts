@@ -51,9 +51,10 @@ declare class WindowManagerSingleton {
      * Sends the state data to a given window for a given module
      * @param moduleID The ID of the module to which this data belongs
      * @param window The window that the module is located in
+     * @param windowID The ID of the window that the module is located in
      * @param data The data to be send
      */
-    protected sendStateData(moduleID: ModuleID | string, window: BrowserWindow, data: AsyncSerializeableData): void;
+    protected sendStateData(moduleID: ModuleID | string, window: BrowserWindow, windowID: string, data: AsyncSerializeableData): void;
     /**
      * Removes the listeners from the module to stop forwarding its data to a window's GuiManager
      * @param moduleID The moduleID of the module that is forwarding to a window
@@ -64,9 +65,10 @@ declare class WindowManagerSingleton {
      * Obtains the current data of the module
      * @param moduleID The moduleID of the module to get the data for
      * @param window The window that the module is located in
+     * @param windowID The ID of the window that the module is located in
      * @returns The data of the module data
      */
-    protected getModuleData(moduleID: ModuleID | string, window: BrowserWindow): ModuleViewData;
+    protected getModuleData(moduleID: ModuleID | string, window: BrowserWindow, windowID: string): ModuleViewData;
 }
 export declare const WindowManager: WindowManagerSingleton;
 export {};

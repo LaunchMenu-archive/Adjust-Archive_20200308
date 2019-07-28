@@ -5,6 +5,9 @@ import {ModuleLocation} from "../../../module/_types/ModuleLocation";
 import {LocationsMoveData} from "../_types/LocationsMoveData";
 import {LocationAncestorIDs} from "../_types/LocationAncestorIDs";
 
+/**
+ * A type used by the location manager, represents a node of the path to a location
+ */
 export type LocationAncestor = {
     /**
      * Opens a module at the given location
@@ -85,7 +88,14 @@ export type LocationAncestorParent = {
      * @param partialPath The partial path too get the locations from
      * @returns The module locations at the path
      */
-    getLocationsAtPath(partialPath: LocationAncestorIDs): Promise<ModuleLocation[]>;
+    getLocationsAtPath(partialPath: string[]): Promise<ModuleLocation[]>;
+
+    /**
+     * Retrieves the modules that are located somewhere along the given partial path
+     * @param partialPath The partial path too get the modules from
+     * @returns The modules at the path
+     */
+    getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]>;
 
     /**
      * Make use of the location move data in order to actually move the locations
@@ -105,3 +115,6 @@ export type LocationAncestorContract = {
 export const LocationAncestorID = Registry.createInterfaceID<LocationAncestorContract>(
     __filename
 );
+
+// Export a name that drag and drop data should be tagged with
+export const dragAndDropName = "Adjust drop";

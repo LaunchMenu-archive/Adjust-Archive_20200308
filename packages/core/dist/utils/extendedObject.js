@@ -411,11 +411,12 @@ class ExtendedObject extends Object {
      * @param dest The object to transfer the data to
      * @param copyModel The model of the data to copy (an object that contains a subset of the paths of src, where final values are ignored)
      * May also be a function that decides whether or not to copy a value from src
-     * @param keepUndefined Whether or not to explicitely keep 'undefined' values in the output, and keep empty objects in the output
+     * @param keepUndefined Whether or not to explicitely keep 'undefined' values in the output
+     * @param keepEmpty Whether or not to explicitely keep empty objects in the output
      * @param path The path of the data so far (used by copyModel if it's a function)
      * @returns Just another reference to the passed dest object
      */
-    static copyData(src, dest, copyModel, keepUndefined = true, path) {
+    static copyData(src, dest, copyModel, keepUndefined = true, keepEmpty = true, path) {
         // If no copyModel was provided, use the full src
         if (!copyModel)
             copyModel = src;
@@ -463,10 +464,10 @@ class ExtendedObject extends Object {
                     destValue = dest[key] = {};
                 // Only recurse if the src exists
                 if (srcValue) {
-                    this.copyData(srcValue, destValue, check || value, keepUndefined, check ? (path ? path + "." + key : key) : undefined);
+                    this.copyData(srcValue, destValue, check || value, keepUndefined, keepEmpty, check ? (path ? path + "." + key : key) : undefined);
                 }
                 // Check if the object should be deleted
-                if (!keepUndefined && Object.keys(destValue).length == 0)
+                if (!keepEmpty && Object.keys(destValue).length == 0)
                     delete dest[key];
             }
         });

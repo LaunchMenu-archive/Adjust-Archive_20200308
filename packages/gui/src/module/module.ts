@@ -127,4 +127,26 @@ export abstract class Module extends adjustCreateModule(baseConfig) {
             }
         });
     }
+
+    /**
+     * Shows the GUI of this module at its locations
+     * @param locations The locations to show this module at (provided it's already opened there)
+     */
+    protected async show(locations?: string[] | string): Promise<void> {
+        // If no locations were passed, load them from the settings
+        if (!locations) locations = this.settings.location;
+
+        // Normalize the locations
+        if (!locations) locations = [];
+        else if (!(locations instanceof Array)) locations = [locations];
+
+        // Only continue if there is a location manager
+        if (!this.locationManager) return;
+
+        // Show the module at the locations
+        const promises = locations.map(location =>
+            this.locationManager.showModule(this.getID(), location)
+        );
+        await Promise.all(promises);
+    }
 }

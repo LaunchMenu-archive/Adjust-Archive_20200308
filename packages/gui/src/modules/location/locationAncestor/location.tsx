@@ -8,9 +8,14 @@ import {
 import {React} from "../../../React";
 import {DragEvent} from "react";
 import {LocationPath} from "../_types/LocationPath";
-import {LocationAncestorID, LocationAncestor} from "./locationAncestor.type";
+import {
+    LocationAncestorID,
+    LocationAncestor,
+    dragAndDropName,
+} from "./locationAncestor.type";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
 import {Box} from "@material-ui/core";
+import LocationAncestorModule from "./locationAncestor";
 
 export const config = {
     initialState: {
@@ -22,8 +27,6 @@ export const config = {
             };
         },
         modules: [] as ModuleReference[], // The opened modules in order
-        isEditMode: false,
-        isDropMode: false,
         draggingModule: null as {
             moduleID: string;
             locationID: string;
@@ -43,7 +46,7 @@ export const config = {
 /**
  * The location class that simply renders a location when requested
  */
-export default class LocationModule extends createModule(config)
+export default class LocationModule extends createModule(config, LocationAncestorModule)
     implements LocationAncestor {
     //TODO: add list of multiple modules, and a request focus system
 
@@ -163,12 +166,9 @@ export default class LocationModule extends createModule(config)
 
     // Drag and drop methods
     /** @override */
-    public async setEditMode(edit: boolean): Promise<void> {
-        return this.setState({isEditMode: edit});
-    }
-
-    /** @override */
     public async setDropMode(drop: boolean): Promise<void> {
+        await super.setDropMode(drop);
+
         // If we dragged a module that was located here, change its location
         if (!drop && this.state.draggingModule) {
             // Obtain the module from the ID
@@ -184,7 +184,7 @@ export default class LocationModule extends createModule(config)
 
             // Obtain the ccondition to change the location for TODO: show a GUI fo rthe user to choose
             const condition = undefined;
-            // await new Promise(res => setTimeout(res, 1000)); // Emulate something async
+            // await new Promise(res => setTimeout(res, 0)); // Emulate something async
 
             // Change the location for the condition
             const so = module.settingsObject;
@@ -207,7 +207,6 @@ export default class LocationModule extends createModule(config)
                 console.error(e);
             }
         }
-        return this.setState({isDropMode: drop});
     }
 
     /**
@@ -271,7 +270,7 @@ export class LocationView extends createModuleView(LocationModule) {
         locationID: string,
         module: {ID: string; module: JSX.Element}
     ): void {
-        event.dataTransfer.setData("text", "Adjust drop");
+        event.dataTransfer.setData("text", dragAndDropName);
         this.module.onDragStart(locationID, module.ID);
     }
 
@@ -280,7 +279,7 @@ export class LocationView extends createModuleView(LocationModule) {
      * @param event The DOM event of the user dragging data
      */
     protected onDragOver(event: DragEvent): void {
-        if (this.state.isDropMode) event.preventDefault(); // Allows for dropping
+        if (this.state.inDropMode) event.preventDefault(); // Allows for dropping
     }
 
     /**
@@ -298,7 +297,7 @@ export class LocationView extends createModuleView(LocationModule) {
     protected onDrop(event: DragEvent): void {
         event.preventDefault(); // Allows for dropping
         const data = event.dataTransfer.getData("text");
-        if (data == "Adjust drop" && this.state.isDropMode) {
+        if (data == dragAndDropName && this.state.inDropMode) {
             this.module.onDrop();
         }
     }
@@ -338,7 +337,7 @@ export class LocationView extends createModuleView(LocationModule) {
     protected renderView(): JSX.Element {
         return (
             <Box css={this.cover}>
-                {this.state.isEditMode && (
+                {this.state.inEditMode && (
                     <Box
                         css={this.cover}
                         p={1}
@@ -348,6 +347,9 @@ export class LocationView extends createModuleView(LocationModule) {
                     </Box>
                 )}
                 {this.state.modules[0]}
+                {Object.keys(this.state.locations).map(key => (
+                    <div key={key}>{key}</div>
+                ))}
             </Box>
         );
     }

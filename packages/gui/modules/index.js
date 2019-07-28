@@ -11,3 +11,5 @@ __export(require("../dist/modules/location/locationAncestor/locationAncestor.typ
 __export(require("../dist/modules/location/locationAncestor/types/window"));
 __export(require("../dist/modules/location/locationManager"));
 __export(require("../dist/modules/location/locationManager.type"));
+__export(require("../dist/modules/location/windowSelector/windowSelector"));
+__export(require("../dist/modules/location/windowSelector/windowSelector.type"));

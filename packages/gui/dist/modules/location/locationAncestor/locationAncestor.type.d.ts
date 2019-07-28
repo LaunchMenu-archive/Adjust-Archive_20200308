@@ -3,7 +3,9 @@ import { PublicModuleMethods } from "@adjust/core/types";
 import { LocationPath } from "../_types/LocationPath";
 import { ModuleLocation } from "../../../module/_types/ModuleLocation";
 import { LocationsMoveData } from "../_types/LocationsMoveData";
-import { LocationAncestorIDs } from "../_types/LocationAncestorIDs";
+/**
+ * A type used by the location manager, represents a node of the path to a location
+ */
 export declare type LocationAncestor = {
     /**
      * Opens a module at the given location
@@ -72,7 +74,13 @@ export declare type LocationAncestorParent = {
      * @param partialPath The partial path too get the locations from
      * @returns The module locations at the path
      */
-    getLocationsAtPath(partialPath: LocationAncestorIDs): Promise<ModuleLocation[]>;
+    getLocationsAtPath(partialPath: string[]): Promise<ModuleLocation[]>;
+    /**
+     * Retrieves the modules that are located somewhere along the given partial path
+     * @param partialPath The partial path too get the modules from
+     * @returns The modules at the path
+     */
+    getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]>;
     /**
      * Make use of the location move data in order to actually move the locations
      */
@@ -87,3 +95,4 @@ export declare type LocationAncestorContract = {
     };
 };
 export declare const LocationAncestorID: import("@adjust/core/types").InterfaceID<LocationAncestorContract>;
+export declare const dragAndDropName = "Adjust drop";

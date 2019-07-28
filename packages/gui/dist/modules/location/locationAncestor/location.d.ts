@@ -3,6 +3,7 @@ import { DragEvent } from "react";
 import { LocationPath } from "../_types/LocationPath";
 import { LocationAncestor } from "./locationAncestor.type";
 import { ModuleLocation } from "../../../module/_types/ModuleLocation";
+import LocationAncestorModule from "./locationAncestor";
 export declare const config: {
     initialState: {
         locations: {
@@ -15,8 +16,6 @@ export declare const config: {
             };
         };
         modules: ModuleReference[];
-        isEditMode: boolean;
-        isDropMode: boolean;
         draggingModule: {
             moduleID: string;
             locationID: string;
@@ -44,8 +43,6 @@ declare const LocationModule_base: import("@adjust/core/types").ExtendedModuleCl
             };
         };
         modules: ModuleReference[];
-        isEditMode: boolean;
-        isDropMode: boolean;
         draggingModule: {
             moduleID: string;
             locationID: string;
@@ -60,10 +57,7 @@ declare const LocationModule_base: import("@adjust/core/types").ExtendedModuleCl
         };
     };
     type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
-}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
-    isStopping: boolean;
-    isStopped: boolean;
-}, {}, import("@adjust/core/types").ModuleInterface>>>;
+}, typeof LocationAncestorModule>;
 /**
  * The location class that simply renders a location when requested
  */
@@ -78,8 +72,6 @@ export default class LocationModule extends LocationModule_base implements Locat
     createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */
     removeLocation(locationPath: LocationPath): Promise<boolean>;
-    /** @override */
-    setEditMode(edit: boolean): Promise<void>;
     /** @override */
     setDropMode(drop: boolean): Promise<void>;
     /**

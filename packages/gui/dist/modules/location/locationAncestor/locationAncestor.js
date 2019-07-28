@@ -2,7 +2,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@adjust/core");
 const locationAncestor_type_1 = require("./locationAncestor.type");
 exports.config = {
-    initialState: {},
+    initialState: {
+        inEditMode: false,
+        inDropMode: false,
+    },
     settings: {},
     type: locationAncestor_type_1.LocationAncestorID,
     abstract: true,
@@ -98,8 +101,22 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
                     : this.getData().path,
             },
         }))[0];
+        // Make sure to initialise the correct state
+        if (this.state.inEditMode)
+            locationAncestor.setEditMode(true);
+        if (this.state.inDropMode)
+            locationAncestor.setDropMode(true);
         // Return the ancestor
         return locationAncestor;
+    }
+    // State related methods
+    /** @override */
+    async setEditMode(edit) {
+        await this.setState({ inEditMode: edit });
+    }
+    /** @override */
+    async setDropMode(drop) {
+        await this.setState({ inDropMode: drop });
     }
     // Location moving related methods
     /** @override */
@@ -117,6 +134,10 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
     /** @override */
     async getLocationsAtPath(partialPath) {
         return this.getParent().getLocationsAtPath(partialPath);
+    }
+    /** @override */
+    async getModulesAtPath(partialPath) {
+        return this.getParent().getModulesAtPath(partialPath);
     }
     /** @override */
     async updateMovedLocations() {

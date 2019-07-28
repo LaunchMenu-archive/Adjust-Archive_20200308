@@ -7,3 +7,5 @@ export * from "../dist/modules/location/locationAncestor/locationAncestor.type";
 export * from "../dist/modules/location/locationAncestor/types/window";
 export * from "../dist/modules/location/locationManager";
 export * from "../dist/modules/location/locationManager.type";
+export * from "../dist/modules/location/windowSelector/windowSelector";
+export * from "../dist/modules/location/windowSelector/windowSelector.type";

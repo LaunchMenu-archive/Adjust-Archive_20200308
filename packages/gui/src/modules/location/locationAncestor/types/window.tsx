@@ -46,12 +46,15 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     protected async closeWindow(): Promise<void> {
         // Check if the window has been opened
         if (this.window) {
-            const window = await this.window;
-
             // Close the window
-            window.close();
+            WindowManager.closeWindow(this.getData().ID);
             this.window = null;
         }
+    }
+
+    /** @override */
+    protected async onStop(): Promise<void> {
+        await this.closeWindow();
     }
 
     // Location management
@@ -111,8 +114,8 @@ export default class WindowModule extends createModule(config, LocationAncestorM
             // Obtain the child ancestor
             const child = await this.getChild();
 
-            // Forward opening the module to the child
-            return child.closeModule(module, location);
+            // Forward closing the module to the child
+            return await child.closeModule(module, location);
         }
         return false;
     }
@@ -122,30 +125,42 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         module: ModuleReference,
         location: LocationPath
     ): Promise<boolean> {
+        if (this.window) {
+            // Obtain the child ancestor
+            const child = await this.getChild();
+
+            // Forward showing the module to the child
+            return child.showModule(module, location);
+        }
         return false;
     }
 
     // Edit magement
     /** @override */
     public async setEditMode(edit: boolean): Promise<void> {
+        await super.setEditMode(edit);
+
         if (this.state.childLocationAncestor) {
             const child = await this.getChild();
-            child.setEditMode(edit);
+            return child.setEditMode(edit);
         }
     }
 
     /** @override */
     public async setDropMode(drop: boolean): Promise<void> {
+        await super.setDropMode(drop);
+
         if (this.state.childLocationAncestor) {
             const child = await this.getChild();
-            child.setDropMode(drop);
+            return child.setDropMode(drop);
         }
     }
 
     // Testing TODO: remove this
-    public async setEdit(enabled: boolean): Promise<void> {
+    public async setEdit(edit: boolean): Promise<void> {
         const LM = await this.request({type: LocationManagerID});
-        LM.setEditMode(enabled);
+        await LM.setEditMode(edit);
+        LM.close();
     }
 
     public async saveSettings(): Promise<void> {

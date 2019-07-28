@@ -84,6 +84,26 @@ class Module extends core_1.createModule(exports.baseConfig) {
             }
         });
     }
+    /**
+     * Shows the GUI of this module at its locations
+     * @param locations The locations to show this module at (provided it's already opened there)
+     */
+    async show(locations) {
+        // If no locations were passed, load them from the settings
+        if (!locations)
+            locations = this.settings.location;
+        // Normalize the locations
+        if (!locations)
+            locations = [];
+        else if (!(locations instanceof Array))
+            locations = [locations];
+        // Only continue if there is a location manager
+        if (!this.locationManager)
+            return;
+        // Show the module at the locations
+        const promises = locations.map(location => this.locationManager.showModule(this.getID(), location));
+        await Promise.all(promises);
+    }
 }
 exports.Module = Module;
 //# sourceMappingURL=module.js.map

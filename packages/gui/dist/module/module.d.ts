@@ -49,5 +49,10 @@ export declare abstract class Module extends Module_base {
      * Opens the module view using the location manager, according to the module's settings
      */
     protected openView(): Promise<void>;
+    /**
+     * Shows the GUI of this module at its locations
+     * @param locations The locations to show this module at (provided it's already opened there)
+     */
+    protected show(locations?: string[] | string): Promise<void>;
 }
 export {};

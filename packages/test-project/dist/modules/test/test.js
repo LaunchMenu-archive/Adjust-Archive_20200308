@@ -27,6 +27,8 @@ class TestModule extends gui_1.createModule(exports.config) {
             }),
         });
         this.intervalID = setInterval(() => {
+            if (this.state.smth == 0)
+                this.show();
             this.setState({
                 smth: (this.state.smth + 1) % 100,
             });

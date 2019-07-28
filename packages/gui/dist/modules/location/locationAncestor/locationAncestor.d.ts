@@ -1,16 +1,22 @@
+import { ModuleReference } from "@adjust/core";
 import { LocationPath } from "../_types/LocationPath";
 import { LocationAncestor, LocationAncestorParent } from "./locationAncestor.type";
 import { LocationsMoveData } from "../_types/LocationsMoveData";
 import { ModuleLocation } from "../../../module/_types/ModuleLocation";
-import { LocationAncestorIDs } from "../_types/LocationAncestorIDs";
 export declare const config: {
-    initialState: {};
+    initialState: {
+        inEditMode: boolean;
+        inDropMode: boolean;
+    };
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
     abstract: boolean;
 };
 declare const LocationAncestorModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {};
+    initialState: {
+        inEditMode: boolean;
+        inDropMode: boolean;
+    };
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
     abstract: boolean;
@@ -58,13 +64,19 @@ export default class LocationAncestorModule extends LocationAncestorModule_base 
      */
     protected getChildLocationAncestor(ID?: string): Promise<LocationAncestor>;
     /** @override */
+    setEditMode(edit: boolean): Promise<any>;
+    /** @override */
+    setDropMode(drop: boolean): Promise<void>;
+    /** @override */
     setLocationsMoveData(data: LocationsMoveData): Promise<boolean>;
     /** @override */
     updateLocationsMoveData(data: LocationsMoveData): Promise<boolean>;
     /** @override */
     getLocationsMoveData(): Promise<LocationsMoveData>;
     /** @override */
-    getLocationsAtPath(partialPath: LocationAncestorIDs): Promise<ModuleLocation[]>;
+    getLocationsAtPath(partialPath: string[]): Promise<ModuleLocation[]>;
+    /** @override */
+    getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]>;
     /** @override */
     updateMovedLocations(): Promise<void>;
 }
