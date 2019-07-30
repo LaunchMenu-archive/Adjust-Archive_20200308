@@ -1,7 +1,13 @@
 [
     {
-        "condition": "() => true",
-        "priority": 2,
+        "condition": {
+            "type": "function",
+            "data": {
+                "condition": "() => true",
+                "data": []
+            },
+            "priority": 2
+        },
         "ID": 1,
         "data": {
             "b": {
@@ -10,8 +16,14 @@
         }
     },
     {
-        "condition": "target => {\r\n            return target.getClass() != null; // Should always be true also\r\n        }",
-        "priority": 2,
+        "condition": {
+            "type": "function",
+            "data": {
+                "condition": "target => {\r\n            return target != null; // Should always be true also\r\n        }",
+                "data": []
+            },
+            "priority": 2
+        },
         "ID": 2,
         "data": {
             "b": {
@@ -20,7 +32,13 @@
         }
     },
     {
-        "priority": 0,
+        "condition": {
+            "type": "function",
+            "data": {
+                "data": []
+            },
+            "priority": 0
+        },
         "ID": 0,
         "data": {
             "a": 3,

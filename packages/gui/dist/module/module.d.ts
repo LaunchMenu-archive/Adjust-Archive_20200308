@@ -1,4 +1,4 @@
-import { SettingsConditions, SettingsFile } from "@adjust/core";
+import { SettingsFile } from "@adjust/core";
 import { LocationManager } from "../modules/location/locationManager.type";
 /**
  * A method that syncrhonizes the locations with the location manager when a module's location changes
@@ -7,7 +7,7 @@ import { LocationManager } from "../modules/location/locationManager.type";
  * @param oldValue The old locations of the modulei
  * @param settingsFile An instance of the settings file in which these locations are stored
  */
-export declare const synchronizedLocations: (newValue: string | string[], condition: SettingsConditions, oldValue: string | string[], settingsFile: SettingsFile<any>) => Promise<void>;
+export declare const synchronizedLocations: (newValue: string | string[], condition: any, oldValue: string | string[], settingsFile: SettingsFile<any>) => Promise<void>;
 /**
  * The default config for modules, adds location management to the Adjust core modules
  */
@@ -17,7 +17,7 @@ export declare const baseConfig: {
         location: {
             default: string | string[];
             type: string;
-            onChange: (newValue: string | string[], condition: SettingsConditions, oldValue: string | string[], settingsFile: SettingsFile<any>) => Promise<void>;
+            onChange: (newValue: string | string[], condition: any, oldValue: string | string[], settingsFile: SettingsFile<any>) => Promise<void>;
         };
     };
     type: any;
@@ -28,11 +28,11 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
         location: {
             default: string | string[];
             type: string;
-            onChange: (newValue: string | string[], condition: SettingsConditions, oldValue: string | string[], settingsFile: SettingsFile<any>) => Promise<void>;
+            onChange: (newValue: string | string[], condition: any, oldValue: string | string[], settingsFile: SettingsFile<any>) => Promise<void>;
         };
     };
     type: any;
-}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
+}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core/dist/module/module").Module, import("@adjust/core/dist/module/module").Module<{
     isStopping: boolean;
     isStopped: boolean;
 }, {}, import("@adjust/core/types").ModuleInterface>>>;

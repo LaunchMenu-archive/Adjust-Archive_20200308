@@ -5,11 +5,11 @@ import { Data } from "../data";
 import { Setters } from "../_types/setters";
 import { SettingsConfig } from "./_types/settingsConfig";
 import { SettingsData } from "./_types/settingsData";
-import { SettingsConditions } from "./settingsConditions";
 import { EventEmitter } from "../../utils/eventEmitter";
 import { Shape } from "./_types/shape";
 import { SettingsDataID } from "./SettingsDataID";
 import { Module } from "../../module/module";
+import { SettingsConditions } from "./settingsConditions/abstractSettingsConditions";
 export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsData<S>>;
     protected config: SettingsConfig;

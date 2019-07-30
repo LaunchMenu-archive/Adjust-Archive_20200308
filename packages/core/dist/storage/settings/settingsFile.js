@@ -1,10 +1,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const data_1 = require("../data");
 const settingsManager_1 = require("./settingsManager");
-const settingsConditions_1 = require("./settingsConditions");
 const eventEmitter_1 = require("../../utils/eventEmitter");
 const extendedObject_1 = require("../../utils/extendedObject");
 const sortedList_1 = require("../../utils/sortedList");
+const settingsConditionsSerializer_1 = require("./settingsConditions/settingsConditionsSerializer");
+const abstractSettingsConditions_1 = require("./settingsConditions/abstractSettingsConditions");
 class SettingsFile extends eventEmitter_1.EventEmitter {
     /**
      * Creates a settingsFile to store settings for a certain module class
@@ -136,7 +137,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
      */
     getConditionData(condition) {
         // Normalize the conditions
-        if (!(condition instanceof settingsConditions_1.SettingsConditions) && condition !== undefined)
+        if (!(condition instanceof abstractSettingsConditions_1.SettingsConditions) && condition !== undefined)
             condition = this.getCondition(condition);
         // Get the settingsSetData if already defined
         let settingsSetData = this.settings
@@ -214,8 +215,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         const data = this.settings
             .filter(settingsSet => Object.keys(settingsSet.data.get).length > 0)
             .map(settingsSet => ({
-            condition: settingsSet.condition.getData(),
-            priority: settingsSet.condition.getPriority(),
+            condition: settingsConditionsSerializer_1.SettingsConditionSerializer.serialize(settingsSet.condition),
             ID: settingsSet.ID,
             data: settingsSet.data.serialize(),
         }));
@@ -235,10 +235,10 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         const getSettings = initialSettings => {
             // Create data objects for all of them
             const settingsData = (initialSettings || []).map(settings => {
-                const data = new data_1.Data(settings.data);
+                const data = new data_1.Data(settings.data, false);
                 data.on("change", this.valueChange.bind(this, settings.condition), "SettingsFile");
                 return {
-                    condition: new settingsConditions_1.SettingsConditions(settings.condition, settings.priority || 0),
+                    condition: settingsConditionsSerializer_1.SettingsConditionSerializer.deserialize(settings.condition),
                     ID: settings.ID,
                     data: data,
                 };

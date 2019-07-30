@@ -59,7 +59,7 @@ export default class WindowModule extends WindowModule_base implements Window {
     setEdit(edit: boolean): Promise<void>;
     saveSettings(): Promise<void>;
 }
-declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core/dist/module/moduleView").ModuleView, import("@adjust/core/dist/module/moduleView").ModuleView<{}, {}, import("@adjust/core/dist/module/module").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>, {}>>>;
 export declare class WindowView extends WindowView_base {
     /**@override */
     componentWillMount(): void;

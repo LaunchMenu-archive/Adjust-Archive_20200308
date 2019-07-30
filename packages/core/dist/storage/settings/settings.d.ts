@@ -6,9 +6,9 @@ import { JsonPartial } from "../_types/jsonPartial";
 import { Module, ParameterizedModule } from "../../module/module";
 import { SettingsConfig } from "./_types/settingsConfig";
 import { SettingsFile } from "./settingsFile";
-import { SettingsConditions } from "./settingsConditions";
 import { Data } from "../data";
 import { EventEmitter } from "../../utils/eventEmitter";
+import { SettingsConditions } from "./settingsConditions/abstractSettingsConditions";
 export declare class Settings<C extends SettingsConfig> extends EventEmitter {
     protected settingsFile: SettingsFile<C>;
     protected settingsFileListener: (path: string, value: any, condition: SettingsConditions) => void;

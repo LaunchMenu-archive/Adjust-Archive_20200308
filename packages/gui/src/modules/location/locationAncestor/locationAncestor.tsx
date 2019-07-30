@@ -1,7 +1,9 @@
 import {
-    ClassModuleProvider,
     createModule as createAdjustCoreModule,
     ModuleReference,
+    Settings,
+    SettingsConditions,
+    ParameterizedModule,
 } from "@adjust/core";
 import {LocationPath} from "../_types/LocationPath";
 import {
@@ -9,9 +11,9 @@ import {
     LocationAncestor,
     LocationAncestorParent,
 } from "./locationAncestor.type";
-// import {createModule} from "../../../module/moduleClassCreator";
 import {LocationsMoveData} from "../_types/LocationsMoveData";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
+import {SettingsData, JsonPartial} from "@adjust/core/types";
 
 export const config = {
     initialState: {
@@ -139,6 +141,15 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
         // Return the ancestor
         return locationAncestor;
     }
+
+    // Data change related methods
+    /**
+     * The settings condition to target the settings with the correct ID
+     */
+    settingsConditions = new SettingsConditions((target: ParameterizedModule) => {
+        const data = target.getData();
+        return data.ID && true;
+    }, 1);
 
     // State related methods
     /** @override */

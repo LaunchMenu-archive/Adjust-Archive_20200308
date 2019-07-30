@@ -87,7 +87,9 @@ describe("ModuleProxy", () => {
     describe("IsParentof", () => {
         let parent;
         let parentProxy;
-        beforeEach(() => {
+        beforeEach(async () => {
+            node = await Node.customConstruct(a, b, c, d);
+            node2 = await Node.customConstruct(a, b, c, d);
             parent = node;
             parentProxy = parent.createProxy();
         });

@@ -1,5 +1,5 @@
 import {Data} from "../../data";
-import {SettingsConditions} from "../settingsConditions";
+import {SettingsConditions} from "../settingsConditions/abstractSettingsConditions";
 
 /**
  * Settings that apply only when the given condition is met, where the data is stored in an actual Data object

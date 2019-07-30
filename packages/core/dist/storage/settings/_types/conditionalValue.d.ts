@@ -1,4 +1,4 @@
-import { SettingsConditions } from "../settingsConditions";
+import { SettingsConditions } from "../settingsConditions/abstractSettingsConditions";
 /**
  * The way a single value is stored together with its condition
  */

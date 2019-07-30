@@ -33,7 +33,7 @@ class StateData extends data_1.Data {
             const contextProxy = module.parents.find(parent => parent._target == context);
             if (!contextProxy) {
                 // TODO: add error once architecture has been changed such that locations don't require passing modules around
-                // throw Error(`module doesn't specify context as parent`);
+                throw Error(`module doesn't specify context as parent`);
                 return moduleProxy;
             }
             // Connect the procies, and return the module proxy

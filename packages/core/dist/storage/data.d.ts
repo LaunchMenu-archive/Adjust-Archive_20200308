@@ -6,12 +6,14 @@ export declare class Data<S extends object> extends EventEmitter {
     readonly get: DeepReadonly<S>;
     readonly set: DeepReadonly<Setters<S>>;
     protected storeUndefined: boolean;
+    protected keepEmpty: boolean;
     /**
      * A class that stores data and emits events on changes of the data
      * @param initialData The initial data to store in the system, the set structure will also be based on this
-     * @param storeUndefined Whether or not to explicitely store undefined, and whether to keep empty objects
+     * @param storeUndefined Whether or not to explicitely store undefined
+     * @param keepEmpty Whether or not to explicitely keep empty objects
      */
-    constructor(initialData: S, storeUndefined?: boolean);
+    constructor(initialData: S, storeUndefined?: boolean, keepEmpty?: boolean);
     /**
      * Changes properties in the data of the module, and rerenders the associated GUI
      * @param changedProps An object with all the changed properties and their values

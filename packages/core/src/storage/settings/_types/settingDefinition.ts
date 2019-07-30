@@ -1,5 +1,5 @@
 import {ParameterizedSettingsFile} from "../settingsFile";
-import {SettingsConditions} from "../settingsConditions";
+import {SettingsConditions} from "../settingsConditions/abstractSettingsConditions";
 
 /**
  * The data of a single Setting in the config

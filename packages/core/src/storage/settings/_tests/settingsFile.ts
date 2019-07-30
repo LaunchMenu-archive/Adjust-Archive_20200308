@@ -1,5 +1,5 @@
 import {SettingsFile} from "../settingsFile";
-import {SettingsConditions} from "../settingsConditions";
+import {FunctionSettingsConditions} from "../settingsConditions/functionSettingsConditions";
 
 const config = {
     a: {
@@ -45,18 +45,18 @@ describe("SettingsFile", () => {
         });
 
         it("Should be able to create setter objects for new conditions", () => {
-            const condition = new SettingsConditions(() => true, 2);
+            const condition = new FunctionSettingsConditions(() => true, 2);
             expect(settingsFile.set(condition)).not.toBeFalsy();
         });
         it("Should return a setter object with the right structure", () => {
-            const condition = new SettingsConditions(() => true, 2);
+            const condition = new FunctionSettingsConditions(() => true, 2);
 
             settingsFile.set(condition).a(3);
             settingsFile.set(condition).b.c("test");
             expect(true).toBeTruthy();
         });
         it("Should invoke change events", () => {
-            const condition = new SettingsConditions(() => true, 2);
+            const condition = new FunctionSettingsConditions(() => true, 2);
 
             const changes = [];
             settingsFile.on("change", (path, value, cCondition, oldValue) => {
@@ -94,11 +94,11 @@ describe("SettingsFile", () => {
             expect(args.newValue).toEqual(3);
             expect(args.oldValue).toEqual(undefined);
             expect(
-                new SettingsConditions(undefined, 0).equals(args.condition)
+                new FunctionSettingsConditions(undefined, 0).equals(args.condition)
             ).toBeTruthy();
             expect(args.settings).not.toBeFalsy();
 
-            const condition = new SettingsConditions(() => true, 2);
+            const condition = new FunctionSettingsConditions(() => true, 2);
             settingsFile.set(condition).f.g(5);
 
             expect(args.newValue).toEqual(5);
@@ -122,7 +122,7 @@ describe("SettingsFile", () => {
                     },
                 },
             });
-            const condition = new SettingsConditions(() => true, 2);
+            const condition = new FunctionSettingsConditions(() => true, 2);
             await settingsFile.set(condition).f.g(5);
             order.push(2);
 
@@ -136,12 +136,12 @@ describe("SettingsFile", () => {
             expect(order).toEqual([1, 2, 1, 3, 2]);
         });
         it("Should remove data if undefined", () => {
-            const condition = new SettingsConditions(() => true, 2);
+            const condition = new FunctionSettingsConditions(() => true, 2);
 
             settingsFile.set(condition).b.c("test");
             expect(settingsFile.get(condition).b.c).toBe("test");
             settingsFile.set(condition).b.c(undefined);
-            expect(settingsFile.get(condition).b).toBe(undefined);
+            expect(settingsFile.get(condition).b).toEqual({});
         });
     });
     describe("Get", () => {
@@ -151,9 +151,9 @@ describe("SettingsFile", () => {
         });
 
         it("Should get the data corresponding with some condition", () => {
-            const condition = new SettingsConditions(() => true, 2);
-            const condition2 = new SettingsConditions(target => {
-                return target.getClass() != null; // Should always be true also
+            const condition = new FunctionSettingsConditions(() => true, 2);
+            const condition2 = new FunctionSettingsConditions(target => {
+                return target != null; // Should always be true also
             }, 2);
 
             settingsFile.set().b.c("test");
@@ -183,9 +183,9 @@ describe("SettingsFile", () => {
                 },
             },
         };
-        const condition = new SettingsConditions(() => true, 2);
-        const condition2 = new SettingsConditions(target => {
-            return target.getClass() != null; // Should always be true also
+        const condition = new FunctionSettingsConditions(() => true, 2);
+        const condition2 = new FunctionSettingsConditions(target => {
+            return target != null; // Should always be true also
         }, 2);
         let settingsFile: SettingsFile<typeof config>;
         beforeEach(async () => {
@@ -212,9 +212,9 @@ describe("SettingsFile", () => {
         });
     });
     describe("Reload", () => {
-        const condition = new SettingsConditions(() => true, 2);
-        const condition2 = new SettingsConditions(target => {
-            return target.getClass() != null; // Should always be true also
+        const condition = new FunctionSettingsConditions(() => true, 2);
+        const condition2 = new FunctionSettingsConditions(target => {
+            return target != null; // Should always be true also
         }, 2);
         let settingsFile: SettingsFile<typeof config>;
         beforeEach(async () => {

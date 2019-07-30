@@ -34,5 +34,5 @@ __export(require("./storage/settings/settingsManager"));
 __export(require("./storage/settings/settingsDataID"));
 __export(require("./storage/settings/settingsFile"));
 __export(require("./storage/settings/settings"));
-__export(require("./storage/settings/settingsConditions"));
+__export(require("./storage/settings/settingsConditions/functionSettingsConditions"));
 //# sourceMappingURL=index.js.map

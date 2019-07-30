@@ -5,6 +5,7 @@ import {
     createModuleView,
     ModuleReference,
     SettingsManager,
+    SettingsConditions,
 } from "@adjust/core";
 import {LocationAncestor} from "../../../locationAncestor.type";
 import {createModule} from "../../../../../../module/moduleClassCreator";

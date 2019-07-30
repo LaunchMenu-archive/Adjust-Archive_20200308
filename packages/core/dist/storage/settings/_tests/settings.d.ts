@@ -34,7 +34,6 @@ declare const Target_base: import("../../../module/_types/extendedModule").Exten
     isStopped: boolean;
 }, {}, import("../../../module/_types/moduleInterface").ModuleInterface>>>;
 export declare class Target extends Target_base implements dummyInterface {
-    identifier: number;
     static createCustomInstance(identifier: number): Promise<Target>;
     test(text: string): Promise<string>;
 }

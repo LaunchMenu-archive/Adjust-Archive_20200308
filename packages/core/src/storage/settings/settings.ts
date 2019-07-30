@@ -9,11 +9,11 @@ import {JsonPartial} from "../_types/jsonPartial";
 import {Module, ParameterizedModule} from "../../module/module";
 import {SettingsConfig} from "./_types/settingsConfig";
 import {SettingsFile} from "./settingsFile";
-import {SettingsConditions} from "./settingsConditions";
 import {Data} from "../data";
 import {EventEmitter} from "../../utils/eventEmitter";
 import {ExtendedObject} from "../../utils/extendedObject";
 import {SortedList} from "../../utils/sortedList";
+import {SettingsConditions} from "./settingsConditions/abstractSettingsConditions";
 
 export class Settings<C extends SettingsConfig> extends EventEmitter {
     protected settingsFile: SettingsFile<C>; // The file that stores settings

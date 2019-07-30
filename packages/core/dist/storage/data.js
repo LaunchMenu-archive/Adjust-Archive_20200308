@@ -5,11 +5,13 @@ class Data extends eventEmitter_1.EventEmitter {
     /**
      * A class that stores data and emits events on changes of the data
      * @param initialData The initial data to store in the system, the set structure will also be based on this
-     * @param storeUndefined Whether or not to explicitely store undefined, and whether to keep empty objects
+     * @param storeUndefined Whether or not to explicitely store undefined
+     * @param keepEmpty Whether or not to explicitely keep empty objects
      */
-    constructor(initialData, storeUndefined = true) {
+    constructor(initialData, storeUndefined = true, keepEmpty = true) {
         super();
         this.storeUndefined = storeUndefined;
+        this.keepEmpty = keepEmpty;
         // Set up the initial data
         // @ts-ignore
         this.get = {};
@@ -26,7 +28,7 @@ class Data extends eventEmitter_1.EventEmitter {
         // Get the current values for the changed properties
         const originalProps = extendedObject_1.ExtendedObject.copyData(this.get, {}, changedProps);
         // Alter the values in the Data of the passed properties
-        extendedObject_1.ExtendedObject.copyData(changedProps, this.get, undefined, this.storeUndefined);
+        extendedObject_1.ExtendedObject.copyData(changedProps, this.get, undefined, this.storeUndefined, this.keepEmpty);
         // Emit an event to notify listeners of the change
         await this.emitAsync("change", changedProps, originalProps);
     }

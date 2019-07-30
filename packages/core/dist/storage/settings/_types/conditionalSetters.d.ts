@@ -1,4 +1,4 @@
-import { SettingsConditions } from "../settingsConditions";
+import { SettingsConditions } from "../settingsConditions/abstractSettingsConditions";
 /**
  * Extacts the value objects and maps them to setters functions, that require a condition to be specified
  */

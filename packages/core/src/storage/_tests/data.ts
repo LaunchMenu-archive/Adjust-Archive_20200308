@@ -165,7 +165,7 @@ describe("Data", () => {
             expect(called).toBeTruthy();
         });
         it("Should get rid of undefined values if specified", () => {
-            data = new Data(initial, false);
+            data = new Data(initial, false, false);
             data.set.a.b.d(undefined);
             data.set.a.b.c(undefined);
             expect(data.get.a).toBe(undefined);

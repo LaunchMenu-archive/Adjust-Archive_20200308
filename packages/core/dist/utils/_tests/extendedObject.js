@@ -372,7 +372,7 @@ describe("Object", () => {
                     },
                 },
                 f: "no",
-            }, null, false);
+            }, null, false, false);
             expect(data).toEqual({
                 a: {
                     c: 9,

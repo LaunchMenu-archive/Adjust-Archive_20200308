@@ -52,7 +52,7 @@ export class StateData<
             ) as any;
             if (!contextProxy) {
                 // TODO: add error once architecture has been changed such that locations don't require passing modules around
-                // throw Error(`module doesn't specify context as parent`);
+                throw Error(`module doesn't specify context as parent`);
                 return moduleProxy;
             }
 

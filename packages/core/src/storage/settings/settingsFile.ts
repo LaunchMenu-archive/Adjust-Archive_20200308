@@ -7,13 +7,14 @@ import {Setters} from "../_types/setters";
 import {SettingsManager} from "./settingsManager";
 import {SettingsConfig} from "./_types/settingsConfig";
 import {SettingsData} from "./_types/settingsData";
-import {SettingsConditions} from "./settingsConditions";
 import {EventEmitter} from "../../utils/eventEmitter";
 import {ExtendedObject} from "../../utils/extendedObject";
 import {SortedList} from "../../utils/sortedList";
 import {Shape} from "./_types/shape";
 import {SettingsDataID} from "./SettingsDataID";
 import {Module} from "../../module/module";
+import {SettingsConditionSerializer} from "./settingsConditions/settingsConditionsSerializer";
+import {SettingsConditions} from "./settingsConditions/abstractSettingsConditions";
 
 export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsData<S>>;
@@ -304,8 +305,9 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
             .map(
                 settingsSet =>
                     ({
-                        condition: settingsSet.condition.getData(),
-                        priority: settingsSet.condition.getPriority(),
+                        condition: SettingsConditionSerializer.serialize(
+                            settingsSet.condition
+                        ),
                         ID: settingsSet.ID,
                         data: settingsSet.data.serialize(),
                     } as ConditionalSettings<any>)
@@ -330,16 +332,15 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         const getSettings = initialSettings => {
             // Create data objects for all of them
             const settingsData = (initialSettings || []).map(settings => {
-                const data = new Data(settings.data);
+                const data = new Data(settings.data, false);
                 data.on(
                     "change",
                     this.valueChange.bind(this, settings.condition),
                     "SettingsFile"
                 );
                 return {
-                    condition: new SettingsConditions(
-                        settings.condition,
-                        settings.priority || 0
+                    condition: SettingsConditionSerializer.deserialize(
+                        settings.condition
                     ),
                     ID: settings.ID,
                     data: data,

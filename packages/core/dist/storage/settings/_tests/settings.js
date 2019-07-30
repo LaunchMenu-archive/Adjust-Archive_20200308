@@ -1,11 +1,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
-const settingsConditions_1 = require("../settingsConditions");
 const settingsManager_1 = require("../settingsManager");
 const settings_1 = require("../settings");
 const registry_1 = require("../../../registry/registry");
 const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
 const module_1 = require("../../../module/module");
 const moduleID_1 = require("../../../module/moduleID");
+const functionSettingsConditions_1 = require("../settingsConditions/functionSettingsConditions");
 // Create a settings config
 const config = {
     a: {
@@ -27,8 +27,7 @@ exports.dummyInterfaceID = registry_1.Registry.createInterfaceID(__filename + "1
 class Target extends moduleClassCreator_1.createModule({ initialState: {}, settings: config, type: exports.dummyInterfaceID }) {
     static async createCustomInstance(identifier) {
         const moduleID = new moduleID_1.ModuleID("test", 3);
-        const instance = (await super.construct({ requestPath: module_1.Module.createRequestPath(moduleID, null, {}), data: null }, moduleID, {}, []));
-        instance.identifier = identifier;
+        const instance = (await super.construct({ requestPath: module_1.Module.createRequestPath(moduleID, null, {}), data: identifier }, moduleID, {}, []));
         return instance;
     }
     async test(text) {
@@ -53,9 +52,9 @@ describe("Settings", () => {
         target1 = await Target.createCustomInstance(1);
         target2 = await Target.createCustomInstance(2);
         // Create some conditions for a specific target
-        isTarget1 = new settingsConditions_1.SettingsConditions((target) => target.identifier == 1, 2);
-        isTarget2 = new settingsConditions_1.SettingsConditions((target) => target.identifier == 2, 3);
-        isTarget1higherPrior = new settingsConditions_1.SettingsConditions((target) => target.identifier == 1, 3);
+        isTarget1 = new functionSettingsConditions_1.FunctionSettingsConditions((target) => target.data == 1, 2);
+        isTarget2 = new functionSettingsConditions_1.FunctionSettingsConditions((target) => target.data == 2, 3);
+        isTarget1higherPrior = new functionSettingsConditions_1.FunctionSettingsConditions((target) => target.data == 1, 3);
     });
     describe("Instanciation", () => {
         it("Should not error", async () => {
@@ -65,7 +64,7 @@ describe("Settings", () => {
         it("Should store the correct values", async () => {
             // Add some content to the file
             const file = await settingsManager_1.SettingsManager.getSettingsFile(Target.getPath(), config);
-            file.set(new settingsConditions_1.SettingsConditions(() => true, 1)).b.c(false);
+            file.set(new functionSettingsConditions_1.FunctionSettingsConditions(() => true, 1)).b.c(false);
             // Create the settings and verify it loads the correct data
             const settings = await settings_1.Settings.createInstance(target1);
             expect(settings.get).toEqual({ a: 3, b: { c: false }, d: {} });

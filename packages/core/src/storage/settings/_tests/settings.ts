@@ -1,4 +1,3 @@
-import {SettingsConditions} from "../settingsConditions";
 import {SettingsManager} from "../settingsManager";
 import {Settings} from "../settings";
 import {Registry} from "../../../registry/registry";
@@ -6,6 +5,7 @@ import {createModule} from "../../../module/moduleClassCreator";
 import {PublicModuleMethods} from "../../../module/_types/publicModuleMethods";
 import {Module} from "../../../module/module";
 import {ModuleID} from "../../../module/moduleID";
+import {FunctionSettingsConditions} from "../settingsConditions/functionSettingsConditions";
 
 // Create a settings config
 const config = {
@@ -36,17 +36,14 @@ export const dummyInterfaceID = Registry.createInterfaceID<{
 export class Target
     extends createModule({initialState: {}, settings: config, type: dummyInterfaceID})
     implements dummyInterface {
-    public identifier: number;
-
     static async createCustomInstance(identifier: number) {
         const moduleID = new ModuleID("test", 3);
         const instance = (await super.construct(
-            {requestPath: Module.createRequestPath(moduleID, null, {}), data: null},
+            {requestPath: Module.createRequestPath(moduleID, null, {}), data: identifier},
             moduleID,
             {},
             []
         )) as Target;
-        instance.identifier = identifier;
 
         return instance;
     }
@@ -77,10 +74,10 @@ describe("Settings", () => {
         target2 = await Target.createCustomInstance(2);
 
         // Create some conditions for a specific target
-        isTarget1 = new SettingsConditions((target: any) => target.identifier == 1, 2);
-        isTarget2 = new SettingsConditions((target: any) => target.identifier == 2, 3);
-        isTarget1higherPrior = new SettingsConditions(
-            (target: any) => target.identifier == 1,
+        isTarget1 = new FunctionSettingsConditions((target: any) => target.data == 1, 2);
+        isTarget2 = new FunctionSettingsConditions((target: any) => target.data == 2, 3);
+        isTarget1higherPrior = new FunctionSettingsConditions(
+            (target: any) => target.data == 1,
             3
         );
     });
@@ -92,7 +89,7 @@ describe("Settings", () => {
         it("Should store the correct values", async () => {
             // Add some content to the file
             const file = await SettingsManager.getSettingsFile(Target.getPath(), config);
-            file.set(new SettingsConditions(() => true, 1)).b.c(false);
+            file.set(new FunctionSettingsConditions(() => true, 1)).b.c(false);
 
             // Create the settings and verify it loads the correct data
             const settings = await Settings.createInstance(target1);

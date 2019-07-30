@@ -11,15 +11,22 @@ export class Data<S extends object> extends EventEmitter {
     // TODO: add a way to directly register a listener for a certain field
 
     protected storeUndefined: boolean; // Whether or not undefined values should be kept in the data
+    protected keepEmpty: boolean; // Whether or not empty objects should be kept in the data
 
     /**
      * A class that stores data and emits events on changes of the data
      * @param initialData The initial data to store in the system, the set structure will also be based on this
-     * @param storeUndefined Whether or not to explicitely store undefined, and whether to keep empty objects
+     * @param storeUndefined Whether or not to explicitely store undefined
+     * @param keepEmpty Whether or not to explicitely keep empty objects
      */
-    constructor(initialData: S, storeUndefined: boolean = true) {
+    constructor(
+        initialData: S,
+        storeUndefined: boolean = true,
+        keepEmpty: boolean = true
+    ) {
         super();
         this.storeUndefined = storeUndefined;
+        this.keepEmpty = keepEmpty;
 
         // Set up the initial data
         // @ts-ignore
@@ -43,7 +50,13 @@ export class Data<S extends object> extends EventEmitter {
         const originalProps = ExtendedObject.copyData(this.get, {}, changedProps);
 
         // Alter the values in the Data of the passed properties
-        ExtendedObject.copyData(changedProps, this.get, undefined, this.storeUndefined);
+        ExtendedObject.copyData(
+            changedProps,
+            this.get,
+            undefined,
+            this.storeUndefined,
+            this.keepEmpty
+        );
 
         // Emit an event to notify listeners of the change
         await this.emitAsync("change", changedProps, originalProps);

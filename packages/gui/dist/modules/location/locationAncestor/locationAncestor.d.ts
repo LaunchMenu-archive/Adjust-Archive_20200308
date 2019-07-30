@@ -20,7 +20,7 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
     abstract: boolean;
-}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
+}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core/dist/module/module").Module, import("@adjust/core/dist/module/module").Module<{
     isStopping: boolean;
     isStopped: boolean;
 }, {}, import("@adjust/core/types").ModuleInterface>>>;
@@ -63,6 +63,10 @@ export default class LocationAncestorModule extends LocationAncestorModule_base 
      * @returns The child ancestor
      */
     protected getChildLocationAncestor(ID?: string): Promise<LocationAncestor>;
+    /**
+     * The settings condition to target the settings with the correct ID
+     */
+    settingsConditions: any;
     /** @override */
     setEditMode(edit: boolean): Promise<any>;
     /** @override */
