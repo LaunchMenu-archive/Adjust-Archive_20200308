@@ -62,16 +62,16 @@ declare const LocationModule_base: import("@adjust/core/types").ExtendedModuleCl
  * The location class that simply renders a location when requested
  */
 export default class LocationModule extends LocationModule_base implements LocationAncestor {
+    /** @override */
+    createLocation(location: ModuleLocation): Promise<LocationPath>;
+    /** @override */
+    removeLocation(locationPath: LocationPath): Promise<boolean>;
     /** @override*/
     openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
     /** @override*/
     closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
     /** @override*/
     showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
-    /** @override */
-    createLocation(location: ModuleLocation): Promise<LocationPath>;
-    /** @override */
-    removeLocation(locationPath: LocationPath): Promise<boolean>;
     /** @override */
     setDropMode(drop: boolean): Promise<void>;
     /**

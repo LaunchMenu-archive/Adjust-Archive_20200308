@@ -5,17 +5,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@material-ui/core");
 const icons_1 = require("@material-ui/icons");
 const core_2 = require("@adjust/core");
-const locationAncestor_type_1 = require("../locationAncestor.type");
-const moduleClassCreator_1 = require("../../../../module/moduleClassCreator");
-const locationAncestor_1 = __importDefault(require("../locationAncestor"));
-const React_1 = require("../../../../React");
-const locationManager_type_1 = require("../../locationManager.type");
+const moduleClassCreator_1 = require("../../../../../../module/moduleClassCreator");
+const locationAncestor_1 = __importDefault(require("../../../locationAncestor"));
+const React_1 = require("../../../../../../React");
+const locationManager_type_1 = require("../../../../locationManager.type");
+const window_type_1 = require("./window.type");
 exports.config = {
     initialState: {
         childLocationAncestor: null,
+        windowName: "",
     },
     settings: {},
-    type: locationAncestor_type_1.LocationAncestorID,
+    type: window_type_1.WindowID,
 };
 class WindowModule extends moduleClassCreator_1.createModule(exports.config, locationAncestor_1.default) {
     constructor() {
@@ -77,31 +78,31 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     }
     // Module management
     /** @override */
-    async openModule(module, location) {
+    async openModule(module, locationPath) {
         // Open the actual window
         this.openWindow();
         // Obtain the child ancestor
         const child = await this.getChild();
         // Forward opening the module to the child
-        return child.openModule(module, location);
+        return child.openModule(module, locationPath);
     }
     /** @override */
-    async closeModule(module, location) {
+    async closeModule(module, locationPath) {
         if (this.window) {
             // Obtain the child ancestor
             const child = await this.getChild();
             // Forward closing the module to the child
-            return await child.closeModule(module, location);
+            return await child.closeModule(module, locationPath);
         }
         return false;
     }
     /** @override */
-    async showModule(module, location) {
+    async showModule(module, locationPath) {
         if (this.window) {
             // Obtain the child ancestor
             const child = await this.getChild();
             // Forward showing the module to the child
-            return child.showModule(module, location);
+            return child.showModule(module, locationPath);
         }
         return false;
     }
@@ -121,6 +122,11 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
             const child = await this.getChild();
             return child.setDropMode(drop);
         }
+    }
+    // Window specific methods
+    /** @override */
+    async setName(name) {
+        this.setState({ windowName: name });
     }
     // Testing TODO: remove this
     async setEdit(edit) {
@@ -161,7 +167,7 @@ class WindowView extends core_2.createModuleView(WindowModule) {
             React_1.React.createElement(core_1.Grid, { item: true },
                 React_1.React.createElement(core_1.Button, null,
                     React_1.React.createElement(icons_1.Close, null))),
-            React_1.React.createElement(core_1.Grid, { item: true }, this.data.ID)));
+            React_1.React.createElement(core_1.Grid, { item: true }, this.state.windowName)));
     }
     /**@override */
     renderView() {

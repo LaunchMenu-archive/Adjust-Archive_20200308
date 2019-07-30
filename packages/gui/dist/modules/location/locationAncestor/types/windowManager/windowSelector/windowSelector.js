@@ -2,9 +2,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@material-ui/core");
 const windowSelector_type_1 = require("./windowSelector.type");
 const core_2 = require("@adjust/core");
-const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
-const React_1 = require("../../../React");
-const locationAncestor_type_1 = require("../locationAncestor/locationAncestor.type");
+const moduleClassCreator_1 = require("../../../../../../module/moduleClassCreator");
+const React_1 = require("../../../../../../React");
+const locationAncestor_type_1 = require("../../../locationAncestor.type");
 exports.config = {
     initialState: {},
     settings: {},

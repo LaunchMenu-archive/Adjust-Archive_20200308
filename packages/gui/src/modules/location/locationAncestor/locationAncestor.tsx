@@ -111,26 +111,24 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
         const isNewID = ID != undefined;
         if (ID == undefined) ID = this.getData().ID;
 
+        // Obtain this module's path
+        const path = this.getData().path || [];
+
         // Request the location
         const locationAncestor = (await this.request({
             type: LocationAncestorID,
             use: providers => {
                 // Get the index of this module class
-                const index = providers.findIndex(p => {
-                    const provider = p.provider;
-                    if (provider instanceof ClassModuleProvider)
-                        return provider.getModuleClass() == this.getClass();
-                });
+                const thisPath = this.getData().path;
+                const nextIndex = thisPath ? thisPath.length : 0;
 
-                // Get the module with the next (lower) index
-                const provider = providers[index + 1].provider;
+                // Get the module with the next (lower priority) index
+                const provider = providers[nextIndex].provider;
                 return [provider];
             },
             data: {
                 ID: ID,
-                path: isNewID
-                    ? [...(this.getData().path || []), ID]
-                    : this.getData().path,
+                path: isNewID ? [...path, ID] : path,
             },
         }))[0];
 
@@ -177,6 +175,11 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
     /** @override */
     public async getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]> {
         return this.getParent().getModulesAtPath(partialPath);
+    }
+
+    /** @override */
+    public async getLocationPath(location: string): Promise<LocationPath> {
+        return this.getParent().getLocationPath(location);
     }
 
     /** @override */

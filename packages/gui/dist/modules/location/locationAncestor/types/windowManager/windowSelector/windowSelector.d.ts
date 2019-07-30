@@ -9,7 +9,7 @@ declare const WindowSelectorModule_base: import("@adjust/core/types").ExtendedMo
     initialState: {};
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("./windowSelector.type").WindowSelectorContract>;
-}, import("@adjust/core/types").ExtendsClass<typeof import("../../..").Module, import("../../..").Module>>;
+}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../../..").Module, import("../../../../../..").Module>>;
 export default class WindowSelectorModule extends WindowSelectorModule_base implements WindowSelector {
     protected windowName: string;
     protected window: Promise<Electron.BrowserWindow>;

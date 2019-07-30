@@ -1,25 +1,15 @@
-import {
-    createModule,
-    InstanceModuleProvider,
-    ModuleReference,
-    ExtendedObject,
-} from "@adjust/core";
+import {createModule, InstanceModuleProvider, ModuleReference} from "@adjust/core";
 import {SettingsDataID} from "@adjust/core";
 import {LocationManagerID, LocationManager} from "./locationManager.type";
 import {ModuleLocation} from "../../module/_types/ModuleLocation";
 import {Registry} from "../../registry/registry";
 import LocationAncestorModule from "./locationAncestor/locationAncestor";
 import {LocationPath} from "./_types/LocationPath";
-import {LocationAncestor} from "./locationAncestor/locationAncestor.type";
 import {LocationsMoveData} from "./_types/LocationsMoveData";
-import {WindowSelector, WindowSelectorID} from "./windowSelector/windowSelector.type";
+import {LocationAncestor} from "./locationAncestor/locationAncestor.type";
 
 export const config = {
     initialState: {
-        // Keep track of currently opened child ancestors
-        locationAncestors: {} as {
-            [locationAncestorID: string]: Promise<LocationAncestor>;
-        },
         // Keep track of currently used locations, and modules opened here in this session
         locations: {} as {
             [locationID: string]: {
@@ -28,8 +18,8 @@ export const config = {
         },
         // The data of locations currently being moved
         locationMoveData: null as LocationsMoveData,
-        // The window selector to handle windpws that are currently not opened
-        windowSelector: null as WindowSelector,
+        // The location ancestor to use
+        locationAncestor: null as Promise<LocationAncestor>,
     },
     settings: {
         // Keeps permanent track of all locations and modules that should be opened here
@@ -47,33 +37,27 @@ export const config = {
 };
 
 /**
- * Accepts location hints:
- * - ID: String (The ID of the window to open)
- * - sameAs: String (The ID of a location in the same window)
- */
-
-/**
- * The location manager, which in this implementation also is a window manager (all windows are on the same level)
+ * The location manager, responsible for keeping track of all locations in the system, and linking them with modules
  */
 export default class LocationManagerModule
     extends createModule(config, LocationAncestorModule)
     implements LocationManager {
-    //TODO: close location ancestor when no modules are opened in it
-
-    // The name of this ancestor type to be used in the location path and hints
-    protected ancestorName: string = "window";
-
     /** @override */
     protected async onInit(fromReload: boolean): Promise<void> {
         Registry.addProvider(
             new InstanceModuleProvider(LocationManagerID, this, () => 2)
         );
+    }
 
-        // Load the window selector
-        if (!fromReload)
-            this.setState({
-                windowSelector: await this.request({type: WindowSelectorID}),
-            });
+    /**
+     * Retrieves the location ancestor to be used
+     * @returns The obtained location ancestor
+     */
+    protected async getAncestor(): Promise<LocationAncestor> {
+        if (!this.state.locationAncestor) {
+            this.setState({locationAncestor: this.getChildLocationAncestor()});
+        }
+        return this.state.locationAncestor;
     }
 
     // Path/locations management
@@ -82,7 +66,9 @@ export default class LocationManagerModule
      * @param location The module location to get the path for
      * @returns The retrieve location path
      */
-    protected getLocationPath(location: ModuleLocation | string): LocationPath {
+    public async getLocationPath(
+        location: ModuleLocation | string
+    ): Promise<LocationPath> {
         // Check whether the passed location was a location or identifier
         if (typeof location == "string") {
             const data = this.settings.locations[location];
@@ -110,84 +96,24 @@ export default class LocationManagerModule
         });
     }
 
-    /**
-     * Retrieves the location ancestor with a given ID
-     * @param ancestorID The ID of the location ancestor to retrieve
-     * @returns The ancestor that was either already loaded, or was just opened
-     */
-    protected async getAncestor(ancestorID: string): Promise<LocationAncestor> {
-        // Check if the ancestor is already opened
-        let locationAncestor = this.state.locationAncestors[ancestorID];
-
-        if (!locationAncestor) {
-            // Get the child location ancestor
-            locationAncestor = this.getChildLocationAncestor(ancestorID);
-
-            // Update the state to contain this location ancestor
-            this.setState({
-                locationAncestors: {
-                    [ancestorID]: locationAncestor,
-                },
-            });
-        }
-
-        // Return the ancestor
-        return await locationAncestor;
-    }
-
-    /**
-     * Closes the location ancestor with a given ID if currently opened
-     * @param ancestorID The ID of the location ancestor to close
-     */
-    protected async closeAncestor(ancestorID: string): Promise<void> {
-        // Get the ancestor if opened
-        let locationAncestor = await this.state.locationAncestors[ancestorID];
-
-        if (locationAncestor) {
-            // Remove it from the state
-            this.setState({
-                locationAncestors: {
-                    [ancestorID]: undefined,
-                },
-            });
-
-            // Close it
-            await locationAncestor.close();
-        }
-    }
-
     /** @override */
     public async updateLocation(location: ModuleLocation): Promise<void> {
         // Remove old
         {
             // Get the location ID and the location's current path
-            const storedPath = this.getLocationPath(location);
+            const path = await this.getLocationPath(location);
 
-            // Obtain the locationAncestor
-            let {ID, path} = this.getExtractID(storedPath);
-            const oldLocationAncestor = await this.getAncestor(ID);
+            // Retrieve the location ancestor
+            const locationAncestor = await this.getAncestor();
 
-            // Remove the location from this ancestor
-            await oldLocationAncestor.removeLocation(path);
+            // Remove the location from the ancestor
+            await locationAncestor.removeLocation(path);
         }
 
         // Add new
         {
-            // Get the ID of new ancestor for the module, using the new hints
-            let windowID;
-            let hints = this.getLocationHints(location);
-            if ("sameAs" in hints) {
-                const locationPath = this.getLocationPath(hints["sameAs"]);
-                windowID = locationPath.nodes[0];
-            } else if ("ID" in hints) {
-                windowID = hints["ID"];
-            }
-
-            // Default to default
-            if (!windowID) windowID = "default";
-
-            // Obtain the ancestor
-            const locationAncestor = await this.getAncestor(windowID);
+            // Retrieve the location ancestor
+            const locationAncestor = await this.getAncestor();
 
             // Create the new location path, and store it
             const locationPath = await locationAncestor.createLocation(location);
@@ -230,13 +156,14 @@ export default class LocationManagerModule
                 // Check if there are still modules at this location, if not, remove it
                 current = this.settings.locations[oldLocationID];
                 if (current.modules.length == 0) {
-                    // Retrieve the location path and obtain the locationAncestor
-                    const storedPath = this.getLocationPath(oldLocationID);
-                    const {ID} = this.getExtractID(storedPath);
-                    const locationAncestor = await this.getAncestor(ID);
+                    // Retrieve the location path and obtain the window
+                    const path = await this.getLocationPath(oldLocationID);
+
+                    // Retrieve the location ancestor
+                    const locationAncestor = await this.getAncestor();
 
                     // Remove the location
-                    locationAncestor.removeLocation(storedPath);
+                    locationAncestor.removeLocation(path);
                 }
             }
         });
@@ -282,13 +209,9 @@ export default class LocationManagerModule
         // Update the state
         await super.setEditMode(edit);
 
-        // Inform ancestors
-        const promises = Object.values(this.state.locationAncestors).map(
-            async ancestor => {
-                (await ancestor).setEditMode(edit);
-            }
-        );
-        await Promise.all(promises);
+        // Inform ancestor
+        const locationAncestor = await this.getAncestor();
+        await locationAncestor.setEditMode(edit);
 
         // Return that the change was successful
         return true;
@@ -303,13 +226,8 @@ export default class LocationManagerModule
         this.setState({locationMoveData: data});
 
         // Update whether we are able to drop elements now
-        const promises = Object.values(this.state.locationAncestors).map(async ancestor =>
-            (await ancestor).setDropMode(data != null)
-        );
-        await Promise.all(promises);
-
-        // Enable or disable the window selector
-        this.state.windowSelector.setEnabled(data != null);
+        const locationAncestor = await this.getAncestor();
+        await locationAncestor.setDropMode(data != null);
 
         // Return that the movement data was successfully set
         return true;
@@ -367,13 +285,12 @@ export default class LocationManagerModule
 
     // Opening/closing modules
     /** @override */
-    public async openModule(module: ModuleReference, location: string) {
+    public async openModule(module: ModuleReference, location: string): Promise<void> {
         // Retrieve the location path
-        const storedPath = this.getLocationPath(location);
+        const path = await this.getLocationPath(location);
 
-        // Obtain the locationAncestor
-        const {ID, path} = this.getExtractID(storedPath);
-        const locationAncestor = await this.getAncestor(ID);
+        // Obtain the ancestor
+        const locationAncestor = await this.getAncestor();
 
         // Store the module at this path
         this.setState({
@@ -395,42 +312,35 @@ export default class LocationManagerModule
     }
 
     /** @override */
-    public async closeModule(module: ModuleReference, location: string) {
+    public async closeModule(module: ModuleReference, location: string): Promise<void> {
         // Retrieve the location path
-        const storedPath = this.getLocationPath(location);
+        const path = await this.getLocationPath(location);
 
-        // Obtain the locationAncestor
-        const {ID, path} = this.getExtractID(storedPath);
-        const locationAncestor = await this.getAncestor(ID);
-        // Open the path in the location ancestor
-        const closed = await locationAncestor.closeModule(module, path);
+        // Obtain the ancestor
+        const locationAncestor = await this.getAncestor();
 
-        // Store the module at this path
-        if (closed) {
-            this.setState({
-                locations: {
-                    [location]: {
-                        modules: (
-                            this.state.locations[location] || {modules: []}
-                        ).modules.filter(m => !m.equals(module)),
-                    },
+        // Remove the module at this path
+        this.setState({
+            locations: {
+                [location]: {
+                    modules: (
+                        this.state.locations[location] || {modules: []}
+                    ).modules.filter(m => !m.equals(module)),
                 },
-            });
+            },
+        });
 
-            // Close the window if there are no more modules opened in it
-            if ((await this.getModulesAtPath([ID])).length == 0)
-                await this.closeAncestor(ID);
-        }
+        // Open the path in the location ancestor
+        await locationAncestor.closeModule(module, path);
     }
 
     /** @override */
     public async showModule(module: ModuleReference, location: string): Promise<boolean> {
         // Retrieve the location path
-        const storedPath = this.getLocationPath(location);
+        const path = await this.getLocationPath(location);
 
-        // Obtain the locationAncestor
-        const {ID, path} = this.getExtractID(storedPath);
-        const locationAncestor = await this.getAncestor(ID);
+        // Obtain the ancestor
+        const locationAncestor = await this.getAncestor();
 
         // Attempt to show the module
         return locationAncestor.showModule(module, path);

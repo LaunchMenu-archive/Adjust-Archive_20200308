@@ -2,9 +2,9 @@ import {Grid, Button, Box} from "@material-ui/core";
 import {WindowSelectorID, WindowSelector} from "./windowSelector.type";
 import {WindowManager, createModuleView} from "@adjust/core";
 import {DragEvent} from "react";
-import {createModule} from "../../../module/moduleClassCreator";
-import {React} from "../../../React";
-import {dragAndDropName} from "../locationAncestor/locationAncestor.type";
+import {createModule} from "../../../../../../module/moduleClassCreator";
+import {React} from "../../../../../../React";
+import {dragAndDropName} from "../../../locationAncestor.type";
 
 export const config = {
     initialState: {},

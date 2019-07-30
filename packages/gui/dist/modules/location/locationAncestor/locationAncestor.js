@@ -80,25 +80,22 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
         const isNewID = ID != undefined;
         if (ID == undefined)
             ID = this.getData().ID;
+        // Obtain this module's path
+        const path = this.getData().path || [];
         // Request the location
         const locationAncestor = (await this.request({
             type: locationAncestor_type_1.LocationAncestorID,
             use: providers => {
                 // Get the index of this module class
-                const index = providers.findIndex(p => {
-                    const provider = p.provider;
-                    if (provider instanceof core_1.ClassModuleProvider)
-                        return provider.getModuleClass() == this.getClass();
-                });
-                // Get the module with the next (lower) index
-                const provider = providers[index + 1].provider;
+                const thisPath = this.getData().path;
+                const nextIndex = thisPath ? thisPath.length : 0;
+                // Get the module with the next (lower priority) index
+                const provider = providers[nextIndex].provider;
                 return [provider];
             },
             data: {
                 ID: ID,
-                path: isNewID
-                    ? [...(this.getData().path || []), ID]
-                    : this.getData().path,
+                path: isNewID ? [...path, ID] : path,
             },
         }))[0];
         // Make sure to initialise the correct state
@@ -138,6 +135,10 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
     /** @override */
     async getModulesAtPath(partialPath) {
         return this.getParent().getModulesAtPath(partialPath);
+    }
+    /** @override */
+    async getLocationPath(location) {
+        return this.getParent().getLocationPath(location);
     }
     /** @override */
     async updateMovedLocations(delay) {

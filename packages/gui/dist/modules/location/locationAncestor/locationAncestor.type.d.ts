@@ -82,6 +82,12 @@ export declare type LocationAncestorParent = {
      */
     getModulesAtPath(partialPath: string[]): Promise<ModuleReference[]>;
     /**
+     * Retrieves a location path for the given location
+     * @param location The module location to get the path for
+     * @returns The retrieve location path
+     */
+    getLocationPath(location: string): Promise<LocationPath>;
+    /**
      * Make use of the location move data in order to actually move the locations
      * @param delay The number of miliseconds that should be waited to perform updateLocationsMoveData calls
      */

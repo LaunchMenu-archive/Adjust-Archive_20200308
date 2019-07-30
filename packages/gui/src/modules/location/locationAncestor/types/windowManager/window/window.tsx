@@ -6,24 +6,26 @@ import {
     ModuleReference,
     SettingsManager,
 } from "@adjust/core";
-import {LocationAncestorID, LocationAncestor} from "../locationAncestor.type";
-import {createModule} from "../../../../module/moduleClassCreator";
-import LocationAncestorModule from "../locationAncestor";
-import {LocationPath} from "../../_types/LocationPath";
-import {React} from "../../../../React";
-import {ModuleLocation} from "../../../../module/_types/ModuleLocation";
-import {LocationManagerID} from "../../locationManager.type";
+import {LocationAncestor} from "../../../locationAncestor.type";
+import {createModule} from "../../../../../../module/moduleClassCreator";
+import LocationAncestorModule from "../../../locationAncestor";
+import {LocationPath} from "../../../../_types/LocationPath";
+import {React} from "../../../../../../React";
+import {ModuleLocation} from "../../../../../../module/_types/ModuleLocation";
+import {LocationManagerID} from "../../../../locationManager.type";
+import {WindowID, Window} from "./window.type";
 
 export const config = {
     initialState: {
         childLocationAncestor: null as Promise<LocationAncestor>,
+        windowName: "",
     },
     settings: {},
-    type: LocationAncestorID,
+    type: WindowID,
 };
 
 export default class WindowModule extends createModule(config, LocationAncestorModule)
-    implements LocationAncestor {
+    implements Window {
     // The name of this ancestor type to be used in the location path and hints
     protected ancestorName: string = "window";
 
@@ -93,7 +95,7 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     /** @override */
     public async openModule(
         module: ModuleReference,
-        location: LocationPath
+        locationPath: LocationPath
     ): Promise<LocationPath> {
         // Open the actual window
         this.openWindow();
@@ -102,20 +104,20 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         const child = await this.getChild();
 
         // Forward opening the module to the child
-        return child.openModule(module, location);
+        return child.openModule(module, locationPath);
     }
 
     /** @override */
     public async closeModule(
         module: ModuleReference,
-        location: LocationPath
+        locationPath: LocationPath
     ): Promise<boolean> {
         if (this.window) {
             // Obtain the child ancestor
             const child = await this.getChild();
 
             // Forward closing the module to the child
-            return await child.closeModule(module, location);
+            return await child.closeModule(module, locationPath);
         }
         return false;
     }
@@ -123,14 +125,14 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     /** @override */
     public async showModule(
         module: ModuleReference,
-        location: LocationPath
+        locationPath: LocationPath
     ): Promise<boolean> {
         if (this.window) {
             // Obtain the child ancestor
             const child = await this.getChild();
 
             // Forward showing the module to the child
-            return child.showModule(module, location);
+            return child.showModule(module, locationPath);
         }
         return false;
     }
@@ -154,6 +156,12 @@ export default class WindowModule extends createModule(config, LocationAncestorM
             const child = await this.getChild();
             return child.setDropMode(drop);
         }
+    }
+
+    // Window specific methods
+    /** @override */
+    public async setName(name: string): Promise<void> {
+        this.setState({windowName: name});
     }
 
     // Testing TODO: remove this
@@ -200,7 +208,7 @@ export class WindowView extends createModuleView(WindowModule) {
                         <Close />
                     </Button>
                 </Grid>
-                <Grid item>{this.data.ID}</Grid>
+                <Grid item>{this.state.windowName}</Grid>
             </Grid>
         );
     }

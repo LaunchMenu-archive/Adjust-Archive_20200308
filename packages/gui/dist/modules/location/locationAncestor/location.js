@@ -28,6 +28,44 @@ exports.config = {
  */
 class LocationModule extends core_1.createModule(exports.config, locationAncestor_1.default) {
     //TODO: add list of multiple modules, and a request focus system
+    // Location management
+    /** @override */
+    async createLocation(location) {
+        // Add the location to the settings
+        if (this.settings.locations.indexOf(location.ID) == -1)
+            this.settingsObject.changeData({
+                locations: [...this.settings.locations, location.ID],
+            });
+        // Return the path just including this module
+        return {
+            nodes: this.getData().path,
+            location: location,
+        };
+    }
+    /** @override */
+    async removeLocation(locationPath) {
+        const locationID = locationPath.location.ID;
+        const locData = this.state.locations[locationID];
+        // Remove the data from the state if present
+        if (locData) {
+            this.setState({
+                // Keep all modules that weren't present in this location
+                modules: this.state.modules.filter(m => locData.modules.find(lm => m.equals(lm.module)) == undefined),
+                locations: {
+                    [locationID]: undefined,
+                },
+            });
+        }
+        // Check if the location existed here
+        const contained = this.settings.locations.indexOf(locationID) != -1;
+        // Remove the location from the settings
+        this.settingsObject.changeData({
+            locations: this.settings.locations.filter(ID => ID != locationID),
+        });
+        // Return whether or not tyh e location existed here
+        return contained;
+    }
+    // Module management
     /** @override*/
     async openModule(module, locationPath) {
         const locationID = locationPath.location.ID;
@@ -80,42 +118,6 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
         }
         // Return that the location didn't contain the module
         return false;
-    }
-    /** @override */
-    async createLocation(location) {
-        // Add the location to the settings
-        if (this.settings.locations.indexOf(location.ID) == -1)
-            this.settingsObject.changeData({
-                locations: [...this.settings.locations, location.ID],
-            });
-        // Return the path just including this module
-        return {
-            nodes: this.getData().path,
-            location: location,
-        };
-    }
-    /** @override */
-    async removeLocation(locationPath) {
-        const locationID = locationPath.location.ID;
-        const locData = this.state.locations[locationID];
-        // Remove the data from the state if present
-        if (locData) {
-            this.setState({
-                // Keep all modules that weren't present in this location
-                modules: this.state.modules.filter(m => locData.modules.find(lm => m.equals(lm.module)) == undefined),
-                locations: {
-                    [locationID]: undefined,
-                },
-            });
-        }
-        // Check if the location existed here
-        const contained = this.settings.locations.indexOf(locationID) != -1;
-        // Remove the location from the settings
-        this.settingsObject.changeData({
-            locations: this.settings.locations.filter(ID => ID != locationID),
-        });
-        // Return whether or not tyh e location existed here
-        return contained;
     }
     // Drag and drop methods
     /** @override */

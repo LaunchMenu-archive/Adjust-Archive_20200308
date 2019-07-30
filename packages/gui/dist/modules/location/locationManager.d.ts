@@ -4,21 +4,17 @@ import { LocationManager } from "./locationManager.type";
 import { ModuleLocation } from "../../module/_types/ModuleLocation";
 import LocationAncestorModule from "./locationAncestor/locationAncestor";
 import { LocationPath } from "./_types/LocationPath";
-import { LocationAncestor } from "./locationAncestor/locationAncestor.type";
 import { LocationsMoveData } from "./_types/LocationsMoveData";
-import { WindowSelector } from "./windowSelector/windowSelector.type";
+import { LocationAncestor } from "./locationAncestor/locationAncestor.type";
 export declare const config: {
     initialState: {
-        locationAncestors: {
-            [locationAncestorID: string]: Promise<LocationAncestor>;
-        };
         locations: {
             [locationID: string]: {
                 modules: ModuleReference[];
             };
         };
         locationMoveData: LocationsMoveData;
-        windowSelector: WindowSelector;
+        locationAncestor: Promise<LocationAncestor>;
     };
     settings: {
         locations: {
@@ -35,16 +31,13 @@ export declare const config: {
 };
 declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
-        locationAncestors: {
-            [locationAncestorID: string]: Promise<LocationAncestor>;
-        };
         locations: {
             [locationID: string]: {
                 modules: ModuleReference[];
             };
         };
         locationMoveData: LocationsMoveData;
-        windowSelector: WindowSelector;
+        locationAncestor: Promise<LocationAncestor>;
     };
     settings: {
         locations: {
@@ -60,39 +53,27 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
     type: import("@adjust/core/types").InterfaceID<import("./locationManager.type").LocationManagerContract>;
 }, typeof LocationAncestorModule>;
 /**
- * Accepts location hints:
- * - ID: String (The ID of the window to open)
- * - sameAs: String (The ID of a location in the same window)
- */
-/**
- * The location manager, which in this implementation also is a window manager (all windows are on the same level)
+ * The location manager, responsible for keeping track of all locations in the system, and linking them with modules
  */
 export default class LocationManagerModule extends LocationManagerModule_base implements LocationManager {
-    protected ancestorName: string;
     /** @override */
     protected onInit(fromReload: boolean): Promise<void>;
+    /**
+     * Retrieves the location ancestor to be used
+     * @returns The obtained location ancestor
+     */
+    protected getAncestor(): Promise<LocationAncestor>;
     /**
      * Retrieves a location path for the given location
      * @param location The module location to get the path for
      * @returns The retrieve location path
      */
-    protected getLocationPath(location: ModuleLocation | string): LocationPath;
+    getLocationPath(location: ModuleLocation | string): Promise<LocationPath>;
     /**
      * Updates the location path in the settings
      * @param locationPath The location path to be stored
      */
     protected updateLocationPath(locationPath: LocationPath): void;
-    /**
-     * Retrieves the location ancestor with a given ID
-     * @param ancestorID The ID of the location ancestor to retrieve
-     * @returns The ancestor that was either already loaded, or was just opened
-     */
-    protected getAncestor(ancestorID: string): Promise<LocationAncestor>;
-    /**
-     * Closes the location ancestor with a given ID if currently opened
-     * @param ancestorID The ID of the location ancestor to close
-     */
-    protected closeAncestor(ancestorID: string): Promise<void>;
     /** @override */
     updateLocation(location: ModuleLocation): Promise<void>;
     /** @override */
