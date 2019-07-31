@@ -5,7 +5,6 @@ import {
     createModuleView,
     ModuleReference,
     SettingsManager,
-    SettingsConditions,
 } from "@adjust/core";
 import {LocationAncestor} from "../../../locationAncestor.type";
 import {createModule} from "../../../../../../module/moduleClassCreator";
@@ -21,7 +20,24 @@ export const config = {
         childLocationAncestor: null as Promise<LocationAncestor>,
         windowName: "",
     },
-    settings: {},
+    settings: {
+        width: {
+            default: 500,
+            type: "number",
+        },
+        height: {
+            default: 500,
+            type: "number",
+        },
+        x: {
+            default: 0,
+            type: "number",
+        },
+        y: {
+            default: 0,
+            type: "number",
+        },
+    },
     type: WindowID,
 };
 
@@ -39,8 +55,38 @@ export default class WindowModule extends createModule(config, LocationAncestorM
      * @returns The opened or retrieved window
      */
     protected async openWindow(): Promise<Electron.BrowserWindow> {
+        // If the window was already requested, return it
         if (this.window) return this.window;
-        return (this.window = WindowManager.openWindow(this.getData().ID, this.getID()));
+
+        // Open the window
+        this.window = WindowManager.openWindow(this.getData().ID, this.getID());
+        const window = await this.window;
+
+        // Set the initial data
+        window.setContentBounds({
+            x: this.settings.x,
+            y: this.settings.y,
+            width: this.settings.width,
+            height: this.settings.height,
+        });
+
+        // Setup bounds listeners
+        let moveTimeoutID;
+        const updateBounds = event => {
+            const bounds = event.sender.getContentBounds();
+
+            // Use a timeout to only update the location once finished dragging
+            clearTimeout(moveTimeoutID);
+            moveTimeoutID = setTimeout(() => {
+                this.saveWindowLocation(bounds.x, bounds.y);
+                this.saveWindowSize(bounds.width, bounds.height);
+            }, 50);
+        };
+        window.on("move", updateBounds);
+        window.on("resize", updateBounds);
+
+        // Return the window
+        return window;
     }
 
     /**
@@ -73,6 +119,22 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         return child.removeLocation(locationPath);
     }
 
+    /** @override */
+    public async removeAncestor(): Promise<void> {
+        // Remove own data
+        this.settingsObject
+            .getSettingsFile()
+            .removeConditionData(this.settingsConditions);
+
+        // Forward to child
+        const child = await this.getChild();
+        await child.removeAncestor();
+
+        // Dispose the child
+        await this.closeChild();
+    }
+
+    // Child management
     /**
      * Opens the child location ancestor and returns it
      * @returns The child location ancestor
@@ -90,6 +152,25 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         }
 
         return await this.state.childLocationAncestor;
+    }
+
+    /**
+     * closes the child location ancestor if opened
+     */
+    protected async closeChild(): Promise<void> {
+        // Only dispose the child if present
+        if (!this.state.childLocationAncestor) {
+            // Get child location ancestor
+            const child = await this.state.childLocationAncestor;
+
+            // Remove child location ancestor
+            this.setState({
+                childLocationAncestor: undefined,
+            });
+
+            // Close the child
+            await child.close();
+        }
     }
 
     // Module management
@@ -165,6 +246,27 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         this.setState({windowName: name});
     }
 
+    // Window settings methods
+    /**
+     * Saves the size of the window
+     * @param width The width that the window now has
+     * @param height The height that the window now has
+     */
+    public saveWindowSize(width: number, height: number): void {
+        this.settingsObject.set.width(width, this.settingsConditions);
+        this.settingsObject.set.height(height, this.settingsConditions);
+    }
+
+    /**
+     * Saves the location of the window
+     * @param x The x coordinate of the location
+     * @param y The y coordinate of the location
+     */
+    public saveWindowLocation(x: number, y: number): void {
+        this.settingsObject.set.x(x, this.settingsConditions);
+        this.settingsObject.set.y(y, this.settingsConditions);
+    }
+
     // Testing TODO: remove this
     public async setEdit(edit: boolean): Promise<void> {
         const LM = await this.request({type: LocationManagerID});
@@ -181,6 +283,8 @@ export class WindowView extends createModuleView(WindowModule) {
     /**@override */
     public componentWillMount(): void {
         super.componentWillMount();
+
+        //TODO: remove test methids
         document.addEventListener("keydown", e => {
             if (e.key == "e") {
                 this.module.setEdit(true);

@@ -1,6 +1,12 @@
 [
     {
-        "priority": 0,
+        "condition": {
+            "type": "function",
+            "data": {
+                "data": []
+            },
+            "priority": 0
+        },
         "ID": 0,
         "data": {
             "location": [

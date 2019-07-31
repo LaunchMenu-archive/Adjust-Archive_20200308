@@ -73,11 +73,13 @@ export default class LocationManagerModule
         if (typeof location == "string") {
             const data = this.settings.locations[location];
             return data && data.path
-                ? data.path
+                ? {nodes: [...data.path.nodes], location: data.path.location}
                 : {nodes: [], location: {ID: location, hints: {}}};
         } else {
             const data = this.settings.locations[location.ID];
-            return data && data.path ? data.path : {nodes: [], location: location};
+            return data && data.path
+                ? {nodes: [...data.path.nodes], location: data.path.location}
+                : {nodes: [], location: location};
         }
     }
 
@@ -105,6 +107,9 @@ export default class LocationManagerModule
 
             // Retrieve the location ancestor
             const locationAncestor = await this.getAncestor();
+
+            // Temporarily change the nodes of the location to indicate removal
+            this.updateLocationPath({nodes: [], location});
 
             // Remove the location from the ancestor
             await locationAncestor.removeLocation(path);
@@ -145,7 +150,7 @@ export default class LocationManagerModule
 
             let current = this.settings.locations[oldLocationID];
             if (current) {
-                this.settingsObject.set.locations({
+                await this.settingsObject.set.locations({
                     ...this.settings.locations,
                     [oldLocationID]: {
                         path: current.path,
@@ -159,23 +164,29 @@ export default class LocationManagerModule
                     // Retrieve the location path and obtain the window
                     const path = await this.getLocationPath(oldLocationID);
 
+                    // Remove the location from the settings
+                    await this.settingsObject.set.locations({
+                        ...this.settings.locations,
+                        [oldLocationID]: undefined,
+                    });
+
                     // Retrieve the location ancestor
                     const locationAncestor = await this.getAncestor();
 
                     // Remove the location
-                    locationAncestor.removeLocation(path);
+                    await locationAncestor.removeLocation(path);
                 }
             }
         });
         await Promise.all(removePromises);
 
         // Add the module to the new location
-        newLocationIDs.forEach(newLocationID => {
+        const addPromises = newLocationIDs.map(async newLocationID => {
             // Only remove locations that got removed
             if (oldLocationIDs.includes(newLocationID)) return;
 
             let current = this.settings.locations[newLocationID];
-            this.settingsObject.set.locations({
+            await this.settingsObject.set.locations({
                 ...this.settings.locations,
                 [newLocationID]: {
                     path: current && current.path,
@@ -191,6 +202,7 @@ export default class LocationManagerModule
                 },
             });
         });
+        await Promise.all(addPromises);
     }
 
     // Location editing

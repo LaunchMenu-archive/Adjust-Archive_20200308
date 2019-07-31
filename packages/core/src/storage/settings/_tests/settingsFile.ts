@@ -1,5 +1,5 @@
 import {SettingsFile} from "../settingsFile";
-import {FunctionSettingsConditions} from "../settingsConditions/functionSettingsConditions";
+import {FunctionSettingsConditions} from "../settingsConditions/types/functionSettingsConditions";
 
 const config = {
     a: {

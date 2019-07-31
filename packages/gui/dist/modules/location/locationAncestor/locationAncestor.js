@@ -16,16 +16,11 @@ exports.config = {
  * Note that we use adjust core's createModule, since location ancestors shouldn't have any location data themselves
  */
 class LocationAncestorModule extends core_1.createModule(exports.config) {
-    constructor() {
-        super(...arguments);
-        // Data change related methods
-        /**
-         * The settings condition to target the settings with the correct ID
-         */
-        this.settingsConditions = new core_1.SettingsConditions((target) => {
-            const data = target.getData();
-            return data.ID && true;
-        }, 1);
+    /** @override */
+    async onInit(fromReload) {
+        await super.onInit(fromReload);
+        // Save data under the ID of this ancestor
+        this.settingsConditions = new core_1.DataSettingsConditions({ ID: this.getData().ID }, 1);
     }
     // Location creation related methods
     /**

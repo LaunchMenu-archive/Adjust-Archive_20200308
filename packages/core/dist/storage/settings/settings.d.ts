@@ -68,6 +68,11 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      */
     protected satisfiesCondition(condition: SettingsConditions): boolean;
     /**
+     * Retrieves the settings file storing all the settings
+     * @returns The settings file
+     */
+    getSettingsFile(): SettingsFile<C>;
+    /**
      * Retrieves the data object storing all the applicable settings
      * @returns The settings Data instance
      */

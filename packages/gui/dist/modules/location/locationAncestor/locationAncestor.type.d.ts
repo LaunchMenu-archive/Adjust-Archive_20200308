@@ -41,6 +41,11 @@ export declare type LocationAncestor = {
      */
     removeLocation(locationPath: LocationPath): Promise<boolean>;
     /**
+     * A callback for when this ancestor is completely removed from memory,
+     * such that it can dispose it's data
+     */
+    removeAncestor(): Promise<void>;
+    /**
      * Sets whether or not the user is currently able to change the locations and their ancestors
      * @param edit Whether or not editing will be enabled
      */

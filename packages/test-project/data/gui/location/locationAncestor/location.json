@@ -1,12 +1,31 @@
 [
     {
-        "priority": 0,
-        "ID": 0,
+        "condition": {
+            "type": "data",
+            "data": {
+                "ID": "default"
+            },
+            "priority": 1
+        },
+        "ID": 1,
         "data": {
             "locations": [
-                "test",
-                "root"
+                "root",
+                "99200164"
             ]
+        }
+    },
+    {
+        "condition": {
+            "type": "function",
+            "data": {
+                "data": []
+            },
+            "priority": 0
+        },
+        "ID": 0,
+        "data": {
+            "locations": []
         }
     }
 ]

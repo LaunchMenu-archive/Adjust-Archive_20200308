@@ -5,7 +5,7 @@ import {createModule} from "../../../module/moduleClassCreator";
 import {PublicModuleMethods} from "../../../module/_types/publicModuleMethods";
 import {Module} from "../../../module/module";
 import {ModuleID} from "../../../module/moduleID";
-import {FunctionSettingsConditions} from "../settingsConditions/functionSettingsConditions";
+import {FunctionSettingsConditions} from "../settingsConditions/types/functionSettingsConditions";
 
 // Create a settings config
 const config = {

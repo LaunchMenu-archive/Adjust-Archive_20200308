@@ -1,4 +1,4 @@
-import { ModuleReference } from "@adjust/core";
+import { ModuleReference, SettingsConditions } from "@adjust/core";
 import { LocationPath } from "../_types/LocationPath";
 import { LocationAncestor, LocationAncestorParent } from "./locationAncestor.type";
 import { LocationsMoveData } from "../_types/LocationsMoveData";
@@ -20,7 +20,7 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
     abstract: boolean;
-}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core/dist/module/module").Module, import("@adjust/core/dist/module/module").Module<{
+}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
     isStopping: boolean;
     isStopped: boolean;
 }, {}, import("@adjust/core/types").ModuleInterface>>>;
@@ -30,7 +30,10 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
  * Note that we use adjust core's createModule, since location ancestors shouldn't have any location data themselves
  */
 export default class LocationAncestorModule extends LocationAncestorModule_base implements LocationAncestorParent {
-    protected ancestorName: string;
+    protected readonly ancestorName: string;
+    protected settingsConditions: SettingsConditions;
+    /** @override */
+    protected onInit(fromReload: boolean): Promise<void>;
     /**
      * Either gets the next ID from the path, or generates it and stores it in the path
      * @param path The location path to get the ID from
@@ -63,10 +66,6 @@ export default class LocationAncestorModule extends LocationAncestorModule_base 
      * @returns The child ancestor
      */
     protected getChildLocationAncestor(ID?: string): Promise<LocationAncestor>;
-    /**
-     * The settings condition to target the settings with the correct ID
-     */
-    settingsConditions: any;
     /** @override */
     setEditMode(edit: boolean): Promise<any>;
     /** @override */

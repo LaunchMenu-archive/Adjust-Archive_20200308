@@ -524,6 +524,47 @@ class ExtendedObject extends Object {
         }
         return true;
     }
+    /**
+     * Checks if the contents of object 2 are contained in object 1, excluding subobjects
+     * @param obj1 The first object
+     * @param obj2 The second object
+     * @returns Whether or not the contents of object 1 are contained in object 2
+     */
+    static contains(obj1, obj2) {
+        const obj2Keys = Object.keys(obj2);
+        // Check if all values are equivalent
+        for (let i = 0; i < obj2Keys.length; i++) {
+            const key = obj2Keys[i];
+            // Values may only differ if they are objects
+            if (typeof obj1[key] != "object" && obj1[key] !== obj2[key])
+                return false;
+        }
+        return true;
+    }
+    /**
+     * Checks if the contents of object 2 are contained in object 1, including subobjects
+     * @param obj1 The first object
+     * @param obj2 The second object
+     * @returns Whether or not the contents of object 1 are contained in object 2
+     */
+    static deepContains(obj1, obj2) {
+        const obj2Keys = Object.keys(obj2);
+        // Check if all values are equivalent
+        for (let i = 0; i < obj2Keys.length; i++) {
+            const key = obj2Keys[i];
+            if (typeof obj1[key] == "object") {
+                // Recurse if object
+                if (!this.deepContains(obj1[key], obj2[key]))
+                    return false;
+            }
+            else {
+                // Check shallow equivalence otherwise
+                if (obj1[key] !== obj2[key])
+                    return false;
+            }
+        }
+        return true;
+    }
 }
 exports.ExtendedObject = ExtendedObject;
 //# sourceMappingURL=extendedObject.js.map

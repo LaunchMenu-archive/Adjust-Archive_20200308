@@ -15,7 +15,24 @@ exports.config = {
         childLocationAncestor: null,
         windowName: "",
     },
-    settings: {},
+    settings: {
+        width: {
+            default: 500,
+            type: "number",
+        },
+        height: {
+            default: 500,
+            type: "number",
+        },
+        x: {
+            default: 0,
+            type: "number",
+        },
+        y: {
+            default: 0,
+            type: "number",
+        },
+    },
     type: window_type_1.WindowID,
 };
 class WindowModule extends moduleClassCreator_1.createModule(exports.config, locationAncestor_1.default) {
@@ -30,9 +47,34 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
      * @returns The opened or retrieved window
      */
     async openWindow() {
+        // If the window was already requested, return it
         if (this.window)
             return this.window;
-        return (this.window = core_2.WindowManager.openWindow(this.getData().ID, this.getID()));
+        // Open the window
+        this.window = core_2.WindowManager.openWindow(this.getData().ID, this.getID());
+        const window = await this.window;
+        // Set the initial data
+        window.setContentBounds({
+            x: this.settings.x,
+            y: this.settings.y,
+            width: this.settings.width,
+            height: this.settings.height,
+        });
+        // Setup bounds listeners
+        let moveTimeoutID;
+        const updateBounds = event => {
+            const bounds = event.sender.getContentBounds();
+            // Use a timeout to only update the location once finished dragging
+            clearTimeout(moveTimeoutID);
+            moveTimeoutID = setTimeout(() => {
+                this.saveWindowLocation(bounds.x, bounds.y);
+                this.saveWindowSize(bounds.width, bounds.height);
+            }, 50);
+        };
+        window.on("move", updateBounds);
+        window.on("resize", updateBounds);
+        // Return the window
+        return window;
     }
     /**
      * Closes the window if it had been opened already
@@ -60,6 +102,19 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         const child = await this.getChild();
         return child.removeLocation(locationPath);
     }
+    /** @override */
+    async removeAncestor() {
+        // Remove own data
+        this.settingsObject
+            .getSettingsFile()
+            .removeConditionData(this.settingsConditions);
+        // Forward to child
+        const child = await this.getChild();
+        await child.removeAncestor();
+        // Dispose the child
+        await this.closeChild();
+    }
+    // Child management
     /**
      * Opens the child location ancestor and returns it
      * @returns The child location ancestor
@@ -75,6 +130,22 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
             });
         }
         return await this.state.childLocationAncestor;
+    }
+    /**
+     * closes the child location ancestor if opened
+     */
+    async closeChild() {
+        // Only dispose the child if present
+        if (!this.state.childLocationAncestor) {
+            // Get child location ancestor
+            const child = await this.state.childLocationAncestor;
+            // Remove child location ancestor
+            this.setState({
+                childLocationAncestor: undefined,
+            });
+            // Close the child
+            await child.close();
+        }
     }
     // Module management
     /** @override */
@@ -128,6 +199,25 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     async setName(name) {
         this.setState({ windowName: name });
     }
+    // Window settings methods
+    /**
+     * Saves the size of the window
+     * @param width The width that the window now has
+     * @param height The height that the window now has
+     */
+    saveWindowSize(width, height) {
+        this.settingsObject.set.width(width, this.settingsConditions);
+        this.settingsObject.set.height(height, this.settingsConditions);
+    }
+    /**
+     * Saves the location of the window
+     * @param x The x coordinate of the location
+     * @param y The y coordinate of the location
+     */
+    saveWindowLocation(x, y) {
+        this.settingsObject.set.x(x, this.settingsConditions);
+        this.settingsObject.set.y(y, this.settingsConditions);
+    }
     // Testing TODO: remove this
     async setEdit(edit) {
         const LM = await this.request({ type: locationManager_type_1.LocationManagerID });
@@ -143,6 +233,7 @@ class WindowView extends core_2.createModuleView(WindowModule) {
     /**@override */
     componentWillMount() {
         super.componentWillMount();
+        //TODO: remove test methids
         document.addEventListener("keydown", e => {
             if (e.key == "e") {
                 this.module.setEdit(true);

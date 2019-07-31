@@ -85,7 +85,7 @@ export default class WindowManagerModule
             if (this.state.inEditMode) (await window).setEditMode(true);
             if (this.state.inDropMode) (await window).setDropMode(true);
 
-            // Set the winodw's name
+            // Set the window's name TODO: use actual stored name
             (await window).setName("shit");
         }
 
@@ -151,21 +151,43 @@ export default class WindowManagerModule
         const window = await this.getWindow(ID);
 
         // Remove the location from the window
-        const removed = window.removeLocation(path);
-
+        const removed = await window.removeLocation(path);
         if (removed) {
             // Check if there are any locations left in this window
             const locationsAtPath = await this.getLocationsAtPath([
                 ...this.getData().path,
                 ID,
             ]);
+
+            // Remove the entire window when empty (there was 1 location and we removed the last)
             if (locationsAtPath.length == 0) {
-                // TODO: Remove data
+                await window.removeAncestor();
+                await this.closeWindow(ID);
             }
         }
 
         // Return whether or not the location existed here, and was removed
         return removed;
+    }
+
+    /** @override (probably wont ever be called) */
+    public async removeAncestor(): Promise<void> {
+        const promises = Object.entries(this.settings.windows).map(async ([ID, data]) => {
+            // Obtain the window
+            const window = await this.getWindow(ID);
+
+            // Dispose the window
+            await window.removeAncestor();
+
+            // Close the window
+            window.close();
+        });
+
+        // Await all the windows disposals
+        await Promise.all(promises);
+
+        // Clear the settings
+        await this.settingsObject.set.windows({});
     }
 
     // Module management
@@ -232,14 +254,6 @@ export default class WindowManagerModule
     }
 
     // Edit management
-    /**
-     * General approach:
-     * - User enables edit mode
-     * - User selects some locationAncestor to move by dragging (which calls setLocationsMoveData)
-     * - User selects a target by dropping (which calls getLocationsMoveData and updateLocationsMoveData)
-     * - updateMovedLocations to finalize the movement of data
-     */
-
     /** @override */
     public async setDropMode(drop: boolean): Promise<void> {
         // Update the state

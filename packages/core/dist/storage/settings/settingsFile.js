@@ -40,8 +40,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         // Only the provided data will be used if no data is stored yet
         await settingsFile.reload(() => [
             {
-                condition: undefined,
-                priority: 0,
+                condition: { type: "function", data: undefined, priority: 0 },
                 ID: 0,
                 data: settingsFile.extractDefault(config),
             },
@@ -178,6 +177,22 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         return this.getConditionData(condition).set;
     }
     /**
+     * Removes the data associated with a given condition
+     * @param condition The condition for which to remove a Data instance
+     */
+    removeConditionData(condition) {
+        // Normalize the conditions
+        if (!(condition instanceof abstractSettingsConditions_1.SettingsConditions) && condition !== undefined)
+            condition = this.getCondition(condition);
+        // Get the settingsSetData if already defined
+        let settingsSetDataIndex = this.settings
+            .get()
+            .findIndex(settingSetData => settingSetData.condition.equals(condition));
+        // If the data is present, remove it
+        if (settingsSetDataIndex != -1)
+            this.settings.get().splice(settingsSetDataIndex, 1);
+    }
+    /**
      * Processes events emitted by data objects, and forwards them to listeners (called by the data objects)
      * @param condition The condition of the changed data
      * @param changedProps The changed properties
@@ -236,9 +251,10 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
             // Create data objects for all of them
             const settingsData = (initialSettings || []).map(settings => {
                 const data = new data_1.Data(settings.data, false);
-                data.on("change", this.valueChange.bind(this, settings.condition), "SettingsFile");
+                const condition = settingsConditionsSerializer_1.SettingsConditionSerializer.deserialize(settings.condition);
+                data.on("change", this.valueChange.bind(this, condition), "SettingsFile");
                 return {
-                    condition: settingsConditionsSerializer_1.SettingsConditionSerializer.deserialize(settings.condition),
+                    condition: condition,
                     ID: settings.ID,
                     data: data,
                 };

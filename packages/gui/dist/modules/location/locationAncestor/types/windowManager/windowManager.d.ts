@@ -73,19 +73,14 @@ export default class WindowManagerModule extends WindowManagerModule_base implem
     createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */
     removeLocation(locationPath: LocationPath): Promise<boolean>;
+    /** @override (probably wont ever be called) */
+    removeAncestor(): Promise<void>;
     /** @override */
     openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
     /** @override */
     closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
     /** @override */
     showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
-    /**
-     * General approach:
-     * - User enables edit mode
-     * - User selects some locationAncestor to move by dragging (which calls setLocationsMoveData)
-     * - User selects a target by dropping (which calls getLocationsMoveData and updateLocationsMoveData)
-     * - updateMovedLocations to finalize the movement of data
-     */
     /** @override */
     setDropMode(drop: boolean): Promise<void>;
     /** @override */

@@ -62,7 +62,7 @@ class Settings extends eventEmitter_1.EventEmitter {
             const parent = extendedObject_1.ExtendedObject.getField(settings, parentPath, true);
             parent[key] = val;
         }, true);
-        this.settings = new data_1.Data(settings);
+        this.settings = new data_1.Data(settings, false);
         return this.settings.get;
     }
     /**
@@ -182,6 +182,13 @@ class Settings extends eventEmitter_1.EventEmitter {
         return !condition || condition.matches(this.target);
     }
     // Data retrieval methods
+    /**
+     * Retrieves the settings file storing all the settings
+     * @returns The settings file
+     */
+    getSettingsFile() {
+        return this.settingsFile;
+    }
     /**
      * Retrieves the data object storing all the applicable settings
      * @returns The settings Data instance

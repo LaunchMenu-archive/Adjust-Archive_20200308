@@ -66,6 +66,8 @@ export default class LocationModule extends LocationModule_base implements Locat
     createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */
     removeLocation(locationPath: LocationPath): Promise<boolean>;
+    /** @override */
+    removeAncestor(): Promise<void>;
     /** @override*/
     openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
     /** @override*/

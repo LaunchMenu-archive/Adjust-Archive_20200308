@@ -1,5 +1,5 @@
 Object.defineProperty(exports, "__esModule", { value: true });
-const abstractSettingsConditions_1 = require("./abstractSettingsConditions");
+const abstractSettingsConditions_1 = require("../abstractSettingsConditions");
 /*
  TODO: finish class:
     - Typescript support,

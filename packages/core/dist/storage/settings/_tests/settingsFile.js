@@ -1,6 +1,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const settingsFile_1 = require("../settingsFile");
-const functionSettingsConditions_1 = require("../settingsConditions/functionSettingsConditions");
+const functionSettingsConditions_1 = require("../settingsConditions/types/functionSettingsConditions");
 const config = {
     a: {
         default: 3,

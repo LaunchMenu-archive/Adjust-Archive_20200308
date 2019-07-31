@@ -96,6 +96,11 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      */
     set(condition?: SettingsConditions): DeepReadonly<Setters<SettingsData<S>>>;
     /**
+     * Removes the data associated with a given condition
+     * @param condition The condition for which to remove a Data instance
+     */
+    removeConditionData(condition?: SettingsConditions | SettingsDataID | number): void;
+    /**
      * Processes events emitted by data objects, and forwards them to listeners (called by the data objects)
      * @param condition The condition of the changed data
      * @param changedProps The changed properties

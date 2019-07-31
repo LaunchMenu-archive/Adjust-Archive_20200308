@@ -5,7 +5,7 @@ const registry_1 = require("../../../registry/registry");
 const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
 const module_1 = require("../../../module/module");
 const moduleID_1 = require("../../../module/moduleID");
-const functionSettingsConditions_1 = require("../settingsConditions/functionSettingsConditions");
+const functionSettingsConditions_1 = require("../settingsConditions/types/functionSettingsConditions");
 // Create a settings config
 const config = {
     a: {

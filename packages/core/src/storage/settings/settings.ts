@@ -116,7 +116,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
             },
             true
         );
-        this.settings = new Data(settings) as Data<SettingsData<C>>;
+        this.settings = new Data(settings, false) as Data<SettingsData<C>>;
         return this.settings.get;
     }
 
@@ -276,6 +276,14 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
     }
 
     // Data retrieval methods
+    /**
+     * Retrieves the settings file storing all the settings
+     * @returns The settings file
+     */
+    public getSettingsFile(): SettingsFile<C> {
+        return this.settingsFile;
+    }
+
     /**
      * Retrieves the data object storing all the applicable settings
      * @returns The settings Data instance

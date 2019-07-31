@@ -1,7 +1,8 @@
 import {ExtendsClass} from "../../../utils/_types/standardTypes";
 import {SettingsConditions} from "./abstractSettingsConditions";
 import {SerializedSettingsConditions} from "./_types/serializedSettingsConditions";
-import {FunctionSettingsConditions} from "./functionSettingsConditions";
+import {FunctionSettingsConditions} from "./types/functionSettingsConditions";
+import {DataSettingsConditions} from "./types/dataSettingsConditions";
 
 /**
  * A class to keep track of all possible types of settings conditions
@@ -66,6 +67,6 @@ class SettingsConditionSerializerSingleton {
 export const SettingsConditionSerializer = new SettingsConditionSerializerSingleton();
 
 // Add all types
-[FunctionSettingsConditions].forEach(type =>
+[FunctionSettingsConditions, DataSettingsConditions].forEach(type =>
     SettingsConditionSerializer.registerSettingsConditionType(type)
 );

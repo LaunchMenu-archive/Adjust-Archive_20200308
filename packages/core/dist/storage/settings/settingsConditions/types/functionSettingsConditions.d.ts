@@ -1,7 +1,7 @@
-import { ParameterizedModule } from "../../../module/module";
-import { Condition } from "./_types/condition";
-import { SettingsConditions } from "./abstractSettingsConditions";
-import { Json } from "../../../utils/_types/standardTypes";
+import { ParameterizedModule } from "../../../../module/module";
+import { Condition } from "../_types/condition";
+import { SettingsConditions } from "../abstractSettingsConditions";
+import { Json } from "../../../../utils/_types/standardTypes";
 export declare class FunctionSettingsConditions extends SettingsConditions {
     static typeName: string;
     protected condition: Condition;

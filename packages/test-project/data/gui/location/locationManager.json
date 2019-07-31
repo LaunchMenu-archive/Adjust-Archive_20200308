@@ -1,24 +1,38 @@
 [
     {
-        "priority": 0,
+        "condition": {
+            "type": "function",
+            "data": {
+                "data": []
+            },
+            "priority": 0
+        },
         "ID": 0,
         "data": {
             "locations": {
-                "root": {
+                "99200164": {
                     "path": {
                         "nodes": [
                             "default"
                         ],
                         "location": {
-                            "ID": "root",
-                            "hints": {}
+                            "ID": "99200164",
+                            "hints": {
+                                "path": [
+                                    "default"
+                                ]
+                            }
                         }
                     },
                     "modules": [
                         {
                             "settingsID": 0,
-                            "modulePath": "\\embed\\embed.js"
-                        },
+                            "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
+                        }
+                    ]
+                },
+                "root": {
+                    "modules": [
                         {
                             "settingsID": 0,
                             "modulePath": "\\singletonTest\\singleton\\singleton.js"
@@ -29,34 +43,22 @@
                         },
                         {
                             "settingsID": 0,
-                            "modulePath": "gui\\location\\windowSelector\\windowSelector.js"
+                            "modulePath": "gui\\location\\locationAncestor\\types\\windowManager\\windowSelector\\windowSelector.js"
                         },
                         {
                             "settingsID": 0,
-                            "modulePath": "gui\\location\\locationAncestor\\types\\windowManager\\windowSelector\\windowSelector.js"
+                            "modulePath": "\\embed\\embed.js"
                         }
-                    ]
-                },
-                "test": {
+                    ],
                     "path": {
                         "nodes": [
-                            "window1"
+                            "default"
                         ],
                         "location": {
-                            "ID": "test",
-                            "hints": {
-                                "window": {
-                                    "ID": "window1"
-                                }
-                            }
+                            "ID": "root",
+                            "hints": {}
                         }
-                    },
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
-                        }
-                    ]
+                    }
                 }
             }
         }

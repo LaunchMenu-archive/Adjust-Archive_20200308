@@ -182,4 +182,18 @@ export declare class ExtendedObject extends Object {
      * @returns Whether or not the contents of the two objects are equivalent
      */
     static deepEquals(obj1: object, obj2: object): boolean;
+    /**
+     * Checks if the contents of object 2 are contained in object 1, excluding subobjects
+     * @param obj1 The first object
+     * @param obj2 The second object
+     * @returns Whether or not the contents of object 1 are contained in object 2
+     */
+    static contains(obj1: object, obj2: object): boolean;
+    /**
+     * Checks if the contents of object 2 are contained in object 1, including subobjects
+     * @param obj1 The first object
+     * @param obj2 The second object
+     * @returns Whether or not the contents of object 1 are contained in object 2
+     */
+    static deepContains(obj1: object, obj2: object): boolean;
 }

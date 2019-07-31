@@ -1,10 +1,4 @@
-import {
-    createModule,
-    ModuleReference,
-    createModuleView,
-    ModuleID,
-    ExtendedObject,
-} from "@adjust/core";
+import {createModule, ModuleReference, createModuleView, ModuleID} from "@adjust/core";
 import {React} from "../../../React";
 import {DragEvent} from "react";
 import {LocationPath} from "../_types/LocationPath";
@@ -54,9 +48,10 @@ export default class LocationModule extends createModule(config, LocationAncesto
     public async createLocation(location: ModuleLocation): Promise<LocationPath> {
         // Add the location to the settings
         if (this.settings.locations.indexOf(location.ID) == -1)
-            this.settingsObject.changeData({
-                locations: [...this.settings.locations, location.ID],
-            });
+            this.settingsObject.set.locations(
+                [...this.settings.locations, location.ID],
+                this.settingsConditions
+            );
 
         // Return the path just including this module
         return {
@@ -87,12 +82,20 @@ export default class LocationModule extends createModule(config, LocationAncesto
         const contained = this.settings.locations.indexOf(locationID) != -1;
 
         // Remove the location from the settings
-        this.settingsObject.changeData({
-            locations: this.settings.locations.filter(ID => ID != locationID),
-        });
+        this.settingsObject.set.locations(
+            this.settings.locations.filter(ID => ID != locationID),
+            this.settingsConditions
+        );
 
-        // Return whether or not tyh e location existed here
+        // Return whether or not the location existed here
         return contained;
+    }
+
+    /** @override */
+    public async removeAncestor(): Promise<void> {
+        this.settingsObject
+            .getSettingsFile()
+            .removeConditionData(this.settingsConditions);
     }
 
     // Module management
