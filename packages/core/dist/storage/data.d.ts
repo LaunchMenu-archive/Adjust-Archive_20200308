@@ -1,10 +1,8 @@
 import { DeepReadonly, DeepPartial, Json } from "../utils/_types/standardTypes";
-import { Setters } from "./_types/setters";
 import { EventEmitter } from "../utils/eventEmitter";
 import { JsonPartial } from "./_types/jsonPartial";
 export declare class Data<S extends object> extends EventEmitter {
     readonly get: DeepReadonly<S>;
-    readonly set: DeepReadonly<Setters<S>>;
     protected storeUndefined: boolean;
     protected keepEmpty: boolean;
     /**
@@ -19,13 +17,6 @@ export declare class Data<S extends object> extends EventEmitter {
      * @param changedProps An object with all the changed properties and their values
      */
     changeData(changedProps: JsonPartial<S>): Promise<void>;
-    /**
-     * Goes through the initial data in order to map all fields to setter methods on the set object
-     * @param object The object for which to create setter functions
-     * @param path The path of the given object from the root in this data
-     * @returns The mapped object where all values are callable setter functions
-     */
-    static createSetters<T extends object>(object: T, change: (path: object) => any, path?: string): Setters<T>;
     /**
      * Serializes the data in order to store it
      * @returns The data of the module

@@ -1,9 +1,7 @@
-import Path from "path";
 import {DeepReadonly} from "../../utils/_types/standardTypes";
 import {ConditionalSettings} from "./_types/conditionalSettings";
 import {ConditionalSettingsDataList} from "./_types/conditionalSettingsDataList";
 import {Data} from "../data";
-import {Setters} from "../_types/setters";
 import {SettingsManager} from "./settingsManager";
 import {SettingsConfig} from "./_types/settingsConfig";
 import {SettingsData} from "./_types/settingsData";
@@ -243,15 +241,6 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     }
 
     // Altering settings
-    /**
-     * Gets the setter object of a Data instance for a particular condition
-     * @param condition The condition for which to get the setter
-     * @retursn The setter that was found
-     */
-    public set(condition?: SettingsConditions): DeepReadonly<Setters<SettingsData<S>>> {
-        return this.getConditionData(condition).set;
-    }
-
     /**
      * Removes the data associated with a given condition
      * @param condition The condition for which to remove a Data instance

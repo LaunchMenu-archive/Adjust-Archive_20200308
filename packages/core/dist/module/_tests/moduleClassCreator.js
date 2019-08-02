@@ -36,7 +36,6 @@ describe("ModuleClassCreator", () => {
                     this.setState({});
                     this.setState({ val: 3 });
                     // this.setState({val: false}); // errors, since val us string | number
-                    this.stateObject.set.val(5);
                     // const p: string = this.settings.val; // error, cus stuff is of type number
                 }
             }
@@ -72,12 +71,12 @@ describe("ModuleClassCreator", () => {
                 stuff() {
                     // this.somethings(); // errors since it requires an input
                     this.somethings({});
-                    this.stateObject.set.category.val(3);
+                    this.setState({ category: { val: 3 } });
                     const o = this.state.val; // Still has the original state
                     const p = this.state.category.val; // Also has the new state
                     this.setState({ val: 3, category: { val: 2 } }); // Can change the new and old parts of the state
-                    this.settingsObject.set.val(3);
-                    this.settingsObject.set.category.val(true);
+                    this.settingsObject.changeData({ category: { val: 3 } });
+                    this.settingsObject.changeData({ category: { val: true } });
                     // this.setState({category: {v: 3}}); // errors, since category has no v
                     // this.setState({something: "test"}); // errors, since something should be of type number
                 }

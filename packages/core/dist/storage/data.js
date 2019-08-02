@@ -16,9 +16,6 @@ class Data extends eventEmitter_1.EventEmitter {
         // @ts-ignore
         this.get = {};
         this.changeData(initialData);
-        // Create setters from the initial data (which includes undefined structures if included)
-        const Class = this.__proto__.constructor;
-        this.set = Class.createSetters(initialData, this.changeData.bind(this));
     }
     /**
      * Changes properties in the data of the module, and rerenders the associated GUI
@@ -31,37 +28,6 @@ class Data extends eventEmitter_1.EventEmitter {
         extendedObject_1.ExtendedObject.copyData(changedProps, this.get, undefined, this.storeUndefined, this.keepEmpty);
         // Emit an event to notify listeners of the change
         await this.emitAsync("change", changedProps, originalProps);
-    }
-    /**
-     * Goes through the initial data in order to map all fields to setter methods on the set object
-     * @param object The object for which to create setter functions
-     * @param path The path of the given object from the root in this data
-     * @returns The mapped object where all values are callable setter functions
-     */
-    static createSetters(object, change, path = "") {
-        return extendedObject_1.ExtendedObject.map(object, (value, key) => {
-            // Make sure it's not a disallowed property name
-            if (["name", "length", "caller", "arguments", "__proto__"].includes(key))
-                throw Error(`property name '${key}' is not allowed`);
-            // Create an object path from the string path, an leave the property value blank
-            const top = {};
-            const propPath = extendedObject_1.ExtendedObject.translatePathToObject(path, top);
-            // Create the set method
-            const setter = value => {
-                // Change the top most part of the data path (the value)
-                top[key] = value;
-                // Emit the change
-                return change(propPath);
-            };
-            // Add any subsetters to the setter if necessary by recursing
-            if (value instanceof Object) {
-                const p = (path ? path + "." : "") + key;
-                // Assign the child setters
-                Object.assign(setter, this.createSetters(value, change, p));
-            }
-            // Map the data to the setter
-            return setter;
-        });
     }
     // Serialization
     /**

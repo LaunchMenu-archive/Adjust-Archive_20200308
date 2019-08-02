@@ -133,6 +133,15 @@ class Module {
     getSettingsObject() {
         return this.settingsObject;
     }
+    /**
+     * Changes the settings of the module
+     * @param changedProps An object containing any fields of the settings that have changed
+     * @param condition The settings condition to store the data under
+     * @returns A promise that resolves once all listeners have resolved
+     */
+    async setSettings(changedProps, condition) {
+        return this.settingsObject.changeData(changedProps, condition);
+    }
     // Serialization related methods
     /**
      * Serializes the entire module, based on the state

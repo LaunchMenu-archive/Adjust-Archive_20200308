@@ -17,8 +17,6 @@ export * from "../dist/registry/_types/request";
 export * from "../dist/registry/_types/requestFilter";
 export * from "../dist/state/_types/SerializedProgramState";
 export * from "../dist/storage/_types/jsonPartial";
-export * from "../dist/storage/_types/setters";
-export * from "../dist/storage/settings/_types/conditionalSetters";
 export * from "../dist/storage/settings/_types/conditionalSettings";
 export * from "../dist/storage/settings/_types/conditionalSettingsData";
 export * from "../dist/storage/settings/_types/conditionalSettingsDataList";

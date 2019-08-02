@@ -2,7 +2,6 @@ import { DeepReadonly } from "../../utils/_types/standardTypes";
 import { ConditionalSettings } from "./_types/conditionalSettings";
 import { ConditionalSettingsDataList } from "./_types/conditionalSettingsDataList";
 import { Data } from "../data";
-import { Setters } from "../_types/setters";
 import { SettingsConfig } from "./_types/settingsConfig";
 import { SettingsData } from "./_types/settingsData";
 import { EventEmitter } from "../../utils/eventEmitter";
@@ -90,12 +89,6 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * @retursn The getter that was found
      */
     get(condition?: SettingsConditions): DeepReadonly<SettingsData<S>>;
-    /**
-     * Gets the setter object of a Data instance for a particular condition
-     * @param condition The condition for which to get the setter
-     * @retursn The setter that was found
-     */
-    set(condition?: SettingsConditions): DeepReadonly<Setters<SettingsData<S>>>;
     /**
      * Removes the data associated with a given condition
      * @param condition The condition for which to remove a Data instance

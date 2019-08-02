@@ -173,14 +173,6 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
     }
     // Altering settings
     /**
-     * Gets the setter object of a Data instance for a particular condition
-     * @param condition The condition for which to get the setter
-     * @retursn The setter that was found
-     */
-    set(condition) {
-        return this.getConditionData(condition).set;
-    }
-    /**
      * Removes the data associated with a given condition
      * @param condition The condition for which to remove a Data instance
      */

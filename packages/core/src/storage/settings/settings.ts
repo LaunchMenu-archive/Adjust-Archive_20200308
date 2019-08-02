@@ -1,7 +1,6 @@
 import {DeepReadonly} from "../../utils/_types/standardTypes";
 import {SettingsData} from "./_types/settingsData";
 import {SettingsPriorityList} from "./_types/settingsPriorityList";
-import {ConditionalSetters} from "./_types/conditionalSetters";
 import {ParameterizedSettingPriorityList} from "./_types/settingPriorityList";
 import {ParameterizedConditionValue} from "./_types/conditionalValue";
 import {JsonPartial} from "../_types/jsonPartial";
@@ -27,7 +26,6 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
     protected settings: Data<SettingsData<C>>; // The top level settings that apply to the target
     protected settingsPriorities: SettingsPriorityList<C>; // The  whole list of settings that apply to the target
     public readonly get: DeepReadonly<SettingsData<C>>; // The getter object for all settings
-    public readonly set: DeepReadonly<ConditionalSetters<SettingsData<C>>>; // The setter object for all settings
 
     /**
      * Creates settings for a specific module instance
@@ -53,10 +51,6 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
 
         // Setup the listeners
         settings.setupSettingsFileListener();
-
-        // Create the setters object
-        // @ts-ignore
-        settings.set = settings.setupSetters();
 
         return settings;
     }
@@ -197,60 +191,6 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
         this.settingsFile.destroy(); // Only destroys if there are no more listeners
     }
 
-    // Altering settings setup methods
-    /**
-     * Creates setter methods for all of the settings
-     * @returns A setter object that takes a condition as a second argument
-     */
-    protected setupSetters(): DeepReadonly<ConditionalSetters<SettingsData<C>>> {
-        // Get the class
-        const Class = (this as any).__proto__.constructor as typeof Settings;
-
-        // Perform the static method 'createSetters' to turn the data structure intoa setters structure
-        return (Class.createSetters(
-            this.settingsFile.getStucture(),
-            this.changeData.bind(this)
-        ) as any) as DeepReadonly<ConditionalSetters<SettingsData<C>>>;
-    }
-
-    /**
-     * Goes through the initial data in order to map all fields to setter methods on the set object
-     * @param object The object for which to create setter functions
-     * @param path The path of the given object from the root in this data
-     * @returns The mapped object where all values are callable setter functions
-     */
-    public static createSetters<T extends {[name: string]: any}>(
-        object: T,
-        change: (path: object, condition?: SettingsConditions) => any,
-        path: string = ""
-    ): ConditionalSetters<T> {
-        return ExtendedObject.map(object, (value, key) => {
-            // Create an object path from the string path, an leave the property value blank
-            const top = {};
-            const propPath = ExtendedObject.translatePathToObject(path, top);
-
-            // Create the set method
-            const setter = (value: any, condition?: SettingsConditions) => {
-                // Change the top most part of the data path (the value)
-                top[key] = value;
-
-                // Emit the change
-                return change(propPath, condition);
-            };
-
-            // Add any subsetters to the setter if necessary by recursing
-            if ((value as any) instanceof Object) {
-                const p = (path ? path + "." : "") + key;
-
-                // Assign the child setters
-                Object.assign(setter, this.createSetters(value, change, p));
-            }
-
-            // Map the data to the setter
-            return setter;
-        }) as ConditionalSetters<T>;
-    }
-
     // Data altering methods
     /**
      * Changes the data for a passed condition
@@ -326,6 +266,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
         create: boolean = true
     ): Data<SettingsData<C>> {
         // Check if the condition applies to this target, if not throw an error
+        console.log(this.satisfiesCondition(condition));
         if (!this.satisfiesCondition(condition))
             throw new Error(
                 "The target of these settings doesn't satisfy the given condition"

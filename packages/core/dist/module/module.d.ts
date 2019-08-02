@@ -18,6 +18,7 @@ import { PublicModuleMethods } from "./_types/publicModuleMethods";
 import { RequestFilter } from "../registry/_types/requestFilter";
 import { ModuleID } from "./moduleID";
 import { SettingsFile } from "../storage/settings/settingsFile";
+import { SettingsConditions } from "../storage/settings/settingsConditions/abstractSettingsConditions";
 export declare const baseConfig: {
     settings: {};
     initialState: {
@@ -103,6 +104,13 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * @returns The entire settings object on which listeners could be registered
      */
     getSettingsObject(): Settings<C>;
+    /**
+     * Changes the settings of the module
+     * @param changedProps An object containing any fields of the settings that have changed
+     * @param condition The settings condition to store the data under
+     * @returns A promise that resolves once all listeners have resolved
+     */
+    setSettings(changedProps: JsonPartial<S>, condition?: SettingsConditions): Promise<void>;
     /**
      * Serializes the entire module, based on the state
      * @returns An object containing all the module's relevant data

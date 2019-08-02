@@ -1,12 +1,10 @@
-import {DeepReadonly, DeepPartial, Json, Omit} from "../utils/_types/standardTypes";
-import {Setters} from "./_types/setters";
+import {DeepReadonly, DeepPartial, Json} from "../utils/_types/standardTypes";
 import {EventEmitter} from "../utils/eventEmitter";
 import {ExtendedObject} from "../utils/extendedObject";
 import {JsonPartial} from "./_types/jsonPartial";
 
 export class Data<S extends object> extends EventEmitter {
     public readonly get: DeepReadonly<S>; // The data of the object
-    public readonly set: DeepReadonly<Setters<S>>; // The setters for the object data
 
     // TODO: add a way to directly register a listener for a certain field
 
@@ -32,13 +30,6 @@ export class Data<S extends object> extends EventEmitter {
         // @ts-ignore
         this.get = {};
         this.changeData(initialData as any);
-
-        // Create setters from the initial data (which includes undefined structures if included)
-        const Class = (this as any).__proto__.constructor as typeof Data;
-        this.set = Class.createSetters(
-            initialData,
-            this.changeData.bind(this)
-        ) as DeepReadonly<Setters<S>>;
     }
 
     /**
@@ -60,51 +51,6 @@ export class Data<S extends object> extends EventEmitter {
 
         // Emit an event to notify listeners of the change
         await this.emitAsync("change", changedProps, originalProps);
-    }
-
-    /**
-     * Goes through the initial data in order to map all fields to setter methods on the set object
-     * @param object The object for which to create setter functions
-     * @param path The path of the given object from the root in this data
-     * @returns The mapped object where all values are callable setter functions
-     */
-    public static createSetters<T extends object>(
-        object: T,
-        change: (path: object) => any,
-        path: string = ""
-    ): Setters<T> {
-        return ExtendedObject.map(object, (value, key) => {
-            // Make sure it's not a disallowed property name
-            if (["name", "length", "caller", "arguments", "__proto__"].includes(key))
-                throw Error(`property name '${key}' is not allowed`);
-
-            // Create an object path from the string path, an leave the property value blank
-            const top = {};
-            const propPath = ExtendedObject.translatePathToObject(path, top);
-
-            // Create the set method
-            const setter = value => {
-                // Change the top most part of the data path (the value)
-                top[key] = value;
-
-                // Emit the change
-                return change(propPath);
-            };
-
-            // Add any subsetters to the setter if necessary by recursing
-            if (value instanceof Object) {
-                const p = (path ? path + "." : "") + key;
-
-                // Assign the child setters
-                Object.assign(
-                    setter,
-                    this.createSetters((value as any) as object, change, p)
-                );
-            }
-
-            // Map the data to the setter
-            return setter;
-        }) as Setters<T>;
     }
 
     // Serialization

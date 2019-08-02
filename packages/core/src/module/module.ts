@@ -28,6 +28,7 @@ import {RequestFilter} from "../registry/_types/requestFilter";
 import {ModuleID} from "./moduleID";
 import {SettingsManager} from "../storage/settings/settingsManager";
 import {SettingsFile} from "../storage/settings/settingsFile";
+import {SettingsConditions} from "../storage/settings/settingsConditions/abstractSettingsConditions";
 
 export const baseConfig = {
     settings: {},
@@ -206,6 +207,19 @@ export class Module<
      */
     public getSettingsObject(): Settings<C> {
         return this.settingsObject;
+    }
+
+    /**
+     * Changes the settings of the module
+     * @param changedProps An object containing any fields of the settings that have changed
+     * @param condition The settings condition to store the data under
+     * @returns A promise that resolves once all listeners have resolved
+     */
+    public async setSettings(
+        changedProps: JsonPartial<S>,
+        condition?: SettingsConditions
+    ): Promise<void> {
+        return this.settingsObject.changeData(changedProps as any, condition);
     }
 
     // Serialization related methods

@@ -24,9 +24,6 @@ class Settings extends eventEmitter_1.EventEmitter {
         settings.get = settings.loadApplicableSettingsFromFile();
         // Setup the listeners
         settings.setupSettingsFileListener();
-        // Create the setters object
-        // @ts-ignore
-        settings.set = settings.setupSetters();
         return settings;
     }
     // Setup methods/teardown
@@ -123,45 +120,6 @@ class Settings extends eventEmitter_1.EventEmitter {
         this.settingsFile.off("change", this.settingsFileListener);
         this.settingsFile.destroy(); // Only destroys if there are no more listeners
     }
-    // Altering settings setup methods
-    /**
-     * Creates setter methods for all of the settings
-     * @returns A setter object that takes a condition as a second argument
-     */
-    setupSetters() {
-        // Get the class
-        const Class = this.__proto__.constructor;
-        // Perform the static method 'createSetters' to turn the data structure intoa setters structure
-        return Class.createSetters(this.settingsFile.getStucture(), this.changeData.bind(this));
-    }
-    /**
-     * Goes through the initial data in order to map all fields to setter methods on the set object
-     * @param object The object for which to create setter functions
-     * @param path The path of the given object from the root in this data
-     * @returns The mapped object where all values are callable setter functions
-     */
-    static createSetters(object, change, path = "") {
-        return extendedObject_1.ExtendedObject.map(object, (value, key) => {
-            // Create an object path from the string path, an leave the property value blank
-            const top = {};
-            const propPath = extendedObject_1.ExtendedObject.translatePathToObject(path, top);
-            // Create the set method
-            const setter = (value, condition) => {
-                // Change the top most part of the data path (the value)
-                top[key] = value;
-                // Emit the change
-                return change(propPath, condition);
-            };
-            // Add any subsetters to the setter if necessary by recursing
-            if (value instanceof Object) {
-                const p = (path ? path + "." : "") + key;
-                // Assign the child setters
-                Object.assign(setter, this.createSetters(value, change, p));
-            }
-            // Map the data to the setter
-            return setter;
-        });
-    }
     // Data altering methods
     /**
      * Changes the data for a passed condition
@@ -217,6 +175,7 @@ class Settings extends eventEmitter_1.EventEmitter {
      */
     getData(condition, create = true) {
         // Check if the condition applies to this target, if not throw an error
+        console.log(this.satisfiesCondition(condition));
         if (!this.satisfiesCondition(condition))
             throw new Error("The target of these settings doesn't satisfy the given condition");
         // Retrieve the data on the condition of the settings file

@@ -39,23 +39,12 @@ describe("SettingsFile", () => {
             expect(settingsFile.get(undefined).e).toEqual({prop: 3});
         });
     });
-    describe("Set", () => {
+    describe("ChangeData", () => {
         let settingsFile: SettingsFile<typeof config>;
         beforeEach(async () => {
             settingsFile = await SettingsFile.createInstance("_test/dontSave", config);
         });
 
-        it("Should be able to create setter objects for new conditions", () => {
-            const condition = new ConstantSettingsConditions(2);
-            expect(settingsFile.set(condition)).not.toBeFalsy();
-        });
-        it("Should return a setter object with the right structure", () => {
-            const condition = new ConstantSettingsConditions(2);
-
-            settingsFile.set(condition).a(3);
-            settingsFile.set(condition).b.c("test");
-            expect(true).toBeTruthy();
-        });
         it("Should invoke change events", () => {
             const condition = new ConstantSettingsConditions(2);
 
@@ -65,9 +54,9 @@ describe("SettingsFile", () => {
                 changes.push({path: path, value: value, oldValue: oldValue});
             });
 
-            settingsFile.set(condition).a(3);
-            settingsFile.set(condition).b.c("test");
-            settingsFile.set(condition).a(8);
+            settingsFile.getConditionData(condition).changeData({a: 3});
+            settingsFile.getConditionData(condition).changeData({b: {c: "test"}});
+            settingsFile.getConditionData(condition).changeData({a: 8});
 
             [
                 {path: "a", value: 3, oldValue: undefined},
@@ -98,7 +87,7 @@ describe("SettingsFile", () => {
             expect(args.settings).not.toBeFalsy();
 
             const condition = new FunctionSettingsConditions(() => true, 2);
-            settingsFile.set(condition).f.g(5);
+            settingsFile.getConditionData(condition).changeData({f: {g: 5}});
 
             expect(args.newValue).toEqual(5);
             expect(args.oldValue).toEqual(undefined);
@@ -122,14 +111,14 @@ describe("SettingsFile", () => {
                 },
             });
             const condition = new FunctionSettingsConditions(() => true, 2);
-            await settingsFile.set(condition).f.g(5);
+            await settingsFile.getConditionData(condition).changeData({f: {g: 5}});
             order.push(2);
 
             settingsFile.on("change", async (path, value, cCondition, oldValue) => {
                 await new Promise(resolve => setTimeout(resolve, 60));
                 order.push(3);
             });
-            await settingsFile.set(condition).f.g(2);
+            await settingsFile.getConditionData(condition).changeData({f: {g: 2}});
             order.push(2);
 
             expect(order).toEqual([1, 2, 1, 3, 2]);
@@ -137,9 +126,9 @@ describe("SettingsFile", () => {
         it("Should remove data if undefined", () => {
             const condition = new FunctionSettingsConditions(() => true, 2);
 
-            settingsFile.set(condition).b.c("test");
+            settingsFile.getConditionData(condition).changeData({b: {c: "test"}});
             expect(settingsFile.get(condition).b.c).toBe("test");
-            settingsFile.set(condition).b.c(undefined);
+            settingsFile.getConditionData(condition).changeData({b: {c: undefined}});
             expect(settingsFile.get(condition).b).toEqual({});
         });
     });
@@ -155,11 +144,11 @@ describe("SettingsFile", () => {
                 return target != null; // Should always be true also
             }, 2);
 
-            settingsFile.set().b.c("test");
-            settingsFile.set(condition).b.c("test2");
-            settingsFile.set(condition2).b.c("test3");
-            settingsFile.set(condition2).d({hello: 3});
-            settingsFile.set(condition2).e({prop: 6});
+            settingsFile.getConditionData().changeData({b: {c: "test"}});
+            settingsFile.getConditionData(condition).changeData({b: {c: "test2"}});
+            settingsFile
+                .getConditionData(condition2)
+                .changeData({b: {c: "test3"}, d: {hello: 3}, e: {prop: 6}});
             expect(settingsFile.get().b.c).toBe("test");
             expect(settingsFile.get(condition).b.c).toBe("test2");
             expect(settingsFile.get(condition2).b.c).toBe("test3");
@@ -189,9 +178,9 @@ describe("SettingsFile", () => {
         let settingsFile: SettingsFile<typeof config>;
         beforeEach(async () => {
             settingsFile = await SettingsFile.createInstance("_tests/save1", config);
-            settingsFile.set().b.c("test");
-            settingsFile.set(condition).b.c("test2");
-            settingsFile.set(condition2).b.c("test3");
+            settingsFile.getConditionData().changeData({b: {c: "test"}});
+            settingsFile.getConditionData(condition).changeData({b: {c: "test2"}});
+            settingsFile.getConditionData(condition2).changeData({b: {c: "test3"}});
         });
 
         it("Should store the data in a file", () => {
@@ -218,20 +207,20 @@ describe("SettingsFile", () => {
         let settingsFile: SettingsFile<typeof config>;
         beforeEach(async () => {
             settingsFile = await SettingsFile.createInstance("_tests/save2", config);
-            settingsFile.set().b.c("test");
-            settingsFile.set(condition).b.c("test2");
-            settingsFile.set(condition2).b.c("test3");
+            settingsFile.getConditionData().changeData({b: {c: "test"}});
+            settingsFile.getConditionData(condition).changeData({b: {c: "test2"}});
+            settingsFile.getConditionData(condition2).changeData({b: {c: "test3"}});
             settingsFile.save();
         });
 
         it("Should reload the previously saved settings", () => {
-            settingsFile.set().b.c("hallo");
+            settingsFile.getConditionData().changeData({b: {c: "hallo"}});
             expect(settingsFile.get().b.c).toBe("hallo");
             settingsFile.reload();
             expect(settingsFile.get().b.c).toBe("test");
         });
         it("Should invoke change events", () => {
-            settingsFile.set().b.c("hallo");
+            settingsFile.getConditionData().changeData({b: {c: "hallo"}});
 
             let triggered = false;
             settingsFile.on("change", (path, value, condition) => {

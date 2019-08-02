@@ -1,7 +1,6 @@
 import { DeepReadonly } from "../../utils/_types/standardTypes";
 import { SettingsData } from "./_types/settingsData";
 import { SettingsPriorityList } from "./_types/settingsPriorityList";
-import { ConditionalSetters } from "./_types/conditionalSetters";
 import { JsonPartial } from "../_types/jsonPartial";
 import { Module, ParameterizedModule } from "../../module/module";
 import { SettingsConfig } from "./_types/settingsConfig";
@@ -16,7 +15,6 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
     protected settings: Data<SettingsData<C>>;
     protected settingsPriorities: SettingsPriorityList<C>;
     readonly get: DeepReadonly<SettingsData<C>>;
-    readonly set: DeepReadonly<ConditionalSetters<SettingsData<C>>>;
     /**
      * Creates settings for a specific module instance
      * @param target The module instance to target
@@ -40,20 +38,6 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * Properly disposes the object
      */
     destroy(): void;
-    /**
-     * Creates setter methods for all of the settings
-     * @returns A setter object that takes a condition as a second argument
-     */
-    protected setupSetters(): DeepReadonly<ConditionalSetters<SettingsData<C>>>;
-    /**
-     * Goes through the initial data in order to map all fields to setter methods on the set object
-     * @param object The object for which to create setter functions
-     * @param path The path of the given object from the root in this data
-     * @returns The mapped object where all values are callable setter functions
-     */
-    static createSetters<T extends {
-        [name: string]: any;
-    }>(object: T, change: (path: object, condition?: SettingsConditions) => any, path?: string): ConditionalSetters<T>;
     /**
      * Changes the data for a passed condition
      * @param data The fields to change

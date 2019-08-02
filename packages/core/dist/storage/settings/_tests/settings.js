@@ -64,7 +64,7 @@ describe("Settings", () => {
         it("Should store the correct values", async () => {
             // Add some content to the file
             const file = await settingsManager_1.SettingsManager.getSettingsFile(Target.getPath(), config);
-            file.set(new functionSettingsConditions_1.FunctionSettingsConditions(() => true, 1)).b.c(false);
+            file.getConditionData(new functionSettingsConditions_1.FunctionSettingsConditions(() => true, 1)).changeData({ b: { c: false } });
             // Create the settings and verify it loads the correct data
             const settings = await settings_1.Settings.createInstance(target1);
             expect(settings.get).toEqual({ a: 3, b: { c: false }, d: {} });
@@ -73,9 +73,8 @@ describe("Settings", () => {
         it("Should not store data that doesn't apply to the target", async () => {
             // Add some content to the file
             const file = await settingsManager_1.SettingsManager.getSettingsFile(Target.getPath(), config);
-            file.set(isTarget1).b.c(false);
-            file.set(isTarget2).b.c(true);
-            file.set(isTarget2).a(4);
+            file.getConditionData(isTarget1).changeData({ b: { c: false } });
+            file.getConditionData(isTarget2).changeData({ b: { c: true }, a: 4 });
             // Create the settings and verify it loads the correct data
             const settings1 = await settings_1.Settings.createInstance(target1);
             expect(settings1.get).toEqual({ a: 3, b: { c: false }, d: {} });
@@ -90,37 +89,33 @@ describe("Settings", () => {
         it("Should correctly return the data that applies to the target", async () => {
             // Add some content to the file
             const file = await settingsManager_1.SettingsManager.getSettingsFile(Target.getPath(), config);
-            file.set(isTarget1).b.c(false);
-            file.set(isTarget2).b.c(true);
-            file.set(isTarget2).a(4);
+            file.getConditionData(isTarget1).changeData({ b: { c: false } });
+            file.getConditionData(isTarget2).changeData({ b: { c: true }, a: 4 });
             // Load some settings, and check their values
             const settings = await settings_1.Settings.createInstance(target1);
             expect(settings.get.a).toBe(3);
             expect(settings.get.b.c).toBe(false);
         });
     });
-    describe("Set", () => {
+    describe("ChangeData", () => {
         it("Should not be able to change settings that don't apply to the target", async () => {
             // Check if we can alter settings with conditions applying to the target
             const settings = await settings_1.Settings.createInstance(target1);
-            settings.set.a(56, isTarget1);
+            settings.changeData({ a: 56 }, isTarget1);
             // Check if we get a proper error when trying to alter settings
             // with conditions that don't apply to the target
-            expect(() => {
-                settings.set.a(12, isTarget2);
-            }).toThrowError();
+            await expect(settings.changeData({ a: 12 }, isTarget2)).rejects.toThrowError();
         });
         it("Should change the data correctly", async () => {
             const settings = await settings_1.Settings.createInstance(target1);
-            settings.set.a(56, isTarget1);
+            settings.changeData({ a: 56 }, isTarget1);
             expect(settings.get).toEqual({ a: 56, b: { c: true }, d: {} });
         });
         it("Should handle different priorities correctly", async () => {
             const settings = await settings_1.Settings.createInstance(target1);
-            settings.set.b.c(false, isTarget1);
-            settings.set.a(56, isTarget1);
-            settings.set.a(0, isTarget1higherPrior);
-            settings.set.a(19, isTarget1);
+            settings.changeData({ a: 56, b: { c: false } }, isTarget1);
+            settings.changeData({ a: 0 }, isTarget1higherPrior);
+            settings.changeData({ a: 19 }, isTarget1);
             expect(settings.get).toEqual({ a: 0, b: { c: false }, d: {} });
         });
         it("Should invoke change events", async () => {
@@ -129,9 +124,9 @@ describe("Settings", () => {
             settings.on("change", (prop, value, oldValue) => {
                 changed.push({ prop: prop, value: value, oldValue: oldValue });
             });
-            settings.set.a(2, isTarget1);
-            settings.set.a(3, isTarget1);
-            settings.set.b.c(false, isTarget1);
+            settings.changeData({ a: 2 }, isTarget1);
+            settings.changeData({ a: 3 }, isTarget1);
+            settings.changeData({ b: { c: false } }, isTarget1);
             expect(changed).toEqual([
                 {
                     prop: "a",
