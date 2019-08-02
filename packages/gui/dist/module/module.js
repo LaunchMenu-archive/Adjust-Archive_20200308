@@ -48,17 +48,25 @@ class Module extends core_1.createModule(exports.baseConfig) {
         await super.init(fromReload);
         // Open the module if it's requested to do so
         if (this.getRequest().openView)
-            this.openView();
+            this.openViews();
+    }
+    /** @override */
+    async stop() {
+        super.stop();
+        // Close the module if it was request to open them
+        if (this.getRequest().openView)
+            this.closeViews();
     }
     /**
-     * Opens the module view using the location manager, according to the module's settings
+     * Opens the module view(s) using the location manager, according to the module's settings
      */
-    async openView() {
+    async openViews() {
         // Make this module has a view to open
         if (!this.getConfig().viewClass)
             return;
         // Get the location manager to open this module with
-        this.locationManager = await this.request({ type: locationManager_type_1.LocationManagerID });
+        if (!this.locationManager)
+            this.locationManager = await this.request({ type: locationManager_type_1.LocationManagerID });
         // Get the location from the settings
         let locations = this.settings.location;
         if (!locations)
@@ -82,7 +90,29 @@ class Module extends core_1.createModule(exports.baseConfig) {
                 // Await all changes
                 await Promise.all([...closePromises, ...openPromises]);
             }
-        });
+        }, "openViews");
+    }
+    /**
+     * Closes the module view(s) using the location manager, according tot he module's settings
+     */
+    async closeViews() {
+        // Make this module has a view to open
+        if (!this.getConfig().viewClass)
+            return;
+        // Make sure there is a location manager to close this module with
+        if (!this.locationManager)
+            return;
+        // Get the location from the settings
+        let locations = this.settings.location;
+        if (!locations)
+            locations = [];
+        else if (!(locations instanceof Array))
+            locations = [locations];
+        // Use the location manager to close this module in all the specified locations
+        const openingPromises = locations.map(location => this.locationManager.closeModule(this.getID(), location));
+        await Promise.all(openingPromises);
+        // Remove listeners for location changes
+        this.settingsObject.off("change", "openViews");
     }
     /**
      * Shows the GUI of this module at its locations

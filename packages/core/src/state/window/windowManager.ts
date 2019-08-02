@@ -130,6 +130,7 @@ class WindowManagerSingleton {
             const browserWindow = new BrowserWindow({
                 width: 800,
                 height: 600,
+                show: false,
                 ...options,
                 webPreferences: {
                     nodeIntegration: true,
@@ -163,6 +164,9 @@ class WindowManagerSingleton {
                 IpcMain.send(browserWindow, "WindowIndex.setRoot", moduleID.toString()),
             ];
             await Promise.all(promises);
+
+            // Show the window
+            browserWindow.show();
 
             // Remove the promise
             delete this.openingWindows[windowID];
@@ -341,6 +345,18 @@ class WindowManagerSingleton {
         state["~data"] = module.getData();
 
         return state as any;
+    }
+
+    // Window related utility methods
+    /**
+     * Retrieves the size of the main display
+     * @returns The display's size
+     */
+    public async getScreenSize(): Promise<{width: number; height: number}> {
+        // Make sure the electron app is ready first
+        await new Promise(res => (app.isReady() ? res() : app.once("ready", res)));
+
+        return require("electron").screen.getPrimaryDisplay().workAreaSize;
     }
 }
 export const WindowManager = new WindowManagerSingleton();

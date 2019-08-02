@@ -68,6 +68,13 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      */
     protected satisfiesCondition(condition: SettingsConditions): boolean;
     /**
+     * Sets the initial data for a given condition,
+     * will store the data if the condition currently holds no other data
+     * @param data The data to store under this condition
+     * @param condition The condition to store the data under
+     */
+    setInitialData(data: JsonPartial<SettingsData<C>> | (() => JsonPartial<SettingsData<C>> | Promise<JsonPartial<SettingsData<C>>>), condition?: SettingsConditions): Promise<void>;
+    /**
      * Retrieves the settings file storing all the settings
      * @returns The settings file
      */
@@ -80,9 +87,10 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
     /**
      * Retrieves the data for a passed condition
      * @param condition The condition to retrieve the data for
+     * @param create Whether or not to create the conditional data if absent
      * @returns The settings condition data
      */
-    getData(condition?: SettingsConditions): Data<SettingsData<C>>;
+    getData(condition?: SettingsConditions, create?: boolean): Data<SettingsData<C>>;
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change

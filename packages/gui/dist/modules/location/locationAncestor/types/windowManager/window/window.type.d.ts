@@ -10,8 +10,9 @@ export declare type WindowParent = LocationAncestorParent & {
     /**
      * Updates the name of the window
      * @param name The name that the window wants to have
+     * @param windowID The ID of the window whose name to change
      */
-    changeWindowName(name: string): Promise<void>;
+    changeWindowName(name: string, windowID: string): Promise<void>;
 };
 export declare type WindowContract = {
     parent: WindowParent;

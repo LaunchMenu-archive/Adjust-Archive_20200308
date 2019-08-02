@@ -87,7 +87,7 @@ class WindowManagerSingleton {
         // Create a promise that resolves when the window is loaded
         return (this.openingWindows[windowID] = new Promise(async (resolve, reject) => {
             // Create the browser window
-            const browserWindow = new electron_1.BrowserWindow(Object.assign({ width: 800, height: 600 }, options, { webPreferences: Object.assign({ nodeIntegration: true }, options.webPreferences) }));
+            const browserWindow = new electron_1.BrowserWindow(Object.assign({ width: 800, height: 600, show: false }, options, { webPreferences: Object.assign({ nodeIntegration: true }, options.webPreferences) }));
             // Open the index page
             browserWindow.loadURL(`file://${__dirname}/window.html`);
             browserWindow.customID = windowID;
@@ -106,6 +106,8 @@ class WindowManagerSingleton {
                 ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setRoot", moduleID.toString()),
             ];
             await Promise.all(promises);
+            // Show the window
+            browserWindow.show();
             // Remove the promise
             delete this.openingWindows[windowID];
             // Return the browserWindow
@@ -226,6 +228,16 @@ class WindowManagerSingleton {
         // Get the data to the state
         state["~data"] = module.getData();
         return state;
+    }
+    // Window related utility methods
+    /**
+     * Retrieves the size of the main display
+     * @returns The display's size
+     */
+    async getScreenSize() {
+        // Make sure the electron app is ready first
+        await new Promise(res => (electron_1.app.isReady() ? res() : electron_1.app.once("ready", res)));
+        return require("electron").screen.getPrimaryDisplay().workAreaSize;
     }
 }
 exports.WindowManager = new WindowManagerSingleton();

@@ -1,15 +1,25 @@
 [
     {
         "condition": {
-            "type": "function",
-            "data": {
-                "data": []
-            },
+            "type": "constant",
             "priority": 0
         },
         "ID": 0,
         "data": {
-            "windows": {}
+            "windows": {
+                "default": {
+                    "windowName": "default"
+                },
+                "kZON-Gj7L": {
+                    "windowName": "Prompt"
+                },
+                "VY21-EqNK": {
+                    "windowName": "cheese"
+                },
+                "BGDB-6ae7": {
+                    "windowName": "coolio"
+                }
+            }
         }
     }
 ]

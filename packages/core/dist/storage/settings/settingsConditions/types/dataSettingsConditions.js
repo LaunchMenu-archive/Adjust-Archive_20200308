@@ -6,17 +6,18 @@ class DataSettingsConditions extends abstractSettingsConditions_1.SettingsCondit
      * Creates a new instance of these settings conditions
      * @param data The data to check for
      * @param priority The priority of the settings set
+     * @param disabled Whether or not these settings are disabled
      */
-    constructor(data, priority) {
-        super(priority);
+    constructor(data, priority, disabled = false) {
+        super(priority, disabled);
         this.data = typeof data == "string" ? JSON.parse(data) : data;
         // Always stringify the data, such that formatting plays no role when using 'equals'
         this.dataString = JSON.stringify(data);
     }
     // Serialization
     /** @override */
-    static deserialize(data, priority) {
-        return new DataSettingsConditions(data || {}, priority);
+    static deserialize(data, priority, disabled) {
+        return new DataSettingsConditions(data || {}, priority, disabled);
     }
     /** @override */
     serialize() {
@@ -30,14 +31,15 @@ class DataSettingsConditions extends abstractSettingsConditions_1.SettingsCondit
     /** @override */
     equals(condition) {
         // Check if the passed condition is not present, and this doesn't contain a real condition either
-        if (condition == undefined)
+        if (condition == undefined && this.getPriority() == 0)
             return this.data == undefined;
         // Make sure that the contion is of the same type
         if (!(condition instanceof DataSettingsConditions))
             return false;
         // Or both have the same condition, priority and data
         return (condition.dataString == this.dataString &&
-            condition.getPriority() == this.getPriority());
+            condition.getPriority() == this.getPriority() &&
+            condition.isDisabled() == this.isDisabled());
     }
 }
 // The name to be used in serialization

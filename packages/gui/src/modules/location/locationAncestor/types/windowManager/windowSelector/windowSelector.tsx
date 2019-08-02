@@ -1,13 +1,16 @@
 import {Grid, Button, Box} from "@material-ui/core";
 import {WindowSelectorID, WindowSelector} from "./windowSelector.type";
-import {WindowManager, createModuleView} from "@adjust/core";
+import {WindowManager, createModuleView, UUID} from "@adjust/core";
 import {DragEvent} from "react";
 import {createModule} from "../../../../../../module/moduleClassCreator";
 import {React} from "../../../../../../React";
 import {dragAndDropName} from "../../../locationAncestor.type";
+import {InputPrompt, InputPromptID} from "../../../../../prompts/inputPrompt.type";
 
 export const config = {
-    initialState: {},
+    initialState: {
+        namePrompt: null as InputPrompt,
+    },
     settings: {},
     type: WindowSelectorID,
 };
@@ -15,7 +18,7 @@ export const config = {
 export default class WindowSelectorModule extends createModule(config)
     implements WindowSelector {
     // The name of the window
-    protected windowName: string = "#windowSelector";
+    protected windowID: string = "#windowSelector";
 
     // The window in which this module is shown
     protected window: Promise<Electron.BrowserWindow>;
@@ -27,7 +30,7 @@ export default class WindowSelectorModule extends createModule(config)
      */
     protected async getWindow(): Promise<Electron.BrowserWindow> {
         if (this.window) return this.window;
-        return (this.window = WindowManager.openWindow(this.windowName, this.getID()));
+        return (this.window = WindowManager.openWindow(this.windowID, this.getID()));
     }
 
     /**
@@ -37,7 +40,7 @@ export default class WindowSelectorModule extends createModule(config)
         // Check if the window has been opened
         if (this.window) {
             // Close the window
-            WindowManager.closeWindow(this.windowName);
+            WindowManager.closeWindow(this.windowID);
             this.window = null;
         }
     }
@@ -75,7 +78,8 @@ export default class WindowSelectorModule extends createModule(config)
         const currentData = await parent.getLocationsMoveData();
 
         // Set all hints to a path pointing at this location
-        const path = [Math.floor(Math.random() * Math.pow(10, 10)) + ""];
+        const ID = UUID.generateShort();
+        const path = [ID];
         currentData.locations.forEach(loc => {
             loc.hints = {
                 path,
@@ -83,7 +87,36 @@ export default class WindowSelectorModule extends createModule(config)
         });
 
         // Update the data
-        await parent.updateLocationsMoveData(currentData);
+        const movePromise = parent.updateLocationsMoveData(currentData);
+
+        // Allow the user to rename the window
+        const renamePromise = new Promise(async res => {
+            // Obtain the name prompt
+            this.setState({
+                namePrompt: await this.request({type: InputPromptID, openView: true}),
+            });
+
+            // Prompt the user for a name
+            const name = await this.state.namePrompt.prompt("string", {
+                title: "Window Name",
+                description: "Please enter the name that the window should have",
+                maxLength: 40,
+                defaultValue: ID,
+            });
+
+            // If a name was passed, set it
+            if (name) await this.parent.changeWindowName(name, ID);
+
+            // Close the prompt
+            const close = this.state.namePrompt.close();
+            this.setState({
+                namePrompt: undefined,
+            });
+            await close;
+        });
+
+        // Await the promises
+        await Promise.all([movePromise, renamePromise]);
     }
 }
 

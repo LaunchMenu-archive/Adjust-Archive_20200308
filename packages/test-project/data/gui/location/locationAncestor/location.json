@@ -2,25 +2,66 @@
     {
         "condition": {
             "type": "data",
+            "priority": 1,
             "data": {
                 "ID": "default"
-            },
-            "priority": 1
+            }
         },
         "ID": 1,
         "data": {
             "locations": [
-                "root",
-                "99200164"
+                "root"
             ]
         }
     },
     {
         "condition": {
-            "type": "function",
+            "type": "data",
+            "priority": 1,
             "data": {
-                "data": []
-            },
+                "ID": "kZON-Gj7L"
+            }
+        },
+        "ID": 2,
+        "data": {
+            "locations": [
+                "prompt"
+            ]
+        }
+    },
+    {
+        "condition": {
+            "type": "data",
+            "priority": 1,
+            "data": {
+                "ID": "VY21-EqNK"
+            }
+        },
+        "ID": 4,
+        "data": {
+            "locations": [
+                "wTr7-mmuj-Kkvo-SxHD-ovId"
+            ]
+        }
+    },
+    {
+        "condition": {
+            "type": "data",
+            "priority": 1,
+            "data": {
+                "ID": "BGDB-6ae7"
+            }
+        },
+        "ID": 5,
+        "data": {
+            "locations": [
+                "l5lI-DxV2-9sgk-e71O-GILy"
+            ]
+        }
+    },
+    {
+        "condition": {
+            "type": "constant",
             "priority": 0
         },
         "ID": 0,

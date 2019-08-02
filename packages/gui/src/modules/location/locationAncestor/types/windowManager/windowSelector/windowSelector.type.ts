@@ -32,6 +32,13 @@ export type WindowSelectorParent = {
      * @returns The currently set locations move data
      */
     getLocationsMoveData(): Promise<LocationsMoveData>;
+
+    /**
+     * Updates the name of the window
+     * @param name The name that the window wants to have
+     * @param windowID The ID of the window whose name to change
+     */
+    changeWindowName(name: string, windowID: string): Promise<void>;
 };
 export type WindowSelectorContract = {
     parent: WindowSelectorParent;

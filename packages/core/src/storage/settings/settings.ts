@@ -258,7 +258,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      * @param condition The condition to change them for
      * @returns A promise that resolves when all listeners resolved
      */
-    public changeData(
+    public async changeData(
         data: JsonPartial<SettingsData<C>>,
         condition?: SettingsConditions
     ): Promise<void> {
@@ -272,7 +272,30 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      * @returns Whether or not the target satisfies the condition
      */
     protected satisfiesCondition(condition: SettingsConditions): boolean {
-        return !condition || condition.matches(this.target);
+        return !condition || (!condition.isDisabled() && condition.matches(this.target));
+    }
+
+    /**
+     * Sets the initial data for a given condition,
+     * will store the data if the condition currently holds no other data
+     * @param data The data to store under this condition
+     * @param condition The condition to store the data under
+     */
+    public async setInitialData(
+        data:
+            | JsonPartial<SettingsData<C>>
+            | (() =>
+                  | JsonPartial<SettingsData<C>>
+                  | Promise<JsonPartial<SettingsData<C>>>
+              ),
+        condition?: SettingsConditions
+    ): Promise<void> {
+        // The currently stored data for these conditions
+        const dataObj = this.getData(condition, false);
+
+        // If no data is present, store the passed data
+        if (!dataObj)
+            this.changeData(data instanceof Function ? await data() : data, condition);
     }
 
     // Data retrieval methods
@@ -295,9 +318,13 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
     /**
      * Retrieves the data for a passed condition
      * @param condition The condition to retrieve the data for
+     * @param create Whether or not to create the conditional data if absent
      * @returns The settings condition data
      */
-    public getData(condition?: SettingsConditions): Data<SettingsData<C>> {
+    public getData(
+        condition?: SettingsConditions,
+        create: boolean = true
+    ): Data<SettingsData<C>> {
         // Check if the condition applies to this target, if not throw an error
         if (!this.satisfiesCondition(condition))
             throw new Error(
@@ -305,7 +332,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
             );
 
         // Retrieve the data on the condition of the settings file
-        return this.settingsFile.getConditionData(condition);
+        return this.settingsFile.getConditionData(condition, create);
     }
 
     // Events

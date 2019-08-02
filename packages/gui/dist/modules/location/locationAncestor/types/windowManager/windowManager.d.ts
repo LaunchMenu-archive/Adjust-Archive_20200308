@@ -16,7 +16,7 @@ export declare const config: {
         windows: {
             default: {
                 [windowID: string]: {
-                    name: string;
+                    windowName: string;
                 };
             };
             type: string;
@@ -35,7 +35,7 @@ declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedMod
         windows: {
             default: {
                 [windowID: string]: {
-                    name: string;
+                    windowName: string;
                 };
             };
             type: string;
@@ -44,9 +44,13 @@ declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedMod
     type: import("@adjust/core/types").InterfaceID<import("../../locationAncestor.type").LocationAncestorContract>;
 }, typeof LocationAncestorModule>;
 /**
- * Accepts location hints:
+ * type "Window" Accepts one of location hints:
  * - ID: String (The ID of the window to open)
  * - sameAs: String (The ID of a location in the same window)
+ * - new: String (Whether a new window should be created)
+ *
+ * And if 'new' is set:
+ * - windowName: String (The name that any newly created window should have)
  */
 /**
  * The window manager, responsible for keeping track and opening all windows that are used as locations
@@ -59,16 +63,17 @@ export default class WindowManagerModule extends WindowManagerModule_base implem
      * Retrieves the window with a given ID
      * @param windowID The ID of the window to retrieve
      * @param create Whether or not to create the window if not present
+     * @param name THe name of the window
      * @returns The window hat was either already loaded, or was just opened
      */
-    protected getWindow(windowID: string, create?: boolean): Promise<Window>;
+    protected getWindow(windowID: string, create?: boolean, name?: string): Promise<Window>;
     /**
      * Closes the window with a given ID if currently opened
      * @param ancestorID The ID of the window to close
      */
     protected closeWindow(ancestorID: string): Promise<void>;
     /** @override */
-    changeWindowName(name: string): Promise<void>;
+    changeWindowName(name: string, windowID: string): Promise<void>;
     /** @override */
     createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */

@@ -11,3 +11,5 @@ export * from "../dist/modules/location/locationAncestor/types/windowManager/win
 export * from "../dist/modules/location/locationAncestor/types/windowManager/window/window.type";
 export * from "../dist/modules/location/locationManager";
 export * from "../dist/modules/location/locationManager.type";
+export * from "../dist/modules/prompts/inputPrompt";
+export * from "../dist/modules/prompts/inputPrompt.type";

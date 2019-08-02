@@ -165,7 +165,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
      * @param moduleID The ID of the module being dragged
      */
     async onDragStart(locationID, moduleID) {
-        const newLocationID = Math.floor(Math.random() * Math.pow(10, 8)) + "";
+        const newLocationID = core_1.UUID.generate();
         const path = this.getData().path;
         this.getParent().setLocationsMoveData({
             locations: [{ ID: newLocationID, hints: { path: [...path] } }],

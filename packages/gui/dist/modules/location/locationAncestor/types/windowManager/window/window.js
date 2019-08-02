@@ -35,6 +35,13 @@ exports.config = {
     },
     type: window_type_1.WindowID,
 };
+/**
+ * type "Window" accepts location hints:
+ * - width: Number (The initial width that the window should have)
+ * - height: Number (The initial height that the window should have)
+ * - x: Number (The initial x coordinate that the window should have)
+ * - y: Number (The initial y coordinate that the window should have)
+ */
 class WindowModule extends moduleClassCreator_1.createModule(exports.config, locationAncestor_1.default) {
     constructor() {
         super(...arguments);
@@ -94,8 +101,33 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     // Location management
     /** @override */
     async createLocation(location) {
+        // Forward the command to the child ancestor
         const child = await this.getChild();
-        return child.createLocation(location);
+        const childResponse = child.createLocation(location);
+        // Setup inittial settings if required
+        this.settingsObject.setInitialData(async () => {
+            // Obtain the hints for this window
+            const hints = Object.assign({}, this.getLocationHints(location));
+            // If no x or y coordinate was provided, center it
+            const screenSize = await core_2.WindowManager.getScreenSize();
+            if (!("x" in hints))
+                hints["x"] =
+                    screenSize.width / 2 -
+                        (hints["width"] || this.getConfig().settings["width"].default) / 2;
+            if (!("y" in hints))
+                hints["y"] =
+                    screenSize.height / 2 -
+                        (hints["height"] || this.getConfig().settings["height"].default) / 2;
+            // Build the initial data object
+            const out = {};
+            ["x", "y", "width", "height"].forEach(prop => {
+                if (prop in hints)
+                    out[prop] = hints[prop];
+            });
+            return out;
+        }, this.settingsConditions);
+        // Return the child's response
+        return childResponse;
     }
     /** @override */
     async removeLocation(locationPath) {
@@ -234,7 +266,7 @@ class WindowView extends core_2.createModuleView(WindowModule) {
     componentWillMount() {
         super.componentWillMount();
         //TODO: remove test methids
-        document.addEventListener("keydown", e => {
+        document.body.addEventListener("keydown", e => {
             if (e.key == "e") {
                 this.module.setEdit(true);
             }
@@ -244,7 +276,7 @@ class WindowView extends core_2.createModuleView(WindowModule) {
                 this.module.setEdit(false);
             }
         });
-        document.addEventListener("keyup", e => {
+        document.body.addEventListener("keyup", e => {
             if (e.key == "s") {
                 this.module.saveSettings();
             }

@@ -1,4 +1,10 @@
-import {createModule, ModuleReference, createModuleView, ModuleID} from "@adjust/core";
+import {
+    createModule,
+    ModuleReference,
+    createModuleView,
+    ModuleID,
+    UUID,
+} from "@adjust/core";
 import {React} from "../../../React";
 import {DragEvent} from "react";
 import {LocationPath} from "../_types/LocationPath";
@@ -219,7 +225,7 @@ export default class LocationModule extends createModule(config, LocationAncesto
      * @param moduleID The ID of the module being dragged
      */
     public async onDragStart(locationID: string, moduleID: string): Promise<void> {
-        const newLocationID = Math.floor(Math.random() * Math.pow(10, 8)) + "";
+        const newLocationID = UUID.generate();
         const path = this.getData().path;
         this.getParent().setLocationsMoveData({
             locations: [{ID: newLocationID, hints: {path: [...path]}}],

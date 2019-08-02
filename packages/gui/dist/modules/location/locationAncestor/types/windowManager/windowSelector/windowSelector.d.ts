@@ -1,17 +1,22 @@
 import { WindowSelector } from "./windowSelector.type";
 import { DragEvent } from "react";
+import { InputPrompt } from "../../../../../prompts/inputPrompt.type";
 export declare const config: {
-    initialState: {};
+    initialState: {
+        namePrompt: InputPrompt;
+    };
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("./windowSelector.type").WindowSelectorContract>;
 };
 declare const WindowSelectorModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {};
+    initialState: {
+        namePrompt: InputPrompt;
+    };
     settings: {};
     type: import("@adjust/core/types").InterfaceID<import("./windowSelector.type").WindowSelectorContract>;
 }, import("@adjust/core/types").ExtendsClass<typeof import("../../../../../..").Module, import("../../../../../..").Module>>;
 export default class WindowSelectorModule extends WindowSelectorModule_base implements WindowSelector {
-    protected windowName: string;
+    protected windowID: string;
     protected window: Promise<Electron.BrowserWindow>;
     /**
      * Gets the window that's used for this selector, opens it if absent

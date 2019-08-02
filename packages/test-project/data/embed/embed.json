@@ -1,10 +1,7 @@
 [
     {
         "condition": {
-            "type": "function",
-            "data": {
-                "data": []
-            },
+            "type": "constant",
             "priority": 0
         },
         "ID": 0,

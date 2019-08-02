@@ -1,16 +1,13 @@
 [
     {
         "condition": {
-            "type": "function",
-            "data": {
-                "data": []
-            },
+            "type": "constant",
             "priority": 0
         },
         "ID": 0,
         "data": {
             "location": [
-                "root"
+                "wTr7-mmuj-Kkvo-SxHD-ovId"
             ],
             "stuff": false
         }

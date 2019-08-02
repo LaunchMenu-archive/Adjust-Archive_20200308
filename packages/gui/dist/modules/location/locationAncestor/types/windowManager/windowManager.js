@@ -24,9 +24,13 @@ exports.config = {
     type: locationAncestor_type_1.LocationAncestorID,
 };
 /**
- * Accepts location hints:
+ * type "Window" Accepts one of location hints:
  * - ID: String (The ID of the window to open)
  * - sameAs: String (The ID of a location in the same window)
+ * - new: String (Whether a new window should be created)
+ *
+ * And if 'new' is set:
+ * - windowName: String (The name that any newly created window should have)
  */
 /**
  * The window manager, responsible for keeping track and opening all windows that are used as locations
@@ -49,9 +53,10 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
      * Retrieves the window with a given ID
      * @param windowID The ID of the window to retrieve
      * @param create Whether or not to create the window if not present
+     * @param name THe name of the window
      * @returns The window hat was either already loaded, or was just opened
      */
-    async getWindow(windowID, create = true) {
+    async getWindow(windowID, create = true, name) {
         // Check if the window is already opened
         let window = this.state.windows[windowID];
         if (!window && create) {
@@ -69,13 +74,18 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
                     [windowID]: window,
                 },
             });
+            // Define the window data if absent
+            if (!this.settings.windows[windowID])
+                await this.settingsObject.set.windows(Object.assign({}, this.settings.windows, { [windowID]: {
+                        windowName: name || windowID,
+                    } }), this.settingsConditions);
             // Make sure to initialise the correct state
             if (this.state.inEditMode)
                 (await window).setEditMode(true);
             if (this.state.inDropMode)
                 (await window).setDropMode(true);
-            // Set the window's name TODO: use actual stored name
-            (await window).setName("shit");
+            // Set the window's name
+            (await window).setName(this.settings.windows[windowID].windowName);
         }
         // Return the ancestor
         return await window;
@@ -99,8 +109,12 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
         }
     }
     /** @override */
-    async changeWindowName(name) {
-        // TODO: change window name
+    async changeWindowName(name, windowID) {
+        await this.settingsObject.set.windows(Object.assign({}, this.settings.windows, { [windowID]: Object.assign({}, this.settings.windows[windowID], { windowName: name }) }), this.settingsConditions);
+        // Rename the window if opened
+        const window = await this.getWindow(windowID, false);
+        if (window)
+            window.setName(name);
     }
     // Location management
     /** @override */
@@ -108,7 +122,10 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
         // Get the ID of new window for the module, using the new hints
         let windowID;
         let hints = this.getLocationHints(location);
-        if ("sameAs" in hints) {
+        if (hints["new"]) {
+            windowID = core_1.UUID.generateShort();
+        }
+        else if ("sameAs" in hints) {
             const locationPath = await this.getLocationPath(hints["sameAs"]);
             windowID = locationPath.nodes[0];
         }
@@ -119,7 +136,8 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
         if (!windowID)
             windowID = "default";
         // Obtain the window
-        const window = await this.getWindow(windowID);
+        const name = hints["windowName"];
+        const window = await this.getWindow(windowID, true, name);
         // Create the new location path, and return it
         return window.createLocation(location);
     }
@@ -139,7 +157,11 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
             ]);
             // Remove the entire window when empty (there was 1 location and we removed the last)
             if (locationsAtPath.length == 0) {
+                // Remove the ancest
                 await window.removeAncestor();
+                // Remove the associated data
+                await this.settingsObject.set.windows(Object.assign({}, this.settings.windows, { [ID]: undefined }), this.settingsConditions);
+                // Close the window
                 await this.closeWindow(ID);
             }
         }
@@ -159,7 +181,7 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
         // Await all the windows disposals
         await Promise.all(promises);
         // Clear the settings
-        await this.settingsObject.set.windows({});
+        await this.settingsObject.set.windows({}, this.settingsConditions);
     }
     // Module management
     /** @override */

@@ -1,6 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const functionSettingsConditions_1 = require("./types/functionSettingsConditions");
 const dataSettingsConditions_1 = require("./types/dataSettingsConditions");
+const constantSettingsConditions_1 = require("./types/constantSettingsConditions");
 /**
  * A class to keep track of all possible types of settings conditions
  * and allow to serialize and deserialize them
@@ -24,11 +25,8 @@ class SettingsConditionSerializerSingleton {
      */
     serialize(settingsConditions) {
         const cls = settingsConditions.__proto__.constructor;
-        return {
-            type: cls.typeName,
-            data: settingsConditions.serialize(),
-            priority: settingsConditions.getPriority(),
-        };
+        const data = settingsConditions.serialize();
+        return Object.assign({ type: cls.typeName, priority: settingsConditions.getPriority() }, (data && { data }), (settingsConditions.isDisabled() && { disabled: true }));
     }
     /**
      * Deserializes the settings conditions, no matter what type
@@ -39,8 +37,7 @@ class SettingsConditionSerializerSingleton {
         // Set default data if absent
         if (!data)
             data = {
-                type: "function",
-                data: undefined,
+                type: "constant",
                 priority: 0,
             };
         // Obtain the class
@@ -49,10 +46,10 @@ class SettingsConditionSerializerSingleton {
         if (!cls)
             throw Error(`No conditions type by the name '${data.type}' could be found`);
         // Deserialize the data as this type
-        return cls.deserialize(data.data, data.priority);
+        return cls.deserialize(data.data, data.priority, data.disabled);
     }
 }
 exports.SettingsConditionSerializer = new SettingsConditionSerializerSingleton();
 // Add all types
-[functionSettingsConditions_1.FunctionSettingsConditions, dataSettingsConditions_1.DataSettingsConditions].forEach(type => exports.SettingsConditionSerializer.registerSettingsConditionType(type));
+[functionSettingsConditions_1.FunctionSettingsConditions, dataSettingsConditions_1.DataSettingsConditions, constantSettingsConditions_1.ConstantSettingsConditions].forEach(type => exports.SettingsConditionSerializer.registerSettingsConditionType(type));
 //# sourceMappingURL=settingsConditionsSerializer.js.map

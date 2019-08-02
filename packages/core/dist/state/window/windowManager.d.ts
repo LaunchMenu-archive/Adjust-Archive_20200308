@@ -69,6 +69,14 @@ declare class WindowManagerSingleton {
      * @returns The data of the module data
      */
     protected getModuleData(moduleID: ModuleID | string, window: BrowserWindow, windowID: string): ModuleViewData;
+    /**
+     * Retrieves the size of the main display
+     * @returns The display's size
+     */
+    getScreenSize(): Promise<{
+        width: number;
+        height: number;
+    }>;
 }
 export declare const WindowManager: WindowManagerSingleton;
 export {};

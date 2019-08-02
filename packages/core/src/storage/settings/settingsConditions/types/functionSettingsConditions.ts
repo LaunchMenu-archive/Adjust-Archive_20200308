@@ -29,9 +29,15 @@ export class FunctionSettingsConditions extends SettingsConditions {
      * @param condition The condition function to use (may not use ANY scope variables)
      * @param priority The priority of the settings set
      * @param data Any data to forward to the condition function as a third argument
+     * @param disabled Whether or not these settings are disabled
      */
-    constructor(condition: Condition | string, priority: number, data: Json[] = []) {
-        super(priority);
+    constructor(
+        condition: Condition | string,
+        priority: number,
+        data: Json[] = [],
+        disabled: boolean = false
+    ) {
+        super(priority, disabled);
 
         // Get the string format of the conditon
         this.conditionString =
@@ -48,9 +54,18 @@ export class FunctionSettingsConditions extends SettingsConditions {
 
     // Serialization
     /** @override */
-    public static deserialize(data: Json, priority: number): SettingsConditions {
+    public static deserialize(
+        data: Json,
+        priority: number,
+        disabled: boolean
+    ): SettingsConditions {
         const fData: any = data || {condition: undefined, data: undefined};
-        return new FunctionSettingsConditions(fData.condition, priority, fData.data);
+        return new FunctionSettingsConditions(
+            fData.condition,
+            priority,
+            fData.data,
+            disabled
+        );
     }
 
     /** @override */
@@ -80,7 +95,8 @@ export class FunctionSettingsConditions extends SettingsConditions {
         return (
             condition.conditionString == this.conditionString &&
             condition.dataString == this.dataString &&
-            condition.getPriority() == this.getPriority()
+            condition.getPriority() == this.getPriority() &&
+            condition.isDisabled() == this.isDisabled()
         );
     }
 }

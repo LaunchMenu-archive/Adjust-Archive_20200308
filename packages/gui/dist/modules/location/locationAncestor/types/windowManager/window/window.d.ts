@@ -55,6 +55,13 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
     };
     type: import("@adjust/core/types").InterfaceID<import("./window.type").WindowContract>;
 }, typeof LocationAncestorModule>;
+/**
+ * type "Window" accepts location hints:
+ * - width: Number (The initial width that the window should have)
+ * - height: Number (The initial height that the window should have)
+ * - x: Number (The initial x coordinate that the window should have)
+ * - y: Number (The initial y coordinate that the window should have)
+ */
 export default class WindowModule extends WindowModule_base implements Window {
     protected ancestorName: string;
     protected window: Promise<Electron.BrowserWindow>;

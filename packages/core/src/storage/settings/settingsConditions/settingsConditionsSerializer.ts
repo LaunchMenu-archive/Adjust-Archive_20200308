@@ -3,6 +3,7 @@ import {SettingsConditions} from "./abstractSettingsConditions";
 import {SerializedSettingsConditions} from "./_types/serializedSettingsConditions";
 import {FunctionSettingsConditions} from "./types/functionSettingsConditions";
 import {DataSettingsConditions} from "./types/dataSettingsConditions";
+import {ConstantSettingsConditions} from "./types/constantSettingsConditions";
 
 /**
  * A class to keep track of all possible types of settings conditions
@@ -31,10 +32,12 @@ class SettingsConditionSerializerSingleton {
         settingsConditions: SettingsConditions
     ): SerializedSettingsConditions {
         const cls = (settingsConditions as any).__proto__.constructor;
+        const data = settingsConditions.serialize();
         return {
             type: cls.typeName,
-            data: settingsConditions.serialize(),
             priority: settingsConditions.getPriority(),
+            ...(data && {data}),
+            ...(settingsConditions.isDisabled() && {disabled: true}),
         };
     }
 
@@ -47,8 +50,7 @@ class SettingsConditionSerializerSingleton {
         // Set default data if absent
         if (!data)
             data = {
-                type: "function",
-                data: undefined,
+                type: "constant",
                 priority: 0,
             };
 
@@ -60,13 +62,13 @@ class SettingsConditionSerializerSingleton {
             throw Error(`No conditions type by the name '${data.type}' could be found`);
 
         // Deserialize the data as this type
-        return cls.deserialize(data.data, data.priority);
+        return cls.deserialize(data.data, data.priority, data.disabled);
     }
 }
 
 export const SettingsConditionSerializer = new SettingsConditionSerializerSingleton();
 
 // Add all types
-[FunctionSettingsConditions, DataSettingsConditions].forEach(type =>
-    SettingsConditionSerializer.registerSettingsConditionType(type)
+[FunctionSettingsConditions, DataSettingsConditions, ConstantSettingsConditions].forEach(
+    type => SettingsConditionSerializer.registerSettingsConditionType(type)
 );

@@ -4,6 +4,7 @@ import { Json } from "../../../../utils/_types/standardTypes";
  */
 export declare type SerializedSettingsConditions = {
     type: string;
-    data: Json;
+    data?: Json;
     priority: number;
+    disabled?: boolean;
 };

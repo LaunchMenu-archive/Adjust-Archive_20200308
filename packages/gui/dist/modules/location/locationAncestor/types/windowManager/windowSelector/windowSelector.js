@@ -5,8 +5,11 @@ const core_2 = require("@adjust/core");
 const moduleClassCreator_1 = require("../../../../../../module/moduleClassCreator");
 const React_1 = require("../../../../../../React");
 const locationAncestor_type_1 = require("../../../locationAncestor.type");
+const inputPrompt_type_1 = require("../../../../../prompts/inputPrompt.type");
 exports.config = {
-    initialState: {},
+    initialState: {
+        namePrompt: null,
+    },
     settings: {},
     type: windowSelector_type_1.WindowSelectorID,
 };
@@ -14,7 +17,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
     constructor() {
         super(...arguments);
         // The name of the window
-        this.windowName = "#windowSelector";
+        this.windowID = "#windowSelector";
     }
     // Window management
     /**
@@ -24,7 +27,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
     async getWindow() {
         if (this.window)
             return this.window;
-        return (this.window = core_2.WindowManager.openWindow(this.windowName, this.getID()));
+        return (this.window = core_2.WindowManager.openWindow(this.windowID, this.getID()));
     }
     /**
      * Closes the window if it had been opened already
@@ -33,7 +36,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
         // Check if the window has been opened
         if (this.window) {
             // Close the window
-            core_2.WindowManager.closeWindow(this.windowName);
+            core_2.WindowManager.closeWindow(this.windowID);
             this.window = null;
         }
     }
@@ -66,14 +69,40 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
         const parent = this.getParent();
         const currentData = await parent.getLocationsMoveData();
         // Set all hints to a path pointing at this location
-        const path = [Math.floor(Math.random() * Math.pow(10, 10)) + ""];
+        const ID = core_2.UUID.generateShort();
+        const path = [ID];
         currentData.locations.forEach(loc => {
             loc.hints = {
                 path,
             };
         });
         // Update the data
-        await parent.updateLocationsMoveData(currentData);
+        const movePromise = parent.updateLocationsMoveData(currentData);
+        // Allow the user to rename the window
+        const renamePromise = new Promise(async (res) => {
+            // Obtain the name prompt
+            this.setState({
+                namePrompt: await this.request({ type: inputPrompt_type_1.InputPromptID, openView: true }),
+            });
+            // Prompt the user for a name
+            const name = await this.state.namePrompt.prompt("string", {
+                title: "Window Name",
+                description: "Please enter the name that the window should have",
+                maxLength: 40,
+                defaultValue: ID,
+            });
+            // If a name was passed, set it
+            if (name)
+                await this.parent.changeWindowName(name, ID);
+            // Close the prompt
+            const close = this.state.namePrompt.close();
+            this.setState({
+                namePrompt: undefined,
+            });
+            await close;
+        });
+        // Await the promises
+        await Promise.all([movePromise, renamePromise]);
     }
 }
 exports.default = WindowSelectorModule;

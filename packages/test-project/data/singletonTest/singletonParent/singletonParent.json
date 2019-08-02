@@ -1,16 +1,13 @@
 [
     {
         "condition": {
-            "type": "function",
-            "data": {
-                "data": []
-            },
+            "type": "constant",
             "priority": 0
         },
         "ID": 0,
         "data": {
             "location": [
-                "99200164"
+                "l5lI-DxV2-9sgk-e71O-GILy"
             ]
         }
     }

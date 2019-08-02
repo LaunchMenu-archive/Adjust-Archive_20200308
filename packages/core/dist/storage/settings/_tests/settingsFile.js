@@ -1,6 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const settingsFile_1 = require("../settingsFile");
 const functionSettingsConditions_1 = require("../settingsConditions/types/functionSettingsConditions");
+const constantSettingsConditions_1 = require("../settingsConditions/types/constantSettingsConditions");
 const config = {
     a: {
         default: 3,
@@ -39,17 +40,17 @@ describe("SettingsFile", () => {
             settingsFile = await settingsFile_1.SettingsFile.createInstance("_test/dontSave", config);
         });
         it("Should be able to create setter objects for new conditions", () => {
-            const condition = new functionSettingsConditions_1.FunctionSettingsConditions(() => true, 2);
+            const condition = new constantSettingsConditions_1.ConstantSettingsConditions(2);
             expect(settingsFile.set(condition)).not.toBeFalsy();
         });
         it("Should return a setter object with the right structure", () => {
-            const condition = new functionSettingsConditions_1.FunctionSettingsConditions(() => true, 2);
+            const condition = new constantSettingsConditions_1.ConstantSettingsConditions(2);
             settingsFile.set(condition).a(3);
             settingsFile.set(condition).b.c("test");
             expect(true).toBeTruthy();
         });
         it("Should invoke change events", () => {
-            const condition = new functionSettingsConditions_1.FunctionSettingsConditions(() => true, 2);
+            const condition = new constantSettingsConditions_1.ConstantSettingsConditions(2);
             const changes = [];
             settingsFile.on("change", (path, value, cCondition, oldValue) => {
                 expect(cCondition).toBe(condition);
@@ -79,7 +80,7 @@ describe("SettingsFile", () => {
                 } }));
             expect(args.newValue).toEqual(3);
             expect(args.oldValue).toEqual(undefined);
-            expect(new functionSettingsConditions_1.FunctionSettingsConditions(undefined, 0).equals(args.condition)).toBeTruthy();
+            expect(new constantSettingsConditions_1.ConstantSettingsConditions(0).equals(args.condition)).toBeTruthy();
             expect(args.settings).not.toBeFalsy();
             const condition = new functionSettingsConditions_1.FunctionSettingsConditions(() => true, 2);
             settingsFile.set(condition).f.g(5);

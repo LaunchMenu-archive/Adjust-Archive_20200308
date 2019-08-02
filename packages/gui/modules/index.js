@@ -15,3 +15,5 @@ __export(require("../dist/modules/location/locationAncestor/types/windowManager/
 __export(require("../dist/modules/location/locationAncestor/types/windowManager/window/window.type"));
 __export(require("../dist/modules/location/locationManager"));
 __export(require("../dist/modules/location/locationManager.type"));
+__export(require("../dist/modules/prompts/inputPrompt"));
+__export(require("../dist/modules/prompts/inputPrompt.type"));

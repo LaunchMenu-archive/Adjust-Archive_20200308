@@ -1,45 +1,17 @@
 [
     {
         "condition": {
-            "type": "function",
-            "data": {
-                "data": []
-            },
+            "type": "constant",
             "priority": 0
         },
         "ID": 0,
         "data": {
             "locations": {
-                "99200164": {
-                    "path": {
-                        "nodes": [
-                            "default"
-                        ],
-                        "location": {
-                            "ID": "99200164",
-                            "hints": {
-                                "path": [
-                                    "default"
-                                ]
-                            }
-                        }
-                    },
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
-                        }
-                    ]
-                },
                 "root": {
                     "modules": [
                         {
                             "settingsID": 0,
                             "modulePath": "\\singletonTest\\singleton\\singleton.js"
-                        },
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\test\\test.js"
                         },
                         {
                             "settingsID": 0,
@@ -59,6 +31,72 @@
                             "hints": {}
                         }
                     }
+                },
+                "prompt": {
+                    "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "gui\\prompts\\inputPrompt.js"
+                        }
+                    ],
+                    "path": {
+                        "nodes": [
+                            "kZON-Gj7L"
+                        ],
+                        "location": {
+                            "ID": "prompt",
+                            "hints": {
+                                "window": {
+                                    "new": true,
+                                    "windowName": "Prompt",
+                                    "width": 400,
+                                    "height": 250
+                                }
+                            }
+                        }
+                    }
+                },
+                "wTr7-mmuj-Kkvo-SxHD-ovId": {
+                    "path": {
+                        "nodes": [
+                            "VY21-EqNK"
+                        ],
+                        "location": {
+                            "ID": "wTr7-mmuj-Kkvo-SxHD-ovId",
+                            "hints": {
+                                "path": [
+                                    "VY21-EqNK"
+                                ]
+                            }
+                        }
+                    },
+                    "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\test\\test.js"
+                        }
+                    ]
+                },
+                "l5lI-DxV2-9sgk-e71O-GILy": {
+                    "path": {
+                        "nodes": [
+                            "BGDB-6ae7"
+                        ],
+                        "location": {
+                            "ID": "l5lI-DxV2-9sgk-e71O-GILy",
+                            "hints": {
+                                "path": [
+                                    "BGDB-6ae7"
+                                ]
+                            }
+                        }
+                    },
+                    "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
+                        }
+                    ]
                 }
             }
         }

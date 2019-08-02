@@ -90,7 +90,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         // Only the provided data will be used if no data is stored yet
         await settingsFile.reload(() => [
             {
-                condition: {type: "function", data: undefined, priority: 0},
+                condition: {type: "constant", priority: 0},
                 ID: 0,
                 data: settingsFile.extractDefault(config),
             },
@@ -187,10 +187,12 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance
+     * @param create Whether or not to create the conditional data if absent
      * @returns The retrieved or created Data instance
      */
     public getConditionData(
-        condition?: SettingsConditions | SettingsDataID | number
+        condition?: SettingsConditions | SettingsDataID | number,
+        create: boolean = true
     ): Data<SettingsData<S>> {
         // Normalize the conditions
         if (!(condition instanceof SettingsConditions) && condition !== undefined)
@@ -205,6 +207,9 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
 
         // If not previously defined, create it
         if (!settingsSetData) {
+            if (!create) return;
+
+            // Create the data
             const data = new Data<SettingsData<S>>(
                 (this.shape as unknown) as SettingsData<S>,
                 false

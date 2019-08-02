@@ -80,9 +80,10 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
     /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance
+     * @param create Whether or not to create the conditional data if absent
      * @returns The retrieved or created Data instance
      */
-    getConditionData(condition?: SettingsConditions | SettingsDataID | number): Data<SettingsData<S>>;
+    getConditionData(condition?: SettingsConditions | SettingsDataID | number, create?: boolean): Data<SettingsData<S>>;
     /**
      * Gets the getter object of a Data instance for a particular condition
      * @param condition The condition for which to get the getter

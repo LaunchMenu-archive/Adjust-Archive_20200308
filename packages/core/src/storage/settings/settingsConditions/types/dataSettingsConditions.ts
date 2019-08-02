@@ -17,9 +17,14 @@ export class DataSettingsConditions extends SettingsConditions {
      * Creates a new instance of these settings conditions
      * @param data The data to check for
      * @param priority The priority of the settings set
+     * @param disabled Whether or not these settings are disabled
      */
-    constructor(data: {[key: string]: Json} | string, priority: number) {
-        super(priority);
+    constructor(
+        data: {[key: string]: Json} | string,
+        priority: number,
+        disabled: boolean = false
+    ) {
+        super(priority, disabled);
 
         this.data = typeof data == "string" ? JSON.parse(data) : data;
 
@@ -29,10 +34,15 @@ export class DataSettingsConditions extends SettingsConditions {
 
     // Serialization
     /** @override */
-    public static deserialize(data: Json, priority: number): SettingsConditions {
+    public static deserialize(
+        data: Json,
+        priority: number,
+        disabled: boolean
+    ): SettingsConditions {
         return new DataSettingsConditions(
             (data as {[key: string]: Json}) || {},
-            priority
+            priority,
+            disabled
         );
     }
 
@@ -50,7 +60,8 @@ export class DataSettingsConditions extends SettingsConditions {
     /** @override */
     public equals(condition: SettingsConditions): boolean {
         // Check if the passed condition is not present, and this doesn't contain a real condition either
-        if (condition == undefined) return this.data == undefined;
+        if (condition == undefined && this.getPriority() == 0)
+            return this.data == undefined;
 
         // Make sure that the contion is of the same type
         if (!(condition instanceof DataSettingsConditions)) return false;
@@ -58,7 +69,8 @@ export class DataSettingsConditions extends SettingsConditions {
         // Or both have the same condition, priority and data
         return (
             condition.dataString == this.dataString &&
-            condition.getPriority() == this.getPriority()
+            condition.getPriority() == this.getPriority() &&
+            condition.isDisabled() == this.isDisabled()
         );
     }
 }

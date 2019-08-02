@@ -45,10 +45,16 @@ export declare abstract class Module extends Module_base {
     protected locationManager: LocationManager;
     /** @override */
     init(fromReload: boolean): Promise<void>;
+    /** @override */
+    stop(): Promise<void>;
     /**
-     * Opens the module view using the location manager, according to the module's settings
+     * Opens the module view(s) using the location manager, according to the module's settings
      */
-    protected openView(): Promise<void>;
+    protected openViews(): Promise<void>;
+    /**
+     * Closes the module view(s) using the location manager, according tot he module's settings
+     */
+    protected closeViews(): Promise<void>;
     /**
      * Shows the GUI of this module at its locations
      * @param locations The locations to show this module at (provided it's already opened there)

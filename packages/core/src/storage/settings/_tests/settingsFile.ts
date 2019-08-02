@@ -1,5 +1,6 @@
 import {SettingsFile} from "../settingsFile";
 import {FunctionSettingsConditions} from "../settingsConditions/types/functionSettingsConditions";
+import {ConstantSettingsConditions} from "../settingsConditions/types/constantSettingsConditions";
 
 const config = {
     a: {
@@ -45,18 +46,18 @@ describe("SettingsFile", () => {
         });
 
         it("Should be able to create setter objects for new conditions", () => {
-            const condition = new FunctionSettingsConditions(() => true, 2);
+            const condition = new ConstantSettingsConditions(2);
             expect(settingsFile.set(condition)).not.toBeFalsy();
         });
         it("Should return a setter object with the right structure", () => {
-            const condition = new FunctionSettingsConditions(() => true, 2);
+            const condition = new ConstantSettingsConditions(2);
 
             settingsFile.set(condition).a(3);
             settingsFile.set(condition).b.c("test");
             expect(true).toBeTruthy();
         });
         it("Should invoke change events", () => {
-            const condition = new FunctionSettingsConditions(() => true, 2);
+            const condition = new ConstantSettingsConditions(2);
 
             const changes = [];
             settingsFile.on("change", (path, value, cCondition, oldValue) => {
@@ -93,9 +94,7 @@ describe("SettingsFile", () => {
 
             expect(args.newValue).toEqual(3);
             expect(args.oldValue).toEqual(undefined);
-            expect(
-                new FunctionSettingsConditions(undefined, 0).equals(args.condition)
-            ).toBeTruthy();
+            expect(new ConstantSettingsConditions(0).equals(args.condition)).toBeTruthy();
             expect(args.settings).not.toBeFalsy();
 
             const condition = new FunctionSettingsConditions(() => true, 2);

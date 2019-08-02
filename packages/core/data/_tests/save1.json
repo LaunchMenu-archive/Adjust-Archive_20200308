@@ -2,11 +2,11 @@
     {
         "condition": {
             "type": "function",
+            "priority": 2,
             "data": {
                 "condition": "() => true",
                 "data": []
-            },
-            "priority": 2
+            }
         },
         "ID": 1,
         "data": {
@@ -18,11 +18,11 @@
     {
         "condition": {
             "type": "function",
+            "priority": 2,
             "data": {
                 "condition": "target => {\r\n            return target != null; // Should always be true also\r\n        }",
                 "data": []
-            },
-            "priority": 2
+            }
         },
         "ID": 2,
         "data": {
@@ -34,10 +34,10 @@
     {
         "condition": {
             "type": "function",
+            "priority": 0,
             "data": {
                 "data": []
-            },
-            "priority": 0
+            }
         },
         "ID": 0,
         "data": {

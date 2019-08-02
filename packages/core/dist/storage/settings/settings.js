@@ -169,7 +169,7 @@ class Settings extends eventEmitter_1.EventEmitter {
      * @param condition The condition to change them for
      * @returns A promise that resolves when all listeners resolved
      */
-    changeData(data, condition) {
+    async changeData(data, condition) {
         // Change the data on the condition of the settings file
         return this.getData(condition).changeData(data);
     }
@@ -179,7 +179,20 @@ class Settings extends eventEmitter_1.EventEmitter {
      * @returns Whether or not the target satisfies the condition
      */
     satisfiesCondition(condition) {
-        return !condition || condition.matches(this.target);
+        return !condition || (!condition.isDisabled() && condition.matches(this.target));
+    }
+    /**
+     * Sets the initial data for a given condition,
+     * will store the data if the condition currently holds no other data
+     * @param data The data to store under this condition
+     * @param condition The condition to store the data under
+     */
+    async setInitialData(data, condition) {
+        // The currently stored data for these conditions
+        const dataObj = this.getData(condition, false);
+        // If no data is present, store the passed data
+        if (!dataObj)
+            this.changeData(data instanceof Function ? await data() : data, condition);
     }
     // Data retrieval methods
     /**
@@ -199,14 +212,15 @@ class Settings extends eventEmitter_1.EventEmitter {
     /**
      * Retrieves the data for a passed condition
      * @param condition The condition to retrieve the data for
+     * @param create Whether or not to create the conditional data if absent
      * @returns The settings condition data
      */
-    getData(condition) {
+    getData(condition, create = true) {
         // Check if the condition applies to this target, if not throw an error
         if (!this.satisfiesCondition(condition))
             throw new Error("The target of these settings doesn't satisfy the given condition");
         // Retrieve the data on the condition of the settings file
-        return this.settingsFile.getConditionData(condition);
+        return this.settingsFile.getConditionData(condition, create);
     }
     on(type, listener, name) {
         return super.on(type, listener, name);
