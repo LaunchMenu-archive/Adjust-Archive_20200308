@@ -266,7 +266,6 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
         create: boolean = true
     ): Data<SettingsData<C>> {
         // Check if the condition applies to this target, if not throw an error
-        console.log(this.satisfiesCondition(condition));
         if (!this.satisfiesCondition(condition))
             throw new Error(
                 "The target of these settings doesn't satisfy the given condition"

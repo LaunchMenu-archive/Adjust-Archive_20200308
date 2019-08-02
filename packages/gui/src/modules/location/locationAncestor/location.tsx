@@ -54,8 +54,10 @@ export default class LocationModule extends createModule(config, LocationAncesto
     public async createLocation(location: ModuleLocation): Promise<LocationPath> {
         // Add the location to the settings
         if (this.settings.locations.indexOf(location.ID) == -1)
-            this.settingsObject.set.locations(
-                [...this.settings.locations, location.ID],
+            this.setSettings(
+                {
+                    locations: [...this.settings.locations, location.ID],
+                },
                 this.settingsConditions
             );
 
@@ -88,8 +90,10 @@ export default class LocationModule extends createModule(config, LocationAncesto
         const contained = this.settings.locations.indexOf(locationID) != -1;
 
         // Remove the location from the settings
-        this.settingsObject.set.locations(
-            this.settings.locations.filter(ID => ID != locationID),
+        this.setSettings(
+            {
+                locations: this.settings.locations.filter(ID => ID != locationID),
+            },
             this.settingsConditions
         );
 

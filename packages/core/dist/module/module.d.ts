@@ -110,7 +110,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * @param condition The settings condition to store the data under
      * @returns A promise that resolves once all listeners have resolved
      */
-    setSettings(changedProps: JsonPartial<S>, condition?: SettingsConditions): Promise<void>;
+    setSettings(changedProps: JsonPartial<SettingsData<C>>, condition?: SettingsConditions): Promise<void>;
     /**
      * Serializes the entire module, based on the state
      * @returns An object containing all the module's relevant data

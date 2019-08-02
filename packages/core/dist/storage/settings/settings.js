@@ -175,7 +175,6 @@ class Settings extends eventEmitter_1.EventEmitter {
      */
     getData(condition, create = true) {
         // Check if the condition applies to this target, if not throw an error
-        console.log(this.satisfiesCondition(condition));
         if (!this.satisfiesCondition(condition))
             throw new Error("The target of these settings doesn't satisfy the given condition");
         // Retrieve the data on the condition of the settings file

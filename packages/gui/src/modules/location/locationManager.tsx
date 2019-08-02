@@ -89,11 +89,12 @@ export default class LocationManagerModule
      */
     protected updateLocationPath(locationPath: LocationPath): void {
         const current = this.settings.locations[locationPath.location.ID];
-        this.settingsObject.set.locations({
-            ...this.settings.locations,
-            [locationPath.location.ID]: {
-                path: locationPath,
-                modules: current ? current.modules : [],
+        this.setSettings({
+            locations: {
+                [locationPath.location.ID]: {
+                    path: locationPath,
+                    modules: current ? current.modules : [],
+                },
             },
         });
     }
@@ -150,11 +151,14 @@ export default class LocationManagerModule
 
             let current = this.settings.locations[oldLocationID];
             if (current) {
-                await this.settingsObject.set.locations({
-                    ...this.settings.locations,
-                    [oldLocationID]: {
-                        path: current.path,
-                        modules: current.modules.filter(ms => !settingsDataID.equals(ms)),
+                await this.setSettings({
+                    locations: {
+                        [oldLocationID]: {
+                            path: current.path,
+                            modules: current.modules.filter(
+                                ms => !settingsDataID.equals(ms)
+                            ),
+                        },
                     },
                 });
 
@@ -165,9 +169,10 @@ export default class LocationManagerModule
                     const path = await this.getLocationPath(oldLocationID);
 
                     // Remove the location from the settings
-                    await this.settingsObject.set.locations({
-                        ...this.settings.locations,
-                        [oldLocationID]: undefined,
+                    await await this.setSettings({
+                        locations: {
+                            [oldLocationID]: undefined,
+                        },
                     });
 
                     // Retrieve the location ancestor
@@ -186,19 +191,20 @@ export default class LocationManagerModule
             if (oldLocationIDs.includes(newLocationID)) return;
 
             let current = this.settings.locations[newLocationID];
-            await this.settingsObject.set.locations({
-                ...this.settings.locations,
-                [newLocationID]: {
-                    path: current && current.path,
-                    modules: [
-                        // Keep everything that is not the new ID to prevent duplicates
-                        ...((current && current.modules) || []).filter(
-                            ms => !settingsDataID.equals(ms)
-                        ),
+            await await this.setSettings({
+                locations: {
+                    [newLocationID]: {
+                        path: current && current.path,
+                        modules: [
+                            // Keep everything that is not the new ID to prevent duplicates
+                            ...((current && current.modules) || []).filter(
+                                ms => !settingsDataID.equals(ms)
+                            ),
 
-                        // Add the new ID
-                        settingsDataID,
-                    ],
+                            // Add the new ID
+                            settingsDataID,
+                        ],
+                    },
                 },
             });
         });

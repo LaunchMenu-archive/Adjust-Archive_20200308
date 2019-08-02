@@ -216,7 +216,7 @@ export class Module<
      * @returns A promise that resolves once all listeners have resolved
      */
     public async setSettings(
-        changedProps: JsonPartial<S>,
+        changedProps: JsonPartial<SettingsData<C>>,
         condition?: SettingsConditions
     ): Promise<void> {
         return this.settingsObject.changeData(changedProps as any, condition);

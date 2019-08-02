@@ -55,7 +55,7 @@ class TestModule extends gui_1.createModule(exports.config) {
             this.state.child.close();
     }
     setStuff() {
-        this.settingsObject.set.stuff(true);
+        this.setSettings({ stuff: true });
         this.setState({
             somethingAsync: new Promise(res => setTimeout(() => res(9), 1000)),
         });

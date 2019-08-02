@@ -238,8 +238,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
      * @param height The height that the window now has
      */
     saveWindowSize(width, height) {
-        this.settingsObject.set.width(width, this.settingsConditions);
-        this.settingsObject.set.height(height, this.settingsConditions);
+        this.setSettings({ width, height }, this.settingsConditions);
     }
     /**
      * Saves the location of the window
@@ -247,8 +246,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
      * @param y The y coordinate of the location
      */
     saveWindowLocation(x, y) {
-        this.settingsObject.set.x(x, this.settingsConditions);
-        this.settingsObject.set.y(y, this.settingsConditions);
+        this.setSettings({ x, y }, this.settingsConditions);
     }
     // Testing TODO: remove this
     async setEdit(edit) {

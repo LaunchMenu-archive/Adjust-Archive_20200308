@@ -76,9 +76,13 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
             });
             // Define the window data if absent
             if (!this.settings.windows[windowID])
-                await this.settingsObject.set.windows(Object.assign({}, this.settings.windows, { [windowID]: {
-                        windowName: name || windowID,
-                    } }), this.settingsConditions);
+                await this.setSettings({
+                    windows: {
+                        [windowID]: {
+                            windowName: name || windowID,
+                        },
+                    },
+                }, this.settingsConditions);
             // Make sure to initialise the correct state
             if (this.state.inEditMode)
                 (await window).setEditMode(true);
@@ -110,7 +114,13 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
     }
     /** @override */
     async changeWindowName(name, windowID) {
-        await this.settingsObject.set.windows(Object.assign({}, this.settings.windows, { [windowID]: Object.assign({}, this.settings.windows[windowID], { windowName: name }) }), this.settingsConditions);
+        await this.setSettings({
+            windows: {
+                [windowID]: {
+                    windowName: name,
+                },
+            },
+        }, this.settingsConditions);
         // Rename the window if opened
         const window = await this.getWindow(windowID, false);
         if (window)
@@ -160,7 +170,11 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
                 // Remove the ancest
                 await window.removeAncestor();
                 // Remove the associated data
-                await this.settingsObject.set.windows(Object.assign({}, this.settings.windows, { [ID]: undefined }), this.settingsConditions);
+                await this.setSettings({
+                    windows: {
+                        [ID]: undefined,
+                    },
+                }, this.settingsConditions);
                 // Close the window
                 await this.closeWindow(ID);
             }
@@ -181,7 +195,8 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
         // Await all the windows disposals
         await Promise.all(promises);
         // Clear the settings
-        await this.settingsObject.set.windows({}, this.settingsConditions);
+        await this.setSettings({ windows: undefined }, this.settingsConditions);
+        await this.setSettings({ windows: {} }, this.settingsConditions);
     }
     // Module management
     /** @override */

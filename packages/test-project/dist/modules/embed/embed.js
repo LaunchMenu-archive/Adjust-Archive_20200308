@@ -41,8 +41,9 @@ class EmbedModule extends gui_1.createModule(exports.config) {
     cycleColor() {
         const colorIndex = colors.indexOf(this.state.color);
         const newColor = colors[(colorIndex + 1) % colors.length];
-        // Alternative way to change 1 property of state
-        this.stateObject.set.color(newColor);
+        this.setState({
+            color: newColor,
+        });
     }
 }
 exports.default = EmbedModule;

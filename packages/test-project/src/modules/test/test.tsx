@@ -58,7 +58,7 @@ export default class TestModule extends createModule(config) implements Test {
         if (this.state.child) this.state.child.close();
     }
     public setStuff() {
-        this.settingsObject.set.stuff(true);
+        this.setSettings({stuff: true});
         this.setState({
             somethingAsync: new Promise(res => setTimeout(() => res(9), 1000)),
         });

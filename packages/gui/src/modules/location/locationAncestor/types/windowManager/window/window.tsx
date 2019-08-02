@@ -290,8 +290,7 @@ export default class WindowModule extends createModule(config, LocationAncestorM
      * @param height The height that the window now has
      */
     public saveWindowSize(width: number, height: number): void {
-        this.settingsObject.set.width(width, this.settingsConditions);
-        this.settingsObject.set.height(height, this.settingsConditions);
+        this.setSettings({width, height}, this.settingsConditions);
     }
 
     /**
@@ -300,8 +299,7 @@ export default class WindowModule extends createModule(config, LocationAncestorM
      * @param y The y coordinate of the location
      */
     public saveWindowLocation(x: number, y: number): void {
-        this.settingsObject.set.x(x, this.settingsConditions);
-        this.settingsObject.set.y(y, this.settingsConditions);
+        this.setSettings({x, y}, this.settingsConditions);
     }
 
     // Testing TODO: remove this

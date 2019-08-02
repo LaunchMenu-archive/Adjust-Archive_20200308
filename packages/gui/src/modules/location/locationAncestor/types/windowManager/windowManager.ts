@@ -92,11 +92,12 @@ export default class WindowManagerModule
 
             // Define the window data if absent
             if (!this.settings.windows[windowID])
-                await this.settingsObject.set.windows(
+                await this.setSettings(
                     {
-                        ...this.settings.windows,
-                        [windowID]: {
-                            windowName: name || windowID,
+                        windows: {
+                            [windowID]: {
+                                windowName: name || windowID,
+                            },
                         },
                     },
                     this.settingsConditions
@@ -137,12 +138,12 @@ export default class WindowManagerModule
 
     /** @override */
     public async changeWindowName(name: string, windowID: string): Promise<void> {
-        await this.settingsObject.set.windows(
+        await this.setSettings(
             {
-                ...this.settings.windows,
-                [windowID]: {
-                    ...this.settings.windows[windowID],
-                    windowName: name,
+                windows: {
+                    [windowID]: {
+                        windowName: name,
+                    },
                 },
             },
             this.settingsConditions
@@ -202,10 +203,11 @@ export default class WindowManagerModule
                 await window.removeAncestor();
 
                 // Remove the associated data
-                await this.settingsObject.set.windows(
+                await this.setSettings(
                     {
-                        ...this.settings.windows,
-                        [ID]: undefined,
+                        windows: {
+                            [ID]: undefined,
+                        },
                     },
                     this.settingsConditions
                 );
@@ -236,7 +238,8 @@ export default class WindowManagerModule
         await Promise.all(promises);
 
         // Clear the settings
-        await this.settingsObject.set.windows({}, this.settingsConditions);
+        await this.setSettings({windows: undefined}, this.settingsConditions);
+        await this.setSettings({windows: {}}, this.settingsConditions);
     }
 
     // Module management

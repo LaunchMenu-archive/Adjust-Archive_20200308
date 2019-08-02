@@ -56,27 +56,6 @@
                         }
                     }
                 },
-                "wTr7-mmuj-Kkvo-SxHD-ovId": {
-                    "path": {
-                        "nodes": [
-                            "VY21-EqNK"
-                        ],
-                        "location": {
-                            "ID": "wTr7-mmuj-Kkvo-SxHD-ovId",
-                            "hints": {
-                                "path": [
-                                    "VY21-EqNK"
-                                ]
-                            }
-                        }
-                    },
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\test\\test.js"
-                        }
-                    ]
-                },
                 "l5lI-DxV2-9sgk-e71O-GILy": {
                     "path": {
                         "nodes": [
@@ -95,6 +74,27 @@
                         {
                             "settingsID": 0,
                             "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
+                        }
+                    ]
+                },
+                "hqPc-ITjo-vZpp-dv8Y-V3Nr": {
+                    "path": {
+                        "nodes": [
+                            "84Xd-UFL6"
+                        ],
+                        "location": {
+                            "ID": "hqPc-ITjo-vZpp-dv8Y-V3Nr",
+                            "hints": {
+                                "path": [
+                                    "84Xd-UFL6"
+                                ]
+                            }
+                        }
+                    },
+                    "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\test\\test.js"
                         }
                     ]
                 }

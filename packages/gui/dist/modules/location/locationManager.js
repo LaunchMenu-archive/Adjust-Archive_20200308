@@ -69,10 +69,14 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
      */
     updateLocationPath(locationPath) {
         const current = this.settings.locations[locationPath.location.ID];
-        this.settingsObject.set.locations(Object.assign({}, this.settings.locations, { [locationPath.location.ID]: {
-                path: locationPath,
-                modules: current ? current.modules : [],
-            } }));
+        this.setSettings({
+            locations: {
+                [locationPath.location.ID]: {
+                    path: locationPath,
+                    modules: current ? current.modules : [],
+                },
+            },
+        });
     }
     /** @override */
     async updateLocation(location) {
@@ -114,17 +118,25 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
                 return;
             let current = this.settings.locations[oldLocationID];
             if (current) {
-                await this.settingsObject.set.locations(Object.assign({}, this.settings.locations, { [oldLocationID]: {
-                        path: current.path,
-                        modules: current.modules.filter(ms => !settingsDataID.equals(ms)),
-                    } }));
+                await this.setSettings({
+                    locations: {
+                        [oldLocationID]: {
+                            path: current.path,
+                            modules: current.modules.filter(ms => !settingsDataID.equals(ms)),
+                        },
+                    },
+                });
                 // Check if there are still modules at this location, if not, remove it
                 current = this.settings.locations[oldLocationID];
                 if (current.modules.length == 0) {
                     // Retrieve the location path and obtain the window
                     const path = await this.getLocationPath(oldLocationID);
                     // Remove the location from the settings
-                    await this.settingsObject.set.locations(Object.assign({}, this.settings.locations, { [oldLocationID]: undefined }));
+                    await await this.setSettings({
+                        locations: {
+                            [oldLocationID]: undefined,
+                        },
+                    });
                     // Retrieve the location ancestor
                     const locationAncestor = await this.getAncestor();
                     // Remove the location
@@ -139,15 +151,19 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
             if (oldLocationIDs.includes(newLocationID))
                 return;
             let current = this.settings.locations[newLocationID];
-            await this.settingsObject.set.locations(Object.assign({}, this.settings.locations, { [newLocationID]: {
-                    path: current && current.path,
-                    modules: [
-                        // Keep everything that is not the new ID to prevent duplicates
-                        ...((current && current.modules) || []).filter(ms => !settingsDataID.equals(ms)),
-                        // Add the new ID
-                        settingsDataID,
-                    ],
-                } }));
+            await await this.setSettings({
+                locations: {
+                    [newLocationID]: {
+                        path: current && current.path,
+                        modules: [
+                            // Keep everything that is not the new ID to prevent duplicates
+                            ...((current && current.modules) || []).filter(ms => !settingsDataID.equals(ms)),
+                            // Add the new ID
+                            settingsDataID,
+                        ],
+                    },
+                },
+            });
         });
         await Promise.all(addPromises);
     }
