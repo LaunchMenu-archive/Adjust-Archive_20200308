@@ -34,28 +34,14 @@
             "type": "data",
             "priority": 1,
             "data": {
-                "ID": "BGDB-6ae7"
+                "ID": "T8lO-LYNY"
             }
         },
-        "ID": 5,
+        "ID": 7,
         "data": {
             "locations": [
-                "l5lI-DxV2-9sgk-e71O-GILy"
-            ]
-        }
-    },
-    {
-        "condition": {
-            "type": "data",
-            "priority": 1,
-            "data": {
-                "ID": "84Xd-UFL6"
-            }
-        },
-        "ID": 6,
-        "data": {
-            "locations": [
-                "hqPc-ITjo-vZpp-dv8Y-V3Nr"
+                "5gMW-ZCEI-P1DB-Zqq8-Nsdi",
+                "uvoO-BbvG-gPZq-TkSr-vZqA"
             ]
         }
     },

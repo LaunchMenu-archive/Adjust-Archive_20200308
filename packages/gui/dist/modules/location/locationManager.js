@@ -80,6 +80,8 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
     }
     /** @override */
     async updateLocation(location) {
+        // Block system from saving
+        const allowSave = core_1.SettingsManager.preventSave();
         // Remove old
         {
             // Get the location ID and the location's current path
@@ -103,9 +105,13 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         const modules = this.getModulesAtLocation(location.ID);
         const promises = modules.map(moduleReference => this.openModule(moduleReference, location.ID));
         await Promise.all(promises);
+        // Allow saving again
+        allowSave();
     }
     /** @override */
     async updateModuleLocation(settingsDataID, newLocationIDs, oldLocationIDs) {
+        // Block system from saving
+        const allowSave = core_1.SettingsManager.preventSave();
         // Normalize the location ids
         if (!newLocationIDs)
             newLocationIDs = [];
@@ -166,6 +172,8 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
             });
         });
         await Promise.all(addPromises);
+        // Allow saving again
+        allowSave();
     }
     // Location editing
     /**
@@ -239,6 +247,8 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
     // Opening/closing modules
     /** @override */
     async openModule(module, location) {
+        // Block system from saving
+        const allowSave = core_1.SettingsManager.preventSave();
         // Retrieve the location path
         const path = await this.getLocationPath(location);
         // Obtain the ancestor
@@ -258,6 +268,8 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         const obtainedPath = await locationAncestor.openModule(module, path);
         // Update location path
         this.updateLocationPath(obtainedPath);
+        // Allow saving again
+        allowSave();
     }
     /** @override */
     async closeModule(module, location) {

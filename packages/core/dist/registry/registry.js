@@ -248,7 +248,7 @@ class RegistrySingleton {
         moduleProviders.forEach(moduleProvider => this.addProvider(moduleProvider));
         // Install all modules that require it, and save their settings
         await Promise.all(moduleClasses.map(moduleClass => moduleClass.installIfRequired()));
-        settingsManager_1.SettingsManager.saveAll();
+        await settingsManager_1.SettingsManager.saveAll();
         settingsManager_1.SettingsManager.destroySettingsFiles();
     }
     /**

@@ -1,4 +1,9 @@
-import {createModule, InstanceModuleProvider, ModuleReference} from "@adjust/core";
+import {
+    createModule,
+    InstanceModuleProvider,
+    ModuleReference,
+    SettingsManager,
+} from "@adjust/core";
 import {SettingsDataID} from "@adjust/core";
 import {LocationManagerID, LocationManager} from "./locationManager.type";
 import {ModuleLocation} from "../../module/_types/ModuleLocation";
@@ -101,6 +106,9 @@ export default class LocationManagerModule
 
     /** @override */
     public async updateLocation(location: ModuleLocation): Promise<void> {
+        // Block system from saving
+        const allowSave = SettingsManager.preventSave();
+
         // Remove old
         {
             // Get the location ID and the location's current path
@@ -132,6 +140,9 @@ export default class LocationManagerModule
             this.openModule(moduleReference, location.ID)
         );
         await Promise.all(promises);
+
+        // Allow saving again
+        allowSave();
     }
 
     /** @override */
@@ -140,6 +151,9 @@ export default class LocationManagerModule
         newLocationIDs: string[],
         oldLocationIDs: string[]
     ): Promise<void> {
+        // Block system from saving
+        const allowSave = SettingsManager.preventSave();
+
         // Normalize the location ids
         if (!newLocationIDs) newLocationIDs = [];
         if (!oldLocationIDs) oldLocationIDs = [];
@@ -209,6 +223,9 @@ export default class LocationManagerModule
             });
         });
         await Promise.all(addPromises);
+
+        // Allow saving again
+        allowSave();
     }
 
     // Location editing
@@ -304,6 +321,9 @@ export default class LocationManagerModule
     // Opening/closing modules
     /** @override */
     public async openModule(module: ModuleReference, location: string): Promise<void> {
+        // Block system from saving
+        const allowSave = SettingsManager.preventSave();
+
         // Retrieve the location path
         const path = await this.getLocationPath(location);
 
@@ -327,6 +347,9 @@ export default class LocationManagerModule
 
         // Update location path
         this.updateLocationPath(obtainedPath);
+
+        // Allow saving again
+        allowSave();
     }
 
     /** @override */

@@ -346,7 +346,7 @@ export class RegistrySingleton {
         await Promise.all(
             moduleClasses.map(moduleClass => moduleClass.installIfRequired())
         );
-        SettingsManager.saveAll();
+        await SettingsManager.saveAll();
         SettingsManager.destroySettingsFiles();
     }
 

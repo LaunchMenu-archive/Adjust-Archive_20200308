@@ -56,37 +56,16 @@
                         }
                     }
                 },
-                "l5lI-DxV2-9sgk-e71O-GILy": {
+                "5gMW-ZCEI-P1DB-Zqq8-Nsdi": {
                     "path": {
                         "nodes": [
-                            "BGDB-6ae7"
+                            "T8lO-LYNY"
                         ],
                         "location": {
-                            "ID": "l5lI-DxV2-9sgk-e71O-GILy",
+                            "ID": "5gMW-ZCEI-P1DB-Zqq8-Nsdi",
                             "hints": {
                                 "path": [
-                                    "BGDB-6ae7"
-                                ]
-                            }
-                        }
-                    },
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
-                        }
-                    ]
-                },
-                "hqPc-ITjo-vZpp-dv8Y-V3Nr": {
-                    "path": {
-                        "nodes": [
-                            "84Xd-UFL6"
-                        ],
-                        "location": {
-                            "ID": "hqPc-ITjo-vZpp-dv8Y-V3Nr",
-                            "hints": {
-                                "path": [
-                                    "84Xd-UFL6"
+                                    "T8lO-LYNY"
                                 ]
                             }
                         }
@@ -95,6 +74,27 @@
                         {
                             "settingsID": 0,
                             "modulePath": "\\test\\test.js"
+                        }
+                    ]
+                },
+                "uvoO-BbvG-gPZq-TkSr-vZqA": {
+                    "path": {
+                        "nodes": [
+                            "T8lO-LYNY"
+                        ],
+                        "location": {
+                            "ID": "uvoO-BbvG-gPZq-TkSr-vZqA",
+                            "hints": {
+                                "path": [
+                                    "T8lO-LYNY"
+                                ]
+                            }
+                        }
+                    },
+                    "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
                         }
                     ]
                 }

@@ -7,6 +7,9 @@ declare class SettingsManagerSingleton {
     };
     protected dirtySettings: SettingsFile<any>[];
     protected dataPath: string;
+    protected preventPromises: Promise<void>[];
+    protected canSaveTimeout: any;
+    protected canSaveTimeoutDelay: number;
     constructor();
     /**
      * Returns the absolute path to the data directory
@@ -71,11 +74,26 @@ declare class SettingsManagerSingleton {
     /**
      * Save all of the dirty settings files
      */
-    saveAll(): void;
+    saveAll(): Promise<void>;
     /**
      * Reload all of the dirty settings files
      */
     reloadAll(): Promise<void>;
+    /**
+     * Prevents saving and reloading until the returned callback has been called
+     * @returns The callback to wait for
+     */
+    preventSave(): () => void;
+    /**
+     * Prevents saving and reloading until the given promise is resolved
+     * @param promise The promise to await
+     */
+    preventSave(promise: Promise<void>): void;
+    /**
+     * A method that resolves once the state allows for saving
+     * @return A promise that resolves when saving is allowed
+     */
+    protected canSave(): Promise<void>;
 }
 export declare const SettingsManager: SettingsManagerSingleton;
 export {};

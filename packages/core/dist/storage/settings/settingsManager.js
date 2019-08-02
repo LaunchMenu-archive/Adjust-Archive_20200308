@@ -13,6 +13,10 @@ class SettingsManagerSingleton {
         this.dirtySettings = [];
         // The folder to store the data in
         this.dataPath = "data";
+        // The promises that prevent saving and reloading of settings
+        this.preventPromises = [];
+        // The delay before the timeout triggers
+        this.canSaveTimeoutDelay = 5000;
     }
     // Data management
     /**
@@ -160,7 +164,9 @@ class SettingsManagerSingleton {
     /**
      * Save all of the dirty settings files
      */
-    saveAll() {
+    async saveAll() {
+        // Make sure we are able to save
+        await this.canSave();
         // Make a copy of the dirty settings since items will be removed by saving
         const copy = [...this.dirtySettings];
         if (copy.length > 0)
@@ -172,7 +178,50 @@ class SettingsManagerSingleton {
      * Reload all of the dirty settings files
      */
     async reloadAll() {
+        // Make sure we are able to save
+        await this.canSave();
+        // Reload the settings
         await Promise.all(this.dirtySettings.map(settingsFile => settingsFile.reload()));
+    }
+    preventSave(promise) {
+        // Normalize to a promise
+        let response;
+        if (!promise)
+            promise = new Promise(res => (response = res));
+        // Add the promise
+        this.preventPromises.push(promise);
+        // Remove the promise after it's resolved
+        promise.then(() => {
+            const index = this.preventPromises.indexOf(promise);
+            return this.preventPromises.splice(index, 1);
+        });
+        // Return the response, which is either undefined or a callback
+        return response;
+    }
+    /**
+     * A method that resolves once the state allows for saving
+     * @return A promise that resolves when saving is allowed
+     */
+    async canSave() {
+        return new Promise(async (res) => {
+            // Define the full resolve method
+            const resolve = () => {
+                clearTimeout(this.canSaveTimeout);
+                this.canSaveTimeout = undefined;
+                res();
+            };
+            // Set a timeout to allow for manual override if resolving takes too long
+            if (this.canSaveTimeout == undefined)
+                this.canSaveTimeout = setTimeout(() => {
+                    // TODO: execute some kind of prompt to ask the user to override
+                    console.log("Timeout occured");
+                }, this.canSaveTimeoutDelay);
+            // Wait for all promises to resolve
+            while (this.preventPromises.length > 0)
+                await this.preventPromises[0];
+            // Resolve the promise and clear the timeout
+            resolve();
+        });
     }
 }
 exports.SettingsManager = new SettingsManagerSingleton();

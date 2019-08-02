@@ -2,7 +2,6 @@ import Path from "path";
 import {FS} from "../../utils/FS";
 import {SettingsFile} from "./settingsFile";
 import {SettingsConfig} from "./_types/settingsConfig";
-import {ExtendedObject} from "../../utils/extendedObject";
 import {Module} from "../../module/module";
 
 class SettingsManagerSingleton {
@@ -14,6 +13,15 @@ class SettingsManagerSingleton {
 
     // The folder to store the data in
     protected dataPath: string = "data";
+
+    // The promises that prevent saving and reloading of settings
+    protected preventPromises: Promise<void>[] = [];
+
+    // The ID of the timeout for the can save override
+    protected canSaveTimeout: any;
+
+    // The delay before the timeout triggers
+    protected canSaveTimeoutDelay: number = 5000;
 
     constructor() {}
 
@@ -199,7 +207,10 @@ class SettingsManagerSingleton {
     /**
      * Save all of the dirty settings files
      */
-    public saveAll(): void {
+    public async saveAll(): Promise<void> {
+        // Make sure we are able to save
+        await this.canSave();
+
         // Make a copy of the dirty settings since items will be removed by saving
         const copy = [...this.dirtySettings];
         if (copy.length > 0) console.log("saved:", copy.map(sf => sf["path"]));
@@ -212,7 +223,69 @@ class SettingsManagerSingleton {
      * Reload all of the dirty settings files
      */
     public async reloadAll(): Promise<void> {
+        // Make sure we are able to save
+        await this.canSave();
+
+        // Reload the settings
         await Promise.all(this.dirtySettings.map(settingsFile => settingsFile.reload()));
     }
+
+    // Methods to allow fo synchronisation of settings
+    /**
+     * Prevents saving and reloading until the returned callback has been called
+     * @returns The callback to wait for
+     */
+    public preventSave(): () => void;
+    /**
+     * Prevents saving and reloading until the given promise is resolved
+     * @param promise The promise to await
+     */
+    public preventSave(promise: Promise<void>): void;
+    public preventSave(promise?: Promise<void>): (() => void) | void {
+        // Normalize to a promise
+        let response;
+        if (!promise) promise = new Promise(res => (response = res));
+
+        // Add the promise
+        this.preventPromises.push(promise);
+
+        // Remove the promise after it's resolved
+        promise.then(() => {
+            const index = this.preventPromises.indexOf(promise);
+            return this.preventPromises.splice(index, 1);
+        });
+
+        // Return the response, which is either undefined or a callback
+        return response;
+    }
+
+    /**
+     * A method that resolves once the state allows for saving
+     * @return A promise that resolves when saving is allowed
+     */
+    protected async canSave(): Promise<void> {
+        return new Promise(async res => {
+            // Define the full resolve method
+            const resolve = () => {
+                clearTimeout(this.canSaveTimeout);
+                this.canSaveTimeout = undefined;
+                res();
+            };
+
+            // Set a timeout to allow for manual override if resolving takes too long
+            if (this.canSaveTimeout == undefined)
+                this.canSaveTimeout = setTimeout(() => {
+                    // TODO: execute some kind of prompt to ask the user to override
+                    console.log("Timeout occured");
+                }, this.canSaveTimeoutDelay);
+
+            // Wait for all promises to resolve
+            while (this.preventPromises.length > 0) await this.preventPromises[0];
+
+            // Resolve the promise and clear the timeout
+            resolve();
+        });
+    }
 }
+
 export const SettingsManager = new SettingsManagerSingleton();
