@@ -5,20 +5,20 @@ import { LocationPath } from "../../../_types/LocationPath";
 import { WindowSelector } from "./windowSelector/windowSelector.type";
 import { Window, WindowParent } from "./window/window.type";
 import { LocationAncestor } from "../../locationAncestor.type";
+import { WindowsData } from "./_types/windowData";
 export declare const config: {
     initialState: {
         windows: {
-            [windowID: string]: Promise<Window>;
+            [windowID: string]: {
+                opened: boolean;
+                window: Promise<Window>;
+            };
         };
         windowSelector: WindowSelector;
     };
     settings: {
         windows: {
-            default: {
-                [windowID: string]: {
-                    windowName: string;
-                };
-            };
+            default: WindowsData;
             type: string;
         };
     };
@@ -27,17 +27,16 @@ export declare const config: {
 declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
         windows: {
-            [windowID: string]: Promise<Window>;
+            [windowID: string]: {
+                opened: boolean;
+                window: Promise<Window>;
+            };
         };
         windowSelector: WindowSelector;
     };
     settings: {
         windows: {
-            default: {
-                [windowID: string]: {
-                    windowName: string;
-                };
-            };
+            default: WindowsData;
             type: string;
         };
     };
@@ -63,10 +62,11 @@ export default class WindowManagerModule extends WindowManagerModule_base implem
      * Retrieves the window with a given ID
      * @param windowID The ID of the window to retrieve
      * @param create Whether or not to create the window if not present
+     * @param indicateOpened Whether or not this action visually opened the window
      * @param name THe name of the window
      * @returns The window hat was either already loaded, or was just opened
      */
-    protected getWindow(windowID: string, create?: boolean, name?: string): Promise<Window>;
+    protected getWindow(windowID: string, create?: boolean, indicateOpened?: boolean, name?: string): Promise<Window>;
     /**
      * Closes the window with a given ID if currently opened
      * @param ancestorID The ID of the window to close
@@ -74,6 +74,10 @@ export default class WindowManagerModule extends WindowManagerModule_base implem
     protected closeWindow(ancestorID: string): Promise<void>;
     /** @override */
     changeWindowName(name: string, windowID: string): Promise<void>;
+    /**
+     * Passes the updated window data to the window selector
+     */
+    protected updateWindowSelectorData(): Promise<void>;
     /** @override */
     createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */

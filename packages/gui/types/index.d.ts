@@ -4,3 +4,4 @@ export * from "../dist/module/_types/ModuleLocation";
 export * from "../dist/modules/location/_types/LocationAncestorIDs";
 export * from "../dist/modules/location/_types/LocationPath";
 export * from "../dist/modules/location/_types/LocationsMoveData";
+export * from "../dist/modules/location/locationAncestor/types/windowManager/_types/windowData";

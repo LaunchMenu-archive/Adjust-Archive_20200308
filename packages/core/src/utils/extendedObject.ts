@@ -536,6 +536,9 @@ export class ExtendedObject extends Object {
         return dest;
     }
 
+    // A symbol to indicate  to override the data in this object
+    public static overwrite = Symbol("overwrite");
+
     /**
      * Copies the data from a source object to a destination object, according to the copyModel
      * @param src The object to get the data from
@@ -583,6 +586,9 @@ export class ExtendedObject extends Object {
             copyModel = src as any;
         }
 
+        // @ts-ignore If the whole object should be overwritten, straight up return the source
+        if (src[this.overwrite]) return {...src};
+
         // Go through all the fields in the model
         this.forEach(copyModel, (key, value) => {
             // Get the actual values from the source and destionation
@@ -591,10 +597,9 @@ export class ExtendedObject extends Object {
 
             // Check whether we will need to recurse
             const recurse =
-                value != undefined &&
-                value.__proto__ == Object.prototype &&
-                srcValue != undefined &&
-                srcValue.__proto__ == Object.prototype &&
+                this.isPlainObject(value) &&
+                this.isPlainObject(srcValue) &&
+                !srcValue[this.overwrite] &&
                 srcValue.$$typeof != Symbol.for("react.element"); // Don't touch react elements
 
             // Check whether this value should be copied

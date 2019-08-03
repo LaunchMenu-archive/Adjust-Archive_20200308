@@ -57,6 +57,8 @@ class InputPromptModule extends moduleClassCreator_1.createModule(exports.config
         else {
             this.constraints = {};
         }
+        // Make sure this GUI is visible
+        await this.show();
         // A promise to return a value when the user has selected one
         return new Promise(resolve => (this.callback = resolve));
     }

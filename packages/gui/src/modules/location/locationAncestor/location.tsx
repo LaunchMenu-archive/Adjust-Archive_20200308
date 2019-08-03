@@ -350,7 +350,7 @@ export class LocationView extends createModuleView(LocationModule) {
     /**@override */
     protected renderView(): JSX.Element {
         return (
-            <Box css={this.cover}>
+            <Box css={this.cover} bgcolor="#ffdddd">
                 {this.state.inEditMode && (
                     <Box
                         css={this.cover}

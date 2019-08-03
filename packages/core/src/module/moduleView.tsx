@@ -115,10 +115,8 @@ export abstract class ModuleView<
             const curValue = oldState[key] as any;
             // Copy the missing values from current into the changes
             if (
-                value &&
-                curValue &&
-                value.__proto__ == Object.prototype &&
-                curValue.__proto__ == Object.prototype
+                ExtendedObject.isPlainObject(value) &&
+                ExtendedObject.isPlainObject(curValue)
             )
                 return ExtendedObject.copyData(
                     value,

@@ -1,3 +1,6 @@
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@material-ui/core");
 const windowSelector_type_1 = require("./windowSelector.type");
@@ -6,14 +9,22 @@ const moduleClassCreator_1 = require("../../../../../../module/moduleClassCreato
 const React_1 = require("../../../../../../React");
 const locationAncestor_type_1 = require("../../../locationAncestor.type");
 const inputPrompt_type_1 = require("../../../../../prompts/inputPrompt.type");
+const window_type_1 = require("../window/window.type");
+const locationAncestor_1 = __importDefault(require("../../../locationAncestor"));
+const sizes = {
+    barHeight: 40,
+    windowHeight: 500,
+};
 exports.config = {
     initialState: {
         namePrompt: null,
+        closedWindows: {},
+        windowModule: null,
     },
     settings: {},
     type: windowSelector_type_1.WindowSelectorID,
 };
-class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.config) {
+class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.config, locationAncestor_1.default) {
     constructor() {
         super(...arguments);
         // The name of the window
@@ -27,7 +38,10 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
     async getWindow() {
         if (this.window)
             return this.window;
-        return (this.window = core_2.WindowManager.openWindow(this.windowID, this.getID()));
+        return (this.window = core_2.WindowManager.openWindow(this.windowID, this.getID(), {
+            useContentSize: true,
+            height: sizes.barHeight,
+        }));
     }
     /**
      * Closes the window if it had been opened already
@@ -49,16 +63,30 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
     async onStop() {
         await this.closeWindow();
     }
+    /** @override fowards the data to the selector's parent */
+    async changeWindowName(name, windowID) {
+        await this.parent.changeWindowName(name, windowID);
+    }
     // Interface methods
     /** @override */
-    async setWindowNames(windows) { }
+    async setWindows(closed, opened) {
+        console.log(closed);
+        await this.setState({
+            // @ts-ignore
+            closedWindows: Object.assign({}, closed, { 
+                // Make sure to remove previous window data
+                [core_2.ExtendedObject.overwrite]: true }),
+        });
+    }
     /** @override */
     async setEnabled(enabled) {
         const window = await this.getWindow();
         if (enabled)
             window.show();
-        else
+        else {
             window.hide();
+            this.showWindow(null);
+        }
     }
     // Drop methods
     /**
@@ -104,12 +132,87 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
         // Await the promises
         await Promise.all([movePromise, renamePromise]);
     }
+    /**
+     * Shows the window contents of the window with the given ID
+     * @param windowID The ID of the window to show, or undefined to hide
+     */
+    async showWindow(windowID) {
+        // Close the current window
+        if (this.state.windowModule) {
+            const windowModule = await this.state.windowModule;
+            // Remove the window
+            this.setState({ windowModule: undefined });
+            // Close the window
+            windowModule.close();
+            // Update the window size
+            const window = await this.getWindow();
+            window.setContentSize(window.getContentSize()[0], sizes.barHeight);
+        }
+        // Open the new window
+        if (windowID) {
+            // Obtain the new window
+            this.setState({
+                windowModule: this.request({
+                    type: window_type_1.WindowID,
+                    data: {
+                        ID: windowID,
+                        path: [...this.getData().path, windowID],
+                        previewMode: true,
+                    },
+                }),
+            });
+            const windowModule = await this.state.windowModule;
+            // Set the window to edit mode and drop mode
+            await windowModule.setEditMode(true);
+            await windowModule.setDropMode(true);
+            // If the window module is still visible, expand the window size
+            if (this.state.windowModule) {
+                const window = await this.getWindow();
+                window.setContentSize(window.getContentSize()[0], sizes.windowHeight);
+            }
+        }
+    }
 }
 exports.default = WindowSelectorModule;
 class WindowSelectorView extends core_2.createModuleView(WindowSelectorModule) {
+    /** @override */
+    componentWillMount() {
+        super.componentWillMount();
+        // Setup event listeners to trigger onDragLeave,
+        // inspiration: https://www.tutorialspoint.com/How-to-detect-the-dragleave-event-in-Firefox-when-draggingoutside-the-window-with-HTML
+        const collection = new Set();
+        window.addEventListener("dragenter", ev => {
+            collection.add(ev.target);
+        });
+        window.addEventListener("dragleave", ev => {
+            collection.delete(ev.target);
+            if (collection.size === 0)
+                this.onDragLeave();
+        });
+        window.addEventListener("drop", ev => {
+            collection.delete(ev.target);
+            if (collection.size === 0)
+                this.onDragLeave();
+        });
+    }
+    /**
+     * Gets called when data is dragged to outside this window
+     */
+    onDragLeave() {
+        this.module.showWindow(null);
+    }
     // Drag and drop methods
     /**
-     * Checks whether this is valid data for a drop
+     * Handles showing the window for this name
+     * @param windowID The ID of the window to show
+     * @param event The DOM event of the user dragging data
+     */
+    onDragEnterWindow(windowID, event) {
+        event.preventDefault(); // Allows for dropping
+        this.module.showWindow(windowID);
+    }
+    /**
+     * Allows for a drop here
      * @param event The DOM event of the user dragging data
      */
     onDragOver(event) {
@@ -127,10 +230,27 @@ class WindowSelectorView extends core_2.createModuleView(WindowSelectorModule) {
         }
     }
     // Rendering methods
+    /**
+     * Renders the selected window
+     */
+    renderWindow() {
+        return this.state.windowModule;
+    }
+    /**
+     * Renders the window names
+     */
+    renderWindowNames() {
+        return Object.entries(this.state.closedWindows).map(([ID, data]) => {
+            return (React_1.React.createElement(core_1.Box, { onDragEnter: e => this.onDragEnterWindow(ID, e), bgcolor: "orange", m: 1, key: ID }, data.name));
+        });
+    }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(core_1.Box, { display: "flex", flexDirection: "row", css: { width: "100%", height: "100%" } },
-            React_1.React.createElement(core_1.Box, { display: "flex", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDropNew(e) }, "New window")));
+        return (React_1.React.createElement(core_1.Box, { display: "flex", flexDirection: "column", css: { width: "100%", height: "100%" } },
+            React_1.React.createElement(core_1.Box, { className: "selector", display: "flex", flexDirection: "row", css: { width: "100%", height: sizes.barHeight } },
+                this.renderWindowNames(),
+                React_1.React.createElement(core_1.Box, { bgcolor: "orange", m: 1, onDragOver: e => this.onDragOver(e), onDrop: e => this.onDropNew(e) }, "New window")),
+            React_1.React.createElement(core_1.Box, { className: "window", flexGrow: 1, css: { position: "relative" } }, this.renderWindow())));
     }
 }
 exports.WindowSelectorView = WindowSelectorView;

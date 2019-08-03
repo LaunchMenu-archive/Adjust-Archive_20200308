@@ -1,1 +1,1 @@
-{"version":3,"file":"window.type.js","sourceRoot":"src/","sources":["modules/location/locationAncestor/types/windowManager/window/window.type.ts"],"names":[],"mappings":";AACA,kEAA6D;AA0BhD,QAAA,QAAQ,GAAG,mBAAQ,CAAC,iBAAiB,CAAiB,UAAU,CAAC,CAAC"}
+{"version":3,"file":"window.type.js","sourceRoot":"src/","sources":["modules/location/locationAncestor/types/windowManager/window/window.type.ts"],"names":[],"mappings":";AACA,kEAA6D;AA8BhD,QAAA,QAAQ,GAAG,mBAAQ,CAAC,iBAAiB,CAAiB,UAAU,CAAC,CAAC"}

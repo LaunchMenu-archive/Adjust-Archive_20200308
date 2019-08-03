@@ -1,22 +1,33 @@
 [
     {
         "condition": {
+            "type": "data",
+            "priority": 1,
+            "data": {}
+        },
+        "ID": 1,
+        "data": {
+            "windows": {
+                "default": {
+                    "name": "default"
+                },
+                "Z1i0-XfD9": {
+                    "name": "Prompt"
+                },
+                "window1": {
+                    "name": "window1"
+                }
+            }
+        }
+    },
+    {
+        "condition": {
             "type": "constant",
             "priority": 0
         },
         "ID": 0,
         "data": {
-            "windows": {
-                "default": {
-                    "windowName": "default"
-                },
-                "kZON-Gj7L": {
-                    "windowName": "Prompt"
-                },
-                "T8lO-LYNY": {
-                    "windowName": "Super cool window"
-                }
-            }
+            "windows": {}
         }
     }
 ]

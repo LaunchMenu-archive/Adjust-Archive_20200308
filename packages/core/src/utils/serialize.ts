@@ -27,13 +27,21 @@ export class Serialize {
      */
     public static serialize(
         data: AsyncSerializeableData,
-        asyncCallback: (path: string, value: AsyncSerializeableData) => void,
+        asyncCallback: (
+            path: string,
+            value: AsyncSerializeableData,
+            promise: Promise<any>
+        ) => void,
         path?: string
     ): Json;
 
     public static serialize(
         data: SerializeableData,
-        asyncCallback: (path: string, value: AsyncSerializeableData) => void = () => {},
+        asyncCallback: (
+            path: string,
+            value: AsyncSerializeableData,
+            promise: Promise<any>
+        ) => void = () => {},
         path?: string
     ): Json {
         // Check if the data has to be serialized
@@ -62,7 +70,7 @@ export class Serialize {
             // If the data is a promise, await it
             if (data instanceof Promise) {
                 data.then(value => {
-                    asyncCallback(path, value);
+                    asyncCallback(path, value, data);
                 });
                 return undefined;
             }
@@ -78,10 +86,16 @@ export class Serialize {
                 );
 
             // If it is an arbitrary object, map its values
-            return ExtendedObject.mapPairs(data, (key, value) => [
-                key.replace(/^(\$*type)/g, "$$$1"),
+            const out = ExtendedObject.mapPairs(data, (key, value) => [
+                key.replace(/^(\$*(type|flags))/g, "$$$1"),
                 this.serialize(value, asyncCallback, path ? path + "." + key : key + ""),
             ]) as Json;
+
+            // Check if the object contains special key overwrite
+            if (ExtendedObject.overwrite in data)
+                out["$flags"] = {overwrite: data[ExtendedObject.overwrite]};
+
+            return out;
         } else {
             // Simply return the data
             return data;
@@ -116,11 +130,24 @@ export class Serialize {
             if (data instanceof Array)
                 return data.map(value => this.deserialize(value, getModule));
 
+            // If the object contains any flags, store them
+            let flags;
+            if (data["$flags"]) {
+                flags = data["$flags"];
+                delete data["$flags"];
+            }
+
             // If it is an arbitrary object, map its values
-            return ExtendedObject.mapPairs(data, (key, value) => [
-                key.replace(/^\$(\$*type)/g, "$1"),
+            const out = ExtendedObject.mapPairs(data, (key, value) => [
+                key.replace(/^\$(\$*(type|flags))/g, "$1"),
                 this.deserialize(value, getModule),
             ]) as SerializeableData;
+
+            // Handle the flags
+            if (flags && flags.overwrite !== undefined)
+                out[ExtendedObject.overwrite] = flags.overwrite;
+
+            return out;
         } else {
             // Simply return the data
             return data;

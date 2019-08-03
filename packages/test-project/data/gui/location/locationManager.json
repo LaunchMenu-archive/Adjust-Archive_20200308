@@ -7,31 +7,6 @@
         "ID": 0,
         "data": {
             "locations": {
-                "root": {
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\singletonTest\\singleton\\singleton.js"
-                        },
-                        {
-                            "settingsID": 0,
-                            "modulePath": "gui\\location\\locationAncestor\\types\\windowManager\\windowSelector\\windowSelector.js"
-                        },
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\embed\\embed.js"
-                        }
-                    ],
-                    "path": {
-                        "nodes": [
-                            "default"
-                        ],
-                        "location": {
-                            "ID": "root",
-                            "hints": {}
-                        }
-                    }
-                },
                 "prompt": {
                     "modules": [
                         {
@@ -41,7 +16,7 @@
                     ],
                     "path": {
                         "nodes": [
-                            "kZON-Gj7L"
+                            "Z1i0-XfD9"
                         ],
                         "location": {
                             "ID": "prompt",
@@ -56,47 +31,42 @@
                         }
                     }
                 },
-                "5gMW-ZCEI-P1DB-Zqq8-Nsdi": {
-                    "path": {
-                        "nodes": [
-                            "T8lO-LYNY"
-                        ],
-                        "location": {
-                            "ID": "5gMW-ZCEI-P1DB-Zqq8-Nsdi",
-                            "hints": {
-                                "path": [
-                                    "T8lO-LYNY"
-                                ]
-                            }
-                        }
-                    },
+                "root": {
                     "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\embed\\embed.js"
+                        },
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\singletonTest\\singleton\\singleton.js"
+                        },
                         {
                             "settingsID": 0,
                             "modulePath": "\\test\\test.js"
                         }
                     ]
                 },
-                "uvoO-BbvG-gPZq-TkSr-vZqA": {
-                    "path": {
-                        "nodes": [
-                            "T8lO-LYNY"
-                        ],
-                        "location": {
-                            "ID": "uvoO-BbvG-gPZq-TkSr-vZqA",
-                            "hints": {
-                                "path": [
-                                    "T8lO-LYNY"
-                                ]
-                            }
-                        }
-                    },
+                "test": {
                     "modules": [
                         {
                             "settingsID": 0,
                             "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
                         }
-                    ]
+                    ],
+                    "path": {
+                        "nodes": [
+                            "window1"
+                        ],
+                        "location": {
+                            "ID": "test",
+                            "hints": {
+                                "window": {
+                                    "ID": "window1"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

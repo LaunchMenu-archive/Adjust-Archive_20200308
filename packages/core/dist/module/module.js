@@ -101,7 +101,7 @@ class Module {
      * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
     async init(fromReload) {
-        this.onInit(fromReload);
+        await this.onInit(fromReload);
     }
     /**
      * A method that gets called to perform any initialization,

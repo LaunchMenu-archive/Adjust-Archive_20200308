@@ -9,9 +9,7 @@
         },
         "ID": 1,
         "data": {
-            "locations": [
-                "root"
-            ]
+            "locations": []
         }
     },
     {
@@ -19,7 +17,7 @@
             "type": "data",
             "priority": 1,
             "data": {
-                "ID": "kZON-Gj7L"
+                "ID": "Z1i0-XfD9"
             }
         },
         "ID": 2,
@@ -34,14 +32,13 @@
             "type": "data",
             "priority": 1,
             "data": {
-                "ID": "T8lO-LYNY"
+                "ID": "window1"
             }
         },
-        "ID": 7,
+        "ID": 3,
         "data": {
             "locations": [
-                "5gMW-ZCEI-P1DB-Zqq8-Nsdi",
-                "uvoO-BbvG-gPZq-TkSr-vZqA"
+                "test"
             ]
         }
     },

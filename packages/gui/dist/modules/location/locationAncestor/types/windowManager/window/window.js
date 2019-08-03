@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@material-ui/core");
-const icons_1 = require("@material-ui/icons");
+const Close_1 = __importDefault(require("@material-ui/icons/Close"));
 const core_2 = require("@adjust/core");
 const moduleClassCreator_1 = require("../../../../../../module/moduleClassCreator");
 const locationAncestor_1 = __importDefault(require("../../../locationAncestor"));
@@ -48,12 +48,22 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         // The name of this ancestor type to be used in the location path and hints
         this.ancestorName = "window";
     }
+    /** @override */
+    async onInit(fromReload) {
+        await super.onInit(fromReload);
+        // Make sure the window's data is always visible when in preview mode
+        if (this.getData().previewMode)
+            await this.getChild();
+    }
     // Window management
     /**
      * Opens the window that this module instance represents
-     * @returns The opened or retrieved window
+     * @returns The opened or retrieved window, or undefined
      */
     async openWindow() {
+        // Don't open an actual window in preview mode
+        if (this.getData().previewMode)
+            return;
         // If the window was already requested, return it
         if (this.window)
             return this.window;
@@ -90,8 +100,8 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         // Check if the window has been opened
         if (this.window) {
             // Close the window
-            core_2.WindowManager.closeWindow(this.getData().ID);
             this.window = null;
+            await core_2.WindowManager.closeWindow(this.getData().ID);
         }
     }
     /** @override */
@@ -287,16 +297,18 @@ class WindowView extends core_2.createModuleView(WindowModule) {
         return (React_1.React.createElement(core_1.Grid, { container: true, direction: "row-reverse" },
             React_1.React.createElement(core_1.Grid, { item: true },
                 React_1.React.createElement(core_1.Button, null,
-                    React_1.React.createElement(icons_1.Close, null))),
-            React_1.React.createElement(core_1.Grid, { item: true }, this.state.windowName)));
+                    React_1.React.createElement(Close_1.default, null))),
+            React_1.React.createElement(core_1.Grid, { item: true },
+                this.data.ID,
+                " ",
+                this.state.windowName)));
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(core_1.Box, { display: "flex", flexDirection: "column", css: { width: "100%", height: "100%" } },
-            React_1.React.createElement(core_1.Box, { display: "flex" }, this.renderHeader()),
+        return (React_1.React.createElement(core_1.Box, { display: "flex", flexDirection: "column", css: { position: "absolute", left: 0, right: 0, top: 0, bottom: 0 } },
+            React_1.React.createElement(core_1.Box, null, !this.data.previewMode && this.renderHeader()),
             React_1.React.createElement(core_1.Box, { flex: 1, css: { position: "relative" } }, this.state.childLocationAncestor)));
     }
 }
 exports.WindowView = WindowView;
-WindowModule.setViewClass(WindowView);
 //# sourceMappingURL=window.js.map

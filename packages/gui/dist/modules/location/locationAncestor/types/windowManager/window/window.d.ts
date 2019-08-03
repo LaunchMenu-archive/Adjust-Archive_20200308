@@ -65,9 +65,11 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
 export default class WindowModule extends WindowModule_base implements Window {
     protected ancestorName: string;
     protected window: Promise<Electron.BrowserWindow>;
+    /** @override */
+    onInit(fromReload: boolean): Promise<void>;
     /**
      * Opens the window that this module instance represents
-     * @returns The opened or retrieved window
+     * @returns The opened or retrieved window, or undefined
      */
     protected openWindow(): Promise<Electron.BrowserWindow>;
     /**

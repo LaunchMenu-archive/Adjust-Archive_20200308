@@ -1,5 +1,6 @@
 import { BrowserWindow } from "electron";
 import { ModuleViewData } from "../../module/_types/moduleViewData";
+import { ParameterizedModule } from "../../module/module";
 import { ModuleID } from "../../module/moduleID";
 import { ViewNotFound } from "../../modules/viewNotFound.type";
 import { AsyncSerializeableData } from "../../utils/_types/serializeableData";
@@ -49,12 +50,11 @@ declare class WindowManagerSingleton {
     protected listenToModule(moduleID: ModuleID | string, windowID: string): void;
     /**
      * Sends the state data to a given window for a given module
-     * @param moduleID The ID of the module to which this data belongs
-     * @param window The window that the module is located in
+     * @param module The module to which this data belongs
      * @param windowID The ID of the window that the module is located in
      * @param data The data to be send
      */
-    protected sendStateData(moduleID: ModuleID | string, window: BrowserWindow, windowID: string, data: AsyncSerializeableData): void;
+    protected sendStateData(module: ParameterizedModule, windowID: string, data: AsyncSerializeableData): void;
     /**
      * Removes the listeners from the module to stop forwarding its data to a window's GuiManager
      * @param moduleID The moduleID of the module that is forwarding to a window
@@ -68,7 +68,7 @@ declare class WindowManagerSingleton {
      * @param windowID The ID of the window that the module is located in
      * @returns The data of the module data
      */
-    protected getModuleData(moduleID: ModuleID | string, window: BrowserWindow, windowID: string): ModuleViewData;
+    protected getModuleData(moduleID: ModuleID | string, windowID: string): ModuleViewData;
     /**
      * Retrieves the size of the main display
      * @returns The display's size

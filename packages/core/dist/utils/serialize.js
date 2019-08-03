@@ -34,7 +34,7 @@ class Serialize {
             // If the data is a promise, await it
             if (data instanceof Promise) {
                 data.then(value => {
-                    asyncCallback(path, value);
+                    asyncCallback(path, value, data);
                 });
                 return undefined;
             }
@@ -42,10 +42,14 @@ class Serialize {
             if (data instanceof Array)
                 return data.map((value, index) => this.serialize(value, asyncCallback, path ? path + "." + index : index + ""));
             // If it is an arbitrary object, map its values
-            return extendedObject_1.ExtendedObject.mapPairs(data, (key, value) => [
-                key.replace(/^(\$*type)/g, "$$$1"),
+            const out = extendedObject_1.ExtendedObject.mapPairs(data, (key, value) => [
+                key.replace(/^(\$*(type|flags))/g, "$$$1"),
                 this.serialize(value, asyncCallback, path ? path + "." + key : key + ""),
             ]);
+            // Check if the object contains special key overwrite
+            if (extendedObject_1.ExtendedObject.overwrite in data)
+                out["$flags"] = { overwrite: data[extendedObject_1.ExtendedObject.overwrite] };
+            return out;
         }
         else {
             // Simply return the data
@@ -76,11 +80,21 @@ class Serialize {
             // If it is an array, map it
             if (data instanceof Array)
                 return data.map(value => this.deserialize(value, getModule));
+            // If the object contains any flags, store them
+            let flags;
+            if (data["$flags"]) {
+                flags = data["$flags"];
+                delete data["$flags"];
+            }
             // If it is an arbitrary object, map its values
-            return extendedObject_1.ExtendedObject.mapPairs(data, (key, value) => [
-                key.replace(/^\$(\$*type)/g, "$1"),
+            const out = extendedObject_1.ExtendedObject.mapPairs(data, (key, value) => [
+                key.replace(/^\$(\$*(type|flags))/g, "$1"),
                 this.deserialize(value, getModule),
             ]);
+            // Handle the flags
+            if (flags && flags.overwrite !== undefined)
+                out[extendedObject_1.ExtendedObject.overwrite] = flags.overwrite;
+            return out;
         }
         else {
             // Simply return the data

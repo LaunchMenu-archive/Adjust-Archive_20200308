@@ -267,7 +267,7 @@ class LocationView extends core_1.createModuleView(LocationModule) {
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(core_2.Box, { css: this.cover },
+        return (React_1.React.createElement(core_2.Box, { css: this.cover, bgcolor: "#ffdddd" },
             this.state.inEditMode && (React_1.React.createElement(core_2.Box, { css: this.cover, p: 1, onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e) }, this.renderModuleBoxes())),
             this.state.modules[0],
             Object.keys(this.state.locations).map(key => (React_1.React.createElement("div", { key: key }, key)))));

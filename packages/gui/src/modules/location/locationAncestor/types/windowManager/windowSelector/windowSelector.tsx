@@ -1,21 +1,31 @@
 import {Grid, Button, Box} from "@material-ui/core";
 import {WindowSelectorID, WindowSelector} from "./windowSelector.type";
-import {WindowManager, createModuleView, UUID} from "@adjust/core";
+import {WindowManager, createModuleView, UUID, ExtendedObject} from "@adjust/core";
 import {DragEvent} from "react";
 import {createModule} from "../../../../../../module/moduleClassCreator";
 import {React} from "../../../../../../React";
 import {dragAndDropName} from "../../../locationAncestor.type";
 import {InputPrompt, InputPromptID} from "../../../../../prompts/inputPrompt.type";
+import {WindowsData} from "../_types/windowData";
+import {Window, WindowID} from "../window/window.type";
+import LocationAncestorModule from "../../../locationAncestor";
 
+const sizes = {
+    barHeight: 40,
+    windowHeight: 500,
+};
 export const config = {
     initialState: {
         namePrompt: null as InputPrompt,
+        closedWindows: {} as WindowsData,
+        windowModule: null as Promise<Window>,
     },
     settings: {},
     type: WindowSelectorID,
 };
 
-export default class WindowSelectorModule extends createModule(config)
+export default class WindowSelectorModule
+    extends createModule(config, LocationAncestorModule)
     implements WindowSelector {
     // The name of the window
     protected windowID: string = "#windowSelector";
@@ -30,7 +40,10 @@ export default class WindowSelectorModule extends createModule(config)
      */
     protected async getWindow(): Promise<Electron.BrowserWindow> {
         if (this.window) return this.window;
-        return (this.window = WindowManager.openWindow(this.windowID, this.getID()));
+        return (this.window = WindowManager.openWindow(this.windowID, this.getID(), {
+            useContentSize: true,
+            height: sizes.barHeight,
+        }));
     }
 
     /**
@@ -56,19 +69,36 @@ export default class WindowSelectorModule extends createModule(config)
         await this.closeWindow();
     }
 
+    /** @override fowards the data to the selector's parent */
+    public async changeWindowName(name: string, windowID: string): Promise<void> {
+        await this.parent.changeWindowName(name, windowID);
+    }
+
     // Interface methods
     /** @override */
-    public async setWindowNames(windows: string[]): Promise<void> {}
+    public async setWindows(closed: WindowsData, opened: WindowsData): Promise<void> {
+        console.log(closed);
+        await this.setState({
+            // @ts-ignore
+            closedWindows: {
+                ...closed,
+                // Make sure to remove previous window data
+                [ExtendedObject.overwrite]: true,
+            },
+        });
+    }
 
     /** @override */
     public async setEnabled(enabled: boolean): Promise<void> {
         const window = await this.getWindow();
         if (enabled) window.show();
-        else window.hide();
+        else {
+            window.hide();
+            this.showWindow(null);
+        }
     }
 
     // Drop methods
-
     /**
      * Handles dropping of location(s) on the new window button
      */
@@ -118,12 +148,96 @@ export default class WindowSelectorModule extends createModule(config)
         // Await the promises
         await Promise.all([movePromise, renamePromise]);
     }
+
+    /**
+     * Shows the window contents of the window with the given ID
+     * @param windowID The ID of the window to show, or undefined to hide
+     */
+    public async showWindow(windowID: string): Promise<void> {
+        // Close the current window
+        if (this.state.windowModule) {
+            const windowModule = await this.state.windowModule;
+
+            // Remove the window
+            this.setState({windowModule: undefined});
+
+            // Close the window
+            windowModule.close();
+
+            // Update the window size
+            const window = await this.getWindow();
+            window.setContentSize(window.getContentSize()[0], sizes.barHeight);
+        }
+
+        // Open the new window
+        if (windowID) {
+            // Obtain the new window
+            this.setState({
+                windowModule: this.request({
+                    type: WindowID,
+                    data: {
+                        ID: windowID,
+                        path: [...this.getData().path, windowID],
+                        previewMode: true,
+                    },
+                }),
+            });
+            const windowModule = await this.state.windowModule;
+
+            // Set the window to edit mode and drop mode
+            await windowModule.setEditMode(true);
+            await windowModule.setDropMode(true);
+
+            // If the window module is still visible, expand the window size
+            if (this.state.windowModule) {
+                const window = await this.getWindow();
+                window.setContentSize(window.getContentSize()[0], sizes.windowHeight);
+            }
+        }
+    }
 }
 
 export class WindowSelectorView extends createModuleView(WindowSelectorModule) {
+    /** @override */
+    public componentWillMount(): void {
+        super.componentWillMount();
+
+        // Setup event listeners to trigger onDragLeave,
+        // inspiration: https://www.tutorialspoint.com/How-to-detect-the-dragleave-event-in-Firefox-when-draggingoutside-the-window-with-HTML
+        const collection = new Set();
+        window.addEventListener("dragenter", ev => {
+            collection.add(ev.target);
+        });
+        window.addEventListener("dragleave", ev => {
+            collection.delete(ev.target);
+            if (collection.size === 0) this.onDragLeave();
+        });
+        window.addEventListener("drop", ev => {
+            collection.delete(ev.target);
+            if (collection.size === 0) this.onDragLeave();
+        });
+    }
+
+    /**
+     * Gets called when data is dragged to outside this window
+     */
+    protected onDragLeave(): void {
+        this.module.showWindow(null);
+    }
+
     // Drag and drop methods
     /**
-     * Checks whether this is valid data for a drop
+     * Handles showing the window for this name
+     * @param windowID The ID of the window to show
+     * @param event The DOM event of the user dragging data
+     */
+    protected onDragEnterWindow(windowID: string, event: DragEvent): void {
+        event.preventDefault(); // Allows for dropping
+        this.module.showWindow(windowID);
+    }
+
+    /**
+     * Allows for a drop here
      * @param event The DOM event of the user dragging data
      */
     protected onDragOver(event: DragEvent): void {
@@ -143,15 +257,53 @@ export class WindowSelectorView extends createModuleView(WindowSelectorModule) {
     }
 
     // Rendering methods
+    /**
+     * Renders the selected window
+     */
+    protected renderWindow(): JSX.Element {
+        return this.state.windowModule;
+    }
+
+    /**
+     * Renders the window names
+     */
+    protected renderWindowNames(): JSX.Element[] {
+        return Object.entries(this.state.closedWindows).map(([ID, data]) => {
+            return (
+                <Box
+                    onDragEnter={e => this.onDragEnterWindow(ID, e)}
+                    bgcolor="orange"
+                    m={1}
+                    key={ID}>
+                    {data.name}
+                </Box>
+            );
+        });
+    }
+
     /**@override */
     protected renderView(): JSX.Element {
         return (
-            <Box display="flex" flexDirection="row" css={{width: "100%", height: "100%"}}>
+            <Box
+                display="flex"
+                flexDirection="column"
+                css={{width: "100%", height: "100%"}}>
                 <Box
+                    className="selector"
                     display="flex"
-                    onDragOver={e => this.onDragOver(e)}
-                    onDrop={e => this.onDropNew(e)}>
-                    New window
+                    flexDirection="row"
+                    css={{width: "100%", height: sizes.barHeight}}>
+                    {this.renderWindowNames()}
+                    <Box
+                        bgcolor="orange"
+                        m={1}
+                        onDragOver={e => this.onDragOver(e)}
+                        onDrop={e => this.onDropNew(e)}>
+                        New window
+                    </Box>
+                </Box>
+                <Box className="window" flexGrow={1} css={{position: "relative"} as any}>
+                    {this.renderWindow()}
                 </Box>
             </Box>
         );

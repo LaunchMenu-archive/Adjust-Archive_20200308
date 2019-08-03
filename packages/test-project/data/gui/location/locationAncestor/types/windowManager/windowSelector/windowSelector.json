@@ -1,14 +1,1 @@
-[
-    {
-        "condition": {
-            "type": "constant",
-            "priority": 0
-        },
-        "ID": 0,
-        "data": {
-            "location": [
-                "root"
-            ]
-        }
-    }
-]
+[]

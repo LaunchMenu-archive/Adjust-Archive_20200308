@@ -8,6 +8,7 @@ __export(require("../dist/modules/location/_types/LocationsMoveData"));
 __export(require("../dist/modules/location/locationAncestor/location"));
 __export(require("../dist/modules/location/locationAncestor/locationAncestor"));
 __export(require("../dist/modules/location/locationAncestor/locationAncestor.type"));
+__export(require("../dist/modules/location/locationAncestor/types/windowManager/_types/windowData"));
 __export(require("../dist/modules/location/locationAncestor/types/windowManager/windowManager"));
 __export(require("../dist/modules/location/locationAncestor/types/windowManager/windowSelector/windowSelector"));
 __export(require("../dist/modules/location/locationAncestor/types/windowManager/windowSelector/windowSelector.type"));

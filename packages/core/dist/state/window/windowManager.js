@@ -37,11 +37,8 @@ class WindowManagerSingleton {
         });
         // Listen for windows requesting states
         ipcMain_1.IpcMain.on("WindowManager.getState", (moduleID, windowID) => {
-            // Get the window from the windows
-            const windowData = this.windows[windowID];
-            const window = windowData && windowData.window;
             // Get the data (and make it forward any promises that get resolved)
-            return this.getModuleData(moduleID, window, windowID);
+            return this.getModuleData(moduleID, windowID);
         });
         // Listen for module calls
         ipcMain_1.IpcMain.on("WindowManager.moduleCall", (moduleID, methodName, args) => {
@@ -148,7 +145,7 @@ class WindowManagerSingleton {
         // Add a listener to the state
         module
             .getStateObject()
-            .on("change", this.sendStateData.bind(this, moduleID, window, windowID), `windowManager.${windowID}`);
+            .on("change", this.sendStateData.bind(this, module, windowID), `windowManager.${windowID}`);
         // Add a listener to the settings
         module.getSettingsObject().on("change", (prop, value) => {
             // Make sure the window isn't closed
@@ -165,20 +162,24 @@ class WindowManagerSingleton {
     }
     /**
      * Sends the state data to a given window for a given module
-     * @param moduleID The ID of the module to which this data belongs
-     * @param window The window that the module is located in
+     * @param module The module to which this data belongs
      * @param windowID The ID of the window that the module is located in
      * @param data The data to be send
      */
-    sendStateData(moduleID, window, windowID, data) {
+    sendStateData(module, windowID, data) {
         // Make sure the window isn't closed
-        if (!this.windows[windowID])
+        const windowData = this.windows[windowID];
+        if (!windowData)
             return;
+        const window = windowData.window;
         // Send the data
-        ipcMain_1.IpcMain.send(window, "ViewManager.sendUpdate", moduleID.toString(), serialize_1.Serialize.serialize(data, (path, value) => {
+        ipcMain_1.IpcMain.send(window, "ViewManager.sendUpdate", module.getID().toString(), serialize_1.Serialize.serialize(data, (path, value, promise) => {
+            // Make sure the latest value is still the promise that just resolved
+            if (extendedObject_1.ExtendedObject.getField(module.state, path) !== promise)
+                return;
             // IF a promise resolves, translate the path of the value into an object again
             // And also send this data
-            this.sendStateData(moduleID, window, windowID, extendedObject_1.ExtendedObject.translatePathToObject(path, value));
+            this.sendStateData(module, windowID, extendedObject_1.ExtendedObject.translatePathToObject(path, value));
         }));
     }
     /**
@@ -208,7 +209,7 @@ class WindowManagerSingleton {
      * @param windowID The ID of the window that the module is located in
      * @returns The data of the module data
      */
-    getModuleData(moduleID, window, windowID) {
+    getModuleData(moduleID, windowID) {
         // Get the module instance
         const module = programState_1.ProgramState.getModule(moduleID);
         if (!module)
@@ -216,8 +217,7 @@ class WindowManagerSingleton {
         // Get the state of the module
         const state = module
             .getStateObject()
-            .serialize((path, value) => window &&
-            this.sendStateData(moduleID, window, windowID, extendedObject_1.ExtendedObject.translatePathToObject(path, value)));
+            .serialize((path, value) => this.sendStateData(module, windowID, extendedObject_1.ExtendedObject.translatePathToObject(path, value)));
         // Get the settings of the module
         const settings = module
             .getSettingsObject()

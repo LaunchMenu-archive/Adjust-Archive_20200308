@@ -4,15 +4,15 @@
             "type": "data",
             "priority": 1,
             "data": {
-                "ID": "kZON-Gj7L"
+                "ID": "Z1i0-XfD9"
             }
         },
         "ID": 1,
         "data": {
-            "x": 903,
-            "y": 399,
+            "x": 760,
+            "y": 395,
             "width": 400,
-            "height": 237
+            "height": 250
         }
     },
     {
@@ -20,47 +20,13 @@
             "type": "data",
             "priority": 1,
             "data": {
-                "ID": "default"
+                "ID": "window1"
             }
         },
-        "ID": 3,
+        "ID": 2,
         "data": {
-            "x": 291,
-            "y": 394,
-            "width": 500,
-            "height": 500
-        }
-    },
-    {
-        "condition": {
-            "type": "data",
-            "priority": 1,
-            "data": {
-                "ID": "BGDB-6ae7"
-            }
-        },
-        "ID": 5,
-        "data": {
-            "x": 173,
-            "y": 777,
-            "width": 500,
-            "height": 175
-        }
-    },
-    {
-        "condition": {
-            "type": "data",
-            "priority": 1,
-            "data": {
-                "ID": "T8lO-LYNY"
-            }
-        },
-        "ID": 7,
-        "data": {
-            "x": 1330,
-            "y": 699,
-            "width": 500,
-            "height": 235
+            "x": 710,
+            "y": 270
         }
     },
     {

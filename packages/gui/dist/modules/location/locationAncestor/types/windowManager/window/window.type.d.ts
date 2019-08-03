@@ -1,4 +1,7 @@
 import { LocationAncestorParent, LocationAncestor } from "../../../locationAncestor.type";
+/**
+ * The window type
+ */
 export declare type Window = LocationAncestor & {
     /**
      * Updates the name of the window
@@ -20,6 +23,7 @@ export declare type WindowContract = {
     data: {
         ID: string;
         path: string[];
+        previewMode?: boolean;
     };
 };
 export declare const WindowID: import("@adjust/core/types").InterfaceID<WindowContract>;

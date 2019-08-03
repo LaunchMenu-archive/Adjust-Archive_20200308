@@ -426,16 +426,18 @@ class ExtendedObject extends Object {
             check = copyModel;
             copyModel = src;
         }
+        // @ts-ignore If the whole object should be overwritten, straight up return the source
+        if (src[this.overwrite])
+            return Object.assign({}, src);
         // Go through all the fields in the model
         this.forEach(copyModel, (key, value) => {
             // Get the actual values from the source and destionation
             const srcValue = src[key];
             let destValue = dest[key];
             // Check whether we will need to recurse
-            const recurse = value != undefined &&
-                value.__proto__ == Object.prototype &&
-                srcValue != undefined &&
-                srcValue.__proto__ == Object.prototype &&
+            const recurse = this.isPlainObject(value) &&
+                this.isPlainObject(srcValue) &&
+                !srcValue[this.overwrite] &&
                 srcValue.$$typeof != Symbol.for("react.element"); // Don't touch react elements
             // Check whether this value should be copied
             if (check &&
@@ -566,5 +568,7 @@ class ExtendedObject extends Object {
         return true;
     }
 }
+// A symbol to indicate  to override the data in this object
+ExtendedObject.overwrite = Symbol("overwrite");
 exports.ExtendedObject = ExtendedObject;
 //# sourceMappingURL=extendedObject.js.map

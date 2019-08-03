@@ -148,6 +148,7 @@ export declare class ExtendedObject extends Object {
      * @returns Just another reference to the passed dest object
      */
     static copyField(src: object, dest: object, path: string | Array<string>): object;
+    static overwrite: symbol;
     /**
      * Copies the data from a source object to a destination object, according to the copyModel
      * @param src The object to get the data from

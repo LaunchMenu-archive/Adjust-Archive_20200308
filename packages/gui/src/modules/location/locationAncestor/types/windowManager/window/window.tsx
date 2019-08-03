@@ -1,5 +1,5 @@
 import {Grid, Button, Box} from "@material-ui/core";
-import {Close} from "@material-ui/icons";
+import Close from "@material-ui/icons/Close";
 import {
     WindowManager,
     createModuleView,
@@ -57,12 +57,23 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     // The window in which this module is shown
     protected window: Promise<Electron.BrowserWindow>;
 
+    /** @override */
+    public async onInit(fromReload: boolean): Promise<void> {
+        await super.onInit(fromReload);
+
+        // Make sure the window's data is always visible when in preview mode
+        if (this.getData().previewMode) await this.getChild();
+    }
+
     // Window management
     /**
      * Opens the window that this module instance represents
-     * @returns The opened or retrieved window
+     * @returns The opened or retrieved window, or undefined
      */
     protected async openWindow(): Promise<Electron.BrowserWindow> {
+        // Don't open an actual window in preview mode
+        if (this.getData().previewMode) return;
+
         // If the window was already requested, return it
         if (this.window) return this.window;
 
@@ -104,8 +115,8 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         // Check if the window has been opened
         if (this.window) {
             // Close the window
-            WindowManager.closeWindow(this.getData().ID);
             this.window = null;
+            await WindowManager.closeWindow(this.getData().ID);
         }
     }
 
@@ -348,7 +359,9 @@ export class WindowView extends createModuleView(WindowModule) {
                         <Close />
                     </Button>
                 </Grid>
-                <Grid item>{this.state.windowName}</Grid>
+                <Grid item>
+                    {this.data.ID} {this.state.windowName}
+                </Grid>
             </Grid>
         );
     }
@@ -359,8 +372,8 @@ export class WindowView extends createModuleView(WindowModule) {
             <Box
                 display="flex"
                 flexDirection="column"
-                css={{width: "100%", height: "100%"}}>
-                <Box display="flex">{this.renderHeader()}</Box>
+                css={{position: "absolute", left: 0, right: 0, top: 0, bottom: 0} as any}>
+                <Box>{!this.data.previewMode && this.renderHeader()}</Box>
                 <Box flex={1} css={{position: "relative" as any}}>
                     {this.state.childLocationAncestor}
                 </Box>
@@ -368,5 +381,3 @@ export class WindowView extends createModuleView(WindowModule) {
         );
     }
 }
-
-WindowModule.setViewClass(WindowView);

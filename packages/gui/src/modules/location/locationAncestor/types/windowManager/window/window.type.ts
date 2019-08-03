@@ -1,6 +1,9 @@
 import {LocationAncestorParent, LocationAncestor} from "../../../locationAncestor.type";
 import {Registry} from "../../../../../../registry/registry";
 
+/**
+ * The window type
+ */
 export type Window = LocationAncestor & {
     /**
      * Updates the name of the window
@@ -22,6 +25,7 @@ export type WindowContract = {
     data: {
         ID: string; // The ID of this location ancestor itself
         path: string[]; // The IDs of locationAncestor along the way to the location, including ID of location ancestor itself
+        previewMode?: boolean; // Whether or not we are trying to show the window's contents only
     };
 };
 

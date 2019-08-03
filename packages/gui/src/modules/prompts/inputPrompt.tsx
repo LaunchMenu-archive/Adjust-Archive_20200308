@@ -83,6 +83,9 @@ export default class InputPromptModule extends createModule(config)
             this.constraints = {};
         }
 
+        // Make sure this GUI is visible
+        await this.show();
+
         // A promise to return a value when the user has selected one
         return new Promise(resolve => (this.callback = resolve));
     }

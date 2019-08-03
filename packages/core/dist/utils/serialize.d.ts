@@ -14,7 +14,7 @@ export declare class Serialize {
      * @param path The path of the data that is being serialized (if it's a sub object)
      * @returns The serialized data
      */
-    static serialize(data: AsyncSerializeableData, asyncCallback: (path: string, value: AsyncSerializeableData) => void, path?: string): Json;
+    static serialize(data: AsyncSerializeableData, asyncCallback: (path: string, value: AsyncSerializeableData, promise: Promise<any>) => void, path?: string): Json;
     /**
      * Deserializes arbitraty data structures that have been serialized by this class
      * @param data The data to ve deserialized
