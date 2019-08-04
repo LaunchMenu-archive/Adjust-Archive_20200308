@@ -69,8 +69,10 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
             return this.window;
         // Open the window
         this.window = core_2.WindowManager.openWindow(this.getData().ID, this.getID());
-        const window = await this.window;
+        // Indicate that this window is now open to the parent
+        this.parent.setWindowVisibility(true, this.getData().ID);
         // Set the initial data
+        const window = await this.window;
         window.setContentBounds({
             x: this.settings.x,
             y: this.settings.y,
@@ -99,6 +101,8 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     async closeWindow() {
         // Check if the window has been opened
         if (this.window) {
+            // Indicate that this window is now open to the parent
+            this.parent.setWindowVisibility(false, this.getData().ID);
             // Close the window
             this.window = null;
             await core_2.WindowManager.closeWindow(this.getData().ID);
@@ -159,9 +163,10 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     // Child management
     /**
      * Opens the child location ancestor and returns it
+     * @param create Whether or not to create the child if abscent
      * @returns The child location ancestor
      */
-    async getChild() {
+    async getChild(create = true) {
         // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor
@@ -201,21 +206,26 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     }
     /** @override */
     async closeModule(module, locationPath) {
-        if (this.window) {
-            // Obtain the child ancestor
-            const child = await this.getChild();
-            // Forward closing the module to the child
+        // Obtain the child ancestor
+        const child = await this.getChild(false);
+        // Forward closing the module to the child
+        if (child)
             return await child.closeModule(module, locationPath);
-        }
-        return false;
+        else
+            return false;
     }
     /** @override */
     async showModule(module, locationPath) {
-        if (this.window) {
-            // Obtain the child ancestor
-            const child = await this.getChild();
+        // Obtain the child ancestor
+        const child = await this.getChild();
+        if (child) {
             // Forward showing the module to the child
-            return child.showModule(module, locationPath);
+            const shown = child.showModule(module, locationPath);
+            // Open the actual window
+            if (shown)
+                this.openWindow();
+            // Return the result
+            return shown;
         }
         return false;
     }
@@ -297,7 +307,7 @@ class WindowView extends core_2.createModuleView(WindowModule) {
         return (React_1.React.createElement(core_1.Grid, { container: true, direction: "row-reverse" },
             React_1.React.createElement(core_1.Grid, { item: true },
                 React_1.React.createElement(core_1.Button, null,
-                    React_1.React.createElement(Close_1.default, null))),
+                    React_1.React.createElement(Close_1.default, { onClick: () => this.module.closeWindow() }))),
             React_1.React.createElement(core_1.Grid, { item: true },
                 this.data.ID,
                 " ",

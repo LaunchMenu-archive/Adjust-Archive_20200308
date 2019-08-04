@@ -35,38 +35,64 @@
                     "modules": [
                         {
                             "settingsID": 0,
-                            "modulePath": "\\embed\\embed.js"
-                        },
-                        {
-                            "settingsID": 0,
                             "modulePath": "\\singletonTest\\singleton\\singleton.js"
                         },
                         {
                             "settingsID": 0,
-                            "modulePath": "\\test\\test.js"
+                            "modulePath": "\\embed\\embed.js"
                         }
-                    ]
+                    ],
+                    "path": {
+                        "nodes": [
+                            "default"
+                        ],
+                        "location": {
+                            "ID": "root",
+                            "hints": {}
+                        }
+                    }
                 },
-                "test": {
+                "ELt3-sYh7-eX5c-zwnw-uEgD": {
+                    "path": {
+                        "nodes": [
+                            "E0dd-wRj0"
+                        ],
+                        "location": {
+                            "ID": "ELt3-sYh7-eX5c-zwnw-uEgD",
+                            "hints": {
+                                "path": [
+                                    "E0dd-wRj0"
+                                ]
+                            }
+                        }
+                    },
                     "modules": [
                         {
                             "settingsID": 0,
                             "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
                         }
-                    ],
+                    ]
+                },
+                "j5U2-qa8a-n1GJ-KQZu-gvGL": {
                     "path": {
                         "nodes": [
-                            "window1"
+                            "N04a-Nuym"
                         ],
                         "location": {
-                            "ID": "test",
+                            "ID": "j5U2-qa8a-n1GJ-KQZu-gvGL",
                             "hints": {
-                                "window": {
-                                    "ID": "window1"
-                                }
+                                "path": [
+                                    "N04a-Nuym"
+                                ]
                             }
                         }
-                    }
+                    },
+                    "modules": [
+                        {
+                            "settingsID": 0,
+                            "modulePath": "\\test\\test.js"
+                        }
+                    ]
                 }
             }
         }

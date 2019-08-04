@@ -1,12 +1,10 @@
 import { WindowSelector } from "./windowSelector.type";
 import { DragEvent } from "react";
-import { InputPrompt } from "../../../../../prompts/inputPrompt.type";
 import { WindowsData } from "../_types/windowData";
 import { Window } from "../window/window.type";
 import LocationAncestorModule from "../../../locationAncestor";
 export declare const config: {
     initialState: {
-        namePrompt: InputPrompt;
         closedWindows: WindowsData;
         windowModule: Promise<Window>;
     };
@@ -15,7 +13,6 @@ export declare const config: {
 };
 declare const WindowSelectorModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
-        namePrompt: InputPrompt;
         closedWindows: WindowsData;
         windowModule: Promise<Window>;
     };
@@ -40,6 +37,8 @@ export default class WindowSelectorModule extends WindowSelectorModule_base impl
     protected onStop(): Promise<void>;
     /** @override fowards the data to the selector's parent */
     changeWindowName(name: string, windowID: string): Promise<void>;
+    /** @override fowards the data to the selector's parent */
+    setWindowVisibility(visible: boolean, windowID: string): Promise<void>;
     /** @override */
     setWindows(closed: WindowsData, opened: WindowsData): Promise<void>;
     /** @override */

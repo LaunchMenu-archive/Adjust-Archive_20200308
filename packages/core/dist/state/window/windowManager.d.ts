@@ -11,14 +11,12 @@ import { AsyncSerializeableData } from "../../utils/_types/serializeableData";
 declare class WindowManagerSingleton {
     protected readonly windows: {
         [windowID: string]: {
-            window: BrowserWindow;
+            window: Promise<BrowserWindow>;
             moduleCounts: {
                 [moduleID: string]: number;
             };
+            openedAt: number;
         };
-    };
-    protected readonly openingWindows: {
-        [windowID: string]: Promise<BrowserWindow>;
     };
     protected readonly viewNotFoundModule: ViewNotFound;
     /**
@@ -38,10 +36,17 @@ declare class WindowManagerSingleton {
      */
     openWindow(windowID: string, moduleID: ModuleID | string, options?: Electron.BrowserWindowConstructorOptions): Promise<BrowserWindow>;
     /**
+     * Retrieves a window if it has been opened already
+     * @param windowID The ID of the window
+     * @returns The window that was found
+     */
+    getWindow(windowID: string): Promise<BrowserWindow>;
+    /**
      * Closes the window with the given ID
      * @param windowID The ID of the window to close
+     * @returns Whether or not the window has been closed on request (might not be the case if it got opened again before resolving)
      */
-    closeWindow(windowID: string): Promise<void>;
+    closeWindow(windowID: string): Promise<boolean>;
     /**
      * Adds listeners to the module to forward its data to a window's GuiManager
      * @param moduleID The moduleID of the module to forward to a window
@@ -54,7 +59,7 @@ declare class WindowManagerSingleton {
      * @param windowID The ID of the window that the module is located in
      * @param data The data to be send
      */
-    protected sendStateData(module: ParameterizedModule, windowID: string, data: AsyncSerializeableData): void;
+    protected sendStateData(module: ParameterizedModule, windowID: string, data: AsyncSerializeableData): Promise<void>;
     /**
      * Removes the listeners from the module to stop forwarding its data to a window's GuiManager
      * @param moduleID The moduleID of the module that is forwarding to a window

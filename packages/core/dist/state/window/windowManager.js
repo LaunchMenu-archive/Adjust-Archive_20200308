@@ -17,8 +17,6 @@ class WindowManagerSingleton {
     constructor() {
         // Stores all of the windows in the app
         this.windows = {};
-        // Stores the windows that are being opened
-        this.openingWindows = {};
         // Listen for updates of module counts
         ipcMain_1.IpcMain.on("WindowManager.updateCount", (windowID, moduleID, count) => {
             // Get the window data to update
@@ -73,61 +71,80 @@ class WindowManagerSingleton {
         await new Promise(res => (electron_1.app.isReady() ? res() : electron_1.app.once("ready", res)));
         // Make sure we have a view not found module
         await this.createViewNotFoundModule();
-        // Check if the window isn't currently being opened
-        const windowPromise = this.openingWindows[windowID];
-        if (windowPromise)
-            return windowPromise;
-        // Check if the window isn't open already
-        const windowData = this.windows[windowID];
-        if (windowData)
-            return windowData.window;
-        // Create a promise that resolves when the window is loaded
-        return (this.openingWindows[windowID] = new Promise(async (resolve, reject) => {
-            // Create the browser window
-            const browserWindow = new electron_1.BrowserWindow(Object.assign({ width: 800, height: 600, show: false }, options, { webPreferences: Object.assign({ nodeIntegration: true }, options.webPreferences) }));
-            // Open the index page
-            browserWindow.loadURL(`file://${__dirname}/window.html`);
-            browserWindow.customID = windowID;
-            // While debugging, TODO: add debug check
-            browserWindow.webContents.openDevTools();
-            // Wait for the window to indicate it was loaded, and assign it its id
-            await ipcMain_1.IpcMain.once(`WindowManager.loaded:${windowID}`);
-            // Store the window
+        // Make sure the window is present
+        if (!this.windows[windowID]) {
             this.windows[windowID] = {
-                window: browserWindow,
                 moduleCounts: {},
+                window: new Promise(async (resolve, reject) => {
+                    // Create the browser window
+                    const browserWindow = new electron_1.BrowserWindow(Object.assign({ width: 800, height: 600, show: false }, options, { webPreferences: Object.assign({ nodeIntegration: true }, options.webPreferences) }));
+                    // Open the index page
+                    browserWindow.loadURL(`file://${__dirname}/window.html`);
+                    browserWindow.customID = windowID;
+                    // While debugging, TODO: add debug check
+                    browserWindow.webContents.openDevTools();
+                    // Wait for the window to indicate it was loaded, and assign it its id
+                    await ipcMain_1.IpcMain.once(`WindowManager.loaded:${windowID}`);
+                    // Set the root view of the window and assign a viewNotFound view of the window
+                    const promises = [
+                        ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setViewNotFound", this.viewNotFoundModule.toString()),
+                        ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setRoot", moduleID.toString()),
+                    ];
+                    await Promise.all(promises);
+                    // Show the window
+                    browserWindow.show();
+                    // Return the browserWindow
+                    resolve(browserWindow);
+                }),
+                openedAt: Date.now(),
             };
-            // Set the root view of the window and assign a viewNotFound view of the window
-            const promises = [
-                ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setViewNotFound", this.viewNotFoundModule.toString()),
-                ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setRoot", moduleID.toString()),
-            ];
-            await Promise.all(promises);
-            // Show the window
-            browserWindow.show();
-            // Remove the promise
-            delete this.openingWindows[windowID];
-            // Return the browserWindow
-            resolve(browserWindow);
-        }));
+        }
+        else {
+            // Update the opened at timestamp
+            this.windows[windowID].openedAt = Date.now();
+        }
+        // Return the window
+        return this.windows[windowID].window;
+    }
+    /**
+     * Retrieves a window if it has been opened already
+     * @param windowID The ID of the window
+     * @returns The window that was found
+     */
+    async getWindow(windowID) {
+        let windowData = this.windows[windowID];
+        while (windowData) {
+            const windowPromise = windowData.window;
+            // Obtain the window
+            const window = await windowPromise;
+            // Check if the window data hasn't changed, otherwise get the new window
+            windowData = this.windows[windowID];
+            if (windowData && windowData.window == windowPromise)
+                return window;
+        }
+        // Otherwise no window could be found
+        return undefined;
     }
     /**
      * Closes the window with the given ID
      * @param windowID The ID of the window to close
+     * @returns Whether or not the window has been closed on request (might not be the case if it got opened again before resolving)
      */
     async closeWindow(windowID) {
-        // Wait for the window to fully open if it isn't yet
-        const windowPromise = this.openingWindows[windowID];
-        if (windowPromise)
-            await windowPromise;
-        // Check if the window is open at all
-        const windowData = this.windows[windowID];
-        if (!windowData)
-            return;
+        // Request time
+        const closedAt = Date.now();
+        // Retrieve the window to close
+        const window = await this.getWindow(windowID);
+        if (!window)
+            return false;
+        // Make sure there hasn't been another open attempt after this close was requested
+        if (!this.windows[windowID] || this.windows[windowID].openedAt > closedAt)
+            return false;
         // Close the window
-        windowData.window.close();
+        window.close();
         // Get rid of window data
         delete this.windows[windowID];
+        return true;
     }
     /**
      * Adds listeners to the module to forward its data to a window's GuiManager
@@ -135,29 +152,23 @@ class WindowManagerSingleton {
      * @param windowID The id of the window to forward the data to
      */
     listenToModule(moduleID, windowID) {
-        // Get the window from the windows
-        const windowData = this.windows[windowID];
-        if (!windowData)
-            return;
-        const window = windowData.window;
         // Get the module by its request path
         const module = programState_1.ProgramState.getModule(moduleID);
         // Add a listener to the state
-        module
-            .getStateObject()
-            .on("change", this.sendStateData.bind(this, module, windowID), `windowManager.${windowID}`);
+        module.getStateObject().on("change", (data) => {
+            this.sendStateData(module, windowID, data);
+        }, `windowManager.${windowID}`);
         // Add a listener to the settings
         module.getSettingsObject().on("change", (prop, value) => {
-            // Make sure the window isn't closed
-            if (!this.windows[windowID])
-                return;
-            try {
+            // Don't pass a promise that the module has to wait for
+            (async () => {
+                // Make sure the window isn't closed
+                const window = await this.getWindow(windowID);
+                if (!window)
+                    return;
                 // Send the data
                 ipcMain_1.IpcMain.send(window, "ViewManager.sendUpdate", moduleID.toString(), serialize_1.Serialize.serialize(extendedObject_1.ExtendedObject.translatePathToObject(`~settings.${prop}`, value)));
-            }
-            catch (e) {
-                console.error(e, this.windows, windowID);
-            }
+            })();
         }, `windowManager.${windowID}`);
     }
     /**
@@ -166,12 +177,11 @@ class WindowManagerSingleton {
      * @param windowID The ID of the window that the module is located in
      * @param data The data to be send
      */
-    sendStateData(module, windowID, data) {
+    async sendStateData(module, windowID, data) {
         // Make sure the window isn't closed
-        const windowData = this.windows[windowID];
-        if (!windowData)
+        const window = await this.getWindow(windowID);
+        if (!window)
             return;
-        const window = windowData.window;
         // Send the data
         ipcMain_1.IpcMain.send(window, "ViewManager.sendUpdate", module.getID().toString(), serialize_1.Serialize.serialize(data, (path, value, promise) => {
             // Make sure the latest value is still the promise that just resolved
@@ -188,10 +198,6 @@ class WindowManagerSingleton {
      * @param windowID The id of the window the module is forwarding the data to
      */
     stopListeningToModule(moduleID, windowID) {
-        // Get the window from the windows
-        const windowData = this.windows[windowID];
-        if (!windowData)
-            return;
         // Get the module by its ID
         const module = programState_1.ProgramState.getModule(moduleID);
         // Check if the module exists, since the module might have already fully been destroyed by this point

@@ -174,6 +174,12 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      */
     protected removeParent(parent: I["parent"]): boolean;
     /**
+     * Checks whether the given parent is this module's last parent
+     * @param parent The parent to check
+     * @returns Whether or not this parent is the module's last parent
+     */
+    protected isLastParent(parent: I["parent"]): boolean;
+    /**
      * Called when any parent is removed (Either the main or additional parent)
      * @param parent The parent that was removed
      */

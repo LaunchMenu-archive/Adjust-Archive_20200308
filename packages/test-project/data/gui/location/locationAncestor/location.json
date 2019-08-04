@@ -9,7 +9,9 @@
         },
         "ID": 1,
         "data": {
-            "locations": []
+            "locations": [
+                "root"
+            ]
         }
     },
     {
@@ -32,13 +34,28 @@
             "type": "data",
             "priority": 1,
             "data": {
-                "ID": "window1"
+                "ID": "E0dd-wRj0"
             }
         },
-        "ID": 3,
+        "ID": 4,
         "data": {
             "locations": [
-                "test"
+                "ELt3-sYh7-eX5c-zwnw-uEgD"
+            ]
+        }
+    },
+    {
+        "condition": {
+            "type": "data",
+            "priority": 1,
+            "data": {
+                "ID": "N04a-Nuym"
+            }
+        },
+        "ID": 5,
+        "data": {
+            "locations": [
+                "j5U2-qa8a-n1GJ-KQZu-gvGL"
             ]
         }
     },

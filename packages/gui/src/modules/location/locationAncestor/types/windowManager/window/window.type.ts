@@ -18,6 +18,13 @@ export type WindowParent = LocationAncestorParent & {
      * @param windowID The ID of the window whose name to change
      */
     changeWindowName(name: string, windowID: string): Promise<void>;
+
+    /**
+     * Indicates whether or not the window is currently visible
+     * @param visible Whether or not the window is visible
+     * @param windowID The ID of the window to be visible or not
+     */
+    setWindowVisibility(visible: boolean, windowID: string): Promise<void>;
 };
 export type WindowContract = {
     parent: WindowParent;

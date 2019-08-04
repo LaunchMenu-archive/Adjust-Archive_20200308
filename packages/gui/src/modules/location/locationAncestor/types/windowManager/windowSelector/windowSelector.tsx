@@ -16,7 +16,6 @@ const sizes = {
 };
 export const config = {
     initialState: {
-        namePrompt: null as InputPrompt,
         closedWindows: {} as WindowsData,
         windowModule: null as Promise<Window>,
     },
@@ -74,10 +73,14 @@ export default class WindowSelectorModule
         await this.parent.changeWindowName(name, windowID);
     }
 
+    /** @override fowards the data to the selector's parent */
+    public async setWindowVisibility(visible: boolean, windowID: string): Promise<void> {
+        await this.parent.setWindowVisibility(visible, windowID);
+    }
+
     // Interface methods
     /** @override */
     public async setWindows(closed: WindowsData, opened: WindowsData): Promise<void> {
-        console.log(closed);
         await this.setState({
             // @ts-ignore
             closedWindows: {
@@ -122,12 +125,10 @@ export default class WindowSelectorModule
         // Allow the user to rename the window
         const renamePromise = new Promise(async res => {
             // Obtain the name prompt
-            this.setState({
-                namePrompt: await this.request({type: InputPromptID, openView: true}),
-            });
+            const namePrompt = await this.request({type: InputPromptID, openView: true});
 
             // Prompt the user for a name
-            const name = await this.state.namePrompt.prompt("string", {
+            const name = await namePrompt.prompt("string", {
                 title: "Window Name",
                 description: "Please enter the name that the window should have",
                 maxLength: 40,
@@ -138,11 +139,7 @@ export default class WindowSelectorModule
             if (name) await this.parent.changeWindowName(name, ID);
 
             // Close the prompt
-            const close = this.state.namePrompt.close();
-            this.setState({
-                namePrompt: undefined,
-            });
-            await close;
+            await namePrompt.close();
         });
 
         // Await the promises

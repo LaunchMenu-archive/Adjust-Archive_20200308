@@ -20,13 +20,31 @@
             "type": "data",
             "priority": 1,
             "data": {
-                "ID": "window1"
+                "ID": "E0dd-wRj0"
             }
         },
-        "ID": 2,
+        "ID": 3,
         "data": {
-            "x": 710,
-            "y": 270
+            "x": 1348,
+            "y": 205,
+            "width": 500,
+            "height": 500
+        }
+    },
+    {
+        "condition": {
+            "type": "data",
+            "priority": 1,
+            "data": {
+                "ID": "N04a-Nuym"
+            }
+        },
+        "ID": 4,
+        "data": {
+            "x": 85,
+            "y": 130,
+            "width": 500,
+            "height": 500
         }
     },
     {

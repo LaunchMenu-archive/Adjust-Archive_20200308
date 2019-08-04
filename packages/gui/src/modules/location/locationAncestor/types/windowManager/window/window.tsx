@@ -79,9 +79,12 @@ export default class WindowModule extends createModule(config, LocationAncestorM
 
         // Open the window
         this.window = WindowManager.openWindow(this.getData().ID, this.getID());
-        const window = await this.window;
+
+        // Indicate that this window is now open to the parent
+        this.parent.setWindowVisibility(true, this.getData().ID);
 
         // Set the initial data
+        const window = await this.window;
         window.setContentBounds({
             x: this.settings.x,
             y: this.settings.y,
@@ -111,9 +114,12 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     /**
      * Closes the window if it had been opened already
      */
-    protected async closeWindow(): Promise<void> {
+    public async closeWindow(): Promise<void> {
         // Check if the window has been opened
         if (this.window) {
+            // Indicate that this window is now open to the parent
+            this.parent.setWindowVisibility(false, this.getData().ID);
+
             // Close the window
             this.window = null;
             await WindowManager.closeWindow(this.getData().ID);
@@ -185,9 +191,10 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     // Child management
     /**
      * Opens the child location ancestor and returns it
+     * @param create Whether or not to create the child if abscent
      * @returns The child location ancestor
      */
-    protected async getChild(): Promise<LocationAncestor> {
+    protected async getChild(create: boolean = true): Promise<LocationAncestor> {
         // If this module has no child location ancestor yet, obtain it
         if (!this.state.childLocationAncestor) {
             // Get child location ancestor
@@ -242,14 +249,12 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         module: ModuleReference,
         locationPath: LocationPath
     ): Promise<boolean> {
-        if (this.window) {
-            // Obtain the child ancestor
-            const child = await this.getChild();
+        // Obtain the child ancestor
+        const child = await this.getChild(false);
 
-            // Forward closing the module to the child
-            return await child.closeModule(module, locationPath);
-        }
-        return false;
+        // Forward closing the module to the child
+        if (child) return await child.closeModule(module, locationPath);
+        else return false;
     }
 
     /** @override */
@@ -257,13 +262,20 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         module: ModuleReference,
         locationPath: LocationPath
     ): Promise<boolean> {
-        if (this.window) {
-            // Obtain the child ancestor
-            const child = await this.getChild();
+        // Obtain the child ancestor
+        const child = await this.getChild();
 
+        if (child) {
             // Forward showing the module to the child
-            return child.showModule(module, locationPath);
+            const shown = child.showModule(module, locationPath);
+
+            // Open the actual window
+            if (shown) this.openWindow();
+
+            // Return the result
+            return shown;
         }
+
         return false;
     }
 
@@ -356,7 +368,7 @@ export class WindowView extends createModuleView(WindowModule) {
             <Grid container direction="row-reverse">
                 <Grid item>
                     <Button>
-                        <Close />
+                        <Close onClick={() => this.module.closeWindow()} />
                     </Button>
                 </Grid>
                 <Grid item>

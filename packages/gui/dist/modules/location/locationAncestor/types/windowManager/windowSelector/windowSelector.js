@@ -17,7 +17,6 @@ const sizes = {
 };
 exports.config = {
     initialState: {
-        namePrompt: null,
         closedWindows: {},
         windowModule: null,
     },
@@ -67,10 +66,13 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
     async changeWindowName(name, windowID) {
         await this.parent.changeWindowName(name, windowID);
     }
+    /** @override fowards the data to the selector's parent */
+    async setWindowVisibility(visible, windowID) {
+        await this.parent.setWindowVisibility(visible, windowID);
+    }
     // Interface methods
     /** @override */
     async setWindows(closed, opened) {
-        console.log(closed);
         await this.setState({
             // @ts-ignore
             closedWindows: Object.assign({}, closed, { 
@@ -109,11 +111,9 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
         // Allow the user to rename the window
         const renamePromise = new Promise(async (res) => {
             // Obtain the name prompt
-            this.setState({
-                namePrompt: await this.request({ type: inputPrompt_type_1.InputPromptID, openView: true }),
-            });
+            const namePrompt = await this.request({ type: inputPrompt_type_1.InputPromptID, openView: true });
             // Prompt the user for a name
-            const name = await this.state.namePrompt.prompt("string", {
+            const name = await namePrompt.prompt("string", {
                 title: "Window Name",
                 description: "Please enter the name that the window should have",
                 maxLength: 40,
@@ -123,11 +123,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
             if (name)
                 await this.parent.changeWindowName(name, ID);
             // Close the prompt
-            const close = this.state.namePrompt.close();
-            this.setState({
-                namePrompt: undefined,
-            });
-            await close;
+            await namePrompt.close();
         });
         // Await the promises
         await Promise.all([movePromise, renamePromise]);

@@ -67,14 +67,12 @@ export default class WindowManagerModule
      * Retrieves the window with a given ID
      * @param windowID The ID of the window to retrieve
      * @param create Whether or not to create the window if not present
-     * @param indicateOpened Whether or not this action visually opened the window
      * @param name THe name of the window
      * @returns The window hat was either already loaded, or was just opened
      */
     protected async getWindow(
         windowID: string,
         create: boolean = true,
-        indicateOpened: boolean = false,
         name?: string
     ): Promise<Window> {
         // Check if the window is already opened
@@ -90,7 +88,7 @@ export default class WindowManagerModule
                         path: [windowID],
                     },
                 }),
-                opened: indicateOpened,
+                opened: false,
             };
             const window = windowData.window;
 
@@ -123,18 +121,6 @@ export default class WindowManagerModule
 
             // Set the window's name
             (await window).setName(this.settings.windows[windowID].name);
-        } else if (indicateOpened && !windowData.opened) {
-            // Indicate the window to have been opened
-            this.setState({
-                windows: {
-                    [windowID]: {
-                        opened: true,
-                    },
-                },
-            });
-
-            // Send updated data to the window selector
-            await this.updateWindowSelectorData();
         }
 
         // Return the ancestor
@@ -187,6 +173,23 @@ export default class WindowManagerModule
         await this.updateWindowSelectorData();
     }
 
+    /** @override */
+    public async setWindowVisibility(visible: boolean, windowID: string): Promise<void> {
+        // Make sure we haven't fully removed the window already
+        if (this.state.windows[windowID]) {
+            await this.setState({
+                windows: {
+                    [windowID]: {
+                        opened: visible,
+                    },
+                },
+            });
+
+            // Send updated data to the window selector
+            await this.updateWindowSelectorData();
+        }
+    }
+
     /**
      * Passes the updated window data to the window selector
      */
@@ -225,7 +228,7 @@ export default class WindowManagerModule
 
         // Obtain the window
         const name = hints["windowName"];
-        const window = await this.getWindow(windowID, true, false, name);
+        const window = await this.getWindow(windowID, true, name);
 
         // Create the new location path, and return it
         return window.createLocation(location);
@@ -306,7 +309,7 @@ export default class WindowManagerModule
         const {ID, path} = this.getExtractID(locationPath);
 
         // Obtain the window
-        const window = await this.getWindow(ID, true, true);
+        const window = await this.getWindow(ID, true);
 
         // Forward opening the module to the window
         return window.openModule(module, path);

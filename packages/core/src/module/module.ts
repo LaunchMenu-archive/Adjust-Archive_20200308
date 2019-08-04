@@ -376,6 +376,16 @@ export class Module<
     }
 
     /**
+     * Checks whether the given parent is this module's last parent
+     * @param parent The parent to check
+     * @returns Whether or not this parent is the module's last parent
+     */
+    protected isLastParent(parent: I["parent"]): boolean {
+        const index = this.parents.indexOf(parent);
+        return index >= 0 && this.parents.length == 1;
+    }
+
+    /**
      * Called when any parent is removed (Either the main or additional parent)
      * @param parent The parent that was removed
      */
@@ -446,13 +456,16 @@ export class Module<
     public async close(): Promise<void> {
         // Get the caller of the method, and make sure it's a parent
         const context = this.getCallContext();
-        if (context.isParentof(this)) {
-            // Remove the parent, and only close the module if it was the last parent
-            if (this.removeParent(context)) {
-                // Stop and destroy thismodule
+        if (context && context.isParentof(this)) {
+            // Only close the module if it was the last parent
+            if (this.isLastParent(context)) {
+                // Stop and destroy this module
                 await this.stop();
                 await this.destroy();
             }
+
+            // Close the parent
+            this.removeParent(context);
         } else throw Error("Module may only be closed by its parent");
     }
 

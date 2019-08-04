@@ -75,7 +75,7 @@ export default class WindowModule extends WindowModule_base implements Window {
     /**
      * Closes the window if it had been opened already
      */
-    protected closeWindow(): Promise<void>;
+    closeWindow(): Promise<void>;
     /** @override */
     protected onStop(): Promise<void>;
     /** @override */
@@ -86,9 +86,10 @@ export default class WindowModule extends WindowModule_base implements Window {
     removeAncestor(): Promise<void>;
     /**
      * Opens the child location ancestor and returns it
+     * @param create Whether or not to create the child if abscent
      * @returns The child location ancestor
      */
-    protected getChild(): Promise<LocationAncestor>;
+    protected getChild(create?: boolean): Promise<LocationAncestor>;
     /**
      * closes the child location ancestor if opened
      */
