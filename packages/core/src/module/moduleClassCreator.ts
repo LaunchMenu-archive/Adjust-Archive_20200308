@@ -52,6 +52,20 @@ export class ModuleClassCreator {
         ) as any;
         ExtendedObject.copyData(config.settings, settings);
 
+        // Combine the settings migrators of botth configs
+        let settingsMigrators =
+            config.settingsMigrators || superConfig.settingsMigrators || {};
+        if (config.settingsMigrators && superConfig.settingsMigrators) {
+            if (ExtendedObject.isPlainObject(config.settingsMigrators)) {
+                // TODO: warn about complex migrator joining
+            } else if (!ExtendedObject.isPlainObject(superConfig.settingsMigrators))
+                throw Error(
+                    "Super module uses custom migrator, automatic migrator merging can not be used, use an advanced migration method instead"
+                );
+
+            // TODO: Handle combining the migrators
+        }
+
         // Combine the initial states of both configs, giving priority to the new config
         const initialState = ExtendedObject.copyData(superConfig.initialState, {});
         ExtendedObject.copyData(config.initialState, initialState);
@@ -60,8 +74,7 @@ export class ModuleClassCreator {
         const normalizedConfig: ParameterizedNormalizedModuleConfig = {
             version: config.version,
             settings,
-            settingsMigrators:
-                config.settingsMigrators || superConfig.settingsMigrators || {},
+            settingsMigrators,
             initialState,
             abstract: config.abstract,
             onInstall: config.onInstall || (() => {}),

@@ -26,6 +26,16 @@ class ModuleClassCreator {
         // Combine the settings of both configs, giving priority to the new config
         const settings = extendedObject_1.ExtendedObject.copyData(superConfig.settings, {});
         extendedObject_1.ExtendedObject.copyData(config.settings, settings);
+        // Combine the settings migrators of botth configs
+        let settingsMigrators = config.settingsMigrators || superConfig.settingsMigrators || {};
+        if (config.settingsMigrators && superConfig.settingsMigrators) {
+            if (extendedObject_1.ExtendedObject.isPlainObject(config.settingsMigrators)) {
+                // TODO: warn about complex migrator joining
+            }
+            else if (!extendedObject_1.ExtendedObject.isPlainObject(superConfig.settingsMigrators))
+                throw Error("Super module uses custom migrator, automatic migrator merging can not be used, use an advanced migration method instead");
+            // TODO: Handle combining the migrators
+        }
         // Combine the initial states of both configs, giving priority to the new config
         const initialState = extendedObject_1.ExtendedObject.copyData(superConfig.initialState, {});
         extendedObject_1.ExtendedObject.copyData(config.initialState, initialState);
@@ -33,7 +43,7 @@ class ModuleClassCreator {
         const normalizedConfig = {
             version: config.version,
             settings,
-            settingsMigrators: config.settingsMigrators || superConfig.settingsMigrators || {},
+            settingsMigrators,
             initialState,
             abstract: config.abstract,
             onInstall: config.onInstall || (() => { }),
