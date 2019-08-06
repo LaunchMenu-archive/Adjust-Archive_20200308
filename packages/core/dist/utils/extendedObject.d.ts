@@ -6,7 +6,9 @@ export declare class ExtendedObject extends Object {
      * @param obj The object to perform the operation on
      * @returns Whether or not the object is a plain javascipt object
      */
-    static isPlainObject(obj: any): boolean;
+    static isPlainObject(obj: any): obj is {
+        [key: string]: any;
+    };
     /**
      * Maps the values of an object to a new object
      * @param obj The object to perform the operation on
@@ -99,7 +101,7 @@ export declare class ExtendedObject extends Object {
      * @param createIfAbsent Whether or not to create the path if absent, defaults to false
      * @returns The data found (or created) at the end of this path
      */
-    static getField(obj: object, path: string | Array<string>, createIfAbsent?: boolean): any;
+    static getField(obj: object, path: string | string[], createIfAbsent?: boolean): any;
     /**
      * Retrieves a value that matches your constraint given by a function
      * @param obj The object to perform the operation on
@@ -157,6 +159,7 @@ export declare class ExtendedObject extends Object {
      * May also be a function that decides whether or not to copy a value from src
      * @param keepUndefined Whether or not to explicitely keep 'undefined' values in the output
      * @param keepEmpty Whether or not to explicitely keep empty objects in the output
+     * @param overwriteValues If set to false, only data that is not present in dest will be copied
      * @param path The path of the data so far (used by copyModel if it's a function)
      * @returns Just another reference to the passed dest object
      */
@@ -168,7 +171,7 @@ export declare class ExtendedObject extends Object {
         hasDestValue: boolean;
         recursing: boolean;
         key: string;
-    }) => boolean), keepUndefined?: boolean, keepEmpty?: boolean, path?: string): D & PartialObject<S, C, keyof C>;
+    }) => boolean), keepUndefined?: boolean, keepEmpty?: boolean, overwriteValues?: boolean, path?: string): D & PartialObject<S, C, keyof C>;
     /**
      * Checks if the contents of object 1 and 2 are equal, except for subobjects
      * @param obj1 The first object

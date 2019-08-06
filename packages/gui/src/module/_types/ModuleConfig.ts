@@ -1,8 +1,8 @@
 import {
     ModuleConfig as AdjustModuleConfig,
     ModuleInterface,
-    SettingsConfig,
     ModuleState,
+    SettingsConfigSet,
 } from "@adjust/core/types";
 import {ModuleLocation} from "./ModuleLocation";
 
@@ -11,7 +11,7 @@ import {ModuleLocation} from "./ModuleLocation";
  */
 export type ModuleConfig<
     S extends ModuleState,
-    C extends SettingsConfig,
+    C extends SettingsConfigSet,
     I extends ModuleInterface
 > = AdjustModuleConfig<S, C, I> & {
     // Allows new locations to be defined upon install
@@ -25,7 +25,7 @@ export type ModuleConfig<
  */
 export type ParameterizedModuleConfig = ModuleConfig<
     ModuleState,
-    SettingsConfig,
+    SettingsConfigSet,
     ModuleInterface
 >;
 
@@ -34,7 +34,7 @@ export type ParameterizedModuleConfig = ModuleConfig<
  */
 export type NormalizedModuleConfig<
     S extends ModuleState,
-    C extends SettingsConfig,
+    C extends SettingsConfigSet,
     I extends ModuleInterface
 > = {[P in keyof ModuleConfig<S, C, I>]-?: ModuleConfig<S, C, I>[P]};
 
@@ -43,6 +43,6 @@ export type NormalizedModuleConfig<
  */
 export type ParameterizedNormalizedModuleConfig = NormalizedModuleConfig<
     ModuleState,
-    SettingsConfig,
+    SettingsConfigSet,
     ModuleInterface
 >;

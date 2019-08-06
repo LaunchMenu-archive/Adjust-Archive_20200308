@@ -6,7 +6,7 @@
     "scripts": {
         "unit-test": "jest",
         "unit-test-watch": "jest --watch",
-        "unit-test-watch-debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch --config=\"jest.config.js\"",
+        "unit-test-watch-debug": "node --inspect-brk ../../node_modules/jest/bin/jest.js --runInBand --watch --config=\"jest.config.js\"",
         "watch": "concurrently \"tsc -w\"  \"cpx \\\"src/**/*.{html,png,jpg,json}\\\" \\\"dist\\\" --watch --verbose\" \"ts-cleaner --watch\" \"node dev/aggregateTypes\"",
         "clean": "rimraf dist/*"
     },

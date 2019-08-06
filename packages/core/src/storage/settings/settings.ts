@@ -1,6 +1,6 @@
 import {DeepReadonly} from "../../utils/_types/standardTypes";
-import {SettingsData} from "./_types/settingsData";
-import {SettingsPriorityList} from "./_types/settingsPriorityList";
+import {SettingsConfigSetData} from "./_types/settingsConfigSetData";
+import {SettingsConfigSetPriorityList} from "./_types/settingsConfigSetPriorityList";
 import {ParameterizedSettingPriorityList} from "./_types/settingPriorityList";
 import {ParameterizedConditionValue} from "./_types/conditionalValue";
 import {JsonPartial} from "../_types/jsonPartial";
@@ -13,6 +13,8 @@ import {EventEmitter} from "../../utils/eventEmitter";
 import {ExtendedObject} from "../../utils/extendedObject";
 import {SortedList} from "../../utils/sortedList";
 import {SettingsConditions} from "./settingsConditions/abstractSettingsConditions";
+import {SettingsConfigData} from "./_types/settingsConfigData";
+import {SettingsConfigPriorityList} from "./_types/settingsConfigPriorityList";
 
 export class Settings<C extends SettingsConfig> extends EventEmitter {
     protected settingsFile: SettingsFile<C>; // The file that stores settings
@@ -23,9 +25,9 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
     ) => void; // The function that checks for settings changes
 
     protected target: ParameterizedModule; // The target to track the applicable settings for
-    protected settings: Data<SettingsData<C>>; // The top level settings that apply to the target
-    protected settingsPriorities: SettingsPriorityList<C>; // The  whole list of settings that apply to the target
-    public readonly get: DeepReadonly<SettingsData<C>>; // The getter object for all settings
+    protected settings: Data<SettingsConfigData<C>>; // The top level settings that apply to the target
+    protected settingsPriorities: SettingsConfigPriorityList<C>; // The  whole list of settings that apply to the target
+    public readonly get: DeepReadonly<SettingsConfigData<C>>; // The getter object for all settings
 
     /**
      * Creates settings for a specific module instance
@@ -60,8 +62,8 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      * Gets the settings from the settings file and loads the ones that apply to this target
      * @returns The getter object for the settings
      */
-    protected loadApplicableSettingsFromFile(): DeepReadonly<SettingsData<C>> {
-        this.settingsPriorities = {} as SettingsPriorityList<C>;
+    protected loadApplicableSettingsFromFile(): DeepReadonly<SettingsConfigData<C>> {
+        this.settingsPriorities = {} as SettingsConfigPriorityList<C>;
 
         // Go through all the settingsSets and their conditions
         this.settingsFile.getAllSettings().forEach(settingsSet => {
@@ -110,7 +112,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
             },
             true
         );
-        this.settings = new Data(settings, false) as Data<SettingsData<C>>;
+        this.settings = new Data(settings, false) as Data<SettingsConfigData<C>>;
         return this.settings.get;
     }
 
@@ -199,7 +201,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      * @returns A promise that resolves when all listeners resolved
      */
     public async changeData(
-        data: JsonPartial<SettingsData<C>>,
+        data: JsonPartial<SettingsConfigData<C>>,
         condition?: SettingsConditions
     ): Promise<void> {
         // Change the data on the condition of the settings file
@@ -223,10 +225,10 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      */
     public async setInitialData(
         data:
-            | JsonPartial<SettingsData<C>>
+            | JsonPartial<SettingsConfigData<C>>
             | (() =>
-                  | JsonPartial<SettingsData<C>>
-                  | Promise<JsonPartial<SettingsData<C>>>
+                  | JsonPartial<SettingsConfigData<C>>
+                  | Promise<JsonPartial<SettingsConfigData<C>>>
               ),
         condition?: SettingsConditions
     ): Promise<void> {
@@ -251,7 +253,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      * Retrieves the data object storing all the applicable settings
      * @returns The settings Data instance
      */
-    public getSettings(): Data<SettingsData<C>> {
+    public getSettings(): Data<SettingsConfigData<C>> {
         return this.settings;
     }
 
@@ -264,7 +266,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
     public getData(
         condition?: SettingsConditions,
         create: boolean = true
-    ): Data<SettingsData<C>> {
+    ): Data<SettingsConfigData<C>> {
         // Check if the condition applies to this target, if not throw an error
         if (!this.satisfiesCondition(condition))
             throw new Error(

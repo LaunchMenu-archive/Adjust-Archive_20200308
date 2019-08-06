@@ -24,6 +24,7 @@ export const React = OrReact;
 export * from "./utils/isMain";
 export * from "./utils/extendedObject";
 export * from "./utils/UUID";
+export * from "./utils/semver";
 
 // Communication
 export * from "./communication/ipcMain";

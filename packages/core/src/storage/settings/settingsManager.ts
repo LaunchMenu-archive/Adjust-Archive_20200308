@@ -54,6 +54,23 @@ class SettingsManagerSingleton {
     }
 
     /**
+     * Deletes the file at the given path
+     * @param path The path at which to store the data
+     * @returns Whether there was a file to delete
+     */
+    public deleteFile(path: string): boolean {
+        // Get the path
+        path = this.getAbsoluteDataPath(path);
+
+        // Make sure the path exists
+        if (!FS.existsSync(path)) return false;
+
+        // Remove the file
+        FS.unlinkSync(path);
+        return true;
+    }
+
+    /**
      * Loads the previously stored data at the given path
      * @param path The path from which to load the data
      * @returns The json data that was loaded

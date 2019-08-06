@@ -8,23 +8,31 @@ const moduleID_1 = require("../../../module/moduleID");
 const functionSettingsConditions_1 = require("../settingsConditions/types/functionSettingsConditions");
 // Create a settings config
 const config = {
-    a: {
-        default: 3,
-        type: "number",
-    },
-    b: {
-        c: {
-            default: true,
-            type: "boolean",
+    version: "0.0.0",
+    settings: {
+        a: {
+            default: 3,
+            type: "number",
+        },
+        b: {
+            c: {
+                default: true,
+                type: "boolean",
+            },
+        },
+        d: {
+            default: {},
+            type: "something",
         },
     },
-    d: {
-        default: {},
-        type: "something",
-    },
+    migrators: {},
 };
 exports.dummyInterfaceID = registry_1.Registry.createInterfaceID(__filename + "1");
-class Target extends moduleClassCreator_1.createModule({ initialState: {}, settings: config, type: exports.dummyInterfaceID }) {
+class Target extends moduleClassCreator_1.createModule({
+    initialState: {},
+    settings: config.settings,
+    type: exports.dummyInterfaceID,
+}) {
     static async createCustomInstance(identifier) {
         const moduleID = new moduleID_1.ModuleID("test", 3);
         const instance = (await super.construct({ requestPath: module_1.Module.createRequestPath(moduleID, null, {}), data: identifier }, moduleID, {}, []));
@@ -35,8 +43,6 @@ class Target extends moduleClassCreator_1.createModule({ initialState: {}, setti
     }
 }
 exports.Target = Target;
-// @ts-ignore
-Target.config = { settings: config };
 // Create some standard targets
 let target1;
 let target2;

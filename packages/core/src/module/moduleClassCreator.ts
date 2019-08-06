@@ -2,12 +2,13 @@ import {
     ParameterizedModuleConfig,
     ParameterizedNormalizedModuleConfig,
 } from "./_types/moduleConfig";
-import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
 import {ExtendedObject} from "../utils/extendedObject";
 import {ExtendedModuleClass} from "./_types/extendedModule";
-import {Constructor, ExtendsClass, Json} from "../utils/_types/standardTypes";
+import {Constructor, ExtendsClass} from "../utils/_types/standardTypes";
 import {Module} from "./module";
 import {ModuleInterface} from "./_types/moduleInterface";
+import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";
+import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
 
 export class ModuleClassCreator {
     /**
@@ -32,7 +33,7 @@ export class ModuleClassCreator {
         // Can't use Module<{}, {}, any> instead of {}, due to it expecting private members
         X extends ExtendsClass<typeof Module, {}> = ExtendsClass<
             typeof Module,
-            Module<typeof Module.config.initialState, {}, ModuleInterface>
+            Module<typeof Module.config.initialState, SettingsConfig, ModuleInterface>
         >
     >(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X> {
         // Set the module class to the default module if not specified
@@ -45,7 +46,7 @@ export class ModuleClassCreator {
         const superConfig = (moduleClass as any).getConfig() as ParameterizedModuleConfig;
 
         // Combine the settings of both configs, giving priority to the new config
-        const settings: SettingsConfig = ExtendedObject.copyData(
+        const settings: SettingsConfigSet = ExtendedObject.copyData(
             superConfig.settings,
             {}
         ) as any;
@@ -57,7 +58,10 @@ export class ModuleClassCreator {
 
         // Create the normalized and extended config
         const normalizedConfig: ParameterizedNormalizedModuleConfig = {
+            version: config.version,
             settings,
+            settingsMigrators:
+                config.settingsMigrators || superConfig.settingsMigrators || {},
             initialState,
             abstract: config.abstract,
             onInstall: config.onInstall || (() => {}),

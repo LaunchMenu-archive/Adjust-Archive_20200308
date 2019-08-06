@@ -8,6 +8,7 @@ import { AbstractModuleProvider as ModuleProvider } from "./moduleProviders/abst
 import { ClassModuleProvider } from "./moduleProviders/classModuleProvider";
 import { ExtendsClass } from "../utils/_types/standardTypes";
 import { PublicModuleMethods } from "../module/_types/publicModuleMethods";
+import { Package } from "../utils/_types/package";
 /**
  * Keeps track of all modules classes and module providers
  */
@@ -73,6 +74,13 @@ export declare class RegistrySingleton {
      * @returns The exports of the file
      */
     protected requireModuleFile(collectionName: string, path: string): any;
+    /**
+     * Requires a given path and returns the package of the module
+     * @param collectionName The name of the collection to take the module from
+     * @param path A path that's relative to the modules folder
+     * @returns The package that could be found
+     */
+    protected requireModulePackage(collectionName: string, path: string): Package;
     /**
      * Requires a given path and returns the obtained Module class if present
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule

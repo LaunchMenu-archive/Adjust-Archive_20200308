@@ -27,6 +27,7 @@ exports.React = react_1.default;
 __export(require("./utils/isMain"));
 __export(require("./utils/extendedObject"));
 __export(require("./utils/UUID"));
+__export(require("./utils/semver"));
 // Communication
 __export(require("./communication/ipcMain"));
 __export(require("./communication/ipcRenderer"));

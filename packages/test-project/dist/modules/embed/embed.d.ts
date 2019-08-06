@@ -29,7 +29,7 @@ export default class EmbedModule extends EmbedModule_base implements Embed {
      */
     cycleColor(): void;
 }
-declare const EmbedView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof EmbedModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const EmbedView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof EmbedModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<{}>, import("@adjust/core/types").ModuleInterface>, {}>>>;
 export declare class EmbedView extends EmbedView_base {
     protected renderView(): JSX.Element;
 }

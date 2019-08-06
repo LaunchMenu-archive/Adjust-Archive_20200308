@@ -15,6 +15,7 @@ export declare const React: typeof OrReact;
 export * from "./utils/isMain";
 export * from "./utils/extendedObject";
 export * from "./utils/UUID";
+export * from "./utils/semver";
 export * from "./communication/ipcMain";
 export * from "./communication/ipcRenderer";
 export * from "./storage/settings/settingsManager";

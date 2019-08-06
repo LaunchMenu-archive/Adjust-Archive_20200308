@@ -44,7 +44,7 @@ export default class TestModule extends TestModule_base implements Test {
     closeChild(): void;
     setStuff(): void;
 }
-declare const TestView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof TestModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const TestView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof TestModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<{}>, import("@adjust/core/types").ModuleInterface>, {}>>>;
 export declare class TestView extends TestView_base {
     protected renderView(): JSX.Element;
 }

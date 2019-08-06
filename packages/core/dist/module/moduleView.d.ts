@@ -5,16 +5,16 @@ import { ModuleState } from "./_types/moduleState";
 import { ModuleViewState } from "./_types/moduleViewState";
 import { RemoteModule } from "./_types/remoteModule";
 import { ModuleViewProps } from "./_types/moduleViewProps";
-import { SettingsConfig } from "../storage/settings/_types/settingsConfig";
-import { SettingsData } from "../storage/settings/_types/settingsData";
+import { SettingsConfigSetData } from "../storage/settings/_types/settingsConfigSetData";
+import { SettingsConfigSet } from "../storage/settings/_types/settingsConfigSet";
 /**
  * A class that can visually represent the module
  */
-export declare abstract class ModuleView<S extends ModuleState, C extends SettingsConfig, M extends ParameterizedModule, D extends any> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
+export declare abstract class ModuleView<S extends ModuleState, C extends SettingsConfigSet, M extends ParameterizedModule, D extends any> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
     unmounted: boolean;
     protected self: Promise<this>;
     protected readonly module: RemoteModule<M>;
-    protected readonly settings: DeepReadonly<SettingsData<C>>;
+    protected readonly settings: DeepReadonly<SettingsConfigSetData<C>>;
     protected readonly data: DeepReadonly<D>;
     /**
      * Creates an instance of the module view
@@ -78,4 +78,4 @@ export declare abstract class ModuleView<S extends ModuleState, C extends Settin
 /**
  * A type representing a module view, where the generic parameter arguments can be left out
  */
-export declare type ParameterizedModuleView = ModuleView<ModuleState, SettingsConfig, ParameterizedModule, any>;
+export declare type ParameterizedModuleView = ModuleView<ModuleState, SettingsConfigSet, ParameterizedModule, any>;

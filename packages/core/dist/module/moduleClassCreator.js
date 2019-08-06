@@ -31,7 +31,9 @@ class ModuleClassCreator {
         extendedObject_1.ExtendedObject.copyData(config.initialState, initialState);
         // Create the normalized and extended config
         const normalizedConfig = {
+            version: config.version,
             settings,
+            settingsMigrators: config.settingsMigrators || superConfig.settingsMigrators || {},
             initialState,
             abstract: config.abstract,
             onInstall: config.onInstall || (() => { }),

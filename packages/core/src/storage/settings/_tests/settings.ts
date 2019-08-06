@@ -9,20 +9,24 @@ import {FunctionSettingsConditions} from "../settingsConditions/types/functionSe
 
 // Create a settings config
 const config = {
-    a: {
-        default: 3,
-        type: "number",
-    },
-    b: {
-        c: {
-            default: true,
-            type: "boolean",
+    version: "0.0.0",
+    settings: {
+        a: {
+            default: 3,
+            type: "number",
+        },
+        b: {
+            c: {
+                default: true,
+                type: "boolean",
+            },
+        },
+        d: {
+            default: {},
+            type: "something",
         },
     },
-    d: {
-        default: {},
-        type: "something",
-    },
+    migrators: {},
 };
 
 // Make an intansiateable method with some dummy methods
@@ -34,7 +38,11 @@ export const dummyInterfaceID = Registry.createInterfaceID<{
     child: dummyInterface & PublicModuleMethods;
 }>(__filename + "1");
 export class Target
-    extends createModule({initialState: {}, settings: config, type: dummyInterfaceID})
+    extends createModule({
+        initialState: {},
+        settings: config.settings,
+        type: dummyInterfaceID,
+    })
     implements dummyInterface {
     static async createCustomInstance(identifier: number) {
         const moduleID = new ModuleID("test", 3);
@@ -52,8 +60,6 @@ export class Target
         return text;
     }
 }
-// @ts-ignore
-Target.config = {settings: config};
 
 // Create some standard targets
 let target1: Target;

@@ -1,11 +1,11 @@
 import {ModuleState} from "./moduleState";
-import {SettingsData} from "../../storage/settings/_types/settingsData";
-import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
+import {SettingsConfigSet} from "../../storage/settings/_types/settingsConfigSet";
+import {SettingsConfigSetData} from "../../storage/settings/_types/settingsConfigSetData";
 
 /**
  * The data that the view receives for its representation
  */
 export type ModuleViewData = {
-    settings: SettingsData<SettingsConfig>;
+    settings: SettingsConfigSetData<SettingsConfigSet>;
     state: ModuleState;
 };

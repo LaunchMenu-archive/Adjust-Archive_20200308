@@ -77,7 +77,7 @@ export default class InputPromptModule extends InputPromptModule_base implements
     /** @override */
     onClose(): Promise<void>;
 }
-declare const InputPromptView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof InputPromptModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const InputPromptView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof InputPromptModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<{}>, import("@adjust/core/types").ModuleInterface>, {}>>>;
 export declare class InputPromptView extends InputPromptView_base {
     /**
      * Handles keyboard events

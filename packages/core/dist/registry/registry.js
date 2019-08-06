@@ -11,6 +11,7 @@ const ipcRenderer_1 = require("../communication/ipcRenderer");
 const extendedObject_1 = require("../utils/extendedObject");
 const moduleView_1 = require("../module/moduleView");
 const settingsManager_1 = require("../storage/settings/settingsManager");
+const packageRetriever_1 = require("../utils/packageRetriever");
 /**
  * Keeps track of all modules classes and module providers
  */
@@ -181,6 +182,15 @@ class RegistrySingleton {
         return require(path_1.default.join(this.collectionFolders[collectionName] || this.collectionFolders.default, path));
     }
     /**
+     * Requires a given path and returns the package of the module
+     * @param collectionName The name of the collection to take the module from
+     * @param path A path that's relative to the modules folder
+     * @returns The package that could be found
+     */
+    requireModulePackage(collectionName, path) {
+        return packageRetriever_1.PackageRetriever.requireModulePackage(path_1.default.join(this.collectionFolders[collectionName] || this.collectionFolders.default, path));
+    }
+    /**
      * Requires a given path and returns the obtained Module class if present
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule
      * @returns A module class, or undefined
@@ -202,12 +212,21 @@ class RegistrySingleton {
                 // @ts-ignore
                 def.path =
                     (collectionName != "default" ? collectionName : "") + path_1.default.sep + path;
+                // Copy the version from the package if absent
+                const config = def.getConfig();
+                if (!config.version) {
+                    const packag = this.requireModulePackage(collectionName, path);
+                    if (packag)
+                        config.version = packag.version;
+                    else
+                        config.version = "0.0.0";
+                }
                 // Check if the module still needs a view
-                if (def.getConfig().viewClass === undefined) {
+                if (config.viewClass === undefined) {
                     // Check if a view class was provided in the file, and if so, assign it to the module
                     const viewClass = extendedObject_1.ExtendedObject.find(exports, (exp, k) => k != "default" && exp.prototype instanceof moduleView_1.ModuleView);
                     if (viewClass)
-                        def.getConfig().viewClass = viewClass;
+                        config.viewClass = viewClass;
                 }
                 // Return the module
                 return def;

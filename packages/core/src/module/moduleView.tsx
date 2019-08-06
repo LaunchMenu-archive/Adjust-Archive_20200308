@@ -7,15 +7,16 @@ import {ModuleViewState} from "./_types/moduleViewState";
 import {RemoteModule} from "./_types/remoteModule";
 import {ModuleViewProps} from "./_types/moduleViewProps";
 import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
-import {SettingsData} from "../storage/settings/_types/settingsData";
+import {SettingsConfigSetData} from "../storage/settings/_types/settingsConfigSetData";
 import {ExtendedObject} from "../utils/extendedObject";
+import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";
 
 /**
  * A class that can visually represent the module
  */
 export abstract class ModuleView<
     S extends ModuleState,
-    C extends SettingsConfig,
+    C extends SettingsConfigSet,
     M extends ParameterizedModule,
     D extends any
 > extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
@@ -29,7 +30,7 @@ export abstract class ModuleView<
     protected readonly module: RemoteModule<M>;
 
     // The settings of the module
-    protected readonly settings: DeepReadonly<SettingsData<C>>;
+    protected readonly settings: DeepReadonly<SettingsConfigSetData<C>>;
 
     // The data that the module received when requested
     protected readonly data: DeepReadonly<D>;
@@ -187,7 +188,7 @@ export abstract class ModuleView<
  */
 export type ParameterizedModuleView = ModuleView<
     ModuleState,
-    SettingsConfig,
+    SettingsConfigSet,
     ParameterizedModule,
     any
 >;

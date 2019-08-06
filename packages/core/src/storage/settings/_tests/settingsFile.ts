@@ -1,28 +1,33 @@
 import {SettingsFile} from "../settingsFile";
 import {FunctionSettingsConditions} from "../settingsConditions/types/functionSettingsConditions";
 import {ConstantSettingsConditions} from "../settingsConditions/types/constantSettingsConditions";
+import {SettingsManager} from "../settingsManager";
 
 const config = {
-    a: {
-        default: 3,
-        type: "number",
-    },
-    b: {
-        c: {
-            default: "test",
-            type: "string",
+    version: "0.0.0",
+    settings: {
+        a: {
+            default: 3,
+            type: "number",
+        },
+        b: {
+            c: {
+                default: "test",
+                type: "string",
+            },
+        },
+        d: {
+            default: {},
+            type: "object",
+        },
+        e: {
+            default: {
+                prop: 3,
+            },
+            type: "object",
         },
     },
-    d: {
-        default: {},
-        type: "object",
-    },
-    e: {
-        default: {
-            prop: 3,
-        },
-        type: "object",
-    },
+    migrators: {},
 };
 
 describe("SettingsFile", () => {
@@ -70,12 +75,15 @@ describe("SettingsFile", () => {
             let args;
             const settingsFile = await SettingsFile.createInstance("_test/dontSave", {
                 ...config,
-                f: {
-                    g: {
-                        default: 3,
-                        type: "number",
-                        onChange: (newValue, condition, oldValue, settings) => {
-                            args = {newValue, condition, oldValue, settings};
+                settings: {
+                    ...config.settings,
+                    f: {
+                        g: {
+                            default: 3,
+                            type: "number",
+                            onChange: (newValue, condition, oldValue, settings) => {
+                                args = {newValue, condition, oldValue, settings};
+                            },
                         },
                     },
                 },
@@ -98,14 +106,17 @@ describe("SettingsFile", () => {
             let order = [];
             const settingsFile = await SettingsFile.createInstance("_test/dontSave", {
                 ...config,
-                f: {
-                    g: {
-                        default: 3,
-                        type: "number",
-                        onChange: async (newValue, condition, oldValue, settings) => {
-                            if (condition.equals(undefined)) return;
-                            await new Promise(resolve => setTimeout(resolve, 20));
-                            order.push(1);
+                settings: {
+                    ...config.settings,
+                    f: {
+                        g: {
+                            default: 3,
+                            type: "number",
+                            onChange: async (newValue, condition, oldValue, settings) => {
+                                if (condition.equals(undefined)) return;
+                                await new Promise(resolve => setTimeout(resolve, 20));
+                                order.push(1);
+                            },
                         },
                     },
                 },
@@ -160,16 +171,20 @@ describe("SettingsFile", () => {
     });
     describe("Save", () => {
         const config = {
-            a: {
-                default: 3,
-                type: "number",
-            },
-            b: {
-                c: {
-                    default: "test",
-                    type: "string",
+            version: "0.0.0",
+            settings: {
+                a: {
+                    default: 3,
+                    type: "number",
+                },
+                b: {
+                    c: {
+                        default: "test",
+                        type: "string",
+                    },
                 },
             },
+            migrators: {},
         };
         const condition = new FunctionSettingsConditions(() => true, 2);
         const condition2 = new FunctionSettingsConditions(target => {
@@ -181,6 +196,9 @@ describe("SettingsFile", () => {
             settingsFile.getConditionData().changeData({b: {c: "test"}});
             settingsFile.getConditionData(condition).changeData({b: {c: "test2"}});
             settingsFile.getConditionData(condition2).changeData({b: {c: "test3"}});
+        });
+        afterEach(async () => {
+            SettingsManager.deleteFile("_tests/save1.json");
         });
 
         it("Should store the data in a file", () => {
@@ -212,6 +230,10 @@ describe("SettingsFile", () => {
             settingsFile.getConditionData(condition2).changeData({b: {c: "test3"}});
             settingsFile.save();
         });
+        afterEach(async () => {
+            SettingsManager.deleteFile("_tests/save2.json");
+            SettingsManager.deleteFile("_tests/save3.json");
+        });
 
         it("Should reload the previously saved settings", () => {
             settingsFile.getConditionData().changeData({b: {c: "hallo"}});
@@ -232,6 +254,120 @@ describe("SettingsFile", () => {
             settingsFile.reload();
 
             expect(triggered).toBeTruthy();
+        });
+        it("Should migrate settings from a previous version", async () => {
+            // Define multiple configs to act like different versions of the same config
+            const config1 = {
+                version: "0.0.0",
+                settings: {
+                    a: {
+                        default: 3,
+                        type: "number",
+                    },
+                    b: {
+                        c: {
+                            default: "test",
+                            type: "string",
+                        },
+                    },
+                    d: {
+                        default: {},
+                        type: "object",
+                    },
+                    e: {
+                        default: {
+                            prop: 3,
+                        },
+                        type: "object",
+                    },
+                },
+                migrators: {},
+            };
+            const config2 = {
+                version: "0.0.1",
+                settings: {
+                    a: {
+                        a: {
+                            default: 3,
+                            type: "number",
+                        },
+                        b: {
+                            default: {
+                                prop: 3,
+                            },
+                            type: "object",
+                        },
+                    },
+                    b: {
+                        c: {
+                            default: "test",
+                            type: "string",
+                        },
+                    },
+                    new: {
+                        default: {},
+                        type: "object",
+                    },
+                },
+                migrators: {"0.0.1": data => ({a: {a: data.a, b: data.e}})},
+            };
+            const config3 = {
+                version: "0.0.2w",
+                settings: {
+                    a: {
+                        a: {
+                            default: 3,
+                            type: "number",
+                        },
+                        b: {
+                            default: {
+                                prop: 3,
+                            },
+                            type: "object",
+                        },
+                        new: {
+                            default: {},
+                            type: "object",
+                        },
+                    },
+                },
+                migrators: {
+                    "0.0.1": data => ({a: {a: data.a, b: data.e}}),
+                    "0.0.2": data => ({a: {...data.a, new: data.new}}),
+                },
+            };
+
+            // Create some data in the format of the first config
+            settingsFile = await SettingsFile.createInstance("_tests/save3", config);
+            settingsFile
+                .getConditionData()
+                .changeData({a: 5, b: {c: "test"}, e: {prop: 8}});
+            settingsFile.getConditionData(condition).changeData({a: 4, b: {c: "test2"}});
+            settingsFile
+                .getConditionData(condition2)
+                .changeData({a: 3, e: {prop: 2}, b: {c: "test3"}});
+            settingsFile.save();
+
+            // Perform the migration (simulate the same data transfering from config1, to 2, to 3)
+            const settingsFile2 = await SettingsFile.createInstance(
+                "_tests/save3",
+                config2
+            );
+            settingsFile2.save();
+            const settingsFile3 = await SettingsFile.createInstance(
+                "_tests/save3",
+                config3
+            );
+
+            expect(settingsFile3.getConditionData().get).toEqual({
+                a: {a: 5, b: {prop: 8}, new: {}},
+            });
+            expect(settingsFile3.getConditionData(condition).get).toEqual({
+                a: {a: 4},
+            });
+            expect(settingsFile3.getConditionData(condition2).get).toEqual({
+                a: {a: 3, b: {prop: 2}},
+            });
         });
     });
 });

@@ -6,13 +6,10 @@ import {
     ParameterizedNormalizedModuleConfig,
     NormalizedModuleConfig,
 } from "./_types/moduleConfig";
-import {
-    ModuleRequestData,
-    ParameterizedModuleRequestData,
-} from "./_types/moduleRequestData";
+import {ModuleRequestData} from "./_types/moduleRequestData";
 import {ProgramState} from "../state/programState";
 import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
-import {SettingsData} from "../storage/settings/_types/settingsData";
+import {SettingsConfigSetData} from "../storage/settings/_types/settingsConfigSetData";
 import {Settings} from "../storage/settings/settings";
 import {StateData} from "../state/stateData";
 import {RequestPath} from "./requestPath/requestPath";
@@ -29,9 +26,13 @@ import {ModuleID} from "./moduleID";
 import {SettingsManager} from "../storage/settings/settingsManager";
 import {SettingsFile} from "../storage/settings/settingsFile";
 import {SettingsConditions} from "../storage/settings/settingsConditions/abstractSettingsConditions";
+import {SettingsConfigData} from "../storage/settings/_types/settingsConfigData";
+import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";
 
 export const baseConfig = {
+    version: "0.0.0",
     settings: {},
+    settingsMigrators: {},
     initialState: {
         isStopping: false,
         isStopped: false,
@@ -63,7 +64,7 @@ export class Module<
     readonly type: I; // Only used to extract information, no value gets assigned
 
     // Settings
-    readonly settings: DeepReadonly<SettingsData<C>>;
+    readonly settings: DeepReadonly<SettingsConfigData<C>>;
     readonly settingsObject: Settings<C>;
 
     // State
@@ -216,7 +217,7 @@ export class Module<
      * @returns A promise that resolves once all listeners have resolved
      */
     public async setSettings(
-        changedProps: JsonPartial<SettingsData<C>>,
+        changedProps: JsonPartial<SettingsConfigData<C>>,
         condition?: SettingsConditions
     ): Promise<void> {
         return this.settingsObject.changeData(changedProps as any, condition);
@@ -603,7 +604,7 @@ export class Module<
      * Retrieves the config of the module
      * @returns The module's config
      */
-    public getConfig(): NormalizedModuleConfig<S, C, I> {
+    public getConfig(): NormalizedModuleConfig<S, C["settings"], I> {
         return this.getClass().config as any;
     }
 

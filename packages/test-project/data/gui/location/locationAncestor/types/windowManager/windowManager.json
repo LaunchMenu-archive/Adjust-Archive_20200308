@@ -1,36 +1,39 @@
-[
-    {
-        "condition": {
-            "type": "data",
-            "priority": 1,
-            "data": {}
-        },
-        "ID": 1,
-        "data": {
-            "windows": {
-                "default": {
-                    "name": "default"
-                },
-                "Z1i0-XfD9": {
-                    "name": "Prompt"
-                },
-                "E0dd-wRj0": {
-                    "name": "shit"
-                },
-                "N04a-Nuym": {
-                    "name": "orange"
+{
+    "version": "0.0.1",
+    "data": [
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {}
+            },
+            "ID": 1,
+            "data": {
+                "windows": {
+                    "default": {
+                        "name": "default"
+                    },
+                    "7MFm-j40I": {
+                        "name": "Prompt"
+                    },
+                    "window1": {
+                        "name": "window1"
+                    },
+                    "SoZk-5fJh": {
+                        "name": "shiiit"
+                    }
                 }
             }
-        }
-    },
-    {
-        "condition": {
-            "type": "constant",
-            "priority": 0
         },
-        "ID": 0,
-        "data": {
-            "windows": {}
+        {
+            "condition": {
+                "type": "constant",
+                "priority": 0
+            },
+            "ID": 0,
+            "data": {
+                "windows": {}
+            }
         }
-    }
-]
+    ]
+}

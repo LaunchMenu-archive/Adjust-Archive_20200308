@@ -40,6 +40,7 @@ describe("ModuleClassCreator", () => {
                 }
             }
             expect(OurImplementation.getConfig()).toEqual({
+                version: "0.0.0",
                 initialState: {
                     val: "hello",
                     isStopping: false,
@@ -48,6 +49,7 @@ describe("ModuleClassCreator", () => {
                 settings: {
                     val: { default: 3, type: "number" },
                 },
+                settingsMigrators: {},
                 onInstall: expect.any(Function),
                 abstract: undefined,
                 type: dummyModules_helper_1.dummyInterfaceID,
@@ -85,6 +87,7 @@ describe("ModuleClassCreator", () => {
                 }
             }
             expect(ExtendsOurImplementation.getConfig()).toEqual({
+                version: "0.0.0",
                 initialState: {
                     val: "hello",
                     category: {
@@ -99,6 +102,7 @@ describe("ModuleClassCreator", () => {
                         val: { default: true, type: "number" },
                     },
                 },
+                settingsMigrators: {},
                 onInstall: expect.any(Function),
                 abstract: undefined,
                 type: dummyModules_helper_1.dummyInterfaceID,

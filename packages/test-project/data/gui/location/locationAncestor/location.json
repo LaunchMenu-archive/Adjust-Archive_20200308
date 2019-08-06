@@ -1,72 +1,75 @@
-[
-    {
-        "condition": {
-            "type": "data",
-            "priority": 1,
+{
+    "version": "0.0.1",
+    "data": [
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "default"
+                }
+            },
+            "ID": 1,
             "data": {
-                "ID": "default"
+                "locations": [
+                    "root"
+                ]
             }
         },
-        "ID": 1,
-        "data": {
-            "locations": [
-                "root"
-            ]
-        }
-    },
-    {
-        "condition": {
-            "type": "data",
-            "priority": 1,
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "7MFm-j40I"
+                }
+            },
+            "ID": 2,
             "data": {
-                "ID": "Z1i0-XfD9"
+                "locations": [
+                    "prompt"
+                ]
             }
         },
-        "ID": 2,
-        "data": {
-            "locations": [
-                "prompt"
-            ]
-        }
-    },
-    {
-        "condition": {
-            "type": "data",
-            "priority": 1,
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "window1"
+                }
+            },
+            "ID": 3,
             "data": {
-                "ID": "E0dd-wRj0"
+                "locations": [
+                    "0pqo-nsh7-r2mV-Zxg2-69Zc"
+                ]
             }
         },
-        "ID": 4,
-        "data": {
-            "locations": [
-                "ELt3-sYh7-eX5c-zwnw-uEgD"
-            ]
-        }
-    },
-    {
-        "condition": {
-            "type": "data",
-            "priority": 1,
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "SoZk-5fJh"
+                }
+            },
+            "ID": 4,
             "data": {
-                "ID": "N04a-Nuym"
+                "locations": [
+                    "gDiO-aDnB-67eO-INPO-6AX7"
+                ]
             }
         },
-        "ID": 5,
-        "data": {
-            "locations": [
-                "j5U2-qa8a-n1GJ-KQZu-gvGL"
-            ]
+        {
+            "condition": {
+                "type": "constant",
+                "priority": 0
+            },
+            "ID": 0,
+            "data": {
+                "locations": []
+            }
         }
-    },
-    {
-        "condition": {
-            "type": "constant",
-            "priority": 0
-        },
-        "ID": 0,
-        "data": {
-            "locations": []
-        }
-    }
-]
+    ]
+}

@@ -23,7 +23,7 @@ import {PublicModuleMethods} from "./publicModuleMethods";
  */
 export type ExtractModuleSettingsConfig<
     M extends ParameterizedModule
-> = M["settingsObject"] extends Settings<infer C> ? C : never;
+> = M["settingsObject"] extends Settings<infer C> ? C["settings"] : never;
 
 /**
  * Extracts the request data type from a given module

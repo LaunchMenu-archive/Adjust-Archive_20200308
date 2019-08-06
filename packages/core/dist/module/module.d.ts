@@ -5,7 +5,6 @@ import { SerializedModule } from "./_types/serializedModule";
 import { ParameterizedNormalizedModuleConfig, NormalizedModuleConfig } from "./_types/moduleConfig";
 import { ModuleRequestData } from "./_types/moduleRequestData";
 import { SettingsConfig } from "../storage/settings/_types/settingsConfig";
-import { SettingsData } from "../storage/settings/_types/settingsData";
 import { Settings } from "../storage/settings/settings";
 import { StateData } from "../state/stateData";
 import { RequestPath } from "./requestPath/requestPath";
@@ -19,8 +18,11 @@ import { RequestFilter } from "../registry/_types/requestFilter";
 import { ModuleID } from "./moduleID";
 import { SettingsFile } from "../storage/settings/settingsFile";
 import { SettingsConditions } from "../storage/settings/settingsConditions/abstractSettingsConditions";
+import { SettingsConfigData } from "../storage/settings/_types/settingsConfigData";
 export declare const baseConfig: {
+    version: string;
     settings: {};
+    settingsMigrators: {};
     initialState: {
         isStopping: boolean;
         isStopped: boolean;
@@ -42,7 +44,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
     parent: I["parent"];
     readonly parents: I["parent"][];
     readonly type: I;
-    readonly settings: DeepReadonly<SettingsData<C>>;
+    readonly settings: DeepReadonly<SettingsConfigData<C>>;
     readonly settingsObject: Settings<C>;
     readonly state: DeepReadonly<S>;
     readonly stateObject: StateData<S>;
@@ -110,7 +112,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * @param condition The settings condition to store the data under
      * @returns A promise that resolves once all listeners have resolved
      */
-    setSettings(changedProps: JsonPartial<SettingsData<C>>, condition?: SettingsConditions): Promise<void>;
+    setSettings(changedProps: JsonPartial<SettingsConfigData<C>>, condition?: SettingsConditions): Promise<void>;
     /**
      * Serializes the entire module, based on the state
      * @returns An object containing all the module's relevant data
@@ -122,7 +124,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig, ModuleInterface>>;
+    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig<{}>, ModuleInterface>>;
     /**
      * Deserializes the data that defines the module's own state
      * @param data The data to be deserialized
@@ -257,7 +259,9 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      */
     createProxy(): ModuleProxy;
     static config: {
+        version: string;
         settings: {};
+        settingsMigrators: {};
         initialState: {
             isStopping: boolean;
             isStopped: boolean;
@@ -287,7 +291,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * Retrieves the config of the module
      * @returns The module's config
      */
-    getConfig(): NormalizedModuleConfig<S, C, I>;
+    getConfig(): NormalizedModuleConfig<S, C["settings"], I>;
     /**
      * Assigns a view class to the config of this module
      * @param viewClass The view class to relate to this module class

@@ -6,6 +6,7 @@ const extendedObject_1 = require("../../utils/extendedObject");
 const sortedList_1 = require("../../utils/sortedList");
 const settingsConditionsSerializer_1 = require("./settingsConditions/settingsConditionsSerializer");
 const abstractSettingsConditions_1 = require("./settingsConditions/abstractSettingsConditions");
+const semver_1 = require("../../utils/semver");
 class SettingsFile extends eventEmitter_1.EventEmitter {
     /**
      * Creates a settingsFile to store settings for a certain module class
@@ -19,7 +20,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         this.path = path;
         this.config = config;
         // Store the structure
-        this.shape = this.extractShape(config);
+        this.shape = this.extractConfigShape(config.settings);
     }
     /**
      * Creates a settingsFile to store settings for a certain module class
@@ -31,7 +32,12 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         let moduleClass;
         if (typeof path == "function") {
             moduleClass = path;
-            config = moduleClass.getConfig().settings;
+            const moduleConfig = moduleClass.getConfig();
+            config = {
+                version: moduleConfig.version,
+                settings: moduleConfig.settings,
+                migrators: moduleConfig.settingsMigrators,
+            };
             path = moduleClass.getPath();
         }
         //  Create an instance
@@ -42,7 +48,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
             {
                 condition: { type: "constant", priority: 0 },
                 ID: 0,
-                data: settingsFile.extractDefault(config),
+                data: settingsFile.extractDefault(config.settings),
             },
         ]);
         // Return the settings file
@@ -54,9 +60,9 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
      * @param config The config of which to extract the default values
      * @returns The default values
      */
-    extractDefault(config) {
+    extractDefault(configSettings) {
         const data = {};
-        extendedObject_1.ExtendedObject.forEach(config, (key, value) => {
+        extendedObject_1.ExtendedObject.forEach(configSettings, (key, value) => {
             if (value.default !== undefined)
                 data[key] = value.default;
             else
@@ -69,15 +75,30 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
      * @param config The config of which to extract the shape
      * @returns The shape of the settings
      */
-    extractShape(config) {
+    extractConfigShape(config) {
         const data = {};
         extendedObject_1.ExtendedObject.forEach(config, (key, value) => {
             if (value.default !== undefined)
                 data[key] = undefined;
             else
-                data[key] = this.extractShape(value);
+                data[key] = this.extractConfigShape(value);
         });
         return data;
+    }
+    /**
+     * Extracts the value shape of the settings by mapping all non objects to undefined
+     * @param data The data of which to extract the shape
+     * @returns The shape of the Data
+     */
+    extractShape(data) {
+        const out = {};
+        extendedObject_1.ExtendedObject.forEach(data, (key, value) => {
+            if (extendedObject_1.ExtendedObject.isPlainObject(value))
+                out[key] = this.extractShape(value);
+            else
+                out[key] = undefined;
+        });
+        return out;
     }
     /**
      * Destroys this settings file instance, if there are no more listeners
@@ -201,7 +222,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
             this.setDirty(true);
         // Call all listeners
         const promises = [];
-        extendedObject_1.ExtendedObject.forEachPaired([changedProps, previousProps, this.config], 
+        extendedObject_1.ExtendedObject.forEachPaired([changedProps, previousProps, this.config.settings], 
         // Emit all value changes
         (key, [newValue, oldValue, config], path) => {
             // Make sure the value is in the config (might not be the cas for arbitraray top level values)
@@ -213,25 +234,92 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
             // Emit the change event, and add it to promises to wait for
             promises.push(this.emitAsync("change", path, newValue, condition, oldValue));
         }, 
-        // Only recurse when we haven't hit a setting value yet
-        (key, value, path) => !("default" in extendedObject_1.ExtendedObject.getField(this.config, path)), true);
+        // Only recurse when we haven't hit a setting value yet TODO: check if this can be optimised by extracting the field from "value"
+        (key, value, path) => !("default" in extendedObject_1.ExtendedObject.getField(this.config.settings, path)), true);
         // Wait for the promises to resolve
         await Promise.all(promises);
     }
-    // Saving
+    // Saving and loading related methods
     /**
      * Saves the current data in the corresponding file
      */
     save() {
-        const data = this.settings
+        const settings = this.settings
             .filter(settingsSet => Object.keys(settingsSet.data.get).length > 0)
             .map(settingsSet => ({
             condition: settingsConditionsSerializer_1.SettingsConditionSerializer.serialize(settingsSet.condition),
             ID: settingsSet.ID,
             data: settingsSet.data.serialize(),
         }));
-        settingsManager_1.SettingsManager.saveFile(this.path, data);
+        settingsManager_1.SettingsManager.saveFile(this.path, {
+            version: this.config.version,
+            data: settings,
+        });
         this.setDirty(false);
+    }
+    /**
+     * Migrates settings data of a previous version to the latest version
+     * @param version:The current version of the data
+     * @param settings The actual settings currently stored
+     * @returns The input data migrated to the format of the latest version
+     */
+    migrateSettings(version, settings) {
+        if (this.config.migrators instanceof Function) {
+            return this.config.migrators(version, settings, this.extractDefault(this.config.settings));
+        }
+        else {
+            // Find the base data in the settings
+            const getBaseData = settings => settings.reduce((best, { condition: { type, priority }, data }) => type == "constant" && priority < best.priority
+                ? { priority: priority, data: data }
+                : best, { priority: Infinity, data: {} }).data;
+            let baseData;
+            // Obtain and sort the migrators
+            let migrators = Object.entries(this.config.migrators);
+            migrators = migrators.sort(([version1], [version2]) => semver_1.Semver.isNewer(version1, version2) ? 1 : -1);
+            // Find the index of the migrator to get to setting's current version
+            const prevMigratorIndex = migrators.findIndex(([mVersion]) => version == mVersion);
+            // Go through all the migrators that have to applied
+            for (let index = prevMigratorIndex + 1; index < migrators.length; index++) {
+                const migrator = migrators[index][1];
+                // Extract the shape of the data for this version
+                baseData = getBaseData(settings);
+                const dataShape = this.extractShape(baseData);
+                // Apply the migrator to all settings conditions
+                settings = settings.map(cs => {
+                    // Make sure that the data always has the expected shape (by filling abscent data with undefined)
+                    let data = extendedObject_1.ExtendedObject.copyData(dataShape, cs.data, null, true, true, false);
+                    // Migrate the data
+                    data = migrator(data);
+                    // Return the new data
+                    return {
+                        ID: cs.ID,
+                        condition: cs.condition,
+                        data,
+                    };
+                });
+            }
+            // Find the base condition, and add the missing default data
+            baseData = getBaseData(settings);
+            this.migrateSettingsAddDefaults(baseData);
+            // Return the result
+            return settings;
+        }
+    }
+    /**
+     * Adds missing default values to the provided plain data
+     * @param data The data to add the default values to
+     */
+    migrateSettingsAddDefaults(data) {
+        // Go through all setting values
+        extendedObject_1.ExtendedObject.forEachPaired([this.config.settings, data], (key, [config, dataValue], path, parentPath) => {
+            // If no value is present in the data, copy the field from the defaults
+            if (dataValue === undefined) {
+                const parent = extendedObject_1.ExtendedObject.getField(data, parentPath, true);
+                parent[key] = config.default;
+            }
+        }, 
+        // Only recurse when we haven't hit a setting value yet
+        (key, [config]) => !("default" in config), true);
     }
     /**
      * Reloads the settings as are present in the stored file
@@ -243,11 +331,12 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         // Load the previously stored data if present
         const storedData = settingsManager_1.SettingsManager.loadFile(this.path);
         // A method to load the specified settings data
-        const getSettings = initialSettings => {
+        const getSettings = (initialSettings) => {
             // Create data objects for all of them
             const settingsData = (initialSettings || []).map(settings => {
-                const data = new data_1.Data(settings.data, false);
                 const condition = settingsConditionsSerializer_1.SettingsConditionSerializer.deserialize(settings.condition);
+                const keepEmpty = condition.equals(undefined); // Only the default settings should keep empty objects, to keep the proper structure
+                const data = new data_1.Data(settings.data, false, keepEmpty);
                 data.on("change", this.valueChange.bind(this, condition), "SettingsFile");
                 return {
                     condition: condition,
@@ -264,10 +353,18 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         };
         // Try loading the stored data, load the defaults on failure
         try {
-            if (storedData)
-                this.settings = getSettings(storedData);
-            else
+            if (storedData) {
+                // Retrieves the data of the settings
+                let data = storedData.data;
+                // Migrate the settings if necessary
+                if (storedData.version != this.config.version)
+                    data = this.migrateSettings(storedData.version, data);
+                // Transform the data into the proper settings
+                this.settings = getSettings(data);
+            }
+            else {
                 this.settings = getSettings(getInitialSettings());
+            }
         }
         catch (e) {
             console.error("Something went wrong while loading the settings", e);

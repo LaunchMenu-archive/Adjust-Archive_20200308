@@ -15,6 +15,8 @@ import {PublicModuleMethods} from "../module/_types/publicModuleMethods";
 import {ExtendedObject} from "../utils/extendedObject";
 import {ModuleView} from "../module/moduleView";
 import {SettingsManager} from "../storage/settings/settingsManager";
+import {PackageRetriever} from "../utils/packageRetriever";
+import {Package} from "../utils/_types/package";
 
 /**
  * Keeps track of all modules classes and module providers
@@ -244,6 +246,21 @@ export class RegistrySingleton {
     }
 
     /**
+     * Requires a given path and returns the package of the module
+     * @param collectionName The name of the collection to take the module from
+     * @param path A path that's relative to the modules folder
+     * @returns The package that could be found
+     */
+    protected requireModulePackage(collectionName: string, path: string): Package {
+        return PackageRetriever.requireModulePackage(
+            Path.join(
+                this.collectionFolders[collectionName] || this.collectionFolders.default,
+                path
+            )
+        );
+    }
+
+    /**
      * Requires a given path and returns the obtained Module class if present
      * @param modulePath A collection name followed by relative path, E.G. default/myFolder/myModule
      * @returns A module class, or undefined
@@ -269,14 +286,22 @@ export class RegistrySingleton {
                 def.path =
                     (collectionName != "default" ? collectionName : "") + Path.sep + path;
 
+                // Copy the version from the package if absent
+                const config = def.getConfig();
+                if (!config.version) {
+                    const packag = this.requireModulePackage(collectionName, path);
+                    if (packag) config.version = packag.version;
+                    else config.version = "0.0.0";
+                }
+
                 // Check if the module still needs a view
-                if (def.getConfig().viewClass === undefined) {
+                if (config.viewClass === undefined) {
                     // Check if a view class was provided in the file, and if so, assign it to the module
                     const viewClass = ExtendedObject.find(
                         exports,
                         (exp, k) => k != "default" && exp.prototype instanceof ModuleView
                     );
-                    if (viewClass) def.getConfig().viewClass = viewClass;
+                    if (viewClass) config.viewClass = viewClass;
                 }
 
                 // Return the module

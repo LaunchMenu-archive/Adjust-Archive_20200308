@@ -9,7 +9,8 @@ export class ExtendedObject extends Object {
      * @param obj The object to perform the operation on
      * @returns Whether or not the object is a plain javascipt object
      */
-    public static isPlainObject(obj: any): boolean {
+    public static isPlainObject(obj: any): obj is {[key: string]: any} {
+        // @ts-ignore
         return obj && obj.__proto__ && obj.__proto__.constructor == Object;
     }
 
@@ -350,7 +351,7 @@ export class ExtendedObject extends Object {
      */
     public static getField(
         obj: object,
-        path: string | Array<string>,
+        path: string | string[],
         createIfAbsent: boolean = false
     ): any {
         // Normalize the path
@@ -547,6 +548,7 @@ export class ExtendedObject extends Object {
      * May also be a function that decides whether or not to copy a value from src
      * @param keepUndefined Whether or not to explicitely keep 'undefined' values in the output
      * @param keepEmpty Whether or not to explicitely keep empty objects in the output
+     * @param overwriteValues If set to false, only data that is not present in dest will be copied
      * @param path The path of the data so far (used by copyModel if it's a function)
      * @returns Just another reference to the passed dest object
      */
@@ -566,6 +568,7 @@ export class ExtendedObject extends Object {
               }) => boolean),
         keepUndefined: boolean = true,
         keepEmpty: boolean = true,
+        overwriteValues: boolean = true,
         path?: string
     ): D & PartialObject<S, C, keyof C> {
         // If no copyModel was provided, use the full src
@@ -599,7 +602,7 @@ export class ExtendedObject extends Object {
             const recurse =
                 this.isPlainObject(value) &&
                 this.isPlainObject(srcValue) &&
-                !srcValue[this.overwrite] &&
+                !(srcValue as any)[this.overwrite] &&
                 srcValue.$$typeof != Symbol.for("react.element"); // Don't touch react elements
 
             // Check whether this value should be copied
@@ -619,9 +622,11 @@ export class ExtendedObject extends Object {
 
             // Check whether the value is a plain object, or an end point
             if (!recurse) {
-                // Check whether to store the value
-                if (srcValue !== undefined || keepUndefined) dest[key] = srcValue;
-                else delete dest[key];
+                // Check whether to store  or delete the value
+                if (srcValue !== undefined || keepUndefined) {
+                    // Only change a value if not present, or overwrite is set to ture
+                    if (dest[key] === undefined || overwriteValues) dest[key] = srcValue;
+                } else delete dest[key];
             } else {
                 // Recurse on the field
 
@@ -637,6 +642,7 @@ export class ExtendedObject extends Object {
                         check || value,
                         keepUndefined,
                         keepEmpty,
+                        overwriteValues,
                         check ? (path ? path + "." + key : key) : undefined
                     );
                 }

@@ -14,7 +14,7 @@ import { PublicModuleMethods } from "./publicModuleMethods";
 /**
  * Extracts the settingsConfig type from a given module
  */
-export declare type ExtractModuleSettingsConfig<M extends ParameterizedModule> = M["settingsObject"] extends Settings<infer C> ? C : never;
+export declare type ExtractModuleSettingsConfig<M extends ParameterizedModule> = M["settingsObject"] extends Settings<infer C> ? C["settings"] : never;
 /**
  * Extracts the request data type from a given module
  */

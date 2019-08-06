@@ -24,6 +24,12 @@ declare class SettingsManagerSingleton {
      */
     saveFile(path: string, contents: any): void;
     /**
+     * Deletes the file at the given path
+     * @param path The path at which to store the data
+     * @returns Whether there was a file to delete
+     */
+    deleteFile(path: string): boolean;
+    /**
      * Loads the previously stored data at the given path
      * @param path The path from which to load the data
      * @returns The json data that was loaded

@@ -9,10 +9,11 @@ import {
     Empty,
 } from "../../utils/_types/standardTypes";
 import {ModuleRequestData, ParameterizedModuleRequestData} from "./moduleRequestData";
-import {ParameterizedInterfaceID, InterfaceID} from "../../registry/_types/interfaceID";
+import {InterfaceID} from "../../registry/_types/interfaceID";
 import {ModuleID} from "../moduleID";
 import {ModuleState} from "./moduleState";
 import {ModuleProxy} from "../moduleProxy";
+import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
 
 /**
  * Extracts the state type from a given module
@@ -50,7 +51,11 @@ export type ExtendedModule<
     getData(): GetTypeInterface<MC["type"]>["data"];
 } & M &
     // FilterModule<Module<MC["initialState"], MC["settings"], MC["type"]>>;
-    Module<OrEmpty<MC["initialState"]>, MC["settings"], GetTypeInterface<MC["type"]>>;
+    Module<
+        OrEmpty<MC["initialState"]>,
+        SettingsConfig<MC["settings"]>,
+        GetTypeInterface<MC["type"]>
+    >;
 
 /**
  * Creates a new module constructor type, based on a module config and a module constructor type

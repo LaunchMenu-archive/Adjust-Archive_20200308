@@ -8,6 +8,7 @@ class ExtendedObject extends Object {
      * @returns Whether or not the object is a plain javascipt object
      */
     static isPlainObject(obj) {
+        // @ts-ignore
         return obj && obj.__proto__ && obj.__proto__.constructor == Object;
     }
     // Mapping methods
@@ -413,10 +414,11 @@ class ExtendedObject extends Object {
      * May also be a function that decides whether or not to copy a value from src
      * @param keepUndefined Whether or not to explicitely keep 'undefined' values in the output
      * @param keepEmpty Whether or not to explicitely keep empty objects in the output
+     * @param overwriteValues If set to false, only data that is not present in dest will be copied
      * @param path The path of the data so far (used by copyModel if it's a function)
      * @returns Just another reference to the passed dest object
      */
-    static copyData(src, dest, copyModel, keepUndefined = true, keepEmpty = true, path) {
+    static copyData(src, dest, copyModel, keepUndefined = true, keepEmpty = true, overwriteValues = true, path) {
         // If no copyModel was provided, use the full src
         if (!copyModel)
             copyModel = src;
@@ -453,9 +455,12 @@ class ExtendedObject extends Object {
                 return;
             // Check whether the value is a plain object, or an end point
             if (!recurse) {
-                // Check whether to store the value
-                if (srcValue !== undefined || keepUndefined)
-                    dest[key] = srcValue;
+                // Check whether to store  or delete the value
+                if (srcValue !== undefined || keepUndefined) {
+                    // Only change a value if not present, or overwrite is set to ture
+                    if (dest[key] === undefined || overwriteValues)
+                        dest[key] = srcValue;
+                }
                 else
                     delete dest[key];
             }
@@ -466,7 +471,7 @@ class ExtendedObject extends Object {
                     destValue = dest[key] = {};
                 // Only recurse if the src exists
                 if (srcValue) {
-                    this.copyData(srcValue, destValue, check || value, keepUndefined, keepEmpty, check ? (path ? path + "." + key : key) : undefined);
+                    this.copyData(srcValue, destValue, check || value, keepUndefined, keepEmpty, overwriteValues, check ? (path ? path + "." + key : key) : undefined);
                 }
                 // Check if the object should be deleted
                 if (!keepEmpty && Object.keys(destValue).length == 0)

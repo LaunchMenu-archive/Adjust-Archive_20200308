@@ -9,7 +9,9 @@ const moduleProxy_1 = require("./moduleProxy");
 const extendedObject_1 = require("../utils/extendedObject");
 const settingsManager_1 = require("../storage/settings/settingsManager");
 exports.baseConfig = {
+    version: "0.0.0",
     settings: {},
+    settingsMigrators: {},
     initialState: {
         isStopping: false,
         isStopped: false,

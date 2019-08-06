@@ -6,6 +6,7 @@ import { InterfaceID } from "../../registry/_types/interfaceID";
 import { ModuleID } from "../moduleID";
 import { ModuleState } from "./moduleState";
 import { ModuleProxy } from "../moduleProxy";
+import { SettingsConfig } from "../../storage/settings/_types/settingsConfig";
 /**
  * Extracts the state type from a given module
  */
@@ -27,7 +28,7 @@ export declare type ExtendedModule<MC extends ParameterizedModuleConfig, M exten
     getRequest(): ModuleRequestData<GetTypeInterface<MC["type"]>>;
     getParent(): GetTypeInterface<MC["type"]>["parent"];
     getData(): GetTypeInterface<MC["type"]>["data"];
-} & M & Module<OrEmpty<MC["initialState"]>, MC["settings"], GetTypeInterface<MC["type"]>>;
+} & M & Module<OrEmpty<MC["initialState"]>, SettingsConfig<MC["settings"]>, GetTypeInterface<MC["type"]>>;
 /**
  * Creates a new module constructor type, based on a module config and a module constructor type
  */

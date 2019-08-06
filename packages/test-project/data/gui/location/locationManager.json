@@ -1,100 +1,103 @@
-[
-    {
-        "condition": {
-            "type": "constant",
-            "priority": 0
-        },
-        "ID": 0,
-        "data": {
-            "locations": {
-                "prompt": {
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "gui\\prompts\\inputPrompt.js"
-                        }
-                    ],
-                    "path": {
-                        "nodes": [
-                            "Z1i0-XfD9"
+{
+    "version": "0.0.1",
+    "data": [
+        {
+            "condition": {
+                "type": "constant",
+                "priority": 0
+            },
+            "ID": 0,
+            "data": {
+                "locations": {
+                    "prompt": {
+                        "modules": [
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\prompts\\inputPrompt.js"
+                            }
                         ],
-                        "location": {
-                            "ID": "prompt",
-                            "hints": {
-                                "window": {
-                                    "new": true,
-                                    "windowName": "Prompt",
-                                    "width": 400,
-                                    "height": 250
+                        "path": {
+                            "nodes": [
+                                "7MFm-j40I"
+                            ],
+                            "location": {
+                                "ID": "prompt",
+                                "hints": {
+                                    "window": {
+                                        "new": true,
+                                        "windowName": "Prompt",
+                                        "width": 400,
+                                        "height": 250
+                                    }
                                 }
                             }
                         }
-                    }
-                },
-                "root": {
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\singletonTest\\singleton\\singleton.js"
+                    },
+                    "root": {
+                        "modules": [
+                            {
+                                "settingsID": 0,
+                                "modulePath": "\\singletonTest\\singleton\\singleton.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "\\embed\\embed.js"
+                            }
+                        ],
+                        "path": {
+                            "nodes": [
+                                "default"
+                            ],
+                            "location": {
+                                "ID": "root",
+                                "hints": {}
+                            }
+                        }
+                    },
+                    "0pqo-nsh7-r2mV-Zxg2-69Zc": {
+                        "path": {
+                            "nodes": [
+                                "window1"
+                            ],
+                            "location": {
+                                "ID": "0pqo-nsh7-r2mV-Zxg2-69Zc",
+                                "hints": {
+                                    "path": [
+                                        "window1"
+                                    ]
+                                }
+                            }
                         },
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\embed\\embed.js"
-                        }
-                    ],
-                    "path": {
-                        "nodes": [
-                            "default"
-                        ],
-                        "location": {
-                            "ID": "root",
-                            "hints": {}
-                        }
+                        "modules": [
+                            {
+                                "settingsID": 0,
+                                "modulePath": "\\test\\test.js"
+                            }
+                        ]
+                    },
+                    "gDiO-aDnB-67eO-INPO-6AX7": {
+                        "path": {
+                            "nodes": [
+                                "SoZk-5fJh"
+                            ],
+                            "location": {
+                                "ID": "gDiO-aDnB-67eO-INPO-6AX7",
+                                "hints": {
+                                    "path": [
+                                        "SoZk-5fJh"
+                                    ]
+                                }
+                            }
+                        },
+                        "modules": [
+                            {
+                                "settingsID": 0,
+                                "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
+                            }
+                        ]
                     }
-                },
-                "ELt3-sYh7-eX5c-zwnw-uEgD": {
-                    "path": {
-                        "nodes": [
-                            "E0dd-wRj0"
-                        ],
-                        "location": {
-                            "ID": "ELt3-sYh7-eX5c-zwnw-uEgD",
-                            "hints": {
-                                "path": [
-                                    "E0dd-wRj0"
-                                ]
-                            }
-                        }
-                    },
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
-                        }
-                    ]
-                },
-                "j5U2-qa8a-n1GJ-KQZu-gvGL": {
-                    "path": {
-                        "nodes": [
-                            "N04a-Nuym"
-                        ],
-                        "location": {
-                            "ID": "j5U2-qa8a-n1GJ-KQZu-gvGL",
-                            "hints": {
-                                "path": [
-                                    "N04a-Nuym"
-                                ]
-                            }
-                        }
-                    },
-                    "modules": [
-                        {
-                            "settingsID": 0,
-                            "modulePath": "\\test\\test.js"
-                        }
-                    ]
                 }
             }
         }
-    }
-]
+    ]
+}
