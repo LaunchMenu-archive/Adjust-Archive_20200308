@@ -88,6 +88,18 @@ class ExtendedObject extends Object {
         return out;
     }
     /**
+     * Creates an object from the given entry array
+     * @param entries The entries to create an object from
+     * @returns The resulting object
+     */
+    static fromEntries(entries) {
+        const out = {};
+        entries.forEach(([key, value]) => {
+            out[key] = value;
+        });
+        return out;
+    }
+    /**
      * Filters the some fields from the object
      * @param obj The object to perform the operation on
      * @param func The function to use to filter, where the params are value and key

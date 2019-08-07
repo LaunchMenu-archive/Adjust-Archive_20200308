@@ -1,5 +1,5 @@
 {
-    "version": "0.0.1",
+    "version": "0.0.0",
     "data": [
         {
             "condition": {
@@ -11,9 +11,7 @@
             },
             "ID": 1,
             "data": {
-                "locations": [
-                    "root"
-                ]
+                "locations": []
             }
         },
         {
@@ -21,7 +19,7 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "7MFm-j40I"
+                    "ID": "dvzZ-E4yM"
                 }
             },
             "ID": 2,
@@ -42,22 +40,7 @@
             "ID": 3,
             "data": {
                 "locations": [
-                    "0pqo-nsh7-r2mV-Zxg2-69Zc"
-                ]
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "ID": "SoZk-5fJh"
-                }
-            },
-            "ID": 4,
-            "data": {
-                "locations": [
-                    "gDiO-aDnB-67eO-INPO-6AX7"
+                    "test"
                 ]
             }
         },

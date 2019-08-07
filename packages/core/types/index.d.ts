@@ -3,6 +3,7 @@ export * from "../dist/module/_types/extendedModuleView";
 export * from "../dist/module/_types/moduleConfig";
 export * from "../dist/module/_types/moduleInterface";
 export * from "../dist/module/_types/moduleRequestData";
+export * from "../dist/module/_types/moduleSettingsMigrators";
 export * from "../dist/module/_types/moduleState";
 export * from "../dist/module/_types/moduleViewData";
 export * from "../dist/module/_types/moduleViewProps";

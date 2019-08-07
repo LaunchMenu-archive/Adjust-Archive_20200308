@@ -4,7 +4,14 @@ import { SettingsConfigSet } from "./settingsConfigSet";
 /**
  * The function to migrate from an old settings format to a new format
  */
-export declare type SettingsMigrator = (data: SettingsConfigSetData<any>) => SettingsConfigSetData<any>;
+export declare type SettingsMigratorFunction = (data: SettingsConfigSetData<any>, superData?: SettingsConfigSetData<any>) => SettingsConfigSetData<any>;
+/**
+ * The migrator for exactly 1 format to the next
+ */
+export declare type SettingsMigrator = (SettingsMigratorFunction) | {
+    main: SettingsMigratorFunction;
+    super: SettingsMigrators;
+};
 /**
  * A collection of settings migrators
  */

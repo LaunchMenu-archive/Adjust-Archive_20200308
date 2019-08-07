@@ -367,8 +367,8 @@ export class WindowView extends createModuleView(WindowModule) {
         return (
             <Grid container direction="row-reverse">
                 <Grid item>
-                    <Button>
-                        <Close onClick={() => this.module.closeWindow()} />
+                    <Button onClick={() => this.module.closeWindow()}>
+                        <Close />
                     </Button>
                 </Grid>
                 <Grid item>

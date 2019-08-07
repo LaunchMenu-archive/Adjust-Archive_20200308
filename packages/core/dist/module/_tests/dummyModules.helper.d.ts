@@ -22,7 +22,7 @@ declare const DummyModule_base: import("../_types/extendedModule").ExtendedModul
 }, import("../../utils/_types/standardTypes").ExtendsClass<typeof Module, Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, SettingsConfig<{}>, ModuleInterface>>>;
+}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleInterface>>>;
 export declare class DummyModule extends DummyModule_base implements dummyInterface {
     static customConstruct<S extends ModuleState, C extends SettingsConfig, I extends ModuleInterface>(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
     test(text: string): Promise<string>;
@@ -55,7 +55,7 @@ declare const DummyModule2_base: import("../_types/extendedModule").ExtendedModu
 }, import("../../utils/_types/standardTypes").ExtendsClass<typeof Module, Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, SettingsConfig<{}>, ModuleInterface>>>;
+}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleInterface>>>;
 export declare class DummyModule2 extends DummyModule2_base implements dummyInterface2 {
     test2(text: string): Promise<void>;
 }
@@ -76,7 +76,7 @@ declare const DummyModule4_base: import("../_types/extendedModule").ExtendedModu
 }, import("../../utils/_types/standardTypes").ExtendsClass<typeof Module, Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, SettingsConfig<{}>, ModuleInterface>>>;
+}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleInterface>>>;
 export declare class DummyModule4 extends DummyModule4_base implements dummyInterface {
     test(text: string): Promise<string>;
     static something(): boolean;

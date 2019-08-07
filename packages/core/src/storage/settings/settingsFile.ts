@@ -16,8 +16,8 @@ import {SettingsConditions} from "./settingsConditions/abstractSettingsCondition
 import {SettingsConfigData} from "./_types/settingsConfigData";
 import {SettingsConfigSet} from "./_types/settingsConfigSet";
 import {StoredSettings} from "./_types/storedSettings";
-import {ConditionalSettingsData} from "./_types/conditionalSettingsData";
 import {Semver} from "../../utils/semver";
+import {SettingsMigrators} from "./_types/settingsMigrator";
 
 export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsConfigData<S>>;
@@ -330,8 +330,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
                 );
             },
             // Only recurse when we haven't hit a setting value yet TODO: check if this can be optimised by extracting the field from "value"
-            (key, value, path) =>
-                !("default" in ExtendedObject.getField(this.config.settings, path)),
+            (key, [newValue, oldValue, config], path) => !("default" in config),
             true
         );
 
@@ -367,14 +366,17 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
      * Migrates settings data of a previous version to the latest version
      * @param version:The current version of the data
      * @param settings The actual settings currently stored
+     * @param migrators The migrators to use for the migration
      * @returns The input data migrated to the format of the latest version
      */
     protected migrateSettings(
         version: string,
-        settings: ConditionalSettings<SettingsConfigData<any>>[]
-    ): ConditionalSettings<SettingsConfigData<S>>[] {
-        if (this.config.migrators instanceof Function) {
-            return this.config.migrators(
+        settings: ConditionalSettings<SettingsConfigData<any>>[],
+        migrators?: SettingsMigrators
+    ): ConditionalSettings<SettingsConfigData<any>>[] {
+        if (!migrators) migrators = this.config.migrators;
+        if (migrators instanceof Function) {
+            return migrators(
                 version,
                 settings,
                 this.extractDefault(this.config.settings)
@@ -392,26 +394,44 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
             let baseData;
 
             // Obtain and sort the migrators
-            let migrators = Object.entries(this.config.migrators);
-            migrators = migrators.sort(([version1], [version2]) =>
+            let migratorEntries = Object.entries(migrators);
+            migratorEntries = migratorEntries.sort(([version1], [version2]) =>
                 Semver.isNewer(version1, version2) ? 1 : -1
             );
 
             // Find the index of the migrator to get to setting's current version
-            const prevMigratorIndex = migrators.findIndex(
+            const prevMigratorIndex = migratorEntries.findIndex(
                 ([mVersion]) => version == mVersion
             );
 
             // Go through all the migrators that have to applied
-            for (let index = prevMigratorIndex + 1; index < migrators.length; index++) {
-                const migrator = migrators[index][1];
+            for (
+                let index = prevMigratorIndex + 1;
+                index < migratorEntries.length;
+                index++
+            ) {
+                const migrator = migratorEntries[index][1];
 
                 // Extract the shape of the data for this version
                 baseData = getBaseData(settings);
                 const dataShape = this.extractShape(baseData);
 
+                // Get the data of the super migrator
+                let superData: ConditionalSettings<SettingsConfigData<any>>[];
+                if (!(migrator instanceof Function)) {
+                    superData = this.migrateSettings(
+                        "0.0.0",
+                        settings.map(s => ({
+                            ID: s.ID,
+                            condition: s.condition,
+                            data: s.data,
+                        })),
+                        migrator.super
+                    );
+                }
+
                 // Apply the migrator to all settings conditions
-                settings = settings.map(cs => {
+                settings = settings.map((cs, index) => {
                     // Make sure that the data always has the expected shape (by filling abscent data with undefined)
                     let data = ExtendedObject.copyData(
                         dataShape,
@@ -423,7 +443,8 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
                     ) as any;
 
                     // Migrate the data
-                    data = migrator(data);
+                    if (migrator instanceof Function) data = migrator(data);
+                    else data = migrator.main(data, superData[index].data);
 
                     // Return the new data
                     return {

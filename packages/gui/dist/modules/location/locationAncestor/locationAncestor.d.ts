@@ -23,7 +23,7 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, import("@adjust/core/types").SettingsConfig<{}>, import("@adjust/core/types").ModuleInterface>>>;
+}, import("@adjust/core/types").SettingsConfig<import("@adjust/core/types").Empty>, import("@adjust/core/types").ModuleInterface>>>;
 /**
  * A base class for location ancestors to extend,
  * provides some common methods that location ancestors might use

@@ -1,5 +1,5 @@
 {
-    "version": "0.0.1",
+    "version": "0.0.0",
     "data": [
         {
             "condition": {
@@ -13,14 +13,11 @@
                     "default": {
                         "name": "default"
                     },
-                    "7MFm-j40I": {
+                    "dvzZ-E4yM": {
                         "name": "Prompt"
                     },
                     "window1": {
                         "name": "window1"
-                    },
-                    "SoZk-5fJh": {
-                        "name": "shiiit"
                     }
                 }
             }

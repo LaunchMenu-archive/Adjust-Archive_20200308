@@ -9,7 +9,6 @@ import {
 import {ModuleRequestData} from "./_types/moduleRequestData";
 import {ProgramState} from "../state/programState";
 import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
-import {SettingsConfigSetData} from "../storage/settings/_types/settingsConfigSetData";
 import {Settings} from "../storage/settings/settings";
 import {StateData} from "../state/stateData";
 import {RequestPath} from "./requestPath/requestPath";
@@ -27,7 +26,6 @@ import {SettingsManager} from "../storage/settings/settingsManager";
 import {SettingsFile} from "../storage/settings/settingsFile";
 import {SettingsConditions} from "../storage/settings/settingsConditions/abstractSettingsConditions";
 import {SettingsConfigData} from "../storage/settings/_types/settingsConfigData";
-import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";
 
 export const baseConfig = {
     version: "0.0.0",
@@ -51,7 +49,7 @@ export const baseConfig = {
  */
 export class Module<
     S extends ModuleState,
-    C extends SettingsConfig,
+    C extends SettingsConfig<any>,
     I extends ModuleInterface
 > implements PublicModuleMethods {
     // ID

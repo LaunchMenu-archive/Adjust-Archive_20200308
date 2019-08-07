@@ -3,7 +3,7 @@ import { SettingsConfigSet } from "./settingsConfigSet";
 /**
  *  The format of a config of settings
  */
-export declare type SettingsConfig<C extends SettingsConfigSet = {}> = {
+export declare type SettingsConfig<C extends SettingsConfigSet = any> = {
     version: string;
     settings: C;
     migrators: SettingsMigrators;

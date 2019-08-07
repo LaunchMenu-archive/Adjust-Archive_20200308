@@ -38,7 +38,7 @@ export declare const baseConfig: {
  * a state that can be serialized and deserialized and
  * a settings object that stores settings for this type of component
  */
-export declare class Module<S extends ModuleState, C extends SettingsConfig, I extends ModuleInterface> implements PublicModuleMethods {
+export declare class Module<S extends ModuleState, C extends SettingsConfig<any>, I extends ModuleInterface> implements PublicModuleMethods {
     readonly ID: ModuleID;
     private readonly requestData;
     parent: I["parent"];
@@ -124,7 +124,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig, I e
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig<{}>, ModuleInterface>>;
+    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig<any>, ModuleInterface>>;
     /**
      * Deserializes the data that defines the module's own state
      * @param data The data to be deserialized

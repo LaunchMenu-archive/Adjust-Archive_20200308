@@ -1,18 +1,18 @@
 {
-    "version": "0.0.1",
+    "version": "0.0.0",
     "data": [
         {
             "condition": {
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "7MFm-j40I"
+                    "ID": "dvzZ-E4yM"
                 }
             },
             "ID": 1,
             "data": {
-                "x": 204,
-                "y": 122,
+                "x": 760,
+                "y": 395,
                 "width": 400,
                 "height": 250
             }
@@ -26,38 +26,6 @@
                 }
             },
             "ID": 2,
-            "data": {
-                "x": 1205,
-                "y": 265,
-                "width": 500,
-                "height": 500
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "ID": "default"
-                }
-            },
-            "ID": 3,
-            "data": {
-                "x": 129,
-                "y": 217,
-                "width": 500,
-                "height": 500
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "ID": "SoZk-5fJh"
-                }
-            },
-            "ID": 4,
             "data": {
                 "x": 710,
                 "y": 270

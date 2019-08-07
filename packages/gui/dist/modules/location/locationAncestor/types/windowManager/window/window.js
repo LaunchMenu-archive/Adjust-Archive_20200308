@@ -306,8 +306,8 @@ class WindowView extends core_2.createModuleView(WindowModule) {
     renderHeader() {
         return (React_1.React.createElement(core_1.Grid, { container: true, direction: "row-reverse" },
             React_1.React.createElement(core_1.Grid, { item: true },
-                React_1.React.createElement(core_1.Button, null,
-                    React_1.React.createElement(Close_1.default, { onClick: () => this.module.closeWindow() }))),
+                React_1.React.createElement(core_1.Button, { onClick: () => this.module.closeWindow() },
+                    React_1.React.createElement(Close_1.default, null))),
             React_1.React.createElement(core_1.Grid, { item: true },
                 this.data.ID,
                 " ",

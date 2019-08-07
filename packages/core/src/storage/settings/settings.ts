@@ -1,6 +1,4 @@
 import {DeepReadonly} from "../../utils/_types/standardTypes";
-import {SettingsConfigSetData} from "./_types/settingsConfigSetData";
-import {SettingsConfigSetPriorityList} from "./_types/settingsConfigSetPriorityList";
 import {ParameterizedSettingPriorityList} from "./_types/settingPriorityList";
 import {ParameterizedConditionValue} from "./_types/conditionalValue";
 import {JsonPartial} from "../_types/jsonPartial";

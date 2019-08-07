@@ -32,7 +32,7 @@ declare const Target_base: import("../../../module/_types/extendedModule").Exten
 }, import("../../../utils/_types/standardTypes").ExtendsClass<typeof Module, Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, import("../_types/settingsConfig").SettingsConfig<{}>, import("../../../module/_types/moduleInterface").ModuleInterface>>>;
+}, import("../_types/settingsConfig").SettingsConfig<import("../../../utils/_types/standardTypes").Empty>, import("../../../module/_types/moduleInterface").ModuleInterface>>>;
 export declare class Target extends Target_base implements dummyInterface {
     static createCustomInstance(identifier: number): Promise<Target>;
     test(text: string): Promise<string>;

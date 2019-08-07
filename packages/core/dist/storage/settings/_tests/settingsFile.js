@@ -198,6 +198,7 @@ describe("SettingsFile", () => {
         afterEach(async () => {
             settingsManager_1.SettingsManager.deleteFile("_tests/save2.json");
             settingsManager_1.SettingsManager.deleteFile("_tests/save3.json");
+            settingsManager_1.SettingsManager.deleteFile("_tests/save4.json");
         });
         it("Should reload the previously saved settings", () => {
             settingsFile.getConditionData().changeData({ b: { c: "hallo" } });
@@ -299,7 +300,7 @@ describe("SettingsFile", () => {
                 },
             };
             // Create some data in the format of the first config
-            settingsFile = await settingsFile_1.SettingsFile.createInstance("_tests/save3", config);
+            settingsFile = await settingsFile_1.SettingsFile.createInstance("_tests/save3", config1);
             settingsFile
                 .getConditionData()
                 .changeData({ a: 5, b: { c: "test" }, e: { prop: 8 } });
@@ -320,6 +321,83 @@ describe("SettingsFile", () => {
             });
             expect(settingsFile3.getConditionData(condition2).get).toEqual({
                 a: { a: 3, b: { prop: 2 } },
+            });
+        });
+        it("Should migrate settings from a previous version, using complex migrators", async () => {
+            // Define multiple configs for a super class or settings set
+            const superConfig1 = {
+                version: "0.0.0",
+                settings: {
+                    a: {
+                        default: 3,
+                        type: "number",
+                    },
+                },
+                migrators: {},
+            };
+            const superConfig2 = {
+                version: "0.0.1",
+                settings: {
+                    b: {
+                        default: 3,
+                        type: "number",
+                    },
+                },
+                migrators: { "0.0.1": data => ({ b: data.a }) },
+            };
+            const superConfig3 = {
+                version: "0.0.2",
+                settings: {
+                    c: {
+                        default: 3,
+                        type: "number",
+                    },
+                },
+                migrators: {
+                    "0.0.1": data => ({ b: data.a }),
+                    "0.0.2": data => ({ c: data.b }),
+                },
+            };
+            // Define multiple configs to act like different versions of the same config
+            const config1 = {
+                version: "0.0.0",
+                settings: Object.assign({ b: {
+                        default: 3,
+                        type: "number",
+                    } }, superConfig1.settings),
+                migrators: {},
+            };
+            const config2 = {
+                version: "0.0.1",
+                settings: Object.assign({ d: {
+                        default: 3,
+                        type: "number",
+                    } }, superConfig3.settings),
+                migrators: {
+                    "0.0.1": {
+                        main: (data, superData) => (Object.assign({}, superData, { d: data.b })),
+                        super: Object.assign({}, superConfig3.migrators),
+                    },
+                },
+            };
+            // Create some data in the format of the first config
+            const settingsFile = await settingsFile_1.SettingsFile.createInstance("_tests/save4", config1);
+            settingsFile.getConditionData().changeData({ a: 5, b: 2 });
+            settingsFile.getConditionData(condition).changeData({ a: 2, b: 1 });
+            settingsFile.getConditionData(condition2).changeData({ a: 1 });
+            settingsFile.save();
+            // Perform the migration (simulate the same data transfering from config1, to 2)
+            const settingsFile2 = await settingsFile_1.SettingsFile.createInstance("_tests/save4", config2);
+            expect(settingsFile2.getConditionData().get).toEqual({
+                c: 5,
+                d: 2,
+            });
+            expect(settingsFile2.getConditionData(condition).get).toEqual({
+                c: 2,
+                d: 1,
+            });
+            expect(settingsFile2.getConditionData(condition2).get).toEqual({
+                c: 1,
             });
         });
     });

@@ -53,7 +53,7 @@ export default class WindowSelectorModule extends WindowSelectorModule_base impl
      */
     showWindow(windowID: string): Promise<void>;
 }
-declare const WindowSelectorView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowSelectorModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<{}>, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const WindowSelectorView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowSelectorModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleInterface>, {}>>>;
 export declare class WindowSelectorView extends WindowSelectorView_base {
     /** @override */
     componentWillMount(): void;

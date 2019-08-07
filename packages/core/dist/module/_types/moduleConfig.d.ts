@@ -4,15 +4,15 @@ import { ExtendsClass } from "../../utils/_types/standardTypes";
 import { ModuleRequestData } from "./moduleRequestData";
 import { ModuleInterface } from "./moduleInterface";
 import { InterfaceID } from "../../registry/_types/interfaceID";
-import { SettingsMigrators } from "../../storage/settings/_types/settingsMigrator";
 import { SettingsConfigSet } from "../../storage/settings/_types/settingsConfigSet";
+import { ModuleSettingsMigrators } from "./moduleSettingsMigrators";
 /**
  * An interface that contains all config data for the module
  */
 export declare type ModuleConfig<S extends ModuleState, C extends SettingsConfigSet, I extends ModuleInterface> = {
     version?: string;
     settings: C;
-    settingsMigrators?: SettingsMigrators;
+    settingsMigrators?: ModuleSettingsMigrators;
     initialState: S;
     type: InterfaceID<I>;
     onInstall?: () => Promise<void> | void;

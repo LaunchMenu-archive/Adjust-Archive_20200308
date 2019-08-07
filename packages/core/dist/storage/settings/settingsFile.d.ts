@@ -11,6 +11,7 @@ import { Module } from "../../module/module";
 import { SettingsConditions } from "./settingsConditions/abstractSettingsConditions";
 import { SettingsConfigData } from "./_types/settingsConfigData";
 import { SettingsConfigSet } from "./_types/settingsConfigSet";
+import { SettingsMigrators } from "./_types/settingsMigrator";
 export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsConfigData<S>>;
     protected config: SettingsConfig;
@@ -120,9 +121,10 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * Migrates settings data of a previous version to the latest version
      * @param version:The current version of the data
      * @param settings The actual settings currently stored
+     * @param migrators The migrators to use for the migration
      * @returns The input data migrated to the format of the latest version
      */
-    protected migrateSettings(version: string, settings: ConditionalSettings<SettingsConfigData<any>>[]): ConditionalSettings<SettingsConfigData<S>>[];
+    protected migrateSettings(version: string, settings: ConditionalSettings<SettingsConfigData<any>>[], migrators?: SettingsMigrators): ConditionalSettings<SettingsConfigData<any>>[];
     /**
      * Adds missing default values to the provided plain data
      * @param data The data to add the default values to

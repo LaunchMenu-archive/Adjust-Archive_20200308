@@ -2,19 +2,26 @@ import {
     ParameterizedModuleConfig,
     ParameterizedNormalizedModuleConfig,
 } from "./_types/moduleConfig";
-import {ExtendedObject} from "../utils/extendedObject";
-import {ExtendedModuleClass} from "./_types/extendedModule";
-import {Constructor, ExtendsClass} from "../utils/_types/standardTypes";
-import {Module} from "./module";
-import {ModuleInterface} from "./_types/moduleInterface";
+import {
+    ModuleSettingsMigrator,
+    ModuleSettingsMigrators,
+} from "./_types/moduleSettingsMigrators";
+import {Constructor, ExtendsClass, Empty} from "../utils/_types/standardTypes";
 import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";
+import {ExtendedModuleClass} from "./_types/extendedModule";
 import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
+import {ModuleInterface} from "./_types/moduleInterface";
+
+import {ExtendedObject} from "../utils/extendedObject";
+import {Module} from "./module";
+import {Semver} from "../utils/semver";
 
 export class ModuleClassCreator {
     /**
      * Creates a new class extending the passed class, with a dynamic name
      * @param name The name for the class
      * @param cls The class to extend
+     * @returns The newly created class
      */
     protected static createNamedClass<K extends Constructor<any>>(
         name: string,
@@ -24,16 +31,82 @@ export class ModuleClassCreator {
     }
 
     /**
+     * Merges the two migrators
+     * @param migrators The migrators to be used
+     * @param superMigrators The migrators to merge into the others
+     * @returns The resulting migrators
+     */
+    protected static mergeMigrators(
+        migrators: ModuleSettingsMigrators,
+        superMigrators: ModuleSettingsMigrators
+    ): ModuleSettingsMigrators {
+        // Get the migrators in object form
+        let migratorEntries: [string, ModuleSettingsMigrator][] = Object.entries(
+            migrators
+        );
+        migratorEntries = migratorEntries.sort(([version1], [version2]) =>
+            Semver.isNewer(version1, version2) ? 1 : -1
+        );
+        let superMigratorEntries: [string, ModuleSettingsMigrator][] = Object.entries(
+            superMigrators
+        );
+        superMigratorEntries = superMigratorEntries.sort(([version1], [version2]) =>
+            Semver.isNewer(version1, version2) ? 1 : -1
+        );
+
+        // Replace versions in the migrators
+        let previousSuperVersion = "0.0.0";
+        migratorEntries = migratorEntries.map(([version, migrator]) => {
+            // Check if the paren migrator has to be inserted
+            if (!(migrator instanceof Function) && typeof migrator.super == "string") {
+                // Retrieve the range of super migrators to use
+                const rangeStart =
+                    superMigratorEntries.findIndex(([v]) => v == previousSuperVersion) +
+                    1;
+                const endRange = superMigratorEntries.findIndex(
+                    ([v]) => v == migrator.super
+                );
+                const superMigratorsRange = superMigratorEntries.slice(
+                    rangeStart,
+                    endRange + 1
+                );
+
+                // Update the new previousSuperVersion
+                previousSuperVersion = migrator.super;
+
+                // Assign the new migrators
+                return [
+                    version,
+                    {
+                        main: migrator.main,
+                        super: ExtendedObject.fromEntries(superMigratorsRange),
+                    },
+                ];
+            } else {
+                return [version, migrator];
+            }
+        }) as any;
+
+        // Return the resulting object
+        return ExtendedObject.fromEntries(migratorEntries);
+    }
+
+    /**
      * A function to create a new module class
      * @param config The module config
      * @param module The module to extend
+     * @returns The class created from the config data
      */
     public static createModule<
         MC extends ParameterizedModuleConfig,
-        // Can't use Module<{}, {}, any> instead of {}, due to it expecting private members
+        // Can't use Module<{}, {}, any> due to it expecting private members
         X extends ExtendsClass<typeof Module, {}> = ExtendsClass<
             typeof Module,
-            Module<typeof Module.config.initialState, SettingsConfig, ModuleInterface>
+            Module<
+                typeof Module.config.initialState,
+                SettingsConfig<Empty>,
+                ModuleInterface
+            >
         >
     >(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X> {
         // Set the module class to the default module if not specified
@@ -62,8 +135,10 @@ export class ModuleClassCreator {
                 throw Error(
                     "Super module uses custom migrator, automatic migrator merging can not be used, use an advanced migration method instead"
                 );
-
-            // TODO: Handle combining the migrators
+            settingsMigrators = this.mergeMigrators(
+                config.settingsMigrators,
+                superConfig.settingsMigrators
+            );
         }
 
         // Combine the initial states of both configs, giving priority to the new config

@@ -1,5 +1,5 @@
 {
-    "version": "0.0.1",
+    "version": "0.0.0",
     "data": [
         {
             "condition": {
@@ -18,7 +18,7 @@
                         ],
                         "path": {
                             "nodes": [
-                                "7MFm-j40I"
+                                "dvzZ-E4yM"
                             ],
                             "location": {
                                 "ID": "prompt",
@@ -37,64 +37,38 @@
                         "modules": [
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\singletonTest\\singleton\\singleton.js"
+                                "modulePath": "\\embed\\embed.js"
                             },
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\embed\\embed.js"
-                            }
-                        ],
-                        "path": {
-                            "nodes": [
-                                "default"
-                            ],
-                            "location": {
-                                "ID": "root",
-                                "hints": {}
-                            }
-                        }
-                    },
-                    "0pqo-nsh7-r2mV-Zxg2-69Zc": {
-                        "path": {
-                            "nodes": [
-                                "window1"
-                            ],
-                            "location": {
-                                "ID": "0pqo-nsh7-r2mV-Zxg2-69Zc",
-                                "hints": {
-                                    "path": [
-                                        "window1"
-                                    ]
-                                }
-                            }
-                        },
-                        "modules": [
+                                "modulePath": "\\singletonTest\\singleton\\singleton.js"
+                            },
                             {
                                 "settingsID": 0,
                                 "modulePath": "\\test\\test.js"
                             }
                         ]
                     },
-                    "gDiO-aDnB-67eO-INPO-6AX7": {
-                        "path": {
-                            "nodes": [
-                                "SoZk-5fJh"
-                            ],
-                            "location": {
-                                "ID": "gDiO-aDnB-67eO-INPO-6AX7",
-                                "hints": {
-                                    "path": [
-                                        "SoZk-5fJh"
-                                    ]
-                                }
-                            }
-                        },
+                    "test": {
                         "modules": [
                             {
                                 "settingsID": 0,
                                 "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
                             }
-                        ]
+                        ],
+                        "path": {
+                            "nodes": [
+                                "window1"
+                            ],
+                            "location": {
+                                "ID": "test",
+                                "hints": {
+                                    "window": {
+                                        "ID": "window1"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

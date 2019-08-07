@@ -10,10 +10,14 @@ import {
 } from "../../utils/_types/standardTypes";
 import {ModuleRequestData, ParameterizedModuleRequestData} from "./moduleRequestData";
 import {InterfaceID} from "../../registry/_types/interfaceID";
+import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
+import {SettingsConfigData} from "../../storage/settings/_types/settingsConfigData";
+import {SettingsConfigSetData} from "../../storage/settings/_types/settingsConfigSetData";
+import {SettingsConditions} from "../../storage/settings/settingsConditions/abstractSettingsConditions";
 import {ModuleID} from "../moduleID";
 import {ModuleState} from "./moduleState";
 import {ModuleProxy} from "../moduleProxy";
-import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
+import {Settings} from "../../storage/settings/settings";
 
 /**
  * Extracts the state type from a given module
@@ -21,6 +25,13 @@ import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
 export type ExtractModuleState<
     M extends ParameterizedModule
 > = M["state"] extends DeepReadonly<infer S> ? S : never;
+
+/**
+ * Extracts the settings type from a given module
+ */
+export type ExtractModuleSettings<
+    M extends ParameterizedModule
+> = M["settingsObject"] extends Settings<infer S> ? S : never;
 
 /**
  * Filters out any methods from a module that should be overwritten
@@ -45,6 +56,15 @@ export type ExtendedModule<
 > = {
     setState(
         state: DeepPartial<OrEmpty<MC["initialState"]> & ExtractModuleState<M>>
+    ): Promise<void>;
+    setSettings(
+        settings: DeepPartial<
+            OrEmpty<
+                SettingsConfigSetData<MC["settings"]> &
+                    SettingsConfigData<ExtractModuleSettings<M>>
+            >
+        >,
+        conditions?: SettingsConditions
     ): Promise<void>;
     getRequest(): ModuleRequestData<GetTypeInterface<MC["type"]>>;
     getParent(): GetTypeInterface<MC["type"]>["parent"];
