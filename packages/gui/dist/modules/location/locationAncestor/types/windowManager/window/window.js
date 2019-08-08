@@ -68,7 +68,10 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         if (this.window)
             return this.window;
         // Open the window
-        this.window = core_2.WindowManager.openWindow(this.getData().ID, this.getID());
+        this.window = core_2.WindowManager.openWindow(this.getData().ID, this.getID(), {
+            frame: false,
+            preloadModules: [this.getClass().getPath()],
+        });
         // Indicate that this window is now open to the parent
         this.parent.setWindowVisibility(true, this.getData().ID);
         // Set the initial data
@@ -111,6 +114,15 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     /** @override */
     async onStop() {
         await this.closeWindow();
+    }
+    /** @override */
+    static onFileLoad(isMain, modulePath) {
+        // Add a buffer of windows to increase loading times
+        if (isMain)
+            core_2.WindowManager.createWindowBuffer({
+                frame: false,
+                preloadModules: [modulePath],
+            });
     }
     // Location management
     /** @override */
@@ -304,7 +316,12 @@ class WindowView extends core_2.createModuleView(WindowModule) {
      * Renders the header with the window's controls
      */
     renderHeader() {
-        return (React_1.React.createElement(core_1.Grid, { container: true, direction: "row-reverse" },
+        return (React_1.React.createElement(core_1.Grid, { container: true, direction: "row-reverse", css: {
+                WebkitAppRegion: "drag",
+                "& > * ": {
+                    WebkitAppRegion: "no-drag",
+                },
+            } },
             React_1.React.createElement(core_1.Grid, { item: true },
                 React_1.React.createElement(core_1.Button, { onClick: () => this.module.closeWindow() },
                     React_1.React.createElement(Close_1.default, null))),

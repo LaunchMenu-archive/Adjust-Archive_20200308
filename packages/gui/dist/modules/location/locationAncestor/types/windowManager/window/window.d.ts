@@ -79,6 +79,8 @@ export default class WindowModule extends WindowModule_base implements Window {
     /** @override */
     protected onStop(): Promise<void>;
     /** @override */
+    protected static onFileLoad(isMain: boolean, modulePath: string): void;
+    /** @override */
     createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */
     removeLocation(locationPath: LocationPath): Promise<boolean>;

@@ -6,6 +6,67 @@ const extendedObject_1 = require("../../utils/extendedObject");
 const serialize_1 = require("../../utils/serialize");
 const viewNotFound_type_1 = require("../../modules/viewNotFound.type");
 const registry_1 = require("../../registry/registry");
+const isMain_1 = require("../../utils/isMain");
+/**
+ * A mapping of default window properties,
+ * And methods to alter them after creation,
+ *
+ * if no method field is present, the property can't be changed
+ * if the method field is empty, it doesn't have to be directly called
+ */
+const windowPropertyFunctionMap = {
+    width: {
+        method: data => (data.useContentSize ? "setContentSize" : "setSize"),
+        args: ["width", "height"],
+        default: 500,
+    },
+    height: {
+        method: data => (data.useContentSize ? "setContentSize" : "setSize"),
+        args: ["width", "height"],
+        default: 500,
+    },
+    x: { method: "setPosition", args: ["x", "y"], default: undefined },
+    y: { method: "setPosition", args: ["x", "y"], default: undefined },
+    useContentSize: { method: "", args: [], default: true },
+    center: { method: data => (data.center ? "center" : ""), args: [], default: true },
+    minWidth: { method: "setMinimumSize", args: ["minWidth", "minHeight"], default: 200 },
+    minHeight: { method: "setMinimumSize", args: ["minWidth", "minHeight"], default: 30 },
+    maxWidth: {
+        method: "setMaximumSize",
+        args: ["maxWidth", "maxHeight"],
+        default: Infinity,
+    },
+    maxHeight: {
+        method: "setMaximumSize",
+        args: ["maxWidth", "maxHeight"],
+        default: Infinity,
+    },
+    resizable: { method: "setResizable", args: ["resizable"], default: true },
+    movable: { method: "setMovable", args: ["movable"], default: true },
+    minimizable: { method: "setMinimizable", args: ["minimizable"], default: true },
+    maximizable: { method: "setMaximizable", args: ["maximizable"], default: true },
+    closable: { method: "setClosable", args: ["closable"], default: true },
+    focusable: { method: "setFocusable", args: ["focusable"], default: true },
+    alwaysOnTop: { method: "setAlwaysOnTop", args: ["alwaysOnTop"], default: false },
+    fullscreen: { method: "setFullscreen", args: ["fullscreen"], default: false },
+    fullscreenable: {
+        method: "setFullscreenable",
+        args: ["fullscreenable"],
+        default: false,
+    },
+    skipTaskbar: { method: "setSkipTaskbar", args: ["skipTaskbar"], default: false },
+    title: { method: "setTitle", args: ["title"], default: "" },
+    frame: { default: true },
+    icon: { method: "setIcon", args: ["icon"], default: "" },
+    opacity: { method: "setOpacity", args: ["opacity"], default: 1 },
+    transparent: { default: true },
+    backgroundColor: {
+        method: "setBackgroundColor",
+        args: ["backgroundColor"],
+        default: "#ffffff",
+    },
+    hasShadow: { method: "setHasShadow", args: ["hasShadow"], default: false },
+};
 /**
  * Keeps track of all windows and is able to create new ones
  * Also takes care of sending module updates to windows
@@ -17,6 +78,8 @@ class WindowManagerSingleton {
     constructor() {
         // Stores all of the windows in the app
         this.windows = {};
+        // A list of unclaimed window, used to improve opening times
+        this.windowsBuffer = [];
         // Listen for updates of module counts
         ipcMain_1.IpcMain.on("WindowManager.updateCount", (windowID, moduleID, count) => {
             // Get the window data to update
@@ -59,6 +122,121 @@ class WindowManagerSingleton {
         // @ts-ignore
         this.viewNotFoundModule = await registry_1.Registry.createRoot({ type: viewNotFound_type_1.ViewNotFoundID });
     }
+    // Window management methods
+    /**
+     * Adds windows to the window buffer, with the indicated default options
+     * @remarks Some options like 'frame' invalidate usage of some buffered windows for certain requests.
+     * The preloadModules option indicates what modules will be required to load their dependenceis.
+     * When requesting a data, the buffered window can only be used if all preloadModules it passes have been loaded in the buffered window.
+     * @param options The intiail options to use for the window
+     * @param count The number of windows to add to the buffer
+     */
+    async createWindowBuffer(options, count = 1) {
+        if (!isMain_1.isMain)
+            return;
+        const promises = [];
+        for (let i = 0; i < count; i++) {
+            // Create the window, and add it to the buffer
+            const window = this.createWindow(options, false);
+            this.windowsBuffer.push({
+                options,
+                window,
+            });
+            promises.push(window);
+        }
+        // Await all windows being created
+        await Promise.all(promises);
+    }
+    /**
+     * Creates an electron window, without assigning it any data, or showing it
+     * @remarks Makes use of any potential window buffer to speed up creation.     *
+     * @param options The options of the window to create
+     * @param useBuffer Whether or not to obtain a iwndow from the buffer
+     * @returns A browser window
+     */
+    async createWindow(options, useBuffer = true) {
+        // Make sure the electron app is ready first
+        await new Promise(res => (electron_1.app.isReady() ? res() : electron_1.app.once("ready", res)));
+        // Look for an already loaded compatible window
+        if (useBuffer) {
+            const bufferedWindowIndex = this.windowsBuffer.findIndex(({ options: windowOptions, window }) => extendedObject_1.ExtendedObject.reduce(windowOptions, (result, optionValue, optionName) => {
+                if (!result)
+                    return false;
+                // Do a special check for preload modules, whether it contains them
+                if (optionName == "preloadModules") {
+                    if (options.preloadModules)
+                        return true;
+                    if (!optionValue)
+                        return false;
+                    return options.preloadModules.reduce((result, moduleName) => result &&
+                        windowOptions.preloadModules.indexOf(moduleName) != -1, true);
+                }
+                // Check if the option is compatible, either value is the same, or there exists an applicable method
+                if (optionValue == options[optionName])
+                    return true;
+                const data = windowPropertyFunctionMap[optionName];
+                if (!data)
+                    return false;
+                if (!(optionName in options) && optionValue == data.default)
+                    return true;
+                if (data.method == undefined)
+                    return false;
+                return true;
+            }, true));
+            // If a window was found, use all the method to apply the options
+            if (bufferedWindowIndex != -1) {
+                // Remove the window from the buffers
+                const bufferedWindow = this.windowsBuffer[bufferedWindowIndex];
+                this.windowsBuffer.splice(bufferedWindowIndex, 1);
+                // Make sure to to restock the buffer
+                this.windowsBuffer.push({
+                    options: bufferedWindow.options,
+                    window: this.createWindow(bufferedWindow.options, false),
+                });
+                // Apply the settings to the window
+                const window = await bufferedWindow.window;
+                const used = { preloadModules: true };
+                extendedObject_1.ExtendedObject.forEach(bufferedWindow.options, (optionName, optionValue) => {
+                    if (used[optionName])
+                        return; // Use each field only once
+                    used[optionName] = true;
+                    if (optionValue == options[optionName])
+                        return;
+                    // Get the data for this option
+                    const optionData = windowPropertyFunctionMap[optionName];
+                    const methodName = optionData.method instanceof Function
+                        ? optionData.method(options)
+                        : optionData.method;
+                    const method = window[methodName] || (() => { });
+                    // Get the arguments
+                    const args = (optionData.args || []).map(argName => {
+                        used[argName] = true;
+                        return (options[argName] ||
+                            windowPropertyFunctionMap[argName].default);
+                    });
+                    // Apply the method
+                    method.apply(window, args);
+                });
+                // Return the result
+                return window;
+            }
+        }
+        // Create the browser window
+        const normalizedOptions = Object.assign({}, extendedObject_1.ExtendedObject.map(windowPropertyFunctionMap, value => value.default), options, { show: false, webPreferences: Object.assign({ nodeIntegration: true }, options.webPreferences) });
+        const browserWindow = new electron_1.BrowserWindow(normalizedOptions);
+        // Open the index page
+        browserWindow.loadURL(`file://${__dirname}/window.html`);
+        // While debugging, TODO: add debug check
+        browserWindow.webContents.openDevTools();
+        // Wait for the window to indicate it was loaded, and assign it its id
+        await ipcMain_1.IpcMain.once(`WindowManager.loaded:${browserWindow.id}`);
+        // Set the root view of the window and assign a viewNotFound view of the window
+        await ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setViewNotFound", this.viewNotFoundModule.toString());
+        // If a preload module was passed, use it
+        if (options.preloadModules)
+            options.preloadModules.forEach(moduleName => ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.preloadModule", moduleName));
+        return browserWindow;
+    }
     /**
      * Opens the window with the given ID
      * @param windowID The ID of the window to open
@@ -67,8 +245,6 @@ class WindowManagerSingleton {
      * @returns The browser window that was created
      */
     async openWindow(windowID, moduleID, options = {}) {
-        // Make sure the electron app is ready first
-        await new Promise(res => (electron_1.app.isReady() ? res() : electron_1.app.once("ready", res)));
         // Make sure we have a view not found module
         await this.createViewNotFoundModule();
         // Make sure the window is present
@@ -76,23 +252,15 @@ class WindowManagerSingleton {
             this.windows[windowID] = {
                 moduleCounts: {},
                 window: new Promise(async (resolve, reject) => {
-                    // Create the browser window
-                    const browserWindow = new electron_1.BrowserWindow(Object.assign({ width: 800, height: 600, show: false }, options, { webPreferences: Object.assign({ nodeIntegration: true }, options.webPreferences) }));
-                    // Open the index page
-                    browserWindow.loadURL(`file://${__dirname}/window.html`);
+                    const browserWindow = await this.createWindow(options);
+                    // Assign the window its ID
                     browserWindow.customID = windowID;
-                    // While debugging, TODO: add debug check
-                    browserWindow.webContents.openDevTools();
-                    // Wait for the window to indicate it was loaded, and assign it its id
-                    await ipcMain_1.IpcMain.once(`WindowManager.loaded:${windowID}`);
-                    // Set the root view of the window and assign a viewNotFound view of the window
-                    const promises = [
-                        ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setViewNotFound", this.viewNotFoundModule.toString()),
-                        ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setRoot", moduleID.toString()),
-                    ];
-                    await Promise.all(promises);
+                    await ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setWindowID", windowID);
+                    // Assign the root module
+                    await ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setRoot", moduleID.toString());
                     // Show the window
-                    browserWindow.show();
+                    if (options.show != false)
+                        browserWindow.show();
                     // Return the browserWindow
                     resolve(browserWindow);
                 }),
@@ -146,6 +314,7 @@ class WindowManagerSingleton {
         delete this.windows[windowID];
         return true;
     }
+    // Module data transfer related methods
     /**
      * Adds listeners to the module to forward its data to a window's GuiManager
      * @param moduleID The moduleID of the module to forward to a window
@@ -246,5 +415,6 @@ class WindowManagerSingleton {
         return require("electron").screen.getPrimaryDisplay().workAreaSize;
     }
 }
+exports.WindowManagerSingleton = WindowManagerSingleton;
 exports.WindowManager = new WindowManagerSingleton();
 //# sourceMappingURL=windowManager.js.map

@@ -559,6 +559,14 @@ export class Module<
         return ProxyClass.createInstance(this);
     }
 
+    /**
+     * A hook for detecting when the module has been loaded
+     * @remarks Useful if the module path is required
+     * @param isMain Whether or not the class was loaded in the main process
+     * @param modulePath The path of this module
+     */
+    protected static onFileLoad(isMain: boolean, modulePath: string): void {}
+
     // Config related methods
     static config = baseConfig; // The config of the module, will be replaced by createModule
 

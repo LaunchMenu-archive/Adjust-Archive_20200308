@@ -258,6 +258,13 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @returns The created proxy
      */
     createProxy(): ModuleProxy;
+    /**
+     * A hook for detecting when the module has been loaded
+     * @remarks Useful if the module path is required
+     * @param isMain Whether or not the class was loaded in the main process
+     * @param modulePath The path of this module
+     */
+    protected static onFileLoad(isMain: boolean, modulePath: string): void;
     static config: {
         version: string;
         settings: {};

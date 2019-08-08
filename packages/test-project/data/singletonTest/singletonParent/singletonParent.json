@@ -8,7 +8,9 @@
             },
             "ID": 0,
             "data": {
-                "location": "test"
+                "location": [
+                    "UVce-PApP-2kgN-8EMA-xrfy"
+                ]
             }
         }
     ]

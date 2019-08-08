@@ -78,7 +78,10 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         if (this.window) return this.window;
 
         // Open the window
-        this.window = WindowManager.openWindow(this.getData().ID, this.getID());
+        this.window = WindowManager.openWindow(this.getData().ID, this.getID(), {
+            frame: false,
+            preloadModules: [this.getClass().getPath()],
+        });
 
         // Indicate that this window is now open to the parent
         this.parent.setWindowVisibility(true, this.getData().ID);
@@ -129,6 +132,16 @@ export default class WindowModule extends createModule(config, LocationAncestorM
     /** @override */
     protected async onStop(): Promise<void> {
         await this.closeWindow();
+    }
+
+    /** @override */
+    protected static onFileLoad(isMain: boolean, modulePath: string): void {
+        // Add a buffer of windows to increase loading times
+        if (isMain)
+            WindowManager.createWindowBuffer({
+                frame: false,
+                preloadModules: [modulePath],
+            });
     }
 
     // Location management
@@ -365,7 +378,17 @@ export class WindowView extends createModuleView(WindowModule) {
      */
     protected renderHeader(): JSX.Element {
         return (
-            <Grid container direction="row-reverse">
+            <Grid
+                container
+                direction="row-reverse"
+                css={
+                    {
+                        WebkitAppRegion: "drag",
+                        "& > * ": {
+                            WebkitAppRegion: "no-drag",
+                        },
+                    } as any
+                }>
                 <Grid item>
                     <Button onClick={() => this.module.closeWindow()}>
                         <Close />

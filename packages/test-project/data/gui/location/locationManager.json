@@ -37,38 +37,64 @@
                         "modules": [
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\embed\\embed.js"
+                                "modulePath": "\\singletonTest\\singleton\\singleton.js"
                             },
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\singletonTest\\singleton\\singleton.js"
-                            },
+                                "modulePath": "\\embed\\embed.js"
+                            }
+                        ],
+                        "path": {
+                            "nodes": [
+                                "default"
+                            ],
+                            "location": {
+                                "ID": "root",
+                                "hints": {}
+                            }
+                        }
+                    },
+                    "xx3V-GbaX-kB8T-W5gG-MJVF": {
+                        "path": {
+                            "nodes": [
+                                "zqFG-9Xjx"
+                            ],
+                            "location": {
+                                "ID": "xx3V-GbaX-kB8T-W5gG-MJVF",
+                                "hints": {
+                                    "path": [
+                                        "zqFG-9Xjx"
+                                    ]
+                                }
+                            }
+                        },
+                        "modules": [
                             {
                                 "settingsID": 0,
                                 "modulePath": "\\test\\test.js"
                             }
                         ]
                     },
-                    "test": {
+                    "UVce-PApP-2kgN-8EMA-xrfy": {
+                        "path": {
+                            "nodes": [
+                                "FyG1-6zKO"
+                            ],
+                            "location": {
+                                "ID": "UVce-PApP-2kgN-8EMA-xrfy",
+                                "hints": {
+                                    "path": [
+                                        "FyG1-6zKO"
+                                    ]
+                                }
+                            }
+                        },
                         "modules": [
                             {
                                 "settingsID": 0,
                                 "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
                             }
-                        ],
-                        "path": {
-                            "nodes": [
-                                "window1"
-                            ],
-                            "location": {
-                                "ID": "test",
-                                "hints": {
-                                    "window": {
-                                        "ID": "window1"
-                                    }
-                                }
-                            }
-                        }
+                        ]
                     }
                 }
             }

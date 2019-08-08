@@ -304,6 +304,10 @@ export class RegistrySingleton {
                     if (viewClass) config.viewClass = viewClass;
                 }
 
+                // Indicate that the module was loaded
+                // @ts-ignore
+                def.onFileLoad(isMain, modulePath);
+
                 // Return the module
                 return def;
             }

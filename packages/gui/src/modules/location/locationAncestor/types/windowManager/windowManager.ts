@@ -2,7 +2,6 @@ import {createModule, ModuleReference, UUID, ExtendedObject} from "@adjust/core"
 import {ModuleLocation} from "../../../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "../../../locationAncestor/locationAncestor";
 import {LocationPath} from "../../../_types/LocationPath";
-import {LocationsMoveData} from "../../../_types/LocationsMoveData";
 import {WindowSelector, WindowSelectorID} from "./windowSelector/windowSelector.type";
 import {Window, WindowID, WindowParent} from "./window/window.type";
 import {LocationAncestorID, LocationAncestor} from "../../locationAncestor.type";

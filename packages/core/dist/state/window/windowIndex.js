@@ -7,6 +7,7 @@ const electron_1 = require("electron");
 const viewManager_1 = require("./viewManager");
 const ipcRenderer_1 = require("../../communication/ipcRenderer");
 const moduleID_1 = require("../../module/moduleID");
+const registry_1 = require("../../registry/registry");
 // Get the root element to put the contents in
 const rootElement = document.getElementsByClassName("root").item(0);
 // Listen for the main module to be rendered
@@ -20,10 +21,17 @@ ipcRenderer_1.IpcRenderer.on("WindowIndex.setRoot", (moduleID) => {
 ipcRenderer_1.IpcRenderer.on("WindowIndex.setViewNotFound", (moduleID) => {
     viewManager_1.ViewManager.setViewNotFoundID(new moduleID_1.ModuleID(moduleID));
 });
-// Get a reference to the window to obtain this window's ID
+// Listen for the assignment of a window ID
+ipcRenderer_1.IpcRenderer.once("WindowIndex.setWindowID", (windowID) => {
+    // @ts-ignore;
+    window.windowID = windowID;
+});
+// Listen whether a module is requested to be loaded (in order to speed up loading later)
+ipcRenderer_1.IpcRenderer.on("WindowIndex.preloadModule", (moduelePath) => {
+    registry_1.Registry.getModuleClass(moduelePath);
+});
+// Get a reference to the window to obtain this window's electron ID
 const currentWindow = electron_1.remote.getCurrentWindow();
-// @ts-ignore;
-window.windowID = currentWindow.customID;
 // Indicate that all js code has finished loading
-ipcRenderer_1.IpcRenderer.send(`WindowManager.loaded:${windowID}`);
+ipcRenderer_1.IpcRenderer.send(`WindowManager.loaded:${currentWindow.id}`);
 //# sourceMappingURL=windowIndex.js.map

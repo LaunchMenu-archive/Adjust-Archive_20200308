@@ -22,13 +22,31 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "window1"
+                    "ID": "zqFG-9Xjx"
                 }
             },
-            "ID": 2,
+            "ID": 3,
             "data": {
-                "x": 710,
-                "y": 270
+                "x": 1116,
+                "y": 191,
+                "width": 500,
+                "height": 500
+            }
+        },
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "FyG1-6zKO"
+                }
+            },
+            "ID": 4,
+            "data": {
+                "x": 111,
+                "y": 135,
+                "width": 500,
+                "height": 500
             }
         },
         {

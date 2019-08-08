@@ -11,7 +11,9 @@
             },
             "ID": 1,
             "data": {
-                "locations": []
+                "locations": [
+                    "root"
+                ]
             }
         },
         {
@@ -34,13 +36,28 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "window1"
+                    "ID": "zqFG-9Xjx"
                 }
             },
-            "ID": 3,
+            "ID": 4,
             "data": {
                 "locations": [
-                    "test"
+                    "xx3V-GbaX-kB8T-W5gG-MJVF"
+                ]
+            }
+        },
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "FyG1-6zKO"
+                }
+            },
+            "ID": 5,
+            "data": {
+                "locations": [
+                    "UVce-PApP-2kgN-8EMA-xrfy"
                 ]
             }
         },

@@ -4,11 +4,14 @@ import { ParameterizedModule } from "../../module/module";
 import { ModuleID } from "../../module/moduleID";
 import { ViewNotFound } from "../../modules/viewNotFound.type";
 import { AsyncSerializeableData } from "../../utils/_types/serializeableData";
+export declare type windowOptions = Electron.BrowserWindowConstructorOptions & {
+    preloadModules?: string[];
+};
 /**
  * Keeps track of all windows and is able to create new ones
  * Also takes care of sending module updates to windows
  */
-declare class WindowManagerSingleton {
+export declare class WindowManagerSingleton {
     protected readonly windows: {
         [windowID: string]: {
             window: Promise<BrowserWindow>;
@@ -19,6 +22,10 @@ declare class WindowManagerSingleton {
         };
     };
     protected readonly viewNotFoundModule: ViewNotFound;
+    protected readonly windowsBuffer: {
+        options: windowOptions;
+        window: Promise<BrowserWindow>;
+    }[];
     /**
      * Creates a window manager
      */
@@ -28,13 +35,30 @@ declare class WindowManagerSingleton {
      */
     protected createViewNotFoundModule(): Promise<void>;
     /**
+     * Adds windows to the window buffer, with the indicated default options
+     * @remarks Some options like 'frame' invalidate usage of some buffered windows for certain requests.
+     * The preloadModules option indicates what modules will be required to load their dependenceis.
+     * When requesting a data, the buffered window can only be used if all preloadModules it passes have been loaded in the buffered window.
+     * @param options The intiail options to use for the window
+     * @param count The number of windows to add to the buffer
+     */
+    createWindowBuffer(options: windowOptions, count?: number): Promise<void>;
+    /**
+     * Creates an electron window, without assigning it any data, or showing it
+     * @remarks Makes use of any potential window buffer to speed up creation.     *
+     * @param options The options of the window to create
+     * @param useBuffer Whether or not to obtain a iwndow from the buffer
+     * @returns A browser window
+     */
+    protected createWindow(options: windowOptions, useBuffer?: boolean): Promise<BrowserWindow>;
+    /**
      * Opens the window with the given ID
      * @param windowID The ID of the window to open
      * @param moduleID The ID of the root view of the window
      * @param options The extra options to pass to the window
      * @returns The browser window that was created
      */
-    openWindow(windowID: string, moduleID: ModuleID | string, options?: Electron.BrowserWindowConstructorOptions): Promise<BrowserWindow>;
+    openWindow(windowID: string, moduleID: ModuleID | string, options?: windowOptions): Promise<BrowserWindow>;
     /**
      * Retrieves a window if it has been opened already
      * @param windowID The ID of the window
@@ -84,4 +108,3 @@ declare class WindowManagerSingleton {
     }>;
 }
 export declare const WindowManager: WindowManagerSingleton;
-export {};
