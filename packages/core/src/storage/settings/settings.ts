@@ -1,7 +1,7 @@
 import {DeepReadonly} from "../../utils/_types/standardTypes";
 import {ParameterizedSettingPriorityList} from "./_types/settingPriorityList";
 import {ParameterizedConditionValue} from "./_types/conditionalValue";
-import {JsonPartial} from "../_types/jsonPartial";
+import {DataChange} from "../_types/dataChange";
 
 import {Module, ParameterizedModule} from "../../module/module";
 import {SettingsConfig} from "./_types/settingsConfig";
@@ -199,7 +199,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      * @returns A promise that resolves when all listeners resolved
      */
     public async changeData(
-        data: JsonPartial<SettingsConfigData<C>>,
+        data: DataChange<SettingsConfigData<C>>,
         condition?: SettingsConditions
     ): Promise<void> {
         // Change the data on the condition of the settings file
@@ -223,10 +223,10 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      */
     public async setInitialData(
         data:
-            | JsonPartial<SettingsConfigData<C>>
+            | DataChange<SettingsConfigData<C>>
             | (() =>
-                  | JsonPartial<SettingsConfigData<C>>
-                  | Promise<JsonPartial<SettingsConfigData<C>>>
+                  | DataChange<SettingsConfigData<C>>
+                  | Promise<DataChange<SettingsConfigData<C>>>
               ),
         condition?: SettingsConditions
     ): Promise<void> {

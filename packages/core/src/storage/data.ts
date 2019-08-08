@@ -1,7 +1,7 @@
 import {DeepReadonly, DeepPartial, Json} from "../utils/_types/standardTypes";
 import {EventEmitter} from "../utils/eventEmitter";
 import {ExtendedObject} from "../utils/extendedObject";
-import {JsonPartial} from "./_types/jsonPartial";
+import {DataChange} from "./_types/dataChange";
 
 export class Data<S extends object> extends EventEmitter {
     public readonly get: DeepReadonly<S>; // The data of the object
@@ -36,7 +36,7 @@ export class Data<S extends object> extends EventEmitter {
      * Changes properties in the data of the module, and rerenders the associated GUI
      * @param changedProps An object with all the changed properties and their values
      */
-    public async changeData(changedProps: JsonPartial<S>): Promise<void> {
+    public async changeData(changedProps: DataChange<S>): Promise<void> {
         // Get the current values for the changed properties
         const originalProps = ExtendedObject.copyData(this.get, {}, changedProps);
 

@@ -9,7 +9,7 @@ import { Settings } from "../storage/settings/settings";
 import { StateData } from "../state/stateData";
 import { RequestPath } from "./requestPath/requestPath";
 import { ParameterizedModuleView } from "./moduleView";
-import { JsonPartial } from "../storage/_types/jsonPartial";
+import { DataChange } from "../storage/_types/dataChange";
 import { ModuleInterface } from "./_types/moduleInterface";
 import { ModuleProxy } from "./moduleProxy";
 import { ParentlessRequest, ParameterizedRequest } from "../registry/_types/request";
@@ -101,7 +101,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param changedProps An object containing any fields of the state that have changed
      * @returns A promise that resolves once all listeners have resolved
      */
-    setState(changedProps: JsonPartial<S>): Promise<void>;
+    setState(changedProps: DataChange<S>): Promise<void>;
     /**
      * Retrieves the entire settings object of the module
      * @returns The entire settings object on which listeners could be registered
@@ -113,7 +113,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param condition The settings condition to store the data under
      * @returns A promise that resolves once all listeners have resolved
      */
-    setSettings(changedProps: JsonPartial<SettingsConfigData<C>>, condition?: SettingsConditions): Promise<void>;
+    setSettings(changedProps: DataChange<SettingsConfigData<C>>, condition?: SettingsConditions): Promise<void>;
     /**
      * Serializes the entire module, based on the state
      * @returns An object containing all the module's relevant data

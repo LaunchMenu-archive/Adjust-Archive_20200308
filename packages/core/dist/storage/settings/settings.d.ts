@@ -1,5 +1,5 @@
 import { DeepReadonly } from "../../utils/_types/standardTypes";
-import { JsonPartial } from "../_types/jsonPartial";
+import { DataChange } from "../_types/dataChange";
 import { Module, ParameterizedModule } from "../../module/module";
 import { SettingsConfig } from "./_types/settingsConfig";
 import { SettingsFile } from "./settingsFile";
@@ -44,7 +44,7 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * @param condition The condition to change them for
      * @returns A promise that resolves when all listeners resolved
      */
-    changeData(data: JsonPartial<SettingsConfigData<C>>, condition?: SettingsConditions): Promise<void>;
+    changeData(data: DataChange<SettingsConfigData<C>>, condition?: SettingsConditions): Promise<void>;
     /**
      * Checks whether the target of these settings satisfy the passed condition
      * @param condition The condition to check for
@@ -57,7 +57,7 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * @param data The data to store under this condition
      * @param condition The condition to store the data under
      */
-    setInitialData(data: JsonPartial<SettingsConfigData<C>> | (() => JsonPartial<SettingsConfigData<C>> | Promise<JsonPartial<SettingsConfigData<C>>>), condition?: SettingsConditions): Promise<void>;
+    setInitialData(data: DataChange<SettingsConfigData<C>> | (() => DataChange<SettingsConfigData<C>> | Promise<DataChange<SettingsConfigData<C>>>), condition?: SettingsConditions): Promise<void>;
     /**
      * Retrieves the settings file storing all the settings
      * @returns The settings file

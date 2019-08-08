@@ -82,7 +82,6 @@ export default class WindowSelectorModule
     /** @override */
     public async setWindows(closed: WindowsData, opened: WindowsData): Promise<void> {
         await this.setState({
-            // @ts-ignore
             closedWindows: {
                 ...closed,
                 // Make sure to remove previous window data

@@ -1,7 +1,6 @@
 import {ParameterizedModule, Module} from "../module";
 import {ParameterizedModuleConfig} from "./moduleConfig";
 import {
-    DeepPartial,
     Omit,
     Constructor,
     DeepReadonly,
@@ -13,6 +12,7 @@ import {InterfaceID} from "../../registry/_types/interfaceID";
 import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
 import {SettingsConfigData} from "../../storage/settings/_types/settingsConfigData";
 import {SettingsConfigSetData} from "../../storage/settings/_types/settingsConfigSetData";
+import {DataChange} from "../../storage/_types/dataChange";
 import {SettingsConditions} from "../../storage/settings/settingsConditions/abstractSettingsConditions";
 import {ModuleID} from "../moduleID";
 import {ModuleState} from "./moduleState";
@@ -55,10 +55,10 @@ export type ExtendedModule<
     M extends ParameterizedModule
 > = {
     setState(
-        state: DeepPartial<OrEmpty<MC["initialState"]> & ExtractModuleState<M>>
+        state: DataChange<OrEmpty<MC["initialState"]> & ExtractModuleState<M>>
     ): Promise<void>;
     setSettings(
-        settings: DeepPartial<
+        settings: DataChange<
             OrEmpty<
                 SettingsConfigSetData<MC["settings"]> &
                     SettingsConfigData<ExtractModuleSettings<M>>

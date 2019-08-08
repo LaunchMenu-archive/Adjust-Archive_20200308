@@ -41,3 +41,6 @@ export declare type GetPConstructed<T extends PConstructor<any>> = T extends PCo
 export declare type Empty = {
     "　": never;
 };
+export declare type RareObject = {
+    SomeSuperRarePropertyName: symbol;
+};

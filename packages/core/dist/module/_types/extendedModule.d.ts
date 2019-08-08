@@ -1,11 +1,12 @@
 import { ParameterizedModule, Module } from "../module";
 import { ParameterizedModuleConfig } from "./moduleConfig";
-import { DeepPartial, Omit, Constructor, DeepReadonly, GetConstructed, Empty } from "../../utils/_types/standardTypes";
+import { Omit, Constructor, DeepReadonly, GetConstructed, Empty } from "../../utils/_types/standardTypes";
 import { ModuleRequestData, ParameterizedModuleRequestData } from "./moduleRequestData";
 import { InterfaceID } from "../../registry/_types/interfaceID";
 import { SettingsConfig } from "../../storage/settings/_types/settingsConfig";
 import { SettingsConfigData } from "../../storage/settings/_types/settingsConfigData";
 import { SettingsConfigSetData } from "../../storage/settings/_types/settingsConfigSetData";
+import { DataChange } from "../../storage/_types/dataChange";
 import { SettingsConditions } from "../../storage/settings/settingsConditions/abstractSettingsConditions";
 import { ModuleID } from "../moduleID";
 import { ModuleState } from "./moduleState";
@@ -32,8 +33,8 @@ export declare type OrEmpty<S> = {} extends S ? Empty : S;
  * Creates a new module type, based on a module config and a module type
  */
 export declare type ExtendedModule<MC extends ParameterizedModuleConfig, M extends ParameterizedModule> = {
-    setState(state: DeepPartial<OrEmpty<MC["initialState"]> & ExtractModuleState<M>>): Promise<void>;
-    setSettings(settings: DeepPartial<OrEmpty<SettingsConfigSetData<MC["settings"]> & SettingsConfigData<ExtractModuleSettings<M>>>>, conditions?: SettingsConditions): Promise<void>;
+    setState(state: DataChange<OrEmpty<MC["initialState"]> & ExtractModuleState<M>>): Promise<void>;
+    setSettings(settings: DataChange<OrEmpty<SettingsConfigSetData<MC["settings"]> & SettingsConfigData<ExtractModuleSettings<M>>>>, conditions?: SettingsConditions): Promise<void>;
     getRequest(): ModuleRequestData<GetTypeInterface<MC["type"]>>;
     getParent(): GetTypeInterface<MC["type"]>["parent"];
     getData(): GetTypeInterface<MC["type"]>["data"];

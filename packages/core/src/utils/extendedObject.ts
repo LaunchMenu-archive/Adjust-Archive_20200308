@@ -128,7 +128,7 @@ export class ExtendedObject extends Object {
      */
     public static fromEntries<S>(entries: [string, S][]): {[key: string]: S} {
         const out = {};
-        entries.forEach(([key, value])=>{
+        entries.forEach(([key, value]) => {
             out[key] = value;
         });
         return out;
@@ -551,7 +551,7 @@ export class ExtendedObject extends Object {
     }
 
     // A symbol to indicate  to override the data in this object
-    public static overwrite = Symbol("overwrite");
+    public static readonly overwrite: unique symbol = Symbol("overwrite");
 
     /**
      * Copies the data from a source object to a destination object, according to the copyModel

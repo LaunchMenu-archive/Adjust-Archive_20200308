@@ -1,6 +1,6 @@
 import { DeepReadonly, DeepPartial, Json } from "../utils/_types/standardTypes";
 import { EventEmitter } from "../utils/eventEmitter";
-import { JsonPartial } from "./_types/jsonPartial";
+import { DataChange } from "./_types/dataChange";
 export declare class Data<S extends object> extends EventEmitter {
     readonly get: DeepReadonly<S>;
     protected storeUndefined: boolean;
@@ -16,7 +16,7 @@ export declare class Data<S extends object> extends EventEmitter {
      * Changes properties in the data of the module, and rerenders the associated GUI
      * @param changedProps An object with all the changed properties and their values
      */
-    changeData(changedProps: JsonPartial<S>): Promise<void>;
+    changeData(changedProps: DataChange<S>): Promise<void>;
     /**
      * Serializes the data in order to store it
      * @returns The data of the module

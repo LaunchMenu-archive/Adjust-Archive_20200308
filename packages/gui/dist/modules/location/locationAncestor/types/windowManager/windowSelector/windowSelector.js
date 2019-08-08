@@ -74,7 +74,6 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
     /** @override */
     async setWindows(closed, opened) {
         await this.setState({
-            // @ts-ignore
             closedWindows: Object.assign({}, closed, { 
                 // Make sure to remove previous window data
                 [core_2.ExtendedObject.overwrite]: true }),

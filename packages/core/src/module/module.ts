@@ -13,7 +13,7 @@ import {Settings} from "../storage/settings/settings";
 import {StateData} from "../state/stateData";
 import {RequestPath} from "./requestPath/requestPath";
 import {ParameterizedModuleView} from "./moduleView";
-import {JsonPartial} from "../storage/_types/jsonPartial";
+import {DataChange} from "../storage/_types/dataChange";
 import {ModuleInterface} from "./_types/moduleInterface";
 import {Registry} from "../registry/registry";
 import {ModuleProxy} from "./moduleProxy";
@@ -196,7 +196,7 @@ export class Module<
      * @param changedProps An object containing any fields of the state that have changed
      * @returns A promise that resolves once all listeners have resolved
      */
-    public async setState(changedProps: JsonPartial<S>): Promise<void> {
+    public async setState(changedProps: DataChange<S>): Promise<void> {
         return this.stateObject.changeData(changedProps as any);
     }
 
@@ -216,7 +216,7 @@ export class Module<
      * @returns A promise that resolves once all listeners have resolved
      */
     public async setSettings(
-        changedProps: JsonPartial<SettingsConfigData<C>>,
+        changedProps: DataChange<SettingsConfigData<C>>,
         condition?: SettingsConditions
     ): Promise<void> {
         return this.settingsObject.changeData(changedProps as any, condition);
