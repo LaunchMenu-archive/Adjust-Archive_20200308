@@ -87,7 +87,7 @@ class ViewManagerSingleton {
             // If either now such view existed, or it was removed before resolving
             if (!initialState) {
                 // Get the initial state from the window manager
-                const stateData = (await ipcRenderer_1.IpcRenderer.send("WindowManager.getState", moduleID.toString(), windowID))[0];
+                const stateData = (await ipcRenderer_1.IpcRenderer.send("WindowManager.getState", moduleID.toString(), windowID))[0] || { isStopped: true };
                 initialState = this.deserializeData(stateData);
             }
             // Make sure the module hasn't updated its path by now (became a view for another module)

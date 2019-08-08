@@ -65,8 +65,13 @@ export declare abstract class ModuleView<S extends ModuleState, C extends Settin
      */
     protected renderLoader(): JSX.Element;
     /**
-     * Renders a loader element
-     * @returns An element to be displayed while the module is loading
+     * Renders an element if this module was stopped
+     * @returns An element to be displayed when the module was stoppped
+     */
+    protected renderStopped(): JSX.Element;
+    /**
+     * Renders an error element
+     * @returns An element to be displayed when the module rendering errored
      */
     protected renderError(): JSX.Element;
     /**

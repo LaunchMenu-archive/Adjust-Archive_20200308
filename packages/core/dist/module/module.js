@@ -32,7 +32,9 @@ class Module {
      * The core building block for Adjust applications
      * @returns An unregistered instance of this module
      */
-    constructor() { }
+    constructor() {
+        this.children = []; // A list of all the modules that have been requested and not closed yet
+    }
     /**
      * The core building block for Adjust applications
      * @param request The relevant data of the request that created this instance
@@ -239,7 +241,7 @@ class Module {
      * Adds an additonal parent to the module (for when obtained with instance module provider)
      * @param parent The new parent to add
      */
-    addParent(parent) {
+    notifyParentAdded(parent) {
         this.parents.push(parent);
     }
     /**
@@ -247,7 +249,7 @@ class Module {
      * @param parent The parent to remove
      * @returns Whether this was the last parent
      */
-    removeParent(parent) {
+    notifyParentRemoved(parent) {
         // Remove the parent
         const index = this.parents.indexOf(parent);
         if (index >= 0) {
@@ -286,7 +288,16 @@ class Module {
      */
     onChangeParent(newParent, oldParent) { }
     async request(request) {
-        return registry_1.Registry.request(Object.assign({ parent: this }, request));
+        // Get the reponse(s) from the registry
+        const response = registry_1.Registry.request(Object.assign({ parent: this }, request));
+        // Register the responses as children
+        this.notifyChildAdded(response);
+        // Wait for the promises to resolve
+        const result = await response;
+        // Remove the promises
+        this.notifyChildRemoved(response);
+        // Return the response
+        return result;
     }
     /**
      * Retrieves the context that this method was called from, should be called before any awaits
@@ -305,6 +316,22 @@ class Module {
     setCallContext(callContext) {
         this.callContext = callContext;
     }
+    /**
+     * Indicates that this module is now the parent of the given module
+     * @param module The module that is now a child of this module
+     */
+    notifyChildAdded(module) {
+        this.children.push(module);
+    }
+    /**
+     * Indicates that this module is no longer the parent of the given module
+     * @param module The module that is no longer a child of this module (due to being closed)
+     */
+    notifyChildRemoved(module) {
+        const index = this.children.indexOf(module);
+        if (index != -1)
+            this.children.splice(index, 1);
+    }
     // Closing related methods
     /**
      * Stop and close the module
@@ -320,7 +347,7 @@ class Module {
                 await this.destroy();
             }
             // Close the parent
-            this.removeParent(context);
+            this.notifyParentRemoved(context);
         }
         else
             throw Error("Module may only be closed by its parent");
@@ -336,7 +363,6 @@ class Module {
         // Perform stopping methods
         await this.stopChildren();
         await this.onStop();
-        // TODO: Close communication channel
         // Indicate the module has now stopped
         this.setState({
             isStopped: true,
@@ -350,12 +376,17 @@ class Module {
      * Stops all of the children and awaits them
      */
     async stopChildren() {
-        // TODO: make sure to check whether module is closed before removing it from state
-        // Retrieve all the modules in the state
-        const modules = [];
-        extendedObject_1.ExtendedObject.forEach(this.state, (key, val) => (val instanceof moduleProxy_1.ModuleProxy ? modules.push(val) : null), true);
         // Close all of the modules and wait for them to finish
-        await Promise.all(modules.map((module) => module.close()));
+        await Promise.all(this.children.map(async (module) => {
+            if (module instanceof moduleProxy_1.ModuleProxy)
+                module.close();
+            else {
+                let modules = await module;
+                if (!(modules instanceof Array))
+                    modules = [modules];
+                await Promise.all(modules.map(module => module.close()));
+            }
+        }));
     }
     /**
      * Disposes all stored resources of the node and unlinks itself from the state

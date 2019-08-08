@@ -27,7 +27,8 @@
             "ID": 2,
             "data": {
                 "locations": [
-                    "prompt"
+                    "prompt",
+                    "0YkQ-mfPH-Fb3n-vATq-y3YR"
                 ]
             }
         },
@@ -36,28 +37,13 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "zqFG-9Xjx"
+                    "ID": "ZRGY-5QNJ"
                 }
             },
-            "ID": 4,
+            "ID": 6,
             "data": {
                 "locations": [
-                    "xx3V-GbaX-kB8T-W5gG-MJVF"
-                ]
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "ID": "FyG1-6zKO"
-                }
-            },
-            "ID": 5,
-            "data": {
-                "locations": [
-                    "UVce-PApP-2kgN-8EMA-xrfy"
+                    "BQPd-ROZa-y4rm-X7Qd-zPZX"
                 ]
             }
         },

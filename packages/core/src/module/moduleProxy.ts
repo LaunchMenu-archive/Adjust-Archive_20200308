@@ -3,6 +3,7 @@ import {InterfaceID} from "../registry/_types/interfaceID";
 import {ExtendedObject} from "../utils/extendedObject";
 import {ParameterizedModule, Module} from "./module";
 import {ModuleInterface} from "./_types/moduleInterface";
+import {ModuleID} from "./moduleID";
 
 export class ModuleProxy {
     // The module that is being proxied
@@ -11,12 +12,19 @@ export class ModuleProxy {
     // The source that calls methods on this proxy
     protected _source: ModuleProxy;
 
+    // A method to optionally ovewrite the class' close method
+    protected _onClose: () => void;
+
+    // Store the ID of the module instance
+    protected _moduleID: ModuleID;
+
     /**
      * Creates a proxy for a module
      * @param target The module tp proxy
      */
     constructor(target: ParameterizedModule) {
         this._target = target;
+        this._moduleID = target.getID();
     }
 
     /** @override */
@@ -27,13 +35,15 @@ export class ModuleProxy {
     /**
      * Connects two proxies with one and another
      * @param proxy The proxy to connect with
+     * @param onClose An option callback for when close is called
      * @throws {IllegalStateException} If called when already connected
      */
-    public connect(proxy: ModuleProxy): void {
+    public connect(proxy: ModuleProxy, onClose?: () => void): void {
         if (this._source) throw Error("Connect may only be called once");
 
         proxy._source = this;
         this._source = proxy;
+        this._onClose = onClose;
     }
 
     /**
@@ -96,6 +106,13 @@ export class ModuleProxy {
     }
 
     /**
+     * A method to close this proxy and its module.
+     * Body gets created by the `createClass` method
+     */
+
+    public async close(): Promise<void> {}
+
+    /**
      * Retrieves the methods of an object, including inherited methods
      * @param obj The object to get the methods from
      * @returns A list of methods and their names
@@ -152,6 +169,8 @@ export class ModuleProxy {
         // Create a proxy for each method
         ExtendedObject.forEach(methods, (name, method) => {
             cls.prototype[name] = function(this: ModuleProxy) {
+                if (!this._target) throw Error("Module has already been closed");
+
                 // Update the context
                 this._target.setCallContext(this._source);
 
@@ -165,6 +184,24 @@ export class ModuleProxy {
                 return result;
             };
         });
+
+        // Make a specialised method for closing, that automatically closes the channel (proxy)
+        const close = cls.prototype.close;
+        cls.prototype.close = async function(this: ModuleProxy) {
+            // Perform regular closing
+            await close.apply(this, arguments);
+
+            // Call a possible on close handler
+            if (this._onClose) this._onClose();
+
+            // Renove the target reference
+            this._target = null;
+        };
+
+        // Make a method to return the module ID, even if the module was closed
+        cls.prototype.getID = function() {
+            return this._moduleID;
+        };
 
         // Return the created class
         return cls as any;

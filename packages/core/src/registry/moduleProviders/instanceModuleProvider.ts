@@ -55,10 +55,10 @@ export class InstanceModuleProvider<
         request: NormalizedRequest<M>
     ): Promise<M["child"] & PublicModuleMethods> {
         // Create a proxy for the parent, and add to the request
-        let parentProxy;
+        let parentProxy: ParameterizedModule & ModuleProxy;
         // Make sure the request was not for a root
         if (request.parent) {
-            parentProxy = request.parent.createProxy();
+            parentProxy = request.parent.createProxy() as any;
             request = Object.assign({}, request, {parent: parentProxy});
         }
 
@@ -68,11 +68,16 @@ export class InstanceModuleProvider<
         // Only connect and inform the module of a connection if a parent was specified
         if (parentProxy) {
             // Connect the proxies and add this as a parent
-            moduleProxy.connect(parentProxy);
-            this.module.addParent(parentProxy as any);
+            moduleProxy.connect(parentProxy, () => {
+                parentProxy.notifyChildRemoved(moduleProxy);
+            });
+            this.module.notifyParentAdded(parentProxy as any);
 
             // Inform the module of a newly made connection
             this.connectionListener(parentProxy as any);
+
+            // Also add the reference the other way around
+            parentProxy.notifyChildAdded(moduleProxy);
         }
 
         // Return the module

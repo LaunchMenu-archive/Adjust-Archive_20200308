@@ -153,6 +153,9 @@ export abstract class ModuleView<
         // Render the loader while the state is not loaded
         if (Object.keys(this.state).length == 0) return this.renderLoader();
 
+        // If the module has stopped, render it stopped
+        if (this.state.isStopped) return this.renderStopped();
+
         // If an error eccured, render the error
         if (this.state.error) return this.renderError();
 
@@ -169,8 +172,16 @@ export abstract class ModuleView<
     }
 
     /**
-     * Renders a loader element
-     * @returns An element to be displayed while the module is loading
+     * Renders an element if this module was stopped
+     * @returns An element to be displayed when the module was stoppped
+     */
+    protected renderStopped(): JSX.Element {
+        return <span>Stopped</span>;
+    }
+
+    /**
+     * Renders an error element
+     * @returns An element to be displayed when the module rendering errored
      */
     protected renderError(): JSX.Element {
         return <span style={{color: "red"}}>{this.state.error.toString()}</span>;

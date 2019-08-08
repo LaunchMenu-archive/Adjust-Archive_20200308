@@ -101,6 +101,9 @@ class ModuleView extends react_1.default.Component {
         // Render the loader while the state is not loaded
         if (Object.keys(this.state).length == 0)
             return this.renderLoader();
+        // If the module has stopped, render it stopped
+        if (this.state.isStopped)
+            return this.renderStopped();
         // If an error eccured, render the error
         if (this.state.error)
             return this.renderError();
@@ -115,8 +118,15 @@ class ModuleView extends react_1.default.Component {
         return react_1.default.createElement("span", null, "Loading");
     }
     /**
-     * Renders a loader element
-     * @returns An element to be displayed while the module is loading
+     * Renders an element if this module was stopped
+     * @returns An element to be displayed when the module was stoppped
+     */
+    renderStopped() {
+        return react_1.default.createElement("span", null, "Stopped");
+    }
+    /**
+     * Renders an error element
+     * @returns An element to be displayed when the module rendering errored
      */
     renderError() {
         return react_1.default.createElement("span", { style: { color: "red" } }, this.state.error.toString());

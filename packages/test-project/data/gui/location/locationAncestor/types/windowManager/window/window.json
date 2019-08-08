@@ -11,8 +11,8 @@
             },
             "ID": 1,
             "data": {
-                "x": 760,
-                "y": 395,
+                "x": 1227,
+                "y": 187,
                 "width": 400,
                 "height": 250
             }
@@ -22,31 +22,13 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "zqFG-9Xjx"
+                    "ID": "ZRGY-5QNJ"
                 }
             },
-            "ID": 3,
+            "ID": 5,
             "data": {
-                "x": 1116,
-                "y": 191,
-                "width": 500,
-                "height": 500
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "ID": "FyG1-6zKO"
-                }
-            },
-            "ID": 4,
-            "data": {
-                "x": 111,
-                "y": 135,
-                "width": 500,
-                "height": 500
+                "x": 710,
+                "y": 270
             }
         },
         {

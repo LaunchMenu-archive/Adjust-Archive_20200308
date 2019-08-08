@@ -34,10 +34,16 @@ class ClassModuleProvider extends abstractModuleProvider_1.AbstractModuleProvide
         programState_1.ProgramState.addModule(module);
         // Create the proxy for the module and connect to the parent proxy
         const moduleProxy = module.createProxy();
-        if (parentProxy)
-            moduleProxy.connect(parentProxy);
+        if (parentProxy) {
+            moduleProxy.connect(parentProxy, () => {
+                parentProxy.notifyChildRemoved(moduleProxy);
+            });
+        }
         // Call module initialisation now the connection has completed
         await module.init(false);
+        // Indicate that the child have been created
+        if (parentProxy)
+            parentProxy.notifyChildAdded(moduleProxy);
         // Return the module
         return moduleProxy;
     }

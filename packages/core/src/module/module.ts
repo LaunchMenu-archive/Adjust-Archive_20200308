@@ -68,6 +68,7 @@ export class Module<
     // State
     readonly state: DeepReadonly<S>; // An easy to reference object to get state properties
     readonly stateObject: StateData<S>; // The full state object, to which listeners can be added
+    readonly children: (ModuleProxy | Promise<ModuleProxy | ModuleProxy[]>)[] = []; // A list of all the modules that have been requested and not closed yet
 
     /**
      * The core building block for Adjust applications
@@ -345,7 +346,7 @@ export class Module<
      * Adds an additonal parent to the module (for when obtained with instance module provider)
      * @param parent The new parent to add
      */
-    public addParent(parent: I["parent"]): void {
+    public notifyParentAdded(parent: I["parent"]): void {
         this.parents.push(parent as any);
     }
 
@@ -354,7 +355,7 @@ export class Module<
      * @param parent The parent to remove
      * @returns Whether this was the last parent
      */
-    protected removeParent(parent: I["parent"]): boolean {
+    protected notifyParentRemoved(parent: I["parent"]): boolean {
         // Remove the parent
         const index = this.parents.indexOf(parent);
         if (index >= 0) {
@@ -420,10 +421,23 @@ export class Module<
     ): Promise<M["child"] & PublicModuleMethods>;
 
     public async request<M extends ModuleInterface>(
-        this: M["parent"],
+        this: M["parent"] & this,
         request: ParentlessRequest<M>
     ): Promise<M["child"] & PublicModuleMethods | (M["child"] & PublicModuleMethods)[]> {
-        return Registry.request({parent: this, ...request} as any);
+        // Get the reponse(s) from the registry
+        const response = Registry.request({parent: this, ...request} as any);
+
+        // Register the responses as children
+        this.notifyChildAdded(response as any);
+
+        // Wait for the promises to resolve
+        const result = await response;
+
+        // Remove the promises
+        this.notifyChildRemoved(response as any);
+
+        // Return the response
+        return result;
     }
 
     // Channel related methods
@@ -448,6 +462,23 @@ export class Module<
         this.callContext = callContext;
     }
 
+    /**
+     * Indicates that this module is now the parent of the given module
+     * @param module The module that is now a child of this module
+     */
+    public notifyChildAdded(module: ModuleProxy): void {
+        this.children.push(module);
+    }
+
+    /**
+     * Indicates that this module is no longer the parent of the given module
+     * @param module The module that is no longer a child of this module (due to being closed)
+     */
+    public notifyChildRemoved(module: ModuleProxy): void {
+        const index = this.children.indexOf(module);
+        if (index != -1) this.children.splice(index, 1);
+    }
+
     // Closing related methods
     /**
      * Stop and close the module
@@ -464,7 +495,7 @@ export class Module<
             }
 
             // Close the parent
-            this.removeParent(context);
+            this.notifyParentRemoved(context);
         } else throw Error("Module may only be closed by its parent");
     }
 
@@ -481,8 +512,6 @@ export class Module<
         await this.stopChildren();
         await this.onStop();
 
-        // TODO: Close communication channel
-
         // Indicate the module has now stopped
         this.setState({
             isStopped: true,
@@ -498,17 +527,18 @@ export class Module<
      * Stops all of the children and awaits them
      */
     protected async stopChildren(): Promise<void> {
-        // TODO: make sure to check whether module is closed before removing it from state
-        // Retrieve all the modules in the state
-        const modules: ModuleProxy[] = [];
-        ExtendedObject.forEach(
-            this.state,
-            (key, val) => (val instanceof ModuleProxy ? modules.push(val) : null),
-            true
-        );
-
         // Close all of the modules and wait for them to finish
-        await Promise.all(modules.map((module: any) => module.close()));
+        await Promise.all(
+            this.children.map(async module => {
+                if (module instanceof ModuleProxy) module.close();
+                else {
+                    let modules = await module;
+                    if (!(modules instanceof Array)) modules = [modules];
+
+                    await Promise.all(modules.map(module => module.close()));
+                }
+            })
+        );
     }
 
     /**

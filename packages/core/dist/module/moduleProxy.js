@@ -7,6 +7,7 @@ class ModuleProxy {
      */
     constructor(target) {
         this._target = target;
+        this._moduleID = target.getID();
     }
     /** @override */
     toString() {
@@ -15,13 +16,15 @@ class ModuleProxy {
     /**
      * Connects two proxies with one and another
      * @param proxy The proxy to connect with
+     * @param onClose An option callback for when close is called
      * @throws {IllegalStateException} If called when already connected
      */
-    connect(proxy) {
+    connect(proxy, onClose) {
         if (this._source)
             throw Error("Connect may only be called once");
         proxy._source = this;
         this._source = proxy;
+        this._onClose = onClose;
     }
     /**
      * Checks whether this is a proxy for a node of the given interface
@@ -66,6 +69,11 @@ class ModuleProxy {
     isAdditionalParentof(module) {
         return this.isParentof(module) && !this.isMainParentof(module);
     }
+    /**
+     * A method to close this proxy and its module.
+     * Body gets created by the `createClass` method
+     */
+    async close() { }
     /**
      * Retrieves the methods of an object, including inherited methods
      * @param obj The object to get the methods from
@@ -114,6 +122,8 @@ class ModuleProxy {
         // Create a proxy for each method
         extendedObject_1.ExtendedObject.forEach(methods, (name, method) => {
             cls.prototype[name] = function () {
+                if (!this._target)
+                    throw Error("Module has already been closed");
                 // Update the context
                 this._target.setCallContext(this._source);
                 // Make the original call
@@ -124,6 +134,21 @@ class ModuleProxy {
                 return result;
             };
         });
+        // Make a specialised method for closing, that automatically closes the channel (proxy)
+        const close = cls.prototype.close;
+        cls.prototype.close = async function () {
+            // Perform regular closing
+            await close.apply(this, arguments);
+            // Call a possible on close handler
+            if (this._onClose)
+                this._onClose();
+            // Renove the target reference
+            this._target = null;
+        };
+        // Make a method to return the module ID, even if the module was closed
+        cls.prototype.getID = function () {
+            return this._moduleID;
+        };
         // Return the created class
         return cls;
     }

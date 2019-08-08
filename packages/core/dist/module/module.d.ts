@@ -48,6 +48,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
     readonly settingsObject: Settings<C>;
     readonly state: DeepReadonly<S>;
     readonly stateObject: StateData<S>;
+    readonly children: (ModuleProxy | Promise<ModuleProxy | ModuleProxy[]>)[];
     /**
      * The core building block for Adjust applications
      * @returns An unregistered instance of this module
@@ -168,13 +169,13 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * Adds an additonal parent to the module (for when obtained with instance module provider)
      * @param parent The new parent to add
      */
-    addParent(parent: I["parent"]): void;
+    notifyParentAdded(parent: I["parent"]): void;
     /**
      * Removes an additional parent from the module (for when an additional parent closes the child)
      * @param parent The parent to remove
      * @returns Whether this was the last parent
      */
-    protected removeParent(parent: I["parent"]): boolean;
+    protected notifyParentRemoved(parent: I["parent"]): boolean;
     /**
      * Checks whether the given parent is this module's last parent
      * @param parent The parent to check
@@ -218,6 +219,16 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param callContext The new context
      */
     setCallContext(callContext: ModuleProxy): void;
+    /**
+     * Indicates that this module is now the parent of the given module
+     * @param module The module that is now a child of this module
+     */
+    notifyChildAdded(module: ModuleProxy): void;
+    /**
+     * Indicates that this module is no longer the parent of the given module
+     * @param module The module that is no longer a child of this module (due to being closed)
+     */
+    notifyChildRemoved(module: ModuleProxy): void;
     /**
      * Stop and close the module
      */

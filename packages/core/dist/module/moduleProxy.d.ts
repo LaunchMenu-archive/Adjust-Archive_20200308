@@ -2,9 +2,12 @@ import { ExtendsClass } from "../utils/_types/standardTypes";
 import { InterfaceID } from "../registry/_types/interfaceID";
 import { ParameterizedModule, Module } from "./module";
 import { ModuleInterface } from "./_types/moduleInterface";
+import { ModuleID } from "./moduleID";
 export declare class ModuleProxy {
     protected _target: ParameterizedModule;
     protected _source: ModuleProxy;
+    protected _onClose: () => void;
+    protected _moduleID: ModuleID;
     /**
      * Creates a proxy for a module
      * @param target The module tp proxy
@@ -15,9 +18,10 @@ export declare class ModuleProxy {
     /**
      * Connects two proxies with one and another
      * @param proxy The proxy to connect with
+     * @param onClose An option callback for when close is called
      * @throws {IllegalStateException} If called when already connected
      */
-    connect(proxy: ModuleProxy): void;
+    connect(proxy: ModuleProxy, onClose?: () => void): void;
     /**
      * Checks whether this is a proxy for a node of the given interface
      * @param interfaceID The interface to check
@@ -49,6 +53,11 @@ export declare class ModuleProxy {
         getParent: () => ModuleProxy;
         getParents: () => I["parent"][];
     }): this is I["parent"];
+    /**
+     * A method to close this proxy and its module.
+     * Body gets created by the `createClass` method
+     */
+    close(): Promise<void>;
     /**
      * Retrieves the methods of an object, including inherited methods
      * @param obj The object to get the methods from

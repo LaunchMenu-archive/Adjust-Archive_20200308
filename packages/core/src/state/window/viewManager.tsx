@@ -120,7 +120,7 @@ class ViewManagerSingleton {
                     "WindowManager.getState",
                     moduleID.toString(),
                     windowID
-                ))[0];
+                ))[0] || {isStopped: true};
 
                 initialState = this.deserializeData(stateData) as any;
             }

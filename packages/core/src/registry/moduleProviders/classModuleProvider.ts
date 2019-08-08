@@ -6,6 +6,7 @@ import {AbstractModuleProvider} from "./abstractModuleProvider";
 import {ProgramState} from "../../state/programState";
 import {ModuleInterface} from "../../module/_types/moduleInterface";
 import {PublicModuleMethods} from "../../module/_types/publicModuleMethods";
+import {ModuleProxy} from "../../module/moduleProxy";
 
 export class ClassModuleProvider<
     M extends ModuleInterface
@@ -37,10 +38,10 @@ export class ClassModuleProvider<
         request: NormalizedRequest<M>
     ): Promise<M["child"] & PublicModuleMethods> {
         // Create a proxy for the parent, and add to the request
-        let parentProxy;
+        let parentProxy: ParameterizedModule & ModuleProxy;
         // Make sure the request was not for a root
         if (request.parent) {
-            parentProxy = request.parent.createProxy();
+            parentProxy = request.parent.createProxy() as any;
             request = Object.assign({}, request, {parent: parentProxy});
         }
 
@@ -56,10 +57,17 @@ export class ClassModuleProvider<
 
         // Create the proxy for the module and connect to the parent proxy
         const moduleProxy = module.createProxy();
-        if (parentProxy) moduleProxy.connect(parentProxy);
+        if (parentProxy) {
+            moduleProxy.connect(parentProxy, () => {
+                parentProxy.notifyChildRemoved(moduleProxy);
+            });
+        }
 
         // Call module initialisation now the connection has completed
         await module.init(false);
+
+        // Indicate that the child have been created
+        if (parentProxy) parentProxy.notifyChildAdded(moduleProxy);
 
         // Return the module
         return moduleProxy as any;
