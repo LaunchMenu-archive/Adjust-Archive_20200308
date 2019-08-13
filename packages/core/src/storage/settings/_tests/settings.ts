@@ -2,10 +2,10 @@ import {SettingsManager} from "../settingsManager";
 import {Settings} from "../settings";
 import {Registry} from "../../../registry/registry";
 import {createModule} from "../../../module/moduleClassCreator";
-import {PublicModuleMethods} from "../../../module/_types/publicModuleMethods";
 import {Module} from "../../../module/module";
 import {ModuleID} from "../../../module/moduleID";
 import {FunctionSettingsConditions} from "../settingsConditions/types/functionSettingsConditions";
+import {ParentModule, ChildModule} from "../../../module/_types/moduleContract";
 
 // Create a settings config
 const config = {
@@ -33,9 +33,9 @@ const config = {
 export type dummyInterface = {
     test: (text: string) => Promise<string>;
 };
-export const dummyInterfaceID = Registry.createInterfaceID<{
-    parent: {};
-    child: dummyInterface & PublicModuleMethods;
+export const dummyInterfaceID = Registry.createContractID<{
+    parent: ParentModule<{}>;
+    child: ChildModule<dummyInterface>;
 }>(__filename + "1");
 export class Target
     extends createModule({

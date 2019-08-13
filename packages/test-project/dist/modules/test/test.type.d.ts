@@ -1,10 +1,10 @@
-import { PublicModuleMethods } from "@adjust/gui/types";
-export declare type Test = {
+import { ChildModule, ParentModule } from "@adjust/gui/types";
+export declare type Test = ChildModule<{
     doSomething(stuff: string): Promise<string>;
-} & PublicModuleMethods;
-export declare type TestParent = {};
+}>;
+export declare type TestParent = ParentModule<{}>;
 export declare type TestContract = {
     parent: TestParent;
     child: Test;
 };
-export declare const TestID: import("@adjust/gui/types").InterfaceID<TestContract>;
+export declare const TestType: import("@adjust/gui/types").ContractID<TestContract>;

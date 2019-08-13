@@ -33,7 +33,7 @@ exports.config = {
             type: "number",
         },
     },
-    type: window_type_1.WindowID,
+    type: window_type_1.WindowType,
 };
 /**
  * type "Window" accepts location hints:
@@ -282,7 +282,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     }
     // Testing TODO: remove this
     async setEdit(edit) {
-        const LM = await this.request({ type: locationManager_type_1.LocationManagerID });
+        const LM = await this.request({ type: locationManager_type_1.LocationManagerType });
         await LM.setEditMode(edit);
         LM.close();
     }

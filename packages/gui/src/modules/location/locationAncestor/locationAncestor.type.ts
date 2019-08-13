@@ -1,5 +1,5 @@
 import {Registry, ModuleReference} from "@adjust/core";
-import {PublicModuleMethods} from "@adjust/core/types";
+import {ChildModule, ParentModule} from "@adjust/core/types";
 import {LocationPath} from "../_types/LocationPath";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
 import {LocationsMoveData} from "../_types/LocationsMoveData";
@@ -8,7 +8,7 @@ import {LocationAncestorIDs} from "../_types/LocationAncestorIDs";
 /**
  * A type used by the location manager, represents a node of the path to a location
  */
-export type LocationAncestor = {
+export type LocationAncestor = ChildModule<{
     /**
      * Opens a module at the given location
      * @param module The module to open
@@ -67,8 +67,8 @@ export type LocationAncestor = {
      * @param drop Whether or not droping will be enabled
      */
     setDropMode(drop: boolean): Promise<void>;
-} & PublicModuleMethods;
-export type LocationAncestorParent = {
+}>;
+export type LocationAncestorParent = ParentModule<{
     /**
      * Sets the data of what locations are being moved
      * @param data The data, containing all the hints required to recreate the locations in their current form
@@ -115,7 +115,7 @@ export type LocationAncestorParent = {
      * @param delay The number of miliseconds that should be waited to perform updateLocationsMoveData calls
      */
     updateMovedLocations(delay?: number): Promise<void>;
-};
+}>;
 export type LocationAncestorContract = {
     parent: LocationAncestorParent;
     child: LocationAncestor;
@@ -126,7 +126,7 @@ export type LocationAncestorContract = {
 };
 
 // Export the interfaceID type
-export const LocationAncestorID = Registry.createInterfaceID<LocationAncestorContract>(
+export const LocationAncestorType = Registry.createContractID<LocationAncestorContract>(
     __filename
 );
 

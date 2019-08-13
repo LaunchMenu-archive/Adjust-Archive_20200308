@@ -1,10 +1,10 @@
 import { ParameterizedModule } from "../../module/module";
-import { PublicModuleMethods } from "../../module/_types/publicModuleMethods";
 import { ModuleReference } from "../../module/moduleID";
+import { ChildModule } from "../../module/_types/moduleContract";
 /**
  * Data that can be serialized to json
  */
-export declare type SerializeableData = ParameterizedModule | PublicModuleMethods | ModuleReference | string | boolean | number | {
+export declare type SerializeableData = ParameterizedModule | ChildModule<{}> | ModuleReference | string | boolean | number | {
     [key: string]: SerializeableData;
 } | {
     length: number;
@@ -13,7 +13,7 @@ export declare type SerializeableData = ParameterizedModule | PublicModuleMethod
 /**
  * Data that can be serialized to json, when including a promise callback
  */
-export declare type AsyncSerializeableData = ParameterizedModule | PublicModuleMethods | ModuleReference | string | boolean | number | {
+export declare type AsyncSerializeableData = ParameterizedModule | ChildModule<{}> | ModuleReference | string | boolean | number | {
     [key: string]: AsyncSerializeableData | Promise<AsyncSerializeableData>;
 } | {
     length: number;

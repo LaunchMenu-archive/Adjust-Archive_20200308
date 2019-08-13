@@ -16,7 +16,7 @@ export * from "./module/moduleProxy";
 export * from "./module/remoteModuleProxy";
 
 // MVC classes
-export * from "./state/window/windowManager";
+export * from "./window/windowManager";
 import OrReact from "react";
 export const React = OrReact;
 

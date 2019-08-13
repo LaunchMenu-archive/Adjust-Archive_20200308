@@ -7,7 +7,7 @@ exports.config = {
         inDropMode: false,
     },
     settings: {},
-    type: locationAncestor_type_1.LocationAncestorID,
+    type: locationAncestor_type_1.LocationAncestorType,
     abstract: true,
 };
 /**
@@ -90,7 +90,7 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
         const path = this.getData().path || [];
         // Request the location
         const locationAncestor = (await this.request({
-            type: locationAncestor_type_1.LocationAncestorID,
+            type: locationAncestor_type_1.LocationAncestorType,
             use: providers => {
                 // Get the index of this module class
                 const thisPath = this.getData().path;

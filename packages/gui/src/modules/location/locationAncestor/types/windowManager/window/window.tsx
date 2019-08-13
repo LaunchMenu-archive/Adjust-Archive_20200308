@@ -12,8 +12,8 @@ import LocationAncestorModule from "../../../locationAncestor";
 import {LocationPath} from "../../../../_types/LocationPath";
 import {React} from "../../../../../../React";
 import {ModuleLocation} from "../../../../../../module/_types/ModuleLocation";
-import {LocationManagerID} from "../../../../locationManager.type";
-import {WindowID, Window} from "./window.type";
+import {LocationManagerType} from "../../../../locationManager.type";
+import {WindowType, Window} from "./window.type";
 
 export const config = {
     initialState: {
@@ -38,7 +38,7 @@ export const config = {
             type: "number",
         },
     },
-    type: WindowID,
+    type: WindowType,
 };
 
 /**
@@ -340,7 +340,7 @@ export default class WindowModule extends createModule(config, LocationAncestorM
 
     // Testing TODO: remove this
     public async setEdit(edit: boolean): Promise<void> {
-        const LM = await this.request({type: LocationManagerID});
+        const LM = await this.request({type: LocationManagerType});
         await LM.setEditMode(edit);
         LM.close();
     }

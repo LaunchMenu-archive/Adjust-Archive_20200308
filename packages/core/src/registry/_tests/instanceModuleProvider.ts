@@ -4,17 +4,17 @@ import {InstanceModuleProvider} from "../moduleProviders/instanceModuleProvider"
 import {ParameterizedModule} from "../../module/module";
 import {createModule} from "../../module/moduleClassCreator";
 import {ProgramState} from "../../state/programState";
-import {PublicModuleMethods} from "../../module/_types/publicModuleMethods";
 import {RequestPath} from "../../module/requestPath/requestPath";
 import {ModuleID} from "../../module/moduleID";
+import {ChildModule} from "../../module/_types/moduleContract";
 
-export type dummyInterface = {
+export type dummyInterface = ChildModule<{
     test: () => Promise<number>;
-} & PublicModuleMethods;
+}>;
 export type dummyParentInterface = {
     something: () => Promise<void>;
 };
-export const dummyInterfaceID = Registry.createInterfaceID<{
+export const dummyInterfaceID = Registry.createContractID<{
     parent: dummyParentInterface;
     child: dummyInterface;
 }>(__filename + "1");

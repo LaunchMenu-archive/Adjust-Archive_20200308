@@ -1,8 +1,8 @@
 import {ExtendsClass} from "../utils/_types/standardTypes";
-import {InterfaceID} from "../registry/_types/interfaceID";
+import {ContractID} from "../registry/_types/contractID";
 import {ExtendedObject} from "../utils/extendedObject";
 import {ParameterizedModule, Module} from "./module";
-import {ModuleInterface} from "./_types/moduleInterface";
+import {ModuleContract, ParentModule} from "./_types/moduleContract";
 import {ModuleID} from "./moduleID";
 
 export class ModuleProxy {
@@ -51,8 +51,8 @@ export class ModuleProxy {
      * @param interfaceID The interface to check
      * @returns Whether or not the program node is of the interface type
      */
-    public isInstanceof<I extends ModuleInterface>(
-        interfaceID: InterfaceID<I>
+    public isInstanceof<I extends ModuleContract>(
+        interfaceID: ContractID<I>
     ): this is I["child"] {
         // Get the target's class
         const cls = this._target.getClass() as any;
@@ -66,9 +66,9 @@ export class ModuleProxy {
      * @param module The module to check with
      * @returns Whether this is a proxy for the parent
      */
-    public isMainParentof<I extends ModuleInterface>(module: {
-        getParent: () => ModuleProxy;
-    }): this is I["parent"] {
+    public isMainParentof<P extends ParentModule<any>>(module: {
+        getParent: () => P;
+    }): this is P {
         // Get the parent of the module
         const parent = module.getParent();
 
@@ -82,9 +82,9 @@ export class ModuleProxy {
      * @param module The module to check with
      * @returns Whether this is a proxy for the parent
      */
-    public isParentof<I extends ModuleInterface>(module: {
-        getParents: () => I["parent"][];
-    }): this is I["parent"] {
+    public isParentof<P extends ParentModule<any>>(module: {
+        getParents: () => P[];
+    }): this is P {
         // Get the parents of the module
         const parents = module.getParents();
 
@@ -98,10 +98,10 @@ export class ModuleProxy {
      * @param module The module to check with
      * @returns Whether this is a proxy for the parent
      */
-    public isAdditionalParentof<I extends ModuleInterface>(module: {
-        getParent: () => ModuleProxy;
-        getParents: () => I["parent"][];
-    }): this is I["parent"] {
+    public isAdditionalParentof<P extends ParentModule<any>>(module: {
+        getParent: () => P;
+        getParents: () => P[];
+    }): this is P {
         return this.isParentof(module) && !this.isMainParentof(module);
     }
 

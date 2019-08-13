@@ -27,7 +27,7 @@ const config = {
     },
     migrators: {},
 };
-exports.dummyInterfaceID = registry_1.Registry.createInterfaceID(__filename + "1");
+exports.dummyInterfaceID = registry_1.Registry.createContractID(__filename + "1");
 class Target extends moduleClassCreator_1.createModule({
     initialState: {},
     settings: config.settings,

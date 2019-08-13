@@ -3,7 +3,7 @@ import { ModuleSettingsMigrators } from "./_types/moduleSettingsMigrators";
 import { Constructor, ExtendsClass, Empty } from "../utils/_types/standardTypes";
 import { ExtendedModuleClass } from "./_types/extendedModule";
 import { SettingsConfig } from "../storage/settings/_types/settingsConfig";
-import { ModuleInterface } from "./_types/moduleInterface";
+import { ModuleContract } from "./_types/moduleContract";
 import { Module } from "./module";
 export declare class ModuleClassCreator {
     /**
@@ -26,7 +26,7 @@ export declare class ModuleClassCreator {
      * @param module The module to extend
      * @returns The class created from the config data
      */
-    static createModule<MC extends ParameterizedModuleConfig, X extends ExtendsClass<typeof Module, {}> = ExtendsClass<typeof Module, Module<typeof Module.config.initialState, SettingsConfig<Empty>, ModuleInterface>>>(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X>;
+    static createModule<MC extends ParameterizedModuleConfig, X extends ExtendsClass<typeof Module, {}> = ExtendsClass<typeof Module, Module<typeof Module.config.initialState, SettingsConfig<Empty>, ModuleContract>>>(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X>;
 }
 /**
  * A shortcut for the module creation method

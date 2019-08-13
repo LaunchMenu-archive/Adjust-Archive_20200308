@@ -6,7 +6,7 @@ const moduleClassCreator_1 = require("../../module/moduleClassCreator");
 const programState_1 = require("../../state/programState");
 const requestPath_1 = require("../../module/requestPath/requestPath");
 const moduleID_1 = require("../../module/moduleID");
-exports.dummyInterfaceID = registry_1.Registry.createInterfaceID(__filename + "1");
+exports.dummyInterfaceID = registry_1.Registry.createContractID(__filename + "1");
 class DummyModule extends moduleClassCreator_1.createModule({ initialState: {}, settings: {}, type: exports.dummyInterfaceID }) {
     constructor() {
         super(...arguments);

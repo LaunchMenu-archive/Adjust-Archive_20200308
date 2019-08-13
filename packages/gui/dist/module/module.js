@@ -12,7 +12,7 @@ exports.synchronizedLocations = async (newValue, condition, oldValue, settingsFi
     const newLocations = newValue instanceof Array ? newValue : newValue ? [newValue] : [];
     const oldLocations = oldValue instanceof Array ? oldValue : oldValue ? [oldValue] : [];
     // Obtain the location manager instance
-    const locationManager = await core_1.Registry.createRoot({ type: locationManager_type_1.LocationManagerID });
+    const locationManager = await core_1.Registry.createRoot({ type: locationManager_type_1.LocationManagerType });
     // Obtain the ID for these conditions
     const ID = settingsFile.getConditionID(condition);
     const moduleClass = settingsFile.getModuleClass();
@@ -66,7 +66,7 @@ class Module extends core_1.createModule(exports.baseConfig) {
             return;
         // Get the location manager to open this module with
         if (!this.locationManager)
-            this.locationManager = await this.request({ type: locationManager_type_1.LocationManagerID });
+            this.locationManager = await this.request({ type: locationManager_type_1.LocationManagerType });
         // Get the location from the settings
         let locations = this.settings.location;
         if (!locations)

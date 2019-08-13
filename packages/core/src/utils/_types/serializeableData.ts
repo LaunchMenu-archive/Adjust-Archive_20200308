@@ -1,13 +1,13 @@
 import {ParameterizedModule} from "../../module/module";
-import {PublicModuleMethods} from "../../module/_types/publicModuleMethods";
 import {ModuleReference} from "../../module/moduleID";
+import {ChildModule} from "../../module/_types/moduleContract";
 
 /**
  * Data that can be serialized to json
  */
 export type SerializeableData =
     | ParameterizedModule
-    | PublicModuleMethods
+    | ChildModule<{}>
     | ModuleReference
     | string
     | boolean
@@ -25,7 +25,7 @@ export type SerializeableData =
  */
 export type AsyncSerializeableData =
     | ParameterizedModule
-    | PublicModuleMethods
+    | ChildModule<{}>
     | ModuleReference
     | string
     | boolean

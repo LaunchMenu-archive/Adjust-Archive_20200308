@@ -7,10 +7,10 @@ import {
     ModuleProxy,
     ProgramState,
 } from "@adjust/gui";
-import {InterfaceID} from "@adjust/gui/types";
-import {LocationManagerID} from "@adjust/gui/modules";
-import {TestID} from "./modules/test/test.type";
-import {SingletonParentID} from "./modules/singletonTest/singletonParent/singletonParent.type";
+import {ContractID} from "@adjust/gui/types";
+import {LocationManagerType} from "@adjust/gui/modules";
+import {TestType} from "./modules/test/test.type";
+import {SingletonParentType} from "./modules/singletonTest/singletonParent/singletonParent.type";
 
 (async () => {
     console.log("loading");
@@ -22,29 +22,29 @@ import {SingletonParentID} from "./modules/singletonTest/singletonParent/singlet
 
     if (test == 1) {
         //TODO: reject interfaces that require a parent as the root
-        Registry.createRoot({type: TestID}).then(root => {
+        Registry.createRoot({type: TestType}).then(root => {
             setTimeout(() => {
                 root.doSomething("3");
             }, 2000);
         });
     } else if (test == 2) {
-        Registry.createRoot({type: LocationManagerID}).then(locationManager => {
+        Registry.createRoot({type: LocationManagerType}).then(locationManager => {
             console.log(locationManager, (locationManager as any).getRequestPath());
         });
     } else if (test == 3) {
         await Registry.createRoot({
-            type: SingletonParentID,
+            type: SingletonParentType,
             openView: true,
             data: {count: 1},
         });
-        Registry.createRoot({type: TestID, openView: true}).then(root => {
+        Registry.createRoot({type: TestType, openView: true}).then(root => {
             setTimeout(() => {
                 root.doSomething("3");
             }, 2000);
         });
     } else if (test == 4) {
         Registry.createRoot({
-            type: SingletonParentID,
+            type: SingletonParentType,
             openView: true,
             data: {count: 4},
         });

@@ -4,12 +4,12 @@ const gui_1 = require("@adjust/gui");
 exports.config = {
     initialState: { text: "" },
     settings: {},
-    type: singleton_type_1.SingletonID,
+    type: singleton_type_1.SingletonType,
 };
 class SingletonModule extends gui_1.createModule(exports.config) {
     /** @override */
     async onInit() {
-        gui_1.Registry.addProvider(new gui_1.InstanceModuleProvider(singleton_type_1.SingletonID, this, () => 2));
+        gui_1.Registry.addProvider(new gui_1.InstanceModuleProvider(singleton_type_1.SingletonType, this, () => 2));
         const data = this.getData();
         this.setState({
             text: data.text,
@@ -17,7 +17,7 @@ class SingletonModule extends gui_1.createModule(exports.config) {
     }
     /** @override */
     async onReloadInit() {
-        gui_1.Registry.addProvider(new gui_1.InstanceModuleProvider(singleton_type_1.SingletonID, this, () => 2));
+        gui_1.Registry.addProvider(new gui_1.InstanceModuleProvider(singleton_type_1.SingletonType, this, () => 2));
     }
     /** @override */
     async onStop() {

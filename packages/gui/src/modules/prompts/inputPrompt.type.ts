@@ -1,5 +1,5 @@
 import {Registry} from "@adjust/core";
-import {PublicModuleMethods} from "@adjust/core/types";
+import {ChildModule, ParentModule} from "@adjust/core/types";
 
 export type PromptData = {
     title?: string;
@@ -11,7 +11,7 @@ export type PromptData = {
 /**
  * A type used to request standard use data
  */
-export type InputPrompt = {
+export type InputPrompt = ChildModule<{
     //TODO: add more types, look icon options and the likes
     /**
      * Requests the user to input some string value
@@ -50,12 +50,12 @@ export type InputPrompt = {
         type: string,
         data: PromptData & {defaultValue: any} & any
     ): Promise<any | undefined>;
-} & PublicModuleMethods;
-export type InputPromptParent = {};
+}>;
+export type InputPromptParent = ParentModule<{}>;
 export type InputPromptContract = {
     parent: InputPromptParent;
     child: InputPrompt;
 };
 
 // Export the inputPromptID type
-export const InputPromptID = Registry.createInterfaceID<InputPromptContract>(__filename);
+export const InputPromptType = Registry.createContractID<InputPromptContract>(__filename);

@@ -21,7 +21,7 @@ exports.config = {
             type: "windows",
         },
     },
-    type: locationAncestor_type_1.LocationAncestorID,
+    type: locationAncestor_type_1.LocationAncestorType,
 };
 /**
  * type "Window" Accepts one of location hints:
@@ -47,7 +47,7 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
         if (!fromReload)
             this.setState({
                 windowSelector: await this.request({
-                    type: windowSelector_type_1.WindowSelectorID,
+                    type: windowSelector_type_1.WindowSelectorType,
                     data: { path: this.getData().path },
                 }),
             });
@@ -67,7 +67,7 @@ class WindowManagerModule extends core_1.createModule(exports.config, locationAn
             // Request the window
             windowData = {
                 window: this.request({
-                    type: window_type_1.WindowID,
+                    type: window_type_1.WindowType,
                     data: {
                         ID: windowID,
                         path: [windowID],

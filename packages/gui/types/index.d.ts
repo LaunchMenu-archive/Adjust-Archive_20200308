@@ -5,3 +5,6 @@ export * from "../dist/modules/location/_types/LocationAncestorIDs";
 export * from "../dist/modules/location/_types/LocationPath";
 export * from "../dist/modules/location/_types/LocationsMoveData";
 export * from "../dist/modules/location/locationAncestor/types/windowManager/_types/windowData";
+export * from "../dist/theming/_types/themeData";
+export * from "../dist/theming/box/_types/anyProps";
+export * from "../dist/theming/box/_types/cssTypes";

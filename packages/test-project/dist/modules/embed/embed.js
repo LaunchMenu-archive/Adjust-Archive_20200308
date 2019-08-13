@@ -5,7 +5,7 @@ const colors = ["orange", "blue", "purple"];
 exports.config = {
     initialState: { text: "", color: colors[0], child: undefined },
     settings: {},
-    type: embed_type_1.EmbedID,
+    type: embed_type_1.EmbedType,
 };
 class EmbedModule extends gui_1.createModule(exports.config) {
     async onInit() {
@@ -16,7 +16,7 @@ class EmbedModule extends gui_1.createModule(exports.config) {
         if (data.count > 0)
             this.setState({
                 child: await this.request({
-                    type: embed_type_1.EmbedID,
+                    type: embed_type_1.EmbedType,
                     data: { text: data.text + "t", count: data.count - 1 },
                 }),
             });

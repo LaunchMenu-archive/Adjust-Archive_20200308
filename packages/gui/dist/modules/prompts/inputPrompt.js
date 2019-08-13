@@ -24,7 +24,7 @@ exports.config = {
             },
         },
     },
-    type: inputPrompt_type_1.InputPromptID,
+    type: inputPrompt_type_1.InputPromptType,
 };
 class InputPromptModule extends moduleClassCreator_1.createModule(exports.config) {
     /** @override */

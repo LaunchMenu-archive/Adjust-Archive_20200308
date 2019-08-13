@@ -7,7 +7,7 @@ import {
 } from "@adjust/core";
 import {
     LocationManager,
-    LocationManagerID,
+    LocationManagerType,
 } from "../modules/location/locationManager.type";
 
 /**
@@ -29,7 +29,7 @@ export const synchronizedLocations = async (
         oldValue instanceof Array ? oldValue : oldValue ? [oldValue] : [];
 
     // Obtain the location manager instance
-    const locationManager = await Registry.createRoot({type: LocationManagerID});
+    const locationManager = await Registry.createRoot({type: LocationManagerType});
 
     // Obtain the ID for these conditions
     const ID = settingsFile.getConditionID(condition);
@@ -96,7 +96,7 @@ export abstract class Module extends adjustCreateModule(baseConfig) {
 
         // Get the location manager to open this module with
         if (!this.locationManager)
-            this.locationManager = await this.request({type: LocationManagerID});
+            this.locationManager = await this.request({type: LocationManagerType});
 
         // Get the location from the settings
         let locations = this.settings.location;

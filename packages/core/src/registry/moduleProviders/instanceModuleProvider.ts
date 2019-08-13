@@ -1,14 +1,13 @@
 import {Module, ParameterizedModule} from "../../module/module";
 import {AbstractModuleProvider} from "./abstractModuleProvider";
-import {ParameterizedInterfaceID, InterfaceID} from "../_types/interfaceID";
+import {ParameterizedContractID, ContractID} from "../_types/contractID";
 import {NormalizedRequest} from "../_types/request";
-import {ModuleInterface} from "../../module/_types/moduleInterface";
-import {PublicModuleMethods} from "../../module/_types/publicModuleMethods";
+import {ModuleContract} from "../../module/_types/moduleContract";
 import {Registry} from "../registry";
 import {ModuleProxy} from "../../module/moduleProxy";
 
 export class InstanceModuleProvider<
-    M extends ModuleInterface
+    M extends ModuleContract
 > extends AbstractModuleProvider<M> {
     // The module to provide
     protected module: ParameterizedModule;
@@ -24,7 +23,7 @@ export class InstanceModuleProvider<
      * @param connectionListener A method that gets called when a new 'parent' connects
      */
     constructor(
-        type: InterfaceID<M>,
+        type: ContractID<M>,
         module: ParameterizedModule | ModuleProxy,
         filter?: (request: NormalizedRequest<M>) => number,
         connectionListener: (module: M["parent"]) => void = () => {}
@@ -51,9 +50,7 @@ export class InstanceModuleProvider<
     }
 
     /** @override */
-    public async getModule(
-        request: NormalizedRequest<M>
-    ): Promise<M["child"] & PublicModuleMethods> {
+    public async getModule(request: NormalizedRequest<M>): Promise<M["child"]> {
         // Create a proxy for the parent, and add to the request
         let parentProxy: ParameterizedModule & ModuleProxy;
         // Make sure the request was not for a root

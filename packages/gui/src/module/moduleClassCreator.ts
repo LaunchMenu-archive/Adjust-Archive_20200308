@@ -2,11 +2,11 @@ import {
     ModuleClassCreator as AdjustModuleClassCreator,
     Module as AdjustModule,
 } from "@adjust/core";
-import {ExtendsClass, ModuleInterface, ExtendedModuleClass} from "@adjust/core/types";
+import {ExtendsClass, ExtendedModuleClass} from "@adjust/core/types";
 import {Module} from "./module";
 import {ParameterizedModuleConfig} from "./_types/ModuleConfig";
 import {Registry} from "../registry/registry";
-import {LocationManagerID} from "../modules/location/locationManager.type";
+import {LocationManagerType} from "../modules/location/locationManager.type";
 
 // Specify that the default module to be used is our extend module
 export class ModuleClassCreator extends AdjustModuleClassCreator {
@@ -28,7 +28,7 @@ export class ModuleClassCreator extends AdjustModuleClassCreator {
             config.onInstall = async () => {
                 // Obtain the location manager instance
                 const locationManager = await Registry.createRoot({
-                    type: LocationManagerID,
+                    type: LocationManagerType,
                 });
                 await locationManager.updateLocation(config.defineLocation);
 

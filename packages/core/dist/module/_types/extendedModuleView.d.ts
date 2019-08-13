@@ -6,11 +6,10 @@ import { ExtractModuleState } from "./extendedModule";
 import { Settings } from "../../storage/settings/settings";
 import { ModuleViewProps } from "./moduleViewProps";
 import { ModuleViewState } from "./moduleViewState";
-import { ModuleInterface } from "./moduleInterface";
+import { ModuleContract, ChildModule } from "./moduleContract";
 import { ModuleRequestData } from "./moduleRequestData";
 import { ModuleState } from "./moduleState";
 import { ModuleReference } from "../moduleID";
-import { PublicModuleMethods } from "./publicModuleMethods";
 /**
  * Extracts the settingsConfig type from a given module
  */
@@ -19,7 +18,7 @@ export declare type ExtractModuleSettingsConfig<M extends ParameterizedModule> =
  * Extracts the request data type from a given module
  */
 export declare type ExtractModuleData<M extends {
-    type: ModuleInterface;
+    type: ModuleContract;
 }> = ModuleRequestData<M["type"]> extends {
     data: infer D;
 } ? D : undefined;
@@ -36,7 +35,7 @@ export declare type ExtractModuleViewState<V extends {
  */
 export declare type TransformModuleViewState<S> = S extends ModuleState ? {
     [P in keyof S]: S[P] extends Promise<infer T> ? TransformModuleViewState<T> : S[P] extends Array<infer T> ? Array<TransformModuleViewState<T>> : TransformModuleViewState<S[P]>;
-} : S extends ParameterizedModule ? JSX.Element : S extends PublicModuleMethods ? JSX.Element : S extends ModuleReference ? JSX.Element : S;
+} : S extends ParameterizedModule ? JSX.Element : S extends ChildModule<{}> ? JSX.Element : S extends ModuleReference ? JSX.Element : S;
 /**
  * Filters out any methods from a module view that should be overwritten
  */

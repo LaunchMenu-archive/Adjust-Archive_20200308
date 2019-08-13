@@ -1,11 +1,10 @@
 import { ParameterizedModule } from "../../module/module";
 import { AbstractModuleProvider } from "./abstractModuleProvider";
-import { InterfaceID } from "../_types/interfaceID";
+import { ContractID } from "../_types/contractID";
 import { NormalizedRequest } from "../_types/request";
-import { ModuleInterface } from "../../module/_types/moduleInterface";
-import { PublicModuleMethods } from "../../module/_types/publicModuleMethods";
+import { ModuleContract } from "../../module/_types/moduleContract";
 import { ModuleProxy } from "../../module/moduleProxy";
-export declare class InstanceModuleProvider<M extends ModuleInterface> extends AbstractModuleProvider<M> {
+export declare class InstanceModuleProvider<M extends ModuleContract> extends AbstractModuleProvider<M> {
     protected module: ParameterizedModule;
     protected connectionListener: (module: M["parent"]) => void;
     /**
@@ -15,9 +14,9 @@ export declare class InstanceModuleProvider<M extends ModuleInterface> extends A
      * @param filter The filter to apply to choose wherther or not to use this module
      * @param connectionListener A method that gets called when a new 'parent' connects
      */
-    constructor(type: InterfaceID<M>, module: ParameterizedModule | ModuleProxy, filter?: (request: NormalizedRequest<M>) => number, connectionListener?: (module: M["parent"]) => void);
+    constructor(type: ContractID<M>, module: ParameterizedModule | ModuleProxy, filter?: (request: NormalizedRequest<M>) => number, connectionListener?: (module: M["parent"]) => void);
     /** @override*/
     getPriority(request: NormalizedRequest<M>): number;
     /** @override */
-    getModule(request: NormalizedRequest<M>): Promise<M["child"] & PublicModuleMethods>;
+    getModule(request: NormalizedRequest<M>): Promise<M["child"]>;
 }

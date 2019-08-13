@@ -14,12 +14,11 @@ import {StateData} from "../state/stateData";
 import {RequestPath} from "./requestPath/requestPath";
 import {ParameterizedModuleView} from "./moduleView";
 import {DataChange} from "../storage/_types/dataChange";
-import {ModuleInterface} from "./_types/moduleInterface";
+import {ModuleContract, ChildModule} from "./_types/moduleContract";
 import {Registry} from "../registry/registry";
 import {ModuleProxy} from "./moduleProxy";
 import {ParentlessRequest, ParameterizedRequest} from "../registry/_types/request";
 import {ExtendedObject} from "../utils/extendedObject";
-import {PublicModuleMethods} from "./_types/publicModuleMethods";
 import {RequestFilter} from "../registry/_types/requestFilter";
 import {ModuleID} from "./moduleID";
 import {SettingsManager} from "../storage/settings/settingsManager";
@@ -50,8 +49,8 @@ export const baseConfig = {
 export class Module<
     S extends ModuleState,
     C extends SettingsConfig<any>,
-    I extends ModuleInterface
-> implements PublicModuleMethods {
+    I extends ModuleContract
+> implements ChildModule<{}> {
     // ID
     readonly ID: ModuleID;
 
@@ -87,7 +86,7 @@ export class Module<
     protected static async construct<
         S extends ModuleState,
         C extends SettingsConfig,
-        I extends ModuleInterface
+        I extends ModuleContract
     >(
         request: ModuleRequestData<I>,
         moduleID: ModuleID,
@@ -403,27 +402,27 @@ export class Module<
      * @param request The request to base the modules to retrieve on
      * @returns The modules that were either created or obtained
      */
-    public async request<M extends ModuleInterface>(
+    public async request<M extends ModuleContract>(
         this: M["parent"],
         request: ParentlessRequest<M> & {
             use: "all" | RequestFilter<M>;
         }
-    ): Promise<(M["child"] & PublicModuleMethods)[]>;
+    ): Promise<(M["child"])[]>;
 
     /**
      * Retrieves a module based on the given request specification
      * @param request The request to base the module to retrieve on
      * @returns The module that was either created or obtained
      */
-    public async request<M extends ModuleInterface>(
+    public async request<M extends ModuleContract>(
         this: M["parent"],
         request: ParentlessRequest<M>
-    ): Promise<M["child"] & PublicModuleMethods>;
+    ): Promise<M["child"]>;
 
-    public async request<M extends ModuleInterface>(
+    public async request<M extends ModuleContract>(
         this: M["parent"] & this,
         request: ParentlessRequest<M>
-    ): Promise<M["child"] & PublicModuleMethods | (M["child"] & PublicModuleMethods)[]> {
+    ): Promise<M["child"] | (M["child"])[]> {
         // Get the reponse(s) from the registry
         const response = Registry.request({parent: this, ...request} as any);
 
@@ -681,4 +680,4 @@ export class Module<
 /**
  * A type representing a module, where the generic parameter arguments can be left out
  */
-export type ParameterizedModule = Module<ModuleState, SettingsConfig, ModuleInterface>;
+export type ParameterizedModule = Module<ModuleState, SettingsConfig, ModuleContract>;

@@ -1,12 +1,12 @@
 import {Registry} from "@adjust/gui";
-import {PublicModuleMethods} from "@adjust/gui/types";
+import {ChildModule, ParentModule} from "@adjust/gui/types";
 
-export type Embed = {
+export type Embed = ChildModule<{
     setText(text: string): Promise<void>;
-} & PublicModuleMethods;
-export type EmbedParent = {
+}>;
+export type EmbedParent = ParentModule<{
     testSomething(): Promise<number>;
-};
+}>;
 export type EmbedContract = {
     parent: EmbedParent;
     child: Embed;
@@ -16,5 +16,5 @@ export type EmbedContract = {
     };
 };
 
-// Export the interfaceID type
-export const EmbedID = Registry.createInterfaceID<EmbedContract>(__filename);
+// Export the type
+export const EmbedType = Registry.createContractID<EmbedContract>(__filename);

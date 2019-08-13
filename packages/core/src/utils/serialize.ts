@@ -3,10 +3,10 @@ import {SerializeableData, AsyncSerializeableData} from "./_types/serializeableD
 import {Module, ParameterizedModule} from "../module/module";
 import {ExtendedObject} from "./extendedObject";
 import {ModuleProxy} from "../module/moduleProxy";
-import {PublicModuleMethods} from "../module/_types/publicModuleMethods";
 import {ModuleReference} from "../module/moduleID";
+import {ChildModule} from "../module/_types/moduleContract";
 
-function isModule(data): data is ParameterizedModule | ModuleProxy | PublicModuleMethods {
+function isModule(data): data is ParameterizedModule | ModuleProxy | ChildModule<{}> {
     return data instanceof Module || data instanceof ModuleProxy;
 }
 

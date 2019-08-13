@@ -10,7 +10,7 @@ import {Constructor, ExtendsClass, Empty} from "../utils/_types/standardTypes";
 import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";
 import {ExtendedModuleClass} from "./_types/extendedModule";
 import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
-import {ModuleInterface} from "./_types/moduleInterface";
+import {ModuleContract} from "./_types/moduleContract";
 
 import {ExtendedObject} from "../utils/extendedObject";
 import {Module} from "./module";
@@ -105,7 +105,7 @@ export class ModuleClassCreator {
             Module<
                 typeof Module.config.initialState,
                 SettingsConfig<Empty>,
-                ModuleInterface
+                ModuleContract
             >
         >
     >(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X> {

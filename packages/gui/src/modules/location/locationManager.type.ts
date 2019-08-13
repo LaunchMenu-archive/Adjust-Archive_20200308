@@ -1,8 +1,8 @@
 import {Registry, ModuleReference, SettingsDataID} from "@adjust/core";
-import {PublicModuleMethods} from "@adjust/core/types";
+import {ChildModule, ParentModule} from "@adjust/core/types";
 import {ModuleLocation} from "../../module/_types/ModuleLocation";
 
-export type LocationManager = {
+export type LocationManager = ChildModule<{
     /**
      * Opens a module at the given location
      * @param module The module to open
@@ -58,14 +58,14 @@ export type LocationManager = {
      * @returns Whether or not the value was successfully changed
      */
     setEditMode(edit: boolean): Promise<boolean>;
-} & PublicModuleMethods;
-export type LocationManagerParent = {};
+}>;
+export type LocationManagerParent = ParentModule<{}>;
 export type LocationManagerContract = {
     parent: LocationManagerParent;
     child: LocationManager;
 };
 
 // Export the interfaceID type
-export const LocationManagerID = Registry.createInterfaceID<LocationManagerContract>(
+export const LocationManagerType = Registry.createContractID<LocationManagerContract>(
     __filename
 );

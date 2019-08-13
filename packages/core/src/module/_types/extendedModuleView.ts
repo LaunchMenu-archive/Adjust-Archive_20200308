@@ -12,11 +12,10 @@ import {ExtractModuleState} from "./extendedModule";
 import {Settings} from "../../storage/settings/settings";
 import {ModuleViewProps} from "./moduleViewProps";
 import {ModuleViewState} from "./moduleViewState";
-import {ModuleInterface} from "./moduleInterface";
+import {ModuleContract, ChildModule} from "./moduleContract";
 import {ModuleRequestData} from "./moduleRequestData";
 import {ModuleState} from "./moduleState";
 import {ModuleReference} from "../moduleID";
-import {PublicModuleMethods} from "./publicModuleMethods";
 
 /**
  * Extracts the settingsConfig type from a given module
@@ -28,7 +27,7 @@ export type ExtractModuleSettingsConfig<
 /**
  * Extracts the request data type from a given module
  */
-export type ExtractModuleData<M extends {type: ModuleInterface}> = ModuleRequestData<
+export type ExtractModuleData<M extends {type: ModuleContract}> = ModuleRequestData<
     M["type"]
 > extends {
     data: infer D;
@@ -58,7 +57,7 @@ export type TransformModuleViewState<S> = S extends ModuleState
       }
     : S extends ParameterizedModule
     ? JSX.Element
-    : S extends PublicModuleMethods
+    : S extends ChildModule<{}>
     ? JSX.Element
     : S extends ModuleReference
     ? JSX.Element

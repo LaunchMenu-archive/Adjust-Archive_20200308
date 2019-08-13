@@ -35,7 +35,7 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, import("@adjust/core/types").SettingsConfig<import("@adjust/core/types").Empty>, import("@adjust/core/types").ModuleInterface>>>;
+}, import("@adjust/core/types").SettingsConfig<import("@adjust/core/types").Empty>, import("@adjust/core/types").ModuleContract>>>;
 /**
  * A class containing data for importing it (its actual file location),
  * a state that can be serialized and deserialized,

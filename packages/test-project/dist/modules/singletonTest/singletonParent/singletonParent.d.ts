@@ -1,10 +1,13 @@
 /// <reference types="react" />
-import { Singleton } from "../singleton/singleton.type";
 import { SingletonParent } from "./singletonParent.type";
 export declare const config: {
     initialState: {
-        singleton: Singleton;
-        child: import("@adjust/core/types").PublicModuleMethods;
+        singleton: import("@adjust/core/types").ChildModule<{
+            setText(text: string): Promise<void>;
+        }>;
+        child: {
+            close(): Promise<void>;
+        };
         text: string;
     };
     settings: {};
@@ -17,12 +20,16 @@ export declare const config: {
             };
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./singletonParent.type").SingletonParentContract>;
+    type: import("@adjust/core/types").ContractID<import("./singletonParent.type").SingletonParentContract>;
 };
 declare const SingletonParentModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
-        singleton: Singleton;
-        child: import("@adjust/core/types").PublicModuleMethods;
+        singleton: import("@adjust/core/types").ChildModule<{
+            setText(text: string): Promise<void>;
+        }>;
+        child: {
+            close(): Promise<void>;
+        };
         text: string;
     };
     settings: {};
@@ -35,7 +42,7 @@ declare const SingletonParentModule_base: import("@adjust/core/types").ExtendedM
             };
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./singletonParent.type").SingletonParentContract>;
+    type: import("@adjust/core/types").ContractID<import("./singletonParent.type").SingletonParentContract>;
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").Module, import("@adjust/gui").Module>>;
 export default class SingletonParentModule extends SingletonParentModule_base implements SingletonParent {
     onInit(): Promise<void>;
@@ -43,7 +50,7 @@ export default class SingletonParentModule extends SingletonParentModule_base im
     changeText(): void;
     closeSingleton(): Promise<void>;
 }
-declare const SingletonParentView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SingletonParentModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const SingletonParentView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SingletonParentModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class SingletonParentView extends SingletonParentView_base {
     protected renderView(): JSX.Element;
 }

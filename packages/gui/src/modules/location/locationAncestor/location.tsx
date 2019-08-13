@@ -9,7 +9,7 @@ import {React} from "../../../React";
 import {DragEvent} from "react";
 import {LocationPath} from "../_types/LocationPath";
 import {
-    LocationAncestorID,
+    LocationAncestorType,
     LocationAncestor,
     dragAndDropName,
 } from "./locationAncestor.type";
@@ -40,7 +40,7 @@ export const config = {
             type: "locations",
         },
     },
-    type: LocationAncestorID,
+    type: LocationAncestorType,
 };
 
 /**

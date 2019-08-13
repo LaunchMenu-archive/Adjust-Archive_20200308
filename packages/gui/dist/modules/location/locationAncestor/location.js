@@ -21,7 +21,7 @@ exports.config = {
             type: "locations",
         },
     },
-    type: locationAncestor_type_1.LocationAncestorID,
+    type: locationAncestor_type_1.LocationAncestorType,
 };
 /**
  * The location class that simply renders a location when requested

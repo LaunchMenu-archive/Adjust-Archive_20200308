@@ -1,10 +1,9 @@
 import Path from "path";
 import {Registry} from "../../registry/registry";
 import {createModule} from "../moduleClassCreator";
-import {PublicModuleMethods} from "../_types/publicModuleMethods";
 import {ModuleState} from "../_types/moduleState";
 import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
-import {ModuleInterface} from "../_types/moduleInterface";
+import {ModuleContract, ChildModule, ParentModule} from "../_types/moduleContract";
 import {ModuleRequestData} from "../_types/moduleRequestData";
 import {ModuleID} from "../moduleID";
 import {Module} from "../module";
@@ -12,9 +11,9 @@ import {Module} from "../module";
 export type dummyInterface = {
     test: (text: string) => Promise<string>;
 };
-export const dummyInterfaceID = Registry.createInterfaceID<{
-    parent: {};
-    child: dummyInterface & PublicModuleMethods;
+export const dummyInterfaceID = Registry.createContractID<{
+    parent: ParentModule<{}>;
+    child: ChildModule<dummyInterface>;
 }>(__filename + "1");
 export class DummyModule
     extends createModule({initialState: {}, settings: {}, type: dummyInterfaceID})
@@ -22,7 +21,7 @@ export class DummyModule
     public static async customConstruct<
         S extends ModuleState,
         C extends SettingsConfig,
-        I extends ModuleInterface
+        I extends ModuleContract
     >(
         request: ModuleRequestData<I>,
         moduleID: ModuleID,
@@ -46,9 +45,9 @@ DummyModule.path = ["", "..", "module", "_tests", "dummyModules.helper.js"].join
 export type dummyInterface2 = {
     test2: (test: string) => Promise<void>;
 };
-export const dummyInterfaceID2 = Registry.createInterfaceID<{
-    parent: {someMethod: () => Promise<void>};
-    child: dummyInterface2 & PublicModuleMethods;
+export const dummyInterfaceID2 = Registry.createContractID<{
+    parent: ParentModule<{someMethod: () => Promise<void>}>;
+    child: ChildModule<dummyInterface2>;
     data: {shit: string};
 }>(__filename + "2");
 export class DummyModule2
@@ -70,9 +69,9 @@ DummyModule2.path = "test2";
 export type dummyInterface3 = {
     test2: (test: string) => Promise<void>;
 };
-export const dummyInterfaceID3 = Registry.createInterfaceID<{
-    parent: {};
-    child: dummyInterface3 & PublicModuleMethods;
+export const dummyInterfaceID3 = Registry.createContractID<{
+    parent: ParentModule<{}>;
+    child: ChildModule<dummyInterface3>;
 }>(__filename + "3");
 
 export class DummyModule4

@@ -1,6 +1,6 @@
 import {createModule, createModuleView, WindowManager, React} from "@adjust/gui";
-import {TestID, Test} from "./test.type";
-import {EmbedID, Embed} from "../embed/embed.type";
+import {TestType, Test} from "./test.type";
+import {EmbedType, Embed} from "../embed/embed.type";
 
 export const config = {
     initialState: {
@@ -15,7 +15,7 @@ export const config = {
             type: "boolean",
         },
     },
-    type: TestID,
+    type: TestType,
 };
 
 export default class TestModule extends createModule(config) implements Test {
@@ -24,7 +24,7 @@ export default class TestModule extends createModule(config) implements Test {
     public async onInit() {
         this.setState({
             child: await this.request({
-                type: EmbedID,
+                type: EmbedType,
                 data: {text: "hello", count: 3},
             }),
         });

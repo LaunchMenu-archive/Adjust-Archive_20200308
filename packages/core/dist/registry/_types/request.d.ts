@@ -1,13 +1,13 @@
-import { InterfaceID } from "./interfaceID";
+import { ContractID } from "./contractID";
 import { IfRequired } from "../../utils/_types/standardTypes";
-import { ModuleInterface } from "../../module/_types/moduleInterface";
+import { ModuleContract } from "../../module/_types/moduleContract";
 import { ParameterizedModule } from "../../module/module";
 import { RequestFilter } from "./requestFilter";
 /**
  * A version of the request where the parent doesn't have to be provided, because it will be provided by someone else
  */
-export declare type ParentlessRequest<M extends ModuleInterface> = {
-    type: InterfaceID<M>;
+export declare type ParentlessRequest<M extends ModuleContract> = {
+    type: ContractID<M>;
     use?: "all" | "one" | RequestFilter<M>;
     data?: M["data"];
     openView?: boolean;
@@ -15,13 +15,13 @@ export declare type ParentlessRequest<M extends ModuleInterface> = {
 /**
  * The format for requesting a module
  */
-export declare type Request<M extends ModuleInterface> = {
+export declare type Request<M extends ModuleContract> = {
     parent: M["parent"];
 } & ParentlessRequest<M>;
-export declare type ParameterizedRequest = Request<ModuleInterface>;
+export declare type ParameterizedRequest = Request<ModuleContract>;
 /**
  * The normalized version of the request
  */
-export declare type NormalizedRequest<M extends ModuleInterface> = Required<Request<M>> & {
+export declare type NormalizedRequest<M extends ModuleContract> = Required<Request<M>> & {
     parent: ParameterizedModule;
 };

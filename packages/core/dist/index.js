@@ -20,7 +20,7 @@ __export(require("./module/moduleViewClassCreator"));
 __export(require("./module/moduleProxy"));
 __export(require("./module/remoteModuleProxy"));
 // MVC classes
-__export(require("./state/window/windowManager"));
+__export(require("./window/windowManager"));
 const react_1 = __importDefault(require("react"));
 exports.React = react_1.default;
 // Utils

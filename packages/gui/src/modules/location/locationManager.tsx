@@ -5,7 +5,7 @@ import {
     SettingsManager,
 } from "@adjust/core";
 import {SettingsDataID} from "@adjust/core";
-import {LocationManagerID, LocationManager} from "./locationManager.type";
+import {LocationManagerType, LocationManager} from "./locationManager.type";
 import {ModuleLocation} from "../../module/_types/ModuleLocation";
 import {Registry} from "../../registry/registry";
 import LocationAncestorModule from "./locationAncestor/locationAncestor";
@@ -38,7 +38,7 @@ export const config = {
             type: "locationPaths",
         },
     },
-    type: LocationManagerID,
+    type: LocationManagerType,
 };
 
 /**
@@ -50,7 +50,7 @@ export default class LocationManagerModule
     /** @override */
     protected async onInit(fromReload: boolean): Promise<void> {
         Registry.addProvider(
-            new InstanceModuleProvider(LocationManagerID, this, () => 2)
+            new InstanceModuleProvider(LocationManagerType, this, () => 2)
         );
     }
 

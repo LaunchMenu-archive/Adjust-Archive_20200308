@@ -1,10 +1,9 @@
 import {NormalizedRequest} from "../_types/request";
-import {InterfaceID} from "../_types/interfaceID";
-import {ModuleInterface} from "../../module/_types/moduleInterface";
-import {PublicModuleMethods} from "../../module/_types/publicModuleMethods";
-export abstract class AbstractModuleProvider<M extends ModuleInterface> {
+import {ContractID} from "../_types/contractID";
+import {ModuleContract} from "../../module/_types/moduleContract";
+export abstract class AbstractModuleProvider<M extends ModuleContract> {
     // The type of requests to match
-    protected type: InterfaceID<M>;
+    protected type: ContractID<M>;
 
     // A filter to apply to determine the priority
     protected filter: (request: NormalizedRequest<M>) => number;
@@ -15,7 +14,7 @@ export abstract class AbstractModuleProvider<M extends ModuleInterface> {
      * @param filter A filter as to skip certain requests
      */
     constructor(
-        type: InterfaceID<M>,
+        type: ContractID<M>,
         filter: (request: NormalizedRequest<M>) => number = () => 1
     ) {
         this.type = type;
@@ -26,7 +25,7 @@ export abstract class AbstractModuleProvider<M extends ModuleInterface> {
      * Retrieves the type that this provider can provide a module for
      * @returns The module type
      */
-    public getType(): InterfaceID<any> {
+    public getType(): ContractID<any> {
         return this.type;
     }
 
@@ -46,7 +45,5 @@ export abstract class AbstractModuleProvider<M extends ModuleInterface> {
      * Retrieves a module based on the request made
      * @param request The request that was sent
      */
-    public abstract async getModule(
-        request: NormalizedRequest<M>
-    ): Promise<M["child"] & PublicModuleMethods>;
+    public abstract async getModule(request: NormalizedRequest<M>): Promise<M["child"]>;
 }

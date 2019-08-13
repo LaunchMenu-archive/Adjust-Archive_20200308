@@ -29,7 +29,7 @@ export declare const config: {
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
+    type: import("@adjust/core/types").ContractID<import("./locationAncestor.type").LocationAncestorContract>;
 };
 declare const LocationModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
@@ -56,7 +56,7 @@ declare const LocationModule_base: import("@adjust/core/types").ExtendedModuleCl
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
+    type: import("@adjust/core/types").ContractID<import("./locationAncestor.type").LocationAncestorContract>;
 }, typeof LocationAncestorModule>;
 /**
  * The location class that simply renders a location when requested
@@ -91,7 +91,7 @@ export default class LocationModule extends LocationModule_base implements Locat
      */
     onDragEnd(): Promise<void>;
 }
-declare const LocationView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof LocationModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const LocationView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof LocationModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class LocationView extends LocationView_base {
     /**
      * Starts the dragging of a location

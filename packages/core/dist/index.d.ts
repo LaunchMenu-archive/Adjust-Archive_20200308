@@ -9,7 +9,7 @@ export * from "./module/moduleView";
 export * from "./module/moduleViewClassCreator";
 export * from "./module/moduleProxy";
 export * from "./module/remoteModuleProxy";
-export * from "./state/window/windowManager";
+export * from "./window/windowManager";
 import OrReact from "react";
 export declare const React: typeof OrReact;
 export * from "./utils/isMain";

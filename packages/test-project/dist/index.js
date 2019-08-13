@@ -16,24 +16,24 @@ const singletonParent_type_1 = require("./modules/singletonTest/singletonParent/
     let test = 3;
     if (test == 1) {
         //TODO: reject interfaces that require a parent as the root
-        gui_1.Registry.createRoot({ type: test_type_1.TestID }).then(root => {
+        gui_1.Registry.createRoot({ type: test_type_1.TestType }).then(root => {
             setTimeout(() => {
                 root.doSomething("3");
             }, 2000);
         });
     }
     else if (test == 2) {
-        gui_1.Registry.createRoot({ type: modules_1.LocationManagerID }).then(locationManager => {
+        gui_1.Registry.createRoot({ type: modules_1.LocationManagerType }).then(locationManager => {
             console.log(locationManager, locationManager.getRequestPath());
         });
     }
     else if (test == 3) {
         await gui_1.Registry.createRoot({
-            type: singletonParent_type_1.SingletonParentID,
+            type: singletonParent_type_1.SingletonParentType,
             openView: true,
             data: { count: 1 },
         });
-        gui_1.Registry.createRoot({ type: test_type_1.TestID, openView: true }).then(root => {
+        gui_1.Registry.createRoot({ type: test_type_1.TestType, openView: true }).then(root => {
             setTimeout(() => {
                 root.doSomething("3");
             }, 2000);
@@ -41,7 +41,7 @@ const singletonParent_type_1 = require("./modules/singletonTest/singletonParent/
     }
     else if (test == 4) {
         gui_1.Registry.createRoot({
-            type: singletonParent_type_1.SingletonParentID,
+            type: singletonParent_type_1.SingletonParentType,
             openView: true,
             data: { count: 4 },
         });

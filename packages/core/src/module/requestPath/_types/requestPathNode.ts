@@ -1,5 +1,5 @@
 import {Json} from "../../../utils/_types/standardTypes";
-import {ParameterizedInterfaceID} from "../../../registry/_types/interfaceID";
+import {ParameterizedContractID} from "../../../registry/_types/contractID";
 import {ModuleID} from "../../moduleID";
 
 /**
@@ -8,5 +8,5 @@ import {ModuleID} from "../../moduleID";
 export type RequestPathNode = {
     moduleID: ModuleID; // The ID of the module of the request
     requestData: Json; // The data passed by the request
-    getType: () => ParameterizedInterfaceID; // A getter to obtain the type of the module
+    getType: () => ParameterizedContractID; // A getter to obtain the type of the module
 };

@@ -1,7 +1,7 @@
 import {Box, TextField, FormControl, FormHelperText, Typography} from "@material-ui/core";
 import {createModuleView, React} from "@adjust/core";
 import {KeyboardEvent} from "react";
-import {InputPromptID, InputPrompt, PromptData} from "./inputPrompt.type";
+import {InputPromptType, InputPrompt, PromptData} from "./inputPrompt.type";
 import {createModule} from "../../module/moduleClassCreator";
 
 export const config = {
@@ -25,7 +25,7 @@ export const config = {
             },
         },
     },
-    type: InputPromptID,
+    type: InputPromptType,
 };
 
 export default class InputPromptModule extends createModule(config)

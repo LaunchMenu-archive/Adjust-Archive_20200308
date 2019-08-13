@@ -5,14 +5,14 @@ export declare const config: {
         text: string;
     };
     settings: {};
-    type: import("@adjust/core/types").InterfaceID<import("./singleton.type").SingletonContract>;
+    type: import("@adjust/core/types").ContractID<import("./singleton.type").SingletonContract>;
 };
 declare const SingletonModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
         text: string;
     };
     settings: {};
-    type: import("@adjust/core/types").InterfaceID<import("./singleton.type").SingletonContract>;
+    type: import("@adjust/core/types").ContractID<import("./singleton.type").SingletonContract>;
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").Module, import("@adjust/gui").Module>>;
 export default class SingletonModule extends SingletonModule_base implements Singleton {
     /** @override */
@@ -24,7 +24,7 @@ export default class SingletonModule extends SingletonModule_base implements Sin
     /** @override */
     setText(text: string): Promise<void>;
 }
-declare const SingletonView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SingletonModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const SingletonView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SingletonModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class SingletonView extends SingletonView_base {
     protected renderView(): JSX.Element;
 }

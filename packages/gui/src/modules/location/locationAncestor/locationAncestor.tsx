@@ -6,7 +6,7 @@ import {
 } from "@adjust/core";
 import {LocationPath} from "../_types/LocationPath";
 import {
-    LocationAncestorID,
+    LocationAncestorType,
     LocationAncestor,
     LocationAncestorParent,
 } from "./locationAncestor.type";
@@ -19,7 +19,7 @@ export const config = {
         inDropMode: false,
     },
     settings: {},
-    type: LocationAncestorID,
+    type: LocationAncestorType,
     abstract: true, // This is just inteded as module to be extended
 };
 
@@ -127,7 +127,7 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
 
         // Request the location
         const locationAncestor = (await this.request({
-            type: LocationAncestorID,
+            type: LocationAncestorType,
             use: providers => {
                 // Get the index of this module class
                 const thisPath = this.getData().path;

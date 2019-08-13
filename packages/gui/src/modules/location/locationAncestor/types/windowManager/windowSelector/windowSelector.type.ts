@@ -1,12 +1,12 @@
 import {Registry} from "@adjust/core";
-import {PublicModuleMethods} from "@adjust/core/types";
 import {LocationsMoveData} from "../../../../_types/LocationsMoveData";
 import {WindowsData} from "../_types/windowData";
 import {LocationAncestorParent} from "../../../locationAncestor.type";
+import {ChildModule, ParentModule} from "@adjust/core/types";
 /**
  * A type used by the location manager to move a location to a new, or currently not opened window
  */
-export type WindowSelector = {
+export type WindowSelector = ChildModule<{
     /**
      * Sets the available windows
      * @param closed The windows that are currently closed
@@ -19,7 +19,7 @@ export type WindowSelector = {
      * @param enabled Whether or not the selector is visible
      */
     setEnabled(enabled: boolean): Promise<void>;
-} & PublicModuleMethods;
+}>;
 export type WindowSelectorParent = LocationAncestorParent & {
     /**
      * Updates the data of where teh locations are being moved to, by updating their hints
@@ -50,6 +50,6 @@ export type WindowSelectorContract = {
 };
 
 // Export the windowSelectorID type
-export const WindowSelectorID = Registry.createInterfaceID<WindowSelectorContract>(
+export const WindowSelectorType = Registry.createContractID<WindowSelectorContract>(
     __filename
 );

@@ -2,8 +2,8 @@ import {ModuleState} from "./moduleState";
 import {ModuleView} from "../moduleView";
 import {ExtendsClass} from "../../utils/_types/standardTypes";
 import {ModuleRequestData} from "./moduleRequestData";
-import {ModuleInterface} from "./moduleInterface";
-import {InterfaceID} from "../../registry/_types/interfaceID";
+import {ModuleContract} from "./moduleContract";
+import {ContractID} from "../../registry/_types/contractID";
 import {SettingsConfigSet} from "../../storage/settings/_types/settingsConfigSet";
 import {ModuleSettingsMigrators} from "./moduleSettingsMigrators";
 
@@ -13,13 +13,13 @@ import {ModuleSettingsMigrators} from "./moduleSettingsMigrators";
 export type ModuleConfig<
     S extends ModuleState,
     C extends SettingsConfigSet,
-    I extends ModuleInterface
+    I extends ModuleContract
 > = {
     version?: string;
     settings: C;
     settingsMigrators?: ModuleSettingsMigrators;
     initialState: S;
-    type: InterfaceID<I>;
+    type: ContractID<I>;
     onInstall?: () => Promise<void> | void;
     abstract?: boolean;
     viewClass?: ExtendsClass<typeof ModuleView, any>;
@@ -32,7 +32,7 @@ export type ModuleConfig<
 export type ParameterizedModuleConfig = ModuleConfig<
     ModuleState,
     SettingsConfigSet,
-    ModuleInterface
+    ModuleContract
 >;
 
 /**
@@ -41,7 +41,7 @@ export type ParameterizedModuleConfig = ModuleConfig<
 export type NormalizedModuleConfig<
     S extends ModuleState,
     C extends SettingsConfigSet,
-    I extends ModuleInterface
+    I extends ModuleContract
 > = {[P in keyof ModuleConfig<S, C, I>]-?: ModuleConfig<S, C, I>[P]};
 
 /**
@@ -50,5 +50,5 @@ export type NormalizedModuleConfig<
 export type ParameterizedNormalizedModuleConfig = NormalizedModuleConfig<
     ModuleState,
     SettingsConfigSet,
-    ModuleInterface
+    ModuleContract
 >;

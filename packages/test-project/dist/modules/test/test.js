@@ -15,14 +15,14 @@ exports.config = {
             type: "boolean",
         },
     },
-    type: test_type_1.TestID,
+    type: test_type_1.TestType,
 };
 class TestModule extends gui_1.createModule(exports.config) {
     /** @override */
     async onInit() {
         this.setState({
             child: await this.request({
-                type: embed_type_1.EmbedID,
+                type: embed_type_1.EmbedType,
                 data: { text: "hello", count: 3 },
             }),
         });

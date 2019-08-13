@@ -2,7 +2,6 @@ import { ModuleReference } from "@adjust/core";
 import { ModuleLocation } from "../../../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "../../../locationAncestor/locationAncestor";
 import { LocationPath } from "../../../_types/LocationPath";
-import { WindowSelector } from "./windowSelector/windowSelector.type";
 import { Window, WindowParent } from "./window/window.type";
 import { LocationAncestor } from "../../locationAncestor.type";
 import { WindowsData } from "./_types/windowData";
@@ -14,7 +13,10 @@ export declare const config: {
                 window: Promise<Window>;
             };
         };
-        windowSelector: WindowSelector;
+        windowSelector: import("@adjust/core/types").ChildModule<{
+            setWindows(closed: WindowsData, opened: WindowsData): Promise<void>;
+            setEnabled(enabled: boolean): Promise<void>;
+        }>;
     };
     settings: {
         windows: {
@@ -22,7 +24,7 @@ export declare const config: {
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("../../locationAncestor.type").LocationAncestorContract>;
+    type: import("@adjust/core/types").ContractID<import("../../locationAncestor.type").LocationAncestorContract>;
 };
 declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
@@ -32,7 +34,10 @@ declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedMod
                 window: Promise<Window>;
             };
         };
-        windowSelector: WindowSelector;
+        windowSelector: import("@adjust/core/types").ChildModule<{
+            setWindows(closed: WindowsData, opened: WindowsData): Promise<void>;
+            setEnabled(enabled: boolean): Promise<void>;
+        }>;
     };
     settings: {
         windows: {
@@ -40,7 +45,7 @@ declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedMod
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("../../locationAncestor.type").LocationAncestorContract>;
+    type: import("@adjust/core/types").ContractID<import("../../locationAncestor.type").LocationAncestorContract>;
 }, typeof LocationAncestorModule>;
 /**
  * type "Window" Accepts one of location hints:

@@ -1,4 +1,4 @@
-import { PublicModuleMethods } from "@adjust/core/types";
+import { ChildModule, ParentModule } from "@adjust/core/types";
 export declare type PromptData = {
     title?: string;
     description: string;
@@ -8,7 +8,7 @@ export declare type PromptData = {
 /**
  * A type used to request standard use data
  */
-export declare type InputPrompt = {
+export declare type InputPrompt = ChildModule<{
     /**
      * Requests the user to input some string value
      * @param type The type of input to request
@@ -41,10 +41,10 @@ export declare type InputPrompt = {
     prompt(type: string, data: PromptData & {
         defaultValue: any;
     } & any): Promise<any | undefined>;
-} & PublicModuleMethods;
-export declare type InputPromptParent = {};
+}>;
+export declare type InputPromptParent = ParentModule<{}>;
 export declare type InputPromptContract = {
     parent: InputPromptParent;
     child: InputPrompt;
 };
-export declare const InputPromptID: import("@adjust/core/types").InterfaceID<InputPromptContract>;
+export declare const InputPromptType: import("@adjust/core/types").ContractID<InputPromptContract>;

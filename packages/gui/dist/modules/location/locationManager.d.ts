@@ -14,7 +14,16 @@ export declare const config: {
             };
         };
         locationMoveData: LocationsMoveData;
-        locationAncestor: Promise<LocationAncestor>;
+        locationAncestor: Promise<import("@adjust/core/types").ChildModule<{
+            openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
+            closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
+            showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
+            createLocation(location: ModuleLocation): Promise<LocationPath>;
+            removeLocation(locationPath: LocationPath): Promise<boolean>;
+            removeAncestor(): Promise<void>;
+            setEditMode(edit: boolean): Promise<void>;
+            setDropMode(drop: boolean): Promise<void>;
+        }>>;
     };
     settings: {
         locations: {
@@ -27,7 +36,7 @@ export declare const config: {
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./locationManager.type").LocationManagerContract>;
+    type: import("@adjust/core/types").ContractID<import("./locationManager.type").LocationManagerContract>;
 };
 declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
@@ -37,7 +46,16 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
             };
         };
         locationMoveData: LocationsMoveData;
-        locationAncestor: Promise<LocationAncestor>;
+        locationAncestor: Promise<import("@adjust/core/types").ChildModule<{
+            openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
+            closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
+            showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
+            createLocation(location: ModuleLocation): Promise<LocationPath>;
+            removeLocation(locationPath: LocationPath): Promise<boolean>;
+            removeAncestor(): Promise<void>;
+            setEditMode(edit: boolean): Promise<void>;
+            setDropMode(drop: boolean): Promise<void>;
+        }>>;
     };
     settings: {
         locations: {
@@ -50,7 +68,7 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./locationManager.type").LocationManagerContract>;
+    type: import("@adjust/core/types").ContractID<import("./locationManager.type").LocationManagerContract>;
 }, typeof LocationAncestorModule>;
 /**
  * The location manager, responsible for keeping track of all locations in the system, and linking them with modules

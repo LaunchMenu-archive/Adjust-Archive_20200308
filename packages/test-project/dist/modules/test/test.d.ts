@@ -1,10 +1,11 @@
 /// <reference types="react" />
 import { Test } from "./test.type";
-import { Embed } from "../embed/embed.type";
 export declare const config: {
     initialState: {
         stuff: string;
-        child: Embed;
+        child: import("@adjust/core/types").ChildModule<{
+            setText(text: string): Promise<void>;
+        }>;
         somethingAsync: Promise<number>;
         smth: number;
     };
@@ -14,12 +15,14 @@ export declare const config: {
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./test.type").TestContract>;
+    type: import("@adjust/core/types").ContractID<import("./test.type").TestContract>;
 };
 declare const TestModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
         stuff: string;
-        child: Embed;
+        child: import("@adjust/core/types").ChildModule<{
+            setText(text: string): Promise<void>;
+        }>;
         somethingAsync: Promise<number>;
         smth: number;
     };
@@ -29,7 +32,7 @@ declare const TestModule_base: import("@adjust/core/types").ExtendedModuleClass<
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./test.type").TestContract>;
+    type: import("@adjust/core/types").ContractID<import("./test.type").TestContract>;
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").Module, import("@adjust/gui").Module>>;
 export default class TestModule extends TestModule_base implements Test {
     intervalID: number;
@@ -44,7 +47,7 @@ export default class TestModule extends TestModule_base implements Test {
     closeChild(): void;
     setStuff(): void;
 }
-declare const TestView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof TestModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const TestView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof TestModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class TestView extends TestView_base {
     protected renderView(): JSX.Element;
 }

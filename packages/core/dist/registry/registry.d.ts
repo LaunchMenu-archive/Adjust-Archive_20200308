@@ -1,13 +1,12 @@
 /// <reference types="node" />
-import { InterfaceID } from "./_types/interfaceID";
+import { ContractID } from "./_types/contractID";
 import { ParentlessRequest, Request, NormalizedRequest } from "./_types/request";
 import { RequestFilter } from "./_types/requestFilter";
 import { Module, ParameterizedModule } from "../module/module";
-import { ModuleInterface } from "../module/_types/moduleInterface";
+import { ModuleContract, IsContractValid } from "../module/_types/moduleContract";
 import { AbstractModuleProvider as ModuleProvider } from "./moduleProviders/abstractModuleProvider";
 import { ClassModuleProvider } from "./moduleProviders/classModuleProvider";
 import { ExtendsClass } from "../utils/_types/standardTypes";
-import { PublicModuleMethods } from "../module/_types/publicModuleMethods";
 import { Package } from "../utils/_types/package";
 /**
  * Keeps track of all modules classes and module providers
@@ -24,21 +23,21 @@ export declare class RegistrySingleton {
      * @param request The request to base the modules to retrieve on
      * @returns The modules that were either created or obtained
      */
-    request<M extends ModuleInterface>(request: Request<M> & {
+    request<M extends ModuleContract>(request: Request<M> & {
         use: "all" | RequestFilter<M>;
-    }): Promise<(M["child"] & PublicModuleMethods)[]>;
+    }): Promise<(M["child"])[]>;
     /**
      * Retrieves a module based on the given request specification
      * @param request The request to base the module to retrieve on
      * @returns The module that was either created or obtained
      */
-    request<M extends ModuleInterface>(request: Request<M>): Promise<M["child"] & PublicModuleMethods>;
+    request<M extends ModuleContract>(request: Request<M>): Promise<M["child"]>;
     /**
      * Retrieves all the providers for the given request
      * @param request The request to retrieve the providers for
      * @returns A list of module providers in sorted order from highest to lowest priority
      */
-    protected getProviders<M extends ModuleInterface>(request: NormalizedRequest<M>): Promise<ModuleProvider<M>[]>;
+    protected getProviders<M extends ModuleContract>(request: NormalizedRequest<M>): Promise<ModuleProvider<M>[]>;
     /**
      * Adds the provider to the registry
      * @param provider The provider to add to the registry
@@ -55,13 +54,13 @@ export declare class RegistrySingleton {
      * @param request The request to base the module to retrieve on
      * @returns The module that was created
      */
-    createRoot<M extends ModuleInterface>(this: M["parent"], request: ParentlessRequest<M>): Promise<M["child"] & PublicModuleMethods>;
+    createRoot<M extends ModuleContract>(this: M["parent"], request: ParentlessRequest<M>): Promise<M["child"]>;
     /**
-     * Creates a unique ID for the interface
-     * @param location The location of the interface in string form (use __filename), should be unique
-     * @returns An interface ID for recognizing classes using the interface
+     * Creates a unique ID for the contract
+     * @param location The location of the contract in string form (use __filename), should be unique
+     * @returns An contract ID for recognizing classes using the contract
      */
-    createInterfaceID<M extends ModuleInterface = null>(location: string & (M extends null ? "You must provide a generic type parameter" : string)): InterfaceID<M>;
+    createContractID<M extends ModuleContract = null>(location: string & (IsContractValid<M, string>)): ContractID<M>;
     /**
      * Retrieves the module object of which Adjust is a depedency
      * @returns The node module that's not part of adjust (node as in node.js)

@@ -1,13 +1,13 @@
 import {Grid, Button, Box} from "@material-ui/core";
-import {WindowSelectorID, WindowSelector} from "./windowSelector.type";
+import {WindowSelectorType, WindowSelector} from "./windowSelector.type";
 import {WindowManager, createModuleView, UUID, ExtendedObject} from "@adjust/core";
 import {DragEvent} from "react";
 import {createModule} from "../../../../../../module/moduleClassCreator";
 import {React} from "../../../../../../React";
 import {dragAndDropName} from "../../../locationAncestor.type";
-import {InputPrompt, InputPromptID} from "../../../../../prompts/inputPrompt.type";
+import {InputPrompt, InputPromptType} from "../../../../../prompts/inputPrompt.type";
 import {WindowsData} from "../_types/windowData";
-import {Window, WindowID} from "../window/window.type";
+import {Window, WindowType} from "../window/window.type";
 import LocationAncestorModule from "../../../locationAncestor";
 
 const sizes = {
@@ -20,7 +20,7 @@ export const config = {
         windowModule: null as Promise<Window>,
     },
     settings: {},
-    type: WindowSelectorID,
+    type: WindowSelectorType,
 };
 
 export default class WindowSelectorModule
@@ -124,7 +124,10 @@ export default class WindowSelectorModule
         // Allow the user to rename the window
         const renamePromise = new Promise(async res => {
             // Obtain the name prompt
-            const namePrompt = await this.request({type: InputPromptID, openView: true});
+            const namePrompt = await this.request({
+                type: InputPromptType,
+                openView: true,
+            });
 
             // Prompt the user for a name
             const name = await namePrompt.prompt("string", {
@@ -170,7 +173,7 @@ export default class WindowSelectorModule
             // Obtain the new window
             this.setState({
                 windowModule: this.request({
-                    type: WindowID,
+                    type: WindowType,
                     data: {
                         ID: windowID,
                         path: [...this.getData().path, windowID],

@@ -36,4 +36,4 @@ export type WindowContract = {
     };
 };
 
-export const WindowID = Registry.createInterfaceID<WindowContract>(__filename);
+export const WindowType = Registry.createContractID<WindowContract>(__filename);

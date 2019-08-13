@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
-const viewManager_1 = require("../state/window/viewManager");
+const viewManager_1 = require("../window/viewManager");
 const extendedObject_1 = require("../utils/extendedObject");
 /**
  * A class that can visually represent the module

@@ -22,7 +22,7 @@ exports.config = {
             type: "locationPaths",
         },
     },
-    type: locationManager_type_1.LocationManagerID,
+    type: locationManager_type_1.LocationManagerType,
 };
 /**
  * The location manager, responsible for keeping track of all locations in the system, and linking them with modules
@@ -30,7 +30,7 @@ exports.config = {
 class LocationManagerModule extends core_1.createModule(exports.config, locationAncestor_1.default) {
     /** @override */
     async onInit(fromReload) {
-        registry_1.Registry.addProvider(new core_1.InstanceModuleProvider(locationManager_type_1.LocationManagerID, this, () => 2));
+        registry_1.Registry.addProvider(new core_1.InstanceModuleProvider(locationManager_type_1.LocationManagerType, this, () => 2));
     }
     /**
      * Retrieves the location ancestor to be used

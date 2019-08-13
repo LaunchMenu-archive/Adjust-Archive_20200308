@@ -1,10 +1,10 @@
 import {RequestPath} from "../requestPath/requestPath";
-import {ModuleInterface} from "./moduleInterface";
+import {ModuleContract} from "./moduleContract";
 
 /**
  * An interface that contains all required outside data for a Module
  */
-export type ModuleRequestData<I extends ModuleInterface> = {
+export type ModuleRequestData<I extends ModuleContract> = {
     requestPath: RequestPath;
     data: I["data"];
     openView?: boolean;
@@ -13,4 +13,4 @@ export type ModuleRequestData<I extends ModuleInterface> = {
 /**
  * An interface that contains all required outside data for a Module, with a interface paramter provided
  */
-export type ParameterizedModuleRequestData = ModuleRequestData<ModuleInterface>;
+export type ParameterizedModuleRequestData = ModuleRequestData<ModuleContract>;

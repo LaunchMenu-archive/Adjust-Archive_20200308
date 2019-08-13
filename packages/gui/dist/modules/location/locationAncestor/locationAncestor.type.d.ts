@@ -1,12 +1,12 @@
 import { ModuleReference } from "@adjust/core";
-import { PublicModuleMethods } from "@adjust/core/types";
+import { ChildModule, ParentModule } from "@adjust/core/types";
 import { LocationPath } from "../_types/LocationPath";
 import { ModuleLocation } from "../../../module/_types/ModuleLocation";
 import { LocationsMoveData } from "../_types/LocationsMoveData";
 /**
  * A type used by the location manager, represents a node of the path to a location
  */
-export declare type LocationAncestor = {
+export declare type LocationAncestor = ChildModule<{
     /**
      * Opens a module at the given location
      * @param module The module to open
@@ -55,8 +55,8 @@ export declare type LocationAncestor = {
      * @param drop Whether or not droping will be enabled
      */
     setDropMode(drop: boolean): Promise<void>;
-} & PublicModuleMethods;
-export declare type LocationAncestorParent = {
+}>;
+export declare type LocationAncestorParent = ParentModule<{
     /**
      * Sets the data of what locations are being moved
      * @param data The data, containing all the hints required to recreate the locations in their current form
@@ -97,7 +97,7 @@ export declare type LocationAncestorParent = {
      * @param delay The number of miliseconds that should be waited to perform updateLocationsMoveData calls
      */
     updateMovedLocations(delay?: number): Promise<void>;
-};
+}>;
 export declare type LocationAncestorContract = {
     parent: LocationAncestorParent;
     child: LocationAncestor;
@@ -106,5 +106,5 @@ export declare type LocationAncestorContract = {
         path: string[];
     };
 };
-export declare const LocationAncestorID: import("@adjust/core/types").InterfaceID<LocationAncestorContract>;
+export declare const LocationAncestorType: import("@adjust/core/types").ContractID<LocationAncestorContract>;
 export declare const dragAndDropName = "Adjust drop";

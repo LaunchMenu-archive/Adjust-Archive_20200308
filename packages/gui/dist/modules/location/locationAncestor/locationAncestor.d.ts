@@ -9,7 +9,7 @@ export declare const config: {
         inDropMode: boolean;
     };
     settings: {};
-    type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
+    type: import("@adjust/core/types").ContractID<import("./locationAncestor.type").LocationAncestorContract>;
     abstract: boolean;
 };
 declare const LocationAncestorModule_base: import("@adjust/core/types").ExtendedModuleClass<{
@@ -18,12 +18,12 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
         inDropMode: boolean;
     };
     settings: {};
-    type: import("@adjust/core/types").InterfaceID<import("./locationAncestor.type").LocationAncestorContract>;
+    type: import("@adjust/core/types").ContractID<import("./locationAncestor.type").LocationAncestorContract>;
     abstract: boolean;
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, import("@adjust/core/types").SettingsConfig<import("@adjust/core/types").Empty>, import("@adjust/core/types").ModuleInterface>>>;
+}, import("@adjust/core/types").SettingsConfig<import("@adjust/core/types").Empty>, import("@adjust/core/types").ModuleContract>>>;
 /**
  * A base class for location ancestors to extend,
  * provides some common methods that location ancestors might use

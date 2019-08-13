@@ -2,7 +2,7 @@ import { ParameterizedModule, Module } from "../module";
 import { ParameterizedModuleConfig } from "./moduleConfig";
 import { Omit, Constructor, DeepReadonly, GetConstructed, Empty } from "../../utils/_types/standardTypes";
 import { ModuleRequestData, ParameterizedModuleRequestData } from "./moduleRequestData";
-import { InterfaceID } from "../../registry/_types/interfaceID";
+import { ContractID } from "../../registry/_types/contractID";
 import { SettingsConfig } from "../../storage/settings/_types/settingsConfig";
 import { SettingsConfigData } from "../../storage/settings/_types/settingsConfigData";
 import { SettingsConfigSetData } from "../../storage/settings/_types/settingsConfigSetData";
@@ -27,7 +27,7 @@ export declare type FilterModule<M extends ParameterizedModule> = Omit<M, "setSt
 /**
  * Extracts the module interface from a given interface ID
  */
-export declare type GetTypeInterface<M extends InterfaceID<any>> = M extends InterfaceID<infer I> ? I : never;
+export declare type GetTypeInterface<M extends ContractID<any>> = M extends ContractID<infer I> ? I : never;
 export declare type OrEmpty<S> = {} extends S ? Empty : S;
 /**
  * Creates a new module type, based on a module config and a module type

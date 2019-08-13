@@ -1,16 +1,15 @@
-import {InterfaceID} from "../_types/interfaceID";
+import {ContractID} from "../_types/contractID";
 import {NormalizedRequest} from "../_types/request";
 import {ExtendsClass} from "../../utils/_types/standardTypes";
 import {Module, ParameterizedModule} from "../../module/module";
 import {AbstractModuleProvider} from "./abstractModuleProvider";
 import {ProgramState} from "../../state/programState";
-import {ModuleInterface} from "../../module/_types/moduleInterface";
-import {PublicModuleMethods} from "../../module/_types/publicModuleMethods";
+import {ModuleContract} from "../../module/_types/moduleContract";
 import {ModuleProxy} from "../../module/moduleProxy";
 
-export class ClassModuleProvider<
-    M extends ModuleInterface
-> extends AbstractModuleProvider<M> {
+export class ClassModuleProvider<M extends ModuleContract> extends AbstractModuleProvider<
+    M
+> {
     // The module class to create new instances from
     protected moduleClass: ExtendsClass<typeof Module>;
 
@@ -19,7 +18,7 @@ export class ClassModuleProvider<
      * @param type The type of module that gets created
      * @param moduleClass The module class to create the instances from
      */
-    constructor(type: InterfaceID<M>, moduleClass: ExtendsClass<typeof Module>) {
+    constructor(type: ContractID<M>, moduleClass: ExtendsClass<typeof Module>) {
         super(type, moduleClass.getConfig().getPriority.bind(moduleClass));
 
         this.moduleClass = moduleClass;
@@ -34,9 +33,7 @@ export class ClassModuleProvider<
     }
 
     /** @override */
-    public async getModule(
-        request: NormalizedRequest<M>
-    ): Promise<M["child"] & PublicModuleMethods> {
+    public async getModule(request: NormalizedRequest<M>): Promise<M["child"]> {
         // Create a proxy for the parent, and add to the request
         let parentProxy: ParameterizedModule & ModuleProxy;
         // Make sure the request was not for a root

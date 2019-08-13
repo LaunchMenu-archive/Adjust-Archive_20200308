@@ -21,7 +21,7 @@ export declare const config: {
             };
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./inputPrompt.type").InputPromptContract>;
+    type: import("@adjust/core/types").ContractID<import("./inputPrompt.type").InputPromptContract>;
 };
 declare const InputPromptModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
@@ -44,7 +44,7 @@ declare const InputPromptModule_base: import("@adjust/core/types").ExtendedModul
             };
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./inputPrompt.type").InputPromptContract>;
+    type: import("@adjust/core/types").ContractID<import("./inputPrompt.type").InputPromptContract>;
 }, import("@adjust/core/types").ExtendsClass<typeof import("../..").Module, import("../..").Module>>;
 export default class InputPromptModule extends InputPromptModule_base implements InputPrompt {
     protected callback: (value: any) => void;
@@ -77,7 +77,7 @@ export default class InputPromptModule extends InputPromptModule_base implements
     /** @override */
     onClose(): Promise<void>;
 }
-declare const InputPromptView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof InputPromptModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const InputPromptView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof InputPromptModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class InputPromptView extends InputPromptView_base {
     /**
      * Handles keyboard events

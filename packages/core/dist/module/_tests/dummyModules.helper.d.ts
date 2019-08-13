@@ -1,41 +1,40 @@
-import { PublicModuleMethods } from "../_types/publicModuleMethods";
 import { ModuleState } from "../_types/moduleState";
 import { SettingsConfig } from "../../storage/settings/_types/settingsConfig";
-import { ModuleInterface } from "../_types/moduleInterface";
+import { ModuleContract, ChildModule } from "../_types/moduleContract";
 import { ModuleRequestData } from "../_types/moduleRequestData";
 import { ModuleID } from "../moduleID";
 import { Module } from "../module";
 export declare type dummyInterface = {
     test: (text: string) => Promise<string>;
 };
-export declare const dummyInterfaceID: import("../../registry/_types/interfaceID").InterfaceID<{
+export declare const dummyInterfaceID: import("../../registry/_types/contractID").ContractID<{
     parent: {};
-    child: dummyInterface & PublicModuleMethods;
+    child: ChildModule<dummyInterface>;
 }>;
 declare const DummyModule_base: import("../_types/extendedModule").ExtendedModuleClass<{
     initialState: {};
     settings: {};
-    type: import("../../registry/_types/interfaceID").InterfaceID<{
+    type: import("../../registry/_types/contractID").ContractID<{
         parent: {};
-        child: dummyInterface & PublicModuleMethods;
+        child: ChildModule<dummyInterface>;
     }>;
 }, import("../../utils/_types/standardTypes").ExtendsClass<typeof Module, Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleInterface>>>;
+}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleContract>>>;
 export declare class DummyModule extends DummyModule_base implements dummyInterface {
-    static customConstruct<S extends ModuleState, C extends SettingsConfig, I extends ModuleInterface>(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
+    static customConstruct<S extends ModuleState, C extends SettingsConfig, I extends ModuleContract>(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
     test(text: string): Promise<string>;
 }
 export default DummyModule;
 export declare type dummyInterface2 = {
     test2: (test: string) => Promise<void>;
 };
-export declare const dummyInterfaceID2: import("../../registry/_types/interfaceID").InterfaceID<{
+export declare const dummyInterfaceID2: import("../../registry/_types/contractID").ContractID<{
     parent: {
         someMethod: () => Promise<void>;
     };
-    child: dummyInterface2 & PublicModuleMethods;
+    child: ChildModule<dummyInterface2>;
     data: {
         shit: string;
     };
@@ -43,11 +42,11 @@ export declare const dummyInterfaceID2: import("../../registry/_types/interfaceI
 declare const DummyModule2_base: import("../_types/extendedModule").ExtendedModuleClass<{
     initialState: {};
     settings: {};
-    type: import("../../registry/_types/interfaceID").InterfaceID<{
+    type: import("../../registry/_types/contractID").ContractID<{
         parent: {
             someMethod: () => Promise<void>;
         };
-        child: dummyInterface2 & PublicModuleMethods;
+        child: ChildModule<dummyInterface2>;
         data: {
             shit: string;
         };
@@ -55,28 +54,28 @@ declare const DummyModule2_base: import("../_types/extendedModule").ExtendedModu
 }, import("../../utils/_types/standardTypes").ExtendsClass<typeof Module, Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleInterface>>>;
+}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleContract>>>;
 export declare class DummyModule2 extends DummyModule2_base implements dummyInterface2 {
     test2(text: string): Promise<void>;
 }
 export declare type dummyInterface3 = {
     test2: (test: string) => Promise<void>;
 };
-export declare const dummyInterfaceID3: import("../../registry/_types/interfaceID").InterfaceID<{
+export declare const dummyInterfaceID3: import("../../registry/_types/contractID").ContractID<{
     parent: {};
-    child: dummyInterface3 & PublicModuleMethods;
+    child: ChildModule<dummyInterface3>;
 }>;
 declare const DummyModule4_base: import("../_types/extendedModule").ExtendedModuleClass<{
     initialState: {};
     settings: {};
-    type: import("../../registry/_types/interfaceID").InterfaceID<{
+    type: import("../../registry/_types/contractID").ContractID<{
         parent: {};
-        child: dummyInterface & PublicModuleMethods;
+        child: ChildModule<dummyInterface>;
     }>;
 }, import("../../utils/_types/standardTypes").ExtendsClass<typeof Module, Module<{
     isStopping: boolean;
     isStopped: boolean;
-}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleInterface>>>;
+}, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleContract>>>;
 export declare class DummyModule4 extends DummyModule4_base implements dummyInterface {
     test(text: string): Promise<string>;
     static something(): boolean;

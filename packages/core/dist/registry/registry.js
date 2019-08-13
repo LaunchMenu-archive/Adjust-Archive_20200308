@@ -131,20 +131,18 @@ class RegistrySingleton {
     async createRoot(request) {
         return this.request(Object.assign({ parent: undefined }, request));
     }
-    // Interface methods
+    // contract methods
     /**
-     * Creates a unique ID for the interface
-     * @param location The location of the interface in string form (use __filename), should be unique
-     * @returns An interface ID for recognizing classes using the interface
+     * Creates a unique ID for the contract
+     * @param location The location of the contract in string form (use __filename), should be unique
+     * @returns An contract ID for recognizing classes using the contract
      */
-    createInterfaceID(location) {
+    createContractID(location) {
         return {
             ID: location,
             toString: () => location,
         };
     }
-    // /** Keep track of the lowest interface ID that hasn't been used yet */
-    // protected newInterfaceID: number = 1;
     // Module loading related methods
     /**
      * Retrieves the module object of which Adjust is a depedency

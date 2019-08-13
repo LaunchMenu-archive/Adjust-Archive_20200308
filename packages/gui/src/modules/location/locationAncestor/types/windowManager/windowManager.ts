@@ -2,9 +2,9 @@ import {createModule, ModuleReference, UUID, ExtendedObject} from "@adjust/core"
 import {ModuleLocation} from "../../../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "../../../locationAncestor/locationAncestor";
 import {LocationPath} from "../../../_types/LocationPath";
-import {WindowSelector, WindowSelectorID} from "./windowSelector/windowSelector.type";
-import {Window, WindowID, WindowParent} from "./window/window.type";
-import {LocationAncestorID, LocationAncestor} from "../../locationAncestor.type";
+import {WindowSelector, WindowSelectorType} from "./windowSelector/windowSelector.type";
+import {Window, WindowType, WindowParent} from "./window/window.type";
+import {LocationAncestorType, LocationAncestor} from "../../locationAncestor.type";
 import {WindowsData} from "./_types/windowData";
 
 export const config = {
@@ -26,7 +26,7 @@ export const config = {
             type: "windows",
         },
     },
-    type: LocationAncestorID,
+    type: LocationAncestorType,
 };
 
 /**
@@ -55,7 +55,7 @@ export default class WindowManagerModule
         if (!fromReload)
             this.setState({
                 windowSelector: await this.request({
-                    type: WindowSelectorID,
+                    type: WindowSelectorType,
                     data: {path: this.getData().path},
                 }),
             });
@@ -81,7 +81,7 @@ export default class WindowManagerModule
             // Request the window
             windowData = {
                 window: this.request({
-                    type: WindowID,
+                    type: WindowType,
                     data: {
                         ID: windowID,
                         path: [windowID],

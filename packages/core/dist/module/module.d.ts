@@ -10,10 +10,9 @@ import { StateData } from "../state/stateData";
 import { RequestPath } from "./requestPath/requestPath";
 import { ParameterizedModuleView } from "./moduleView";
 import { DataChange } from "../storage/_types/dataChange";
-import { ModuleInterface } from "./_types/moduleInterface";
+import { ModuleContract, ChildModule } from "./_types/moduleContract";
 import { ModuleProxy } from "./moduleProxy";
 import { ParentlessRequest, ParameterizedRequest } from "../registry/_types/request";
-import { PublicModuleMethods } from "./_types/publicModuleMethods";
 import { RequestFilter } from "../registry/_types/requestFilter";
 import { ModuleID } from "./moduleID";
 import { SettingsFile } from "../storage/settings/settingsFile";
@@ -38,7 +37,7 @@ export declare const baseConfig: {
  * a state that can be serialized and deserialized and
  * a settings object that stores settings for this type of component
  */
-export declare class Module<S extends ModuleState, C extends SettingsConfig<any>, I extends ModuleInterface> implements PublicModuleMethods {
+export declare class Module<S extends ModuleState, C extends SettingsConfig<any>, I extends ModuleContract> implements ChildModule<{}> {
     readonly ID: ModuleID;
     private readonly requestData;
     parent: I["parent"];
@@ -62,7 +61,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param parents The list of parents of the module
      * @returns An unregistered instance of this module
      */
-    protected static construct<S extends ModuleState, C extends SettingsConfig, I extends ModuleInterface>(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
+    protected static construct<S extends ModuleState, C extends SettingsConfig, I extends ModuleContract>(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
     /**
      * Get the request path for this module based on its parent and the ID
      * @param moduleID The ID of this module
@@ -125,7 +124,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig<any>, ModuleInterface>>;
+    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig<any>, ModuleContract>>;
     /**
      * Deserializes the data that defines the module's own state
      * @param data The data to be deserialized
@@ -198,15 +197,15 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param request The request to base the modules to retrieve on
      * @returns The modules that were either created or obtained
      */
-    request<M extends ModuleInterface>(this: M["parent"], request: ParentlessRequest<M> & {
+    request<M extends ModuleContract>(this: M["parent"], request: ParentlessRequest<M> & {
         use: "all" | RequestFilter<M>;
-    }): Promise<(M["child"] & PublicModuleMethods)[]>;
+    }): Promise<(M["child"])[]>;
     /**
      * Retrieves a module based on the given request specification
      * @param request The request to base the module to retrieve on
      * @returns The module that was either created or obtained
      */
-    request<M extends ModuleInterface>(this: M["parent"], request: ParentlessRequest<M>): Promise<M["child"] & PublicModuleMethods>;
+    request<M extends ModuleContract>(this: M["parent"], request: ParentlessRequest<M>): Promise<M["child"]>;
     private callContext;
     /**
      * Retrieves the context that this method was called from, should be called before any awaits
@@ -332,4 +331,4 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
 /**
  * A type representing a module, where the generic parameter arguments can be left out
  */
-export declare type ParameterizedModule = Module<ModuleState, SettingsConfig, ModuleInterface>;
+export declare type ParameterizedModule = Module<ModuleState, SettingsConfig, ModuleContract>;

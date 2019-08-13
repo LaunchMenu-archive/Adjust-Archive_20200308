@@ -1,7 +1,7 @@
 import { ExtendsClass } from "../utils/_types/standardTypes";
-import { InterfaceID } from "../registry/_types/interfaceID";
+import { ContractID } from "../registry/_types/contractID";
 import { ParameterizedModule, Module } from "./module";
-import { ModuleInterface } from "./_types/moduleInterface";
+import { ModuleContract, ParentModule } from "./_types/moduleContract";
 import { ModuleID } from "./moduleID";
 export declare class ModuleProxy {
     protected _target: ParameterizedModule;
@@ -27,32 +27,32 @@ export declare class ModuleProxy {
      * @param interfaceID The interface to check
      * @returns Whether or not the program node is of the interface type
      */
-    isInstanceof<I extends ModuleInterface>(interfaceID: InterfaceID<I>): this is I["child"];
+    isInstanceof<I extends ModuleContract>(interfaceID: ContractID<I>): this is I["child"];
     /**
      * Checks whether this is a proxy for the parent of the given module
      * @param module The module to check with
      * @returns Whether this is a proxy for the parent
      */
-    isMainParentof<I extends ModuleInterface>(module: {
-        getParent: () => ModuleProxy;
-    }): this is I["parent"];
+    isMainParentof<P extends ParentModule<any>>(module: {
+        getParent: () => P;
+    }): this is P;
     /**
      * Checks whether this is a proxy for the main parent or an addition parent of the given module
      * @param module The module to check with
      * @returns Whether this is a proxy for the parent
      */
-    isParentof<I extends ModuleInterface>(module: {
-        getParents: () => I["parent"][];
-    }): this is I["parent"];
+    isParentof<P extends ParentModule<any>>(module: {
+        getParents: () => P[];
+    }): this is P;
     /**
      * Checks whether this is a proxy for an additional parent of the given module
      * @param module The module to check with
      * @returns Whether this is a proxy for the parent
      */
-    isAdditionalParentof<I extends ModuleInterface>(module: {
-        getParent: () => ModuleProxy;
-        getParents: () => I["parent"][];
-    }): this is I["parent"];
+    isAdditionalParentof<P extends ParentModule<any>>(module: {
+        getParent: () => P;
+        getParents: () => P[];
+    }): this is P;
     /**
      * A method to close this proxy and its module.
      * Body gets created by the `createClass` method

@@ -8,7 +8,7 @@ import {
     Empty,
 } from "../../utils/_types/standardTypes";
 import {ModuleRequestData, ParameterizedModuleRequestData} from "./moduleRequestData";
-import {InterfaceID} from "../../registry/_types/interfaceID";
+import {ContractID} from "../../registry/_types/contractID";
 import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
 import {SettingsConfigData} from "../../storage/settings/_types/settingsConfigData";
 import {SettingsConfigSetData} from "../../storage/settings/_types/settingsConfigSetData";
@@ -41,7 +41,7 @@ export type FilterModule<M extends ParameterizedModule> = Omit<M, "setState">;
 /**
  * Extracts the module interface from a given interface ID
  */
-export type GetTypeInterface<M extends InterfaceID<any>> = M extends InterfaceID<infer I>
+export type GetTypeInterface<M extends ContractID<any>> = M extends ContractID<infer I>
     ? I
     : never;
 

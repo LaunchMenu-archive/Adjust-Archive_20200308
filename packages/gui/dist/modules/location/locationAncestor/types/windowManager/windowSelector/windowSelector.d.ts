@@ -9,7 +9,7 @@ export declare const config: {
         windowModule: Promise<Window>;
     };
     settings: {};
-    type: import("@adjust/core/types").InterfaceID<import("./windowSelector.type").WindowSelectorContract>;
+    type: import("@adjust/core/types").ContractID<import("./windowSelector.type").WindowSelectorContract>;
 };
 declare const WindowSelectorModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
@@ -17,7 +17,7 @@ declare const WindowSelectorModule_base: import("@adjust/core/types").ExtendedMo
         windowModule: Promise<Window>;
     };
     settings: {};
-    type: import("@adjust/core/types").InterfaceID<import("./windowSelector.type").WindowSelectorContract>;
+    type: import("@adjust/core/types").ContractID<import("./windowSelector.type").WindowSelectorContract>;
 }, typeof LocationAncestorModule>;
 export default class WindowSelectorModule extends WindowSelectorModule_base implements WindowSelector {
     protected windowID: string;
@@ -53,7 +53,7 @@ export default class WindowSelectorModule extends WindowSelectorModule_base impl
      */
     showWindow(windowID: string): Promise<void>;
 }
-declare const WindowSelectorView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowSelectorModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const WindowSelectorView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowSelectorModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class WindowSelectorView extends WindowSelectorView_base {
     /** @override */
     componentWillMount(): void;

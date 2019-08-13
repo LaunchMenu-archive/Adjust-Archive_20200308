@@ -1,8 +1,8 @@
 import {Registry} from "@adjust/gui";
-import {PublicModuleMethods} from "@adjust/gui/types";
+import {ChildModule, ParentModule} from "@adjust/gui/types";
 
-export type SingletonParent = {} & PublicModuleMethods;
-export type SingletonParentParent = {};
+export type SingletonParent = ChildModule<{}>;
+export type SingletonParentParent = ParentModule<{}>;
 export type SingletonParentContract = {
     parent: SingletonParentParent;
     child: SingletonParent;
@@ -11,7 +11,7 @@ export type SingletonParentContract = {
     };
 };
 
-// Export the interfaceID type
-export const SingletonParentID = Registry.createInterfaceID<SingletonParentContract>(
+// Export the type
+export const SingletonParentType = Registry.createContractID<SingletonParentContract>(
     __filename
 );

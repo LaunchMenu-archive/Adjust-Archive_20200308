@@ -18,7 +18,7 @@ exports.config = {
             },
         },
     },
-    type: singletonParent_type_1.SingletonParentID,
+    type: singletonParent_type_1.SingletonParentType,
 };
 class SingletonParentModule extends gui_1.createModule(exports.config) {
     async onInit() {
@@ -26,14 +26,14 @@ class SingletonParentModule extends gui_1.createModule(exports.config) {
         this.setState({
             text: data.count + "",
             singleton: await this.request({
-                type: singleton_type_1.SingletonID,
+                type: singleton_type_1.SingletonType,
                 data: { text: data.count + "" },
             }),
         });
         if (data.count > 0)
             this.setState({
                 child: await this.request({
-                    type: singletonParent_type_1.SingletonParentID,
+                    type: singletonParent_type_1.SingletonParentType,
                     data: { count: data.count - 1 },
                 }),
             });
@@ -42,7 +42,7 @@ class SingletonParentModule extends gui_1.createModule(exports.config) {
         if (!this.state.child)
             this.setState({
                 child: await this.request({
-                    type: singletonParent_type_1.SingletonParentID,
+                    type: singletonParent_type_1.SingletonParentType,
                     data: { count: 0 },
                     openView: true,
                 }),

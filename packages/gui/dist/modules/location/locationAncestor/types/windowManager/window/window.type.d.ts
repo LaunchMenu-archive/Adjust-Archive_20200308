@@ -32,4 +32,4 @@ export declare type WindowContract = {
         previewMode?: boolean;
     };
 };
-export declare const WindowID: import("@adjust/core/types").InterfaceID<WindowContract>;
+export declare const WindowType: import("@adjust/core/types").ContractID<WindowContract>;

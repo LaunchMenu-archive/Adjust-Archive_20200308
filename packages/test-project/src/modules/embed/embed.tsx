@@ -1,11 +1,11 @@
 import {createModule, createModuleView, React} from "@adjust/gui";
-import {EmbedID, Embed} from "./embed.type";
+import {EmbedType, Embed} from "./embed.type";
 
 const colors = ["orange", "blue", "purple"];
 export const config = {
     initialState: {text: "", color: colors[0], child: undefined as Embed},
     settings: {},
-    type: EmbedID,
+    type: EmbedType,
 };
 
 export default class EmbedModule extends createModule(config) implements Embed {
@@ -18,7 +18,7 @@ export default class EmbedModule extends createModule(config) implements Embed {
         if (data.count > 0)
             this.setState({
                 child: await this.request({
-                    type: EmbedID,
+                    type: EmbedType,
                     data: {text: data.text + "t", count: data.count - 1},
                 }),
             });

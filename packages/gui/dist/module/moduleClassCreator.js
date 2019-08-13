@@ -16,7 +16,7 @@ class ModuleClassCreator extends core_1.ModuleClassCreator {
             config.onInstall = async () => {
                 // Obtain the location manager instance
                 const locationManager = await registry_1.Registry.createRoot({
-                    type: locationManager_type_1.LocationManagerID,
+                    type: locationManager_type_1.LocationManagerType,
                 });
                 await locationManager.updateLocation(config.defineLocation);
                 // Call the original install function

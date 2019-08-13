@@ -1,10 +1,10 @@
-import { PublicModuleMethods } from "@adjust/gui/types";
-export declare type Embed = {
+import { ChildModule, ParentModule } from "@adjust/gui/types";
+export declare type Embed = ChildModule<{
     setText(text: string): Promise<void>;
-} & PublicModuleMethods;
-export declare type EmbedParent = {
+}>;
+export declare type EmbedParent = ParentModule<{
     testSomething(): Promise<number>;
-};
+}>;
 export declare type EmbedContract = {
     parent: EmbedParent;
     child: Embed;
@@ -13,4 +13,4 @@ export declare type EmbedContract = {
         count: number;
     };
 };
-export declare const EmbedID: import("@adjust/gui/types").InterfaceID<EmbedContract>;
+export declare const EmbedType: import("@adjust/gui/types").ContractID<EmbedContract>;

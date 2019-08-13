@@ -7,7 +7,16 @@ import { ModuleLocation } from "../../../../../../module/_types/ModuleLocation";
 import { Window } from "./window.type";
 export declare const config: {
     initialState: {
-        childLocationAncestor: Promise<LocationAncestor>;
+        childLocationAncestor: Promise<import("@adjust/core/types").ChildModule<{
+            openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
+            closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
+            showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
+            createLocation(location: ModuleLocation): Promise<LocationPath>;
+            removeLocation(locationPath: LocationPath): Promise<boolean>;
+            removeAncestor(): Promise<void>;
+            setEditMode(edit: boolean): Promise<void>;
+            setDropMode(drop: boolean): Promise<void>;
+        }>>;
         windowName: string;
     };
     settings: {
@@ -28,11 +37,20 @@ export declare const config: {
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./window.type").WindowContract>;
+    type: import("@adjust/core/types").ContractID<import("./window.type").WindowContract>;
 };
 declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClass<{
     initialState: {
-        childLocationAncestor: Promise<LocationAncestor>;
+        childLocationAncestor: Promise<import("@adjust/core/types").ChildModule<{
+            openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
+            closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
+            showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
+            createLocation(location: ModuleLocation): Promise<LocationPath>;
+            removeLocation(locationPath: LocationPath): Promise<boolean>;
+            removeAncestor(): Promise<void>;
+            setEditMode(edit: boolean): Promise<void>;
+            setDropMode(drop: boolean): Promise<void>;
+        }>>;
         windowName: string;
     };
     settings: {
@@ -53,7 +71,7 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
             type: string;
         };
     };
-    type: import("@adjust/core/types").InterfaceID<import("./window.type").WindowContract>;
+    type: import("@adjust/core/types").ContractID<import("./window.type").WindowContract>;
 }, typeof LocationAncestorModule>;
 /**
  * type "Window" accepts location hints:
@@ -123,7 +141,7 @@ export default class WindowModule extends WindowModule_base implements Window {
     setEdit(edit: boolean): Promise<void>;
     saveSettings(): Promise<void>;
 }
-declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleInterface>, {}>>>;
+declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class WindowView extends WindowView_base {
     /**@override */
     componentWillMount(): void;

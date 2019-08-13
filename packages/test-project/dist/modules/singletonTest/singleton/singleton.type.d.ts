@@ -1,8 +1,8 @@
-import { PublicModuleMethods } from "@adjust/gui/types";
-export declare type Singleton = {
+import { ChildModule, ParentModule } from "@adjust/gui/types";
+export declare type Singleton = ChildModule<{
     setText(text: string): Promise<void>;
-} & PublicModuleMethods;
-export declare type SingletonParent = {};
+}>;
+export declare type SingletonParent = ParentModule<{}>;
 export declare type SingletonContract = {
     parent: SingletonParent;
     child: Singleton;
@@ -10,4 +10,4 @@ export declare type SingletonContract = {
         text: string;
     };
 };
-export declare const SingletonID: import("@adjust/gui/types").InterfaceID<SingletonContract>;
+export declare const SingletonType: import("@adjust/gui/types").ContractID<SingletonContract>;

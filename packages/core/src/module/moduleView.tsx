@@ -1,7 +1,7 @@
 import React from "react";
 import {ParameterizedModule} from "./module";
 import {DeepReadonly, ExtendsClass} from "../utils/_types/standardTypes";
-import {ViewManager} from "../state/window/viewManager";
+import {ViewManager} from "../window/viewManager";
 import {ModuleState} from "./_types/moduleState";
 import {ModuleViewState} from "./_types/moduleViewState";
 import {RemoteModule} from "./_types/remoteModule";

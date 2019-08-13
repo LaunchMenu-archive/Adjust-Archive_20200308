@@ -21,7 +21,7 @@ exports.config = {
         windowModule: null,
     },
     settings: {},
-    type: windowSelector_type_1.WindowSelectorID,
+    type: windowSelector_type_1.WindowSelectorType,
 };
 class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.config, locationAncestor_1.default) {
     constructor() {
@@ -110,7 +110,10 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
         // Allow the user to rename the window
         const renamePromise = new Promise(async (res) => {
             // Obtain the name prompt
-            const namePrompt = await this.request({ type: inputPrompt_type_1.InputPromptID, openView: true });
+            const namePrompt = await this.request({
+                type: inputPrompt_type_1.InputPromptType,
+                openView: true,
+            });
             // Prompt the user for a name
             const name = await namePrompt.prompt("string", {
                 title: "Window Name",
@@ -148,7 +151,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
             // Obtain the new window
             this.setState({
                 windowModule: this.request({
-                    type: window_type_1.WindowID,
+                    type: window_type_1.WindowType,
                     data: {
                         ID: windowID,
                         path: [...this.getData().path, windowID],

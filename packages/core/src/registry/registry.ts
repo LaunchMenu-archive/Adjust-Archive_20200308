@@ -1,17 +1,16 @@
 import Path from "path";
 import FS from "fs";
-import {InterfaceID} from "./_types/interfaceID";
+import {ContractID} from "./_types/contractID";
 import {ParentlessRequest, Request, NormalizedRequest} from "./_types/request";
 import {RequestFilter} from "./_types/requestFilter";
 import {Module, ParameterizedModule} from "../module/module";
-import {ModuleInterface} from "../module/_types/moduleInterface";
+import {ModuleContract, IsContractValid} from "../module/_types/moduleContract";
 import {AbstractModuleProvider as ModuleProvider} from "./moduleProviders/abstractModuleProvider";
 import {ClassModuleProvider} from "./moduleProviders/classModuleProvider";
 import {isMain} from "../utils/isMain";
 import {IpcMain} from "../communication/ipcMain";
 import {IpcRenderer} from "../communication/ipcRenderer";
 import {ExtendsClass} from "../utils/_types/standardTypes";
-import {PublicModuleMethods} from "../module/_types/publicModuleMethods";
 import {ExtendedObject} from "../utils/extendedObject";
 import {ModuleView} from "../module/moduleView";
 import {SettingsManager} from "../storage/settings/settingsManager";
@@ -38,22 +37,22 @@ export class RegistrySingleton {
      * @param request The request to base the modules to retrieve on
      * @returns The modules that were either created or obtained
      */
-    public async request<M extends ModuleInterface>(
+    public async request<M extends ModuleContract>(
         request: Request<M> & {use: "all" | RequestFilter<M>}
-    ): Promise<(M["child"] & PublicModuleMethods)[]>;
+    ): Promise<(M["child"])[]>;
 
     /**
      * Retrieves a module based on the given request specification
      * @param request The request to base the module to retrieve on
      * @returns The module that was either created or obtained
      */
-    public async request<M extends ModuleInterface>(
+    public async request<M extends ModuleContract>(
         request: Request<M>
-    ): Promise<M["child"] & PublicModuleMethods>;
+    ): Promise<M["child"]>;
 
-    public async request<M extends ModuleInterface>(
+    public async request<M extends ModuleContract>(
         request: Request<M>
-    ): Promise<M["child"] & PublicModuleMethods | (M["child"] & PublicModuleMethods)[]> {
+    ): Promise<M["child"] | (M["child"])[]> {
         // Normalize the request
         const normalizedRequest: NormalizedRequest<M> = {
             type: request.type,
@@ -84,7 +83,7 @@ export class RegistrySingleton {
      * @param request The request to retrieve the providers for
      * @returns A list of module providers in sorted order from highest to lowest priority
      */
-    protected async getProviders<M extends ModuleInterface>(
+    protected async getProviders<M extends ModuleContract>(
         request: NormalizedRequest<M>
     ): Promise<ModuleProvider<M>[]> {
         // Retrieve the interfaceID
@@ -175,31 +174,27 @@ export class RegistrySingleton {
      * @param request The request to base the module to retrieve on
      * @returns The module that was created
      */
-    public async createRoot<M extends ModuleInterface>(
+    public async createRoot<M extends ModuleContract>(
         this: M["parent"],
         request: ParentlessRequest<M>
-    ): Promise<M["child"] & PublicModuleMethods> {
+    ): Promise<M["child"]> {
         return this.request({parent: undefined, ...request} as any) as any;
     }
 
-    // Interface methods
+    // contract methods
     /**
-     * Creates a unique ID for the interface
-     * @param location The location of the interface in string form (use __filename), should be unique
-     * @returns An interface ID for recognizing classes using the interface
+     * Creates a unique ID for the contract
+     * @param location The location of the contract in string form (use __filename), should be unique
+     * @returns An contract ID for recognizing classes using the contract
      */
-    public createInterfaceID<M extends ModuleInterface = null>(
-        location: string &
-            (M extends null ? "You must provide a generic type parameter" : string)
-    ): InterfaceID<M> {
+    public createContractID<M extends ModuleContract = null>(
+        location: string & (IsContractValid<M, string>)
+    ): ContractID<M> {
         return {
             ID: location,
             toString: () => location,
         };
     }
-
-    // /** Keep track of the lowest interface ID that hasn't been used yet */
-    // protected newInterfaceID: number = 1;
 
     // Module loading related methods
     /**

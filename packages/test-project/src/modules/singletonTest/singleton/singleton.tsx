@@ -1,4 +1,4 @@
-import {SingletonID, Singleton} from "./singleton.type";
+import {SingletonType, Singleton} from "./singleton.type";
 import {
     React,
     createModule,
@@ -10,13 +10,13 @@ import {
 export const config = {
     initialState: {text: ""},
     settings: {},
-    type: SingletonID,
+    type: SingletonType,
 };
 
 export default class SingletonModule extends createModule(config) implements Singleton {
     /** @override */
     public async onInit() {
-        Registry.addProvider(new InstanceModuleProvider(SingletonID, this, () => 2));
+        Registry.addProvider(new InstanceModuleProvider(SingletonType, this, () => 2));
         const data = this.getData();
         this.setState({
             text: data.text,
@@ -25,7 +25,7 @@ export default class SingletonModule extends createModule(config) implements Sin
 
     /** @override */
     public async onReloadInit() {
-        Registry.addProvider(new InstanceModuleProvider(SingletonID, this, () => 2));
+        Registry.addProvider(new InstanceModuleProvider(SingletonType, this, () => 2));
     }
 
     /** @override */
