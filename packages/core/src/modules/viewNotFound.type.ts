@@ -13,5 +13,7 @@ export type ViewNotFoundContract = {
     child: ViewNotFound;
 };
 
-// Export the interfaceID type
-export const ViewNotFoundID = Registry.createContractID<ViewNotFoundContract>(__filename);
+// Export the type
+export const ViewNotFoundType = Registry.createContractID<ViewNotFoundContract>(
+    __filename
+);

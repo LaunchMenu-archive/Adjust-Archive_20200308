@@ -12,7 +12,7 @@ export type ContextProviderContract = {
     child: ContextProvider;
 };
 
-// Export the interfaceID type
+// Export the type
 export const ContextProviderType = Registry.createContractID<ContextProviderContract>(
     __filename
 );

@@ -12,19 +12,15 @@ exports.config = {
     initialState: {},
     getPriority: () => 1,
     settings: {},
-    type: viewNotFound_type_1.ViewNotFoundID,
+    type: viewNotFound_type_1.ViewNotFoundType,
 };
 /**
  * This module is automatically added by the window manager to ensure some ViewNotFound module exists
  */
 class ViewNotFoundModule extends moduleClassCreator_1.createModule(exports.config) {
     /** @override */
-    async onInit() {
-        registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(viewNotFound_type_1.ViewNotFoundID, this, () => 2));
-    }
-    /** @override */
-    async onReloadInit() {
-        registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(viewNotFound_type_1.ViewNotFoundID, this, () => 2));
+    async onInit(fromReload) {
+        registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(viewNotFound_type_1.ViewNotFoundType, this, () => 2));
     }
 }
 exports.default = ViewNotFoundModule;
@@ -45,5 +41,4 @@ class ViewNotFoundView extends moduleViewClassCreator_1.createModuleView(ViewNot
     }
 }
 exports.ViewNotFoundView = ViewNotFoundView;
-ViewNotFoundModule.setViewClass(ViewNotFoundView);
 //# sourceMappingURL=viewNotFound.js.map

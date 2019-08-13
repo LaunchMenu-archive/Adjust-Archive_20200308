@@ -1,4 +1,4 @@
-import React from "react";
+import React, {cloneElement} from "react";
 import {ParameterizedModule} from "./module";
 import {DeepReadonly, ExtendsClass} from "../utils/_types/standardTypes";
 import {ViewManager} from "../window/viewManager";
@@ -6,7 +6,6 @@ import {ModuleState} from "./_types/moduleState";
 import {ModuleViewState} from "./_types/moduleViewState";
 import {RemoteModule} from "./_types/remoteModule";
 import {ModuleViewProps} from "./_types/moduleViewProps";
-import {SettingsConfig} from "../storage/settings/_types/settingsConfig";
 import {SettingsConfigSetData} from "../storage/settings/_types/settingsConfigSetData";
 import {ExtendedObject} from "../utils/extendedObject";
 import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";

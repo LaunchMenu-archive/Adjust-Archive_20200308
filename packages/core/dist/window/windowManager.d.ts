@@ -4,6 +4,7 @@ import { ParameterizedModule } from "../module/module";
 import { ModuleID } from "../module/moduleID";
 import { ViewNotFound } from "../modules/viewNotFound.type";
 import { AsyncSerializeableData } from "../utils/_types/serializeableData";
+import { ContextProvider } from "../modules/contextProvider.type";
 export declare type windowOptions = Electron.BrowserWindowConstructorOptions & {
     preloadModules?: string[];
 };
@@ -22,6 +23,7 @@ export declare class WindowManagerSingleton {
         };
     };
     protected readonly viewNotFoundModule: ViewNotFound;
+    protected readonly contextProvidersModule: ContextProvider;
     protected readonly windowsBuffer: {
         options: windowOptions;
         window: Promise<BrowserWindow>;
@@ -32,8 +34,14 @@ export declare class WindowManagerSingleton {
     constructor();
     /**
      * Create the view not found module if not created already
+     * @returns A view not found module
      */
-    protected createViewNotFoundModule(): Promise<void>;
+    protected getViewNotFoundModule(): Promise<ViewNotFound>;
+    /**
+     * Create the context provider module if not created already
+     * @returns A view not found module
+     */
+    protected getContextProvidersModule(): Promise<ContextProvider>;
     /**
      * Adds windows to the window buffer, with the indicated default options
      * @remarks Some options like 'frame' invalidate usage of some buffered windows for certain requests.
@@ -43,6 +51,12 @@ export declare class WindowManagerSingleton {
      * @param count The number of windows to add to the buffer
      */
     createWindowBuffer(options: windowOptions, count?: number): Promise<void>;
+    /**
+     * Retrieves a buffered window with the given options, if availabke
+     * @param options The options that the retrieved window should have
+     * @returns A browser window with the options if available, or undefiend otherwise
+     */
+    protected getBufferdWindow(options: windowOptions): Promise<BrowserWindow>;
     /**
      * Creates an electron window, without assigning it any data, or showing it
      * @remarks Makes use of any potential window buffer to speed up creation.     *

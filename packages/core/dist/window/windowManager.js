@@ -7,6 +7,7 @@ const serialize_1 = require("../utils/serialize");
 const viewNotFound_type_1 = require("../modules/viewNotFound.type");
 const registry_1 = require("../registry/registry");
 const isMain_1 = require("../utils/isMain");
+const contextProvider_type_1 = require("../modules/contextProvider.type");
 /**
  * A mapping of default window properties,
  * And methods to alter them after creation,
@@ -117,18 +118,34 @@ class WindowManagerSingleton {
             method.apply(module, args);
         });
     }
+    // Setup methods
     /**
      * Create the view not found module if not created already
+     * @returns A view not found module
      */
-    async createViewNotFoundModule() {
+    async getViewNotFoundModule() {
         // Don't do anything of the module was already created
         if (this.viewNotFoundModule)
-            return;
+            return this.viewNotFoundModule;
         // Create the module as a root otherwise
         // @ts-ignore
-        this.viewNotFoundModule = await registry_1.Registry.createRoot({ type: viewNotFound_type_1.ViewNotFoundID });
+        return (this.viewNotFoundModule = registry_1.Registry.createRoot({ type: viewNotFound_type_1.ViewNotFoundType }));
     }
-    // Window management methods
+    /**
+     * Create the context provider module if not created already
+     * @returns A view not found module
+     */
+    async getContextProvidersModule() {
+        // Don't do anything of the module was already created
+        if (this.contextProvidersModule)
+            return this.contextProvidersModule;
+        // Create the module as a root otherwise
+        // @ts-ignore
+        return (this.contextProvidersModule = registry_1.Registry.createRoot({
+            type: contextProvider_type_1.ContextProviderType,
+        }));
+    }
+    // Window buffer methods
     /**
      * Adds windows to the window buffer, with the indicated default options
      * @remarks Some options like 'frame' invalidate usage of some buffered windows for certain requests.
@@ -154,6 +171,75 @@ class WindowManagerSingleton {
         await Promise.all(promises);
     }
     /**
+     * Retrieves a buffered window with the given options, if availabke
+     * @param options The options that the retrieved window should have
+     * @returns A browser window with the options if available, or undefiend otherwise
+     */
+    async getBufferdWindow(options) {
+        const bufferedWindowIndex = this.windowsBuffer.findIndex(({ options: windowOptions, window }) => extendedObject_1.ExtendedObject.reduce(windowOptions, (result, optionValue, optionName) => {
+            if (!result)
+                return false;
+            // Do a special check for preload modules, whether it contains them
+            if (optionName == "preloadModules") {
+                if (options.preloadModules)
+                    return true;
+                if (!optionValue)
+                    return false;
+                return options.preloadModules.reduce((result, moduleName) => result &&
+                    windowOptions.preloadModules.indexOf(moduleName) !=
+                        -1, true);
+            }
+            // Check if the option is compatible, either value is the same, or there exists an applicable method
+            if (optionValue == options[optionName])
+                return true;
+            const data = windowPropertyFunctionMap[optionName];
+            if (!data)
+                return false;
+            if (!(optionName in options) && optionValue == data.default)
+                return true;
+            if (data.method == undefined)
+                return false;
+            return true;
+        }, true));
+        // If a window was found, use all the method to apply the options
+        if (bufferedWindowIndex != -1) {
+            // Remove the window from the buffers
+            const bufferedWindow = this.windowsBuffer[bufferedWindowIndex];
+            this.windowsBuffer.splice(bufferedWindowIndex, 1);
+            // Make sure to to restock the buffer
+            this.windowsBuffer.push({
+                options: bufferedWindow.options,
+                window: this.createWindow(bufferedWindow.options, false),
+            });
+            // Apply the settings to the window
+            const window = await bufferedWindow.window;
+            const used = { preloadModules: true };
+            extendedObject_1.ExtendedObject.forEach(bufferedWindow.options, (optionName, optionValue) => {
+                if (used[optionName])
+                    return; // Use each field only once
+                used[optionName] = true;
+                if (optionValue == options[optionName])
+                    return;
+                // Get the data for this option
+                const optionData = windowPropertyFunctionMap[optionName];
+                const methodName = optionData.method instanceof Function
+                    ? optionData.method(options)
+                    : optionData.method;
+                const method = window[methodName] || (() => { });
+                // Get the arguments
+                const args = (optionData.args || []).map(argName => {
+                    used[argName] = true;
+                    return (options[argName] || windowPropertyFunctionMap[argName].default);
+                });
+                // Apply the method
+                method.apply(window, args);
+            });
+            // Return the result
+            return window;
+        }
+    }
+    // Window management methods
+    /**
      * Creates an electron window, without assigning it any data, or showing it
      * @remarks Makes use of any potential window buffer to speed up creation.     *
      * @param options The options of the window to create
@@ -165,67 +251,9 @@ class WindowManagerSingleton {
         await new Promise(res => (electron_1.app.isReady() ? res() : electron_1.app.once("ready", res)));
         // Look for an already loaded compatible window
         if (useBuffer) {
-            const bufferedWindowIndex = this.windowsBuffer.findIndex(({ options: windowOptions, window }) => extendedObject_1.ExtendedObject.reduce(windowOptions, (result, optionValue, optionName) => {
-                if (!result)
-                    return false;
-                // Do a special check for preload modules, whether it contains them
-                if (optionName == "preloadModules") {
-                    if (options.preloadModules)
-                        return true;
-                    if (!optionValue)
-                        return false;
-                    return options.preloadModules.reduce((result, moduleName) => result &&
-                        windowOptions.preloadModules.indexOf(moduleName) != -1, true);
-                }
-                // Check if the option is compatible, either value is the same, or there exists an applicable method
-                if (optionValue == options[optionName])
-                    return true;
-                const data = windowPropertyFunctionMap[optionName];
-                if (!data)
-                    return false;
-                if (!(optionName in options) && optionValue == data.default)
-                    return true;
-                if (data.method == undefined)
-                    return false;
-                return true;
-            }, true));
-            // If a window was found, use all the method to apply the options
-            if (bufferedWindowIndex != -1) {
-                // Remove the window from the buffers
-                const bufferedWindow = this.windowsBuffer[bufferedWindowIndex];
-                this.windowsBuffer.splice(bufferedWindowIndex, 1);
-                // Make sure to to restock the buffer
-                this.windowsBuffer.push({
-                    options: bufferedWindow.options,
-                    window: this.createWindow(bufferedWindow.options, false),
-                });
-                // Apply the settings to the window
-                const window = await bufferedWindow.window;
-                const used = { preloadModules: true };
-                extendedObject_1.ExtendedObject.forEach(bufferedWindow.options, (optionName, optionValue) => {
-                    if (used[optionName])
-                        return; // Use each field only once
-                    used[optionName] = true;
-                    if (optionValue == options[optionName])
-                        return;
-                    // Get the data for this option
-                    const optionData = windowPropertyFunctionMap[optionName];
-                    const methodName = optionData.method instanceof Function
-                        ? optionData.method(options)
-                        : optionData.method;
-                    const method = window[methodName] || (() => { });
-                    // Get the arguments
-                    const args = (optionData.args || []).map(argName => {
-                        used[argName] = true;
-                        return (options[argName] ||
-                            windowPropertyFunctionMap[argName].default);
-                    });
-                    // Apply the method
-                    method.apply(window, args);
-                });
-                // Return the result
-                return window;
-            }
+            const bufferedWindow = await this.getBufferdWindow(options);
+            if (bufferedWindow)
+                return bufferedWindow;
         }
         // Create the browser window
         const normalizedOptions = Object.assign({}, extendedObject_1.ExtendedObject.map(windowPropertyFunctionMap, value => value.default), options, { show: false, webPreferences: Object.assign({ nodeIntegration: true }, options.webPreferences) });
@@ -236,8 +264,11 @@ class WindowManagerSingleton {
         browserWindow.webContents.openDevTools();
         // Wait for the window to indicate it was loaded, and assign it its id
         await ipcMain_1.IpcMain.once(`WindowManager.loaded:${browserWindow.id}`);
-        // Set the root view of the window and assign a viewNotFound view of the window
-        await ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setViewNotFound", this.viewNotFoundModule.toString());
+        // Assign a viewNotFound view of the window and set the cotnext providers
+        await Promise.all([
+            ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setViewNotFound", (await this.getViewNotFoundModule()).toString()),
+            ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.setContextProvider", (await this.getContextProvidersModule()).toString()),
+        ]);
         // If a preload module was passed, use it
         if (options.preloadModules)
             options.preloadModules.forEach(moduleName => ipcMain_1.IpcMain.send(browserWindow, "WindowIndex.preloadModule", moduleName));
@@ -251,8 +282,6 @@ class WindowManagerSingleton {
      * @returns The browser window that was created
      */
     async openWindow(windowID, moduleID, options = {}) {
-        // Make sure we have a view not found module
-        await this.createViewNotFoundModule();
         // Make sure the window is present
         if (!this.windows[windowID]) {
             this.windows[windowID] = {

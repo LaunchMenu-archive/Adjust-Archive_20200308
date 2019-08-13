@@ -10,4 +10,4 @@ export declare type ViewNotFoundContract = {
     parent: ViewNotFoundParent;
     child: ViewNotFound;
 };
-export declare const ViewNotFoundID: import("../registry/_types/contractID").ContractID<ViewNotFoundContract>;
+export declare const ViewNotFoundType: import("../registry/_types/contractID").ContractID<ViewNotFoundContract>;

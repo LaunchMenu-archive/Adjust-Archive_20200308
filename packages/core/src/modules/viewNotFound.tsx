@@ -1,5 +1,5 @@
 import React from "react";
-import {ViewNotFoundID, ViewNotFound} from "./viewNotFound.type";
+import {ViewNotFoundType, ViewNotFound} from "./viewNotFound.type";
 import {createModuleView} from "../module/moduleViewClassCreator";
 import {createModule} from "../module/moduleClassCreator";
 import {Registry} from "../registry/registry";
@@ -9,7 +9,7 @@ export const config = {
     initialState: {},
     getPriority: () => 1,
     settings: {},
-    type: ViewNotFoundID,
+    type: ViewNotFoundType,
 };
 
 /**
@@ -18,13 +18,8 @@ export const config = {
 export default class ViewNotFoundModule extends createModule(config)
     implements ViewNotFound {
     /** @override */
-    protected async onInit() {
-        Registry.addProvider(new InstanceModuleProvider(ViewNotFoundID, this, () => 2));
-    }
-
-    /** @override */
-    protected async onReloadInit() {
-        Registry.addProvider(new InstanceModuleProvider(ViewNotFoundID, this, () => 2));
+    protected async onInit(fromReload: boolean) {
+        Registry.addProvider(new InstanceModuleProvider(ViewNotFoundType, this, () => 2));
     }
 }
 
@@ -42,5 +37,3 @@ export class ViewNotFoundView extends createModuleView(ViewNotFoundModule) {
         return <span>{this.props.target.cls.getPath()} didn't provide a view</span>;
     }
 }
-
-ViewNotFoundModule.setViewClass(ViewNotFoundView);
