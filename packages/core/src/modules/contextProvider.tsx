@@ -7,22 +7,22 @@ import {ContextProviderType, ContextProvider} from "./contextProvider.type";
 import {createRecursiveRequestFilter} from "../registry/requestFilters";
 import {ViewWrapper} from "../module/moduleViewWrapper";
 
-export const config = {
+export const contextProviderConfig = {
     initialState: {
         childProvider: null as ContextProvider,
     },
-    getPriority: () => 0.1,
+    getPriority: () => 1,
     settings: {},
     type: ContextProviderType,
 };
 
 /**
- * A module of this type is used as the root of the module
+ * A module of this type is used as the root of the window to provide contexts
  */
-export default class ContextProviderModule extends createModule(config)
+export class ContextProviderModule extends createModule(contextProviderConfig)
     implements ContextProvider {
     /** @override */
-    protected async onInit(fromReload: boolean) {
+    protected async onInit(fromReload: boolean): Promise<void> {
         Registry.addProvider(
             new InstanceModuleProvider(ContextProviderType, this, () => 2)
         );
@@ -37,6 +37,7 @@ export default class ContextProviderModule extends createModule(config)
             });
     }
 }
+export default ContextProviderModule;
 
 export class ContextProviderView extends createModuleView(ContextProviderModule) {
     /**
@@ -44,7 +45,6 @@ export class ContextProviderView extends createModuleView(ContextProviderModule)
      * @param children The children to put in the provider
      */
     protected renderProvider(children: any): JSX.Element {
-        console.log("context");
         // Should be overwritten, this default has no effect
         return children;
     }

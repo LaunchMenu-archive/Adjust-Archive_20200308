@@ -219,13 +219,10 @@ class RegistrySingleton {
                     else
                         config.version = "0.0.0";
                 }
-                // Check if the module still needs a view
-                if (config.viewClass === undefined) {
-                    // Check if a view class was provided in the file, and if so, assign it to the module
-                    const viewClass = extendedObject_1.ExtendedObject.find(exports, (exp, k) => k != "default" && exp.prototype instanceof moduleView_1.ModuleView);
-                    if (viewClass)
-                        config.viewClass = viewClass;
-                }
+                // Check if a view class was provided in the file, and if so, assign it to the module
+                const viewClass = extendedObject_1.ExtendedObject.find(exports, (exp, k) => k != "default" && exp.prototype instanceof moduleView_1.ModuleView);
+                if (viewClass)
+                    config.viewClass = viewClass;
                 // Indicate that the module was loaded
                 // @ts-ignore
                 def.onFileLoad(isMain_1.isMain, modulePath);

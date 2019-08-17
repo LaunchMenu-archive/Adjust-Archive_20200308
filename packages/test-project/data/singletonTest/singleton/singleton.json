@@ -10,7 +10,18 @@
             "data": {
                 "location": [
                     "root"
-                ]
+                ],
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    },
+                    "resetTheme": false,
+                    "css": null
+                }
             }
         }
     ]

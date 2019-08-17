@@ -5,7 +5,7 @@ import {createModule} from "../module/moduleClassCreator";
 import {Registry} from "../registry/registry";
 import {InstanceModuleProvider} from "../registry/moduleProviders/instanceModuleProvider";
 
-export const config = {
+export const viewNotFoundConfig = {
     initialState: {},
     getPriority: () => 1,
     settings: {},
@@ -15,13 +15,14 @@ export const config = {
 /**
  * This module is automatically added by the window manager to ensure some ViewNotFound module exists
  */
-export default class ViewNotFoundModule extends createModule(config)
+export class ViewNotFoundModule extends createModule(viewNotFoundConfig)
     implements ViewNotFound {
     /** @override */
     protected async onInit(fromReload: boolean) {
         Registry.addProvider(new InstanceModuleProvider(ViewNotFoundType, this, () => 2));
     }
 }
+export default ViewNotFoundModule;
 
 /**
  * A reference to ViewNotFoundModule is hardcoded into moduleView's props,

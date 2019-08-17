@@ -5,8 +5,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@adjust/core");
 const React_1 = require("../../../React");
 const locationAncestor_type_1 = require("./locationAncestor.type");
-const core_2 = require("@material-ui/core");
 const locationAncestor_1 = __importDefault(require("./locationAncestor"));
+const moduleViewClassCreator_1 = require("../../../module/moduleViewClassCreator");
+const Box_1 = require("../../../components/Box");
 exports.config = {
     initialState: {
         // The modules being displayed
@@ -207,7 +208,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
     }
 }
 exports.default = LocationModule;
-class LocationView extends core_1.createModuleView(LocationModule) {
+class LocationView extends moduleViewClassCreator_1.createModuleView(LocationModule) {
     constructor() {
         super(...arguments);
         // Rendering methods
@@ -257,7 +258,7 @@ class LocationView extends core_1.createModuleView(LocationModule) {
         const boxes = [];
         Object.entries(this.state.locations).forEach(([locationID, location]) => {
             location.modules.forEach(module => {
-                boxes.push(React_1.React.createElement(core_2.Box, { mt: 1, width: "100%", height: "30px", bgcolor: "blue", color: "white", key: module.ID, onDragStart: e => this.onDragStart(e, locationID, module), onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e), onDragEnd: e => this.onDragEnd(e), draggable: true },
+                boxes.push(React_1.React.createElement(Box_1.Box, { marginTop: "m", width: "100%", height: "30px", background: "blue", color: "white", key: module.ID, onDragStart: e => this.onDragStart(e, locationID, module), onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e), onDragEnd: e => this.onDragEnd(e), draggable: true },
                     locationID,
                     " ",
                     module.ID));
@@ -267,8 +268,8 @@ class LocationView extends core_1.createModuleView(LocationModule) {
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(core_2.Box, { css: this.cover, bgcolor: "#ffdddd" },
-            this.state.inEditMode && (React_1.React.createElement(core_2.Box, { css: this.cover, p: 1, onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e) }, this.renderModuleBoxes())),
+        return (React_1.React.createElement(Box_1.Box, { css: this.cover, background: "themeTertiary" },
+            this.state.inEditMode && (React_1.React.createElement(Box_1.Box, { css: this.cover, padding: "m", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e) }, this.renderModuleBoxes())),
             this.state.modules[0],
             Object.keys(this.state.locations).map(key => (React_1.React.createElement("div", { key: key }, key)))));
     }

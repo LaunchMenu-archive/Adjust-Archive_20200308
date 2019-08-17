@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import { ViewNotFound } from "./viewNotFound.type";
-export declare const config: {
+export declare const viewNotFoundConfig: {
     initialState: {};
     getPriority: () => number;
     settings: {};
@@ -18,10 +18,11 @@ declare const ViewNotFoundModule_base: import("../module/_types/extendedModule")
 /**
  * This module is automatically added by the window manager to ensure some ViewNotFound module exists
  */
-export default class ViewNotFoundModule extends ViewNotFoundModule_base implements ViewNotFound {
+export declare class ViewNotFoundModule extends ViewNotFoundModule_base implements ViewNotFound {
     /** @override */
     protected onInit(fromReload: boolean): Promise<void>;
 }
+export default ViewNotFoundModule;
 declare const ViewNotFoundView_base: import("../module/_types/extendedModuleView").ExtendedModuleViewClass<typeof ViewNotFoundModule, {}, import("../utils/_types/standardTypes").ExtendsClass<typeof import("..").ModuleView, import("..").ModuleView<{}, {}, import("..").Module<import("../module/_types/moduleState").ModuleState, import("../storage/settings/_types/settingsConfig").SettingsConfig<any>, import("../module/_types/moduleContract").ModuleContract>, {}>>>;
 /**
  * A reference to ViewNotFoundModule is hardcoded into moduleView's props,
@@ -31,4 +32,3 @@ declare const ViewNotFoundView_base: import("../module/_types/extendedModuleView
 export declare class ViewNotFoundView extends ViewNotFoundView_base {
     protected renderView(): JSX.Element;
 }
-export {};

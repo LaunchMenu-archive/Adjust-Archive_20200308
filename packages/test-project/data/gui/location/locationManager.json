@@ -8,6 +8,15 @@
             },
             "ID": 0,
             "data": {
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    }
+                },
                 "locations": {
                     "prompt": {
                         "modules": [
@@ -18,7 +27,7 @@
                         ],
                         "path": {
                             "nodes": [
-                                "dvzZ-E4yM"
+                                "5oFv-SdWY"
                             ],
                             "location": {
                                 "ID": "prompt",
@@ -37,64 +46,38 @@
                         "modules": [
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\singletonTest\\singleton\\singleton.js"
+                                "modulePath": "\\embed\\embed.js"
                             },
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\embed\\embed.js"
-                            }
-                        ],
-                        "path": {
-                            "nodes": [
-                                "default"
-                            ],
-                            "location": {
-                                "ID": "root",
-                                "hints": {}
-                            }
-                        }
-                    },
-                    "0YkQ-mfPH-Fb3n-vATq-y3YR": {
-                        "path": {
-                            "nodes": [
-                                "dvzZ-E4yM"
-                            ],
-                            "location": {
-                                "ID": "0YkQ-mfPH-Fb3n-vATq-y3YR",
-                                "hints": {
-                                    "path": [
-                                        "dvzZ-E4yM"
-                                    ]
-                                }
-                            }
-                        },
-                        "modules": [
+                                "modulePath": "\\singletonTest\\singleton\\singleton.js"
+                            },
                             {
                                 "settingsID": 0,
                                 "modulePath": "\\test\\test.js"
                             }
                         ]
                     },
-                    "65Pj-Seow-Agh9-Qkt9-Pddb": {
-                        "path": {
-                            "nodes": [
-                                "jmPO-I348"
-                            ],
-                            "location": {
-                                "ID": "65Pj-Seow-Agh9-Qkt9-Pddb",
-                                "hints": {
-                                    "path": [
-                                        "jmPO-I348"
-                                    ]
-                                }
-                            }
-                        },
+                    "test": {
                         "modules": [
                             {
                                 "settingsID": 0,
                                 "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
                             }
-                        ]
+                        ],
+                        "path": {
+                            "nodes": [
+                                "window1"
+                            ],
+                            "location": {
+                                "ID": "test",
+                                "hints": {
+                                    "window": {
+                                        "ID": "window1"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -38,7 +38,7 @@ class ModuleViewClassCreator {
 }
 exports.ModuleViewClassCreator = ModuleViewClassCreator;
 /**
- * A shortcut for the module creation method
+ * A shortcut for the module view creation method
  */
 exports.createModuleView = ModuleViewClassCreator.createModuleView.bind(ModuleViewClassCreator);
 //# sourceMappingURL=moduleViewClassCreator.js.map

@@ -10,7 +10,8 @@
         "sourceMap": true,
         "baseUrl": ".",
         "paths": {
-            "*": ["src/types/*"]
+            // "*": ["src/types/*"],
+            "@emotion/core": ["sink.d.ts"]
         },
         "sourceRoot": "src",
         "outDir": "dist",

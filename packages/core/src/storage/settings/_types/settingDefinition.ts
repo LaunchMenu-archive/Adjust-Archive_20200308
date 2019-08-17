@@ -1,13 +1,13 @@
 import {ParameterizedSettingsFile} from "../settingsFile";
 import {SettingsConditions} from "../settingsConditions/abstractSettingsConditions";
+import {SettingsConfigType} from "./settingsCoonfigType";
 
 /**
  * The data of a single Setting in the config
  */
-
 export type SettingDefinition<V> = {
     default: V;
-    type: string | Object;
+    type: SettingsConfigType;
     validation?: (value: any) => Error | void;
     onChange?: (
         value: any,

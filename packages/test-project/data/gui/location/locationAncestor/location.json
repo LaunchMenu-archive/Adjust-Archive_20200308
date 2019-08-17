@@ -11,9 +11,7 @@
             },
             "ID": 1,
             "data": {
-                "locations": [
-                    "root"
-                ]
+                "locations": []
             }
         },
         {
@@ -21,14 +19,13 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "dvzZ-E4yM"
+                    "ID": "5oFv-SdWY"
                 }
             },
             "ID": 2,
             "data": {
                 "locations": [
-                    "prompt",
-                    "0YkQ-mfPH-Fb3n-vATq-y3YR"
+                    "prompt"
                 ]
             }
         },
@@ -37,13 +34,13 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "jmPO-I348"
+                    "ID": "window1"
                 }
             },
             "ID": 3,
             "data": {
                 "locations": [
-                    "65Pj-Seow-Agh9-Qkt9-Pddb"
+                    "test"
                 ]
             }
         },
@@ -54,6 +51,15 @@
             },
             "ID": 0,
             "data": {
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    }
+                },
                 "locations": []
             }
         }

@@ -63,7 +63,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
     extractDefault(configSettings) {
         const data = {};
         extendedObject_1.ExtendedObject.forEach(configSettings, (key, value) => {
-            if (value.default !== undefined)
+            if ("default" in value)
                 data[key] = value.default;
             else
                 data[key] = this.extractDefault(value);
@@ -78,7 +78,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
     extractConfigShape(config) {
         const data = {};
         extendedObject_1.ExtendedObject.forEach(config, (key, value) => {
-            if (value.default !== undefined)
+            if ("default" in value)
                 data[key] = undefined;
             else
                 data[key] = this.extractConfigShape(value);
@@ -151,6 +151,13 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         return this.shape;
     }
     /**
+     * Retrieves the config of the settings
+     * @returns The config object
+     */
+    getConfig() {
+        return this.config;
+    }
+    /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance
      * @param create Whether or not to create the conditional data if absent
@@ -169,7 +176,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
             if (!create)
                 return;
             // Create the data
-            const data = new data_1.Data(this.shape, false);
+            const data = new data_1.Data(this.shape, false, false);
             // Setup a listener
             data.on("change", this.valueChange.bind(this, condition), "SettingsFile");
             // Create the settings set data
@@ -389,7 +396,6 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         // Emit change events for all settings
         this.setDirty(false);
         const promises = this.settings.map(settings => this.valueChange(settings.condition, settings.data.get, undefined, true));
-        await Promise.all(promises);
     }
     /**
      * Changes whether or not this file is dirty

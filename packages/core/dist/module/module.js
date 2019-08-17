@@ -23,9 +23,13 @@ exports.baseConfig = {
     getPriority: () => 1,
 };
 /**
- * A class containing data for importing it (its actual file location),
- * a state that can be serialized and deserialized and
- * a settings object that stores settings for this type of component
+ * The base class to build your app using adjust gui
+ *
+ * Takes care of the following tasks:
+ * -    Tracking modue file location for importing it
+ * -    Storing a serializable state
+ * -    Storing settings that can be altered by the user
+ *
  */
 class Module {
     /**

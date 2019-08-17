@@ -1,5 +1,5 @@
 import {
-    createModule as adjustCreateModule,
+    createModule as coreCreateModule,
     SettingsConditions,
     SettingsFile,
     Registry,
@@ -9,6 +9,8 @@ import {
     LocationManager,
     LocationManagerType,
 } from "../modules/location/locationManager.type";
+import {themeSettingsEmpty} from "../modules/theming/themeSettings";
+import {Json} from "@adjust/core/types";
 
 /**
  * A method that syncrhonizes the locations with the location manager when a module's location changes
@@ -47,6 +49,23 @@ export const synchronizedLocations = async (
 };
 
 /**
+ * The settings that apply to styling
+ */
+export const stylingSettings = {
+    styleOverride: {
+        theme: themeSettingsEmpty,
+        resetTheme: {
+            default: false,
+            type: "boolean",
+        },
+        css: {
+            default: null as Json,
+            type: "css",
+        },
+    },
+};
+
+/**
  * The default config for modules, adds location management to the Adjust core modules
  */
 export const baseConfig = {
@@ -58,16 +77,23 @@ export const baseConfig = {
             // Make sure that when a location changes, this is synchronized with the location manager
             onChange: synchronizedLocations,
         },
+        ...stylingSettings,
     },
     type: undefined,
 };
 
 /**
- * A class containing data for importing it (its actual file location),
- * a state that can be serialized and deserialized,
- * a settings object that stores settings for this type of component
+ * The base class to build your app using adjust gui
+ *
+ * Takes care of the following tasks:
+ * -    Tracking modue file location for importing it
+ * -    Storing a serializable state
+ * -    Storing settings that can be altered by the user
+ * -    Allow for theming by the user
+ * -    Integrating the location system to show the module's view
+ *
  */
-export abstract class Module extends adjustCreateModule(baseConfig) {
+export abstract class Module extends coreCreateModule(baseConfig) {
     // The location manager used to show the view, if used
     protected locationManager: LocationManager;
 

@@ -21,20 +21,24 @@ export declare const config: {
     };
     settings: {
         width: {
-            default: number;
             type: string;
+        } & {
+            default: number;
         };
         height: {
-            default: number;
             type: string;
+        } & {
+            default: number;
         };
         x: {
-            default: number;
             type: string;
+        } & {
+            default: number;
         };
         y: {
-            default: number;
             type: string;
+        } & {
+            default: number;
         };
     };
     type: import("@adjust/core/types").ContractID<import("./window.type").WindowContract>;
@@ -55,20 +59,24 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
     };
     settings: {
         width: {
-            default: number;
             type: string;
+        } & {
+            default: number;
         };
         height: {
-            default: number;
             type: string;
+        } & {
+            default: number;
         };
         x: {
-            default: number;
             type: string;
+        } & {
+            default: number;
         };
         y: {
-            default: number;
             type: string;
+        } & {
+            default: number;
         };
     };
     type: import("@adjust/core/types").ContractID<import("./window.type").WindowContract>;
@@ -141,7 +149,7 @@ export default class WindowModule extends WindowModule_base implements Window {
     setEdit(edit: boolean): Promise<void>;
     saveSettings(): Promise<void>;
 }
-declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
+declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../../..").ModuleView, import("../../../../../..").ModuleView<{}, {}, import("../../../../../..").Module, {}>>>;
 export declare class WindowView extends WindowView_base {
     /**@override */
     componentWillMount(): void;

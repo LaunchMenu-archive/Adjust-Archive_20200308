@@ -14,7 +14,7 @@ import { SettingsConfigSet } from "./_types/settingsConfigSet";
 import { SettingsMigrators } from "./_types/settingsMigrator";
 export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsConfigData<S>>;
-    protected config: SettingsConfig;
+    protected config: S;
     protected path: string;
     protected moduleClass: typeof Module;
     protected shape: Shape<SettingsConfigData<S>>;
@@ -87,6 +87,11 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * @returns The shape, with all values being undefined
      */
     getStucture(): Shape<SettingsConfigData<S>>;
+    /**
+     * Retrieves the config of the settings
+     * @returns The config object
+     */
+    getConfig(): S;
     /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance

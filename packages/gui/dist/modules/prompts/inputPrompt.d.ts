@@ -83,7 +83,7 @@ export declare class InputPromptView extends InputPromptView_base {
      * Handles keyboard events
      * @param event The keyboard event
      */
-    protected keyEvent(event: KeyboardEvent<HTMLDivElement>): void;
+    protected keyEvent(event: KeyboardEvent<HTMLElement>): void;
     /**@override */
     protected renderView(): JSX.Element;
 }

@@ -3,6 +3,9 @@ const data_1 = require("../data");
 const eventEmitter_1 = require("../../utils/eventEmitter");
 const extendedObject_1 = require("../../utils/extendedObject");
 const sortedList_1 = require("../../utils/sortedList");
+/**
+ * A setting class that filters the appropriate settings from a [settingsFile]
+ */
 class Settings extends eventEmitter_1.EventEmitter {
     /**
      * Creates settings for a specific module instance
@@ -19,6 +22,7 @@ class Settings extends eventEmitter_1.EventEmitter {
     static async createInstance(target) {
         const settings = new this(target);
         settings.settingsFile = await target.getClass().getSettingsFile();
+        settings.config = settings.settingsFile.getConfig();
         // Load the settings that apply to this target
         // @ts-ignore
         settings.get = settings.loadApplicableSettingsFromFile();
@@ -32,6 +36,7 @@ class Settings extends eventEmitter_1.EventEmitter {
      * @returns The getter object for the settings
      */
     loadApplicableSettingsFromFile() {
+        // Create the settings priorities, will automatically be occupied by this.getPriorityList
         this.settingsPriorities = {};
         // Go through all the settingsSets and their conditions
         this.settingsFile.getAllSettings().forEach(settingsSet => {
@@ -41,26 +46,44 @@ class Settings extends eventEmitter_1.EventEmitter {
                 // Go through all the settings values
                 extendedObject_1.ExtendedObject.forEach(settingsSet.data.get, (key, value, path, parentPath) => {
                     // Get the list to store the value in
-                    const parent = extendedObject_1.ExtendedObject.getField(this.settingsPriorities, parentPath, true);
-                    let field = parent[key];
-                    // Create the list if absent
-                    if (!field)
-                        field = parent[key] = new sortedList_1.SortedList((a, b) => a.condition.getPriority() - b.condition.getPriority());
+                    const field = this.getPriorityList(path);
                     // Store the value
                     field.push({ condition: condition, value: value });
-                }, true, true);
+                }, (key, value, path) => !("default" in
+                    extendedObject_1.ExtendedObject.getField(this.config.settings, path)));
             }
         });
         // Retrieve all the highest priority settings
         const settings = {};
         extendedObject_1.ExtendedObject.forEach(this.settingsPriorities, (key, value, path, parentPath) => {
             // Get the highest priority value, and store it
-            const val = value.get(-1).value;
+            const entry = value.get(-1);
+            const val = entry && entry.value;
             const parent = extendedObject_1.ExtendedObject.getField(settings, parentPath, true);
             parent[key] = val;
         }, true);
-        this.settings = new data_1.Data(settings, false);
+        // Create the settings data with the appropriate shape, and add the initial data
+        this.settings = new data_1.Data(this.settingsFile.getStucture(), false);
+        this.settings.changeData(settings);
         return this.settings.get;
+    }
+    /**
+     * Retrieves the priority list for a given path
+     * @param path The path to retrieve the priority list for
+     * @returns The obtained priority list
+     */
+    getPriorityList(path) {
+        // Split the path
+        const nodes = path.split(".");
+        const parentPath = nodes.slice(0, nodes.length - 1).join(".");
+        const key = nodes[nodes.length - 1];
+        // Retrieve the object in the settings priorities to add the list to
+        const parent = extendedObject_1.ExtendedObject.getField(this.settingsPriorities, parentPath, true);
+        // Create and add the list if absent
+        if (!parent[key])
+            parent[key] = new sortedList_1.SortedList((a, b) => a.condition.getPriority() - b.condition.getPriority());
+        // Return the list
+        return parent[key];
     }
     /**
      * Adds the necessary listeners to the settings file, to keep the data in this bject synchronised
@@ -71,7 +94,7 @@ class Settings extends eventEmitter_1.EventEmitter {
                 // Keep track of whether or not the settings value has to be updated
                 let updateValue = false;
                 // Get the list to contain the value
-                const list = extendedObject_1.ExtendedObject.getField(this.settingsPriorities, path);
+                const list = this.getPriorityList(path);
                 // Check if the value has been remvoed, change or inserted
                 if (value === undefined) {
                     // If the value has been removed, remove it from the list
@@ -129,6 +152,7 @@ class Settings extends eventEmitter_1.EventEmitter {
      */
     async changeData(data, condition) {
         // Change the data on the condition of the settings file
+        const n = this.getData(condition);
         return this.getData(condition).changeData(data);
     }
     /**

@@ -5,7 +5,7 @@ const embed_type_1 = require("../embed/embed.type");
 exports.config = {
     initialState: {
         stuff: "test",
-        child: undefined,
+        children: [],
         somethingAsync: undefined,
         smth: 0,
     },
@@ -20,12 +20,30 @@ exports.config = {
 class TestModule extends gui_1.createModule(exports.config) {
     /** @override */
     async onInit() {
+        console.time();
         this.setState({
-            child: await this.request({
+            children: await this.request({
                 type: embed_type_1.EmbedType,
-                data: { text: "hello", count: 3 },
-            }),
+                data: { text: "hello", count: 4 },
+            }).then(child => [child]),
         });
+        // this.setState({
+        //     children: await this.request({
+        //         type: EmbedType,
+        //         data: {text: "hello", count: 842}, //421},
+        //     }).then(child => [child]),
+        // });
+        // this.setState({
+        //     children: await Promise.all(
+        //         new Array(840).fill(0).map(() =>
+        //             this.request({
+        //                 type: EmbedType,
+        //                 data: {text: "hello", count: 100}, //421},
+        //             })
+        //         )
+        //     ),
+        // });
+        console.timeEnd();
         this.intervalID = setInterval(() => {
             if (this.state.smth == 0)
                 this.show();
@@ -47,12 +65,10 @@ class TestModule extends gui_1.createModule(exports.config) {
         return "yes";
     }
     changeChildText() {
-        if (this.state.child)
-            this.state.child.setText("damn");
+        this.state.children.forEach(child => child.setText("damn"));
     }
     closeChild() {
-        if (this.state.child)
-            this.state.child.close();
+        this.state.children.forEach(child => child.close());
     }
     setStuff() {
         this.setSettings({ stuff: true });
@@ -70,7 +86,7 @@ class TestView extends gui_1.createModuleView(TestModule) {
             } },
             this.state.stuff,
             gui_1.React.createElement("br", null),
-            this.state.child,
+            this.state.children,
             gui_1.React.createElement("button", { onClick: e => this.module.changeChildText() }, "Change child text"),
             gui_1.React.createElement("button", { onClick: e => this.module.closeChild() }, "Close child"),
             gui_1.React.createElement("button", { onClick: e => this.module.setStuff() },

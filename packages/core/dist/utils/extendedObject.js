@@ -163,9 +163,9 @@ class ExtendedObject extends Object {
             const value = obj[key];
             const p = (path ? path + "." : "") + key;
             // Check if we should recurse
-            if (this.isPlainObject(value) &&
-                recurse &&
-                (typeof recurse != "function" || recurse(key, value, p, path))) {
+            if (typeof recurse == "function"
+                ? value instanceof Object && recurse(key, value, p, path)
+                : recurse && this.isPlainObject(value)) {
                 // Call the function
                 if (includeRecurseObj)
                     func(key, value, p, path);
@@ -440,6 +440,9 @@ class ExtendedObject extends Object {
             check = copyModel;
             copyModel = src;
         }
+        // Handle the source being undefined
+        if (!src)
+            return dest;
         // @ts-ignore If the whole object should be overwritten, straight up return the source
         if (src[this.overwrite])
             return Object.assign({}, src);

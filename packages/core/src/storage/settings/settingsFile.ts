@@ -21,7 +21,7 @@ import {SettingsMigrators} from "./_types/settingsMigrator";
 
 export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsConfigData<S>>;
-    protected config: SettingsConfig;
+    protected config: S;
     protected path: string;
 
     // The module class that these are the settings for, may be undefined if not associated with module
@@ -119,7 +119,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     ): SettingsConfigSetData<C> {
         const data = {};
         ExtendedObject.forEach(configSettings, (key, value) => {
-            if (value.default !== undefined) data[key] = value.default;
+            if ("default" in value) data[key] = value.default;
             else data[key] = this.extractDefault(value as SettingsConfigSet);
         });
         return data as SettingsConfigSetData<C>;
@@ -135,7 +135,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     ): Shape<SettingsConfigSetData<C>> {
         const data = {};
         ExtendedObject.forEach(config, (key, value) => {
-            if (value.default !== undefined) data[key] = undefined;
+            if ("default" in value) data[key] = undefined;
             else data[key] = this.extractConfigShape(value as SettingsConfigSet);
         });
         return data as Shape<SettingsConfigSetData<C>>;
@@ -211,6 +211,14 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     }
 
     /**
+     * Retrieves the config of the settings
+     * @returns The config object
+     */
+    public getConfig(): S {
+        return this.config;
+    }
+
+    /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance
      * @param create Whether or not to create the conditional data if absent
@@ -238,6 +246,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
             // Create the data
             const data = new Data<SettingsConfigData<S>>(
                 (this.shape as unknown) as SettingsConfigData<S>,
+                false,
                 false
             );
 
@@ -559,7 +568,6 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         const promises = this.settings.map(settings =>
             this.valueChange(settings.condition, settings.data.get, undefined, true)
         );
-        await Promise.all(promises);
     }
 
     /**

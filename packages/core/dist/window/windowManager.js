@@ -213,12 +213,15 @@ class WindowManagerSingleton {
             });
             // Apply the settings to the window
             const window = await bufferedWindow.window;
+            // Store what properties have been used
             const used = { preloadModules: true };
-            extendedObject_1.ExtendedObject.forEach(bufferedWindow.options, (optionName, optionValue) => {
+            extendedObject_1.ExtendedObject.forEach(options, (optionName, optionValue) => {
                 if (used[optionName])
                     return; // Use each field only once
                 used[optionName] = true;
-                if (optionValue == options[optionName])
+                if (optionValue == bufferedWindow.options[optionName])
+                    return;
+                if (optionValue == windowPropertyFunctionMap[optionName].default)
                     return;
                 // Get the data for this option
                 const optionData = windowPropertyFunctionMap[optionName];
@@ -229,9 +232,9 @@ class WindowManagerSingleton {
                 // Get the arguments
                 const args = (optionData.args || []).map(argName => {
                     used[argName] = true;
-                    return (options[argName] || windowPropertyFunctionMap[argName].default);
+                    return options[argName] || windowPropertyFunctionMap[argName].default;
                 });
-                // Apply the method
+                // // Apply the method
                 method.apply(window, args);
             });
             // Return the result

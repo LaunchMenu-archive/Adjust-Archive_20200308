@@ -1,8 +1,9 @@
-import {Box, TextField, FormControl, FormHelperText, Typography} from "@material-ui/core";
 import {createModuleView, React} from "@adjust/core";
 import {KeyboardEvent} from "react";
 import {InputPromptType, InputPrompt, PromptData} from "./inputPrompt.type";
 import {createModule} from "../../module/moduleClassCreator";
+import {Box} from "../../components/Box";
+import {TextField} from "office-ui-fabric-react/lib-commonjs";
 
 export const config = {
     initialState: {
@@ -155,7 +156,7 @@ export class InputPromptView extends createModuleView(InputPromptModule) {
      * Handles keyboard events
      * @param event The keyboard event
      */
-    protected keyEvent(event: KeyboardEvent<HTMLDivElement>): void {
+    protected keyEvent(event: KeyboardEvent<HTMLElement>): void {
         event.stopPropagation();
         event.nativeEvent.stopImmediatePropagation();
         if (event.key === "Enter") {
@@ -166,40 +167,20 @@ export class InputPromptView extends createModuleView(InputPromptModule) {
     /**@override */
     protected renderView(): JSX.Element {
         return (
-            <Box p={2}>
-                {this.state.title && (
-                    <Box className="title">
-                        <Typography variant="h5" component="h2">
-                            {this.state.title}
-                        </Typography>
-                    </Box>
-                )}
+            <Box padding="l">
+                {this.state.title && <Box className="title">{this.state.title}</Box>}
                 {this.state.description && (
-                    <Box className="description">
-                        <Typography variant="body2" component="p">
-                            {this.state.description}
-                        </Typography>
-                    </Box>
+                    <Box className="description">{this.state.description}</Box>
                 )}
-                <FormControl className={"input"} fullWidth>
-                    <TextField
-                        className={"inputField"}
-                        margin="normal"
-                        aria-describedby="inputError"
-                        placeholder={this.state.placeHolder}
-                        error={!!this.state.errorMessage}
-                        value={this.state.value}
-                        onChange={e => this.module.setValue(e.target.value)}
-                        onKeyPress={e => this.keyEvent(e)}
-                        type={this.state.type == "number" ? "number" : "text"}
-                        fullWidth
-                    />
-                    {this.state.errorMessage && (
-                        <FormHelperText id="inputError">
-                            {this.state.errorMessage}
-                        </FormHelperText>
-                    )}
-                </FormControl>
+                {/* TODO: use type to only allow numbers if type is set to number */}
+                <TextField
+                    className={"inputField"}
+                    borderless
+                    placeholder={this.state.placeHolder}
+                    errorMessage={this.state.errorMessage}
+                    onChange={(e, value) => this.module.setValue(value)}
+                    onKeyUp={e => this.keyEvent(e)}
+                />
             </Box>
         );
     }

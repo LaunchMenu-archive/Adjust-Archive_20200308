@@ -8,7 +8,7 @@ const moduleViewClassCreator_1 = require("../module/moduleViewClassCreator");
 const moduleClassCreator_1 = require("../module/moduleClassCreator");
 const registry_1 = require("../registry/registry");
 const instanceModuleProvider_1 = require("../registry/moduleProviders/instanceModuleProvider");
-exports.config = {
+exports.viewNotFoundConfig = {
     initialState: {},
     getPriority: () => 1,
     settings: {},
@@ -17,12 +17,13 @@ exports.config = {
 /**
  * This module is automatically added by the window manager to ensure some ViewNotFound module exists
  */
-class ViewNotFoundModule extends moduleClassCreator_1.createModule(exports.config) {
+class ViewNotFoundModule extends moduleClassCreator_1.createModule(exports.viewNotFoundConfig) {
     /** @override */
     async onInit(fromReload) {
         registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(viewNotFound_type_1.ViewNotFoundType, this, () => 2));
     }
 }
+exports.ViewNotFoundModule = ViewNotFoundModule;
 exports.default = ViewNotFoundModule;
 /**
  * A reference to ViewNotFoundModule is hardcoded into moduleView's props,

@@ -91,7 +91,7 @@ export default class LocationModule extends LocationModule_base implements Locat
      */
     onDragEnd(): Promise<void>;
 }
-declare const LocationView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof LocationModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
+declare const LocationView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof LocationModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../..").ModuleView, import("../../..").ModuleView<{}, {}, import("../../..").Module, {}>>>;
 export declare class LocationView extends LocationView_base {
     /**
      * Starts the dragging of a location

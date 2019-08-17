@@ -5,7 +5,7 @@ import {EmbedType, Embed} from "../embed/embed.type";
 export const config = {
     initialState: {
         stuff: "test",
-        child: undefined as Embed,
+        children: [] as Embed[],
         somethingAsync: undefined as Promise<number>,
         smth: 0 as number,
     },
@@ -22,12 +22,30 @@ export default class TestModule extends createModule(config) implements Test {
     intervalID: number;
     /** @override */
     public async onInit() {
+        console.time();
         this.setState({
-            child: await this.request({
+            children: await this.request({
                 type: EmbedType,
-                data: {text: "hello", count: 3},
-            }),
+                data: {text: "hello", count: 4}, //421},
+            }).then(child => [child]),
         });
+        // this.setState({
+        //     children: await this.request({
+        //         type: EmbedType,
+        //         data: {text: "hello", count: 842}, //421},
+        //     }).then(child => [child]),
+        // });
+        // this.setState({
+        //     children: await Promise.all(
+        //         new Array(840).fill(0).map(() =>
+        //             this.request({
+        //                 type: EmbedType,
+        //                 data: {text: "hello", count: 100}, //421},
+        //             })
+        //         )
+        //     ),
+        // });
+        console.timeEnd();
         this.intervalID = setInterval(() => {
             if (this.state.smth == 0) this.show();
             this.setState({
@@ -52,10 +70,10 @@ export default class TestModule extends createModule(config) implements Test {
     }
 
     public changeChildText() {
-        if (this.state.child) this.state.child.setText("damn");
+        this.state.children.forEach(child => child.setText("damn"));
     }
     public closeChild() {
-        if (this.state.child) this.state.child.close();
+        this.state.children.forEach(child => child.close());
     }
     public setStuff() {
         this.setSettings({stuff: true});
@@ -75,7 +93,7 @@ export class TestView extends createModuleView(TestModule) {
                 }}>
                 {this.state.stuff}
                 <br />
-                {this.state.child}
+                {this.state.children}
 
                 <button onClick={e => this.module.changeChildText()}>
                     Change child text

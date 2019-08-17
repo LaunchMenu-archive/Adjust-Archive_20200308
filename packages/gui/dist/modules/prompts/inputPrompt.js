@@ -1,8 +1,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@material-ui/core");
-const core_2 = require("@adjust/core");
+const core_1 = require("@adjust/core");
 const inputPrompt_type_1 = require("./inputPrompt.type");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
+const Box_1 = require("../../components/Box");
+const lib_commonjs_1 = require("office-ui-fabric-react/lib-commonjs");
 exports.config = {
     initialState: {
         type: "string",
@@ -119,7 +120,7 @@ class InputPromptModule extends moduleClassCreator_1.createModule(exports.config
     }
 }
 exports.default = InputPromptModule;
-class InputPromptView extends core_2.createModuleView(InputPromptModule) {
+class InputPromptView extends core_1.createModuleView(InputPromptModule) {
     /**
      * Handles keyboard events
      * @param event The keyboard event
@@ -133,14 +134,10 @@ class InputPromptView extends core_2.createModuleView(InputPromptModule) {
     }
     /**@override */
     renderView() {
-        return (core_2.React.createElement(core_1.Box, { p: 2 },
-            this.state.title && (core_2.React.createElement(core_1.Box, { className: "title" },
-                core_2.React.createElement(core_1.Typography, { variant: "h5", component: "h2" }, this.state.title))),
-            this.state.description && (core_2.React.createElement(core_1.Box, { className: "description" },
-                core_2.React.createElement(core_1.Typography, { variant: "body2", component: "p" }, this.state.description))),
-            core_2.React.createElement(core_1.FormControl, { className: "input", fullWidth: true },
-                core_2.React.createElement(core_1.TextField, { className: "inputField", margin: "normal", "aria-describedby": "inputError", placeholder: this.state.placeHolder, error: !!this.state.errorMessage, value: this.state.value, onChange: e => this.module.setValue(e.target.value), onKeyPress: e => this.keyEvent(e), type: this.state.type == "number" ? "number" : "text", fullWidth: true }),
-                this.state.errorMessage && (core_2.React.createElement(core_1.FormHelperText, { id: "inputError" }, this.state.errorMessage)))));
+        return (core_1.React.createElement(Box_1.Box, { padding: "l" },
+            this.state.title && core_1.React.createElement(Box_1.Box, { className: "title" }, this.state.title),
+            this.state.description && (core_1.React.createElement(Box_1.Box, { className: "description" }, this.state.description)),
+            core_1.React.createElement(lib_commonjs_1.TextField, { className: "inputField", borderless: true, placeholder: this.state.placeHolder, errorMessage: this.state.errorMessage, onChange: (e, value) => this.module.setValue(value), onKeyUp: e => this.keyEvent(e) })));
     }
 }
 exports.InputPromptView = InputPromptView;

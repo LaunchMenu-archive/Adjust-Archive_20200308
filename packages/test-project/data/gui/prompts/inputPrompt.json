@@ -8,7 +8,18 @@
             },
             "ID": 0,
             "data": {
-                "location": "prompt"
+                "location": "prompt",
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    },
+                    "resetTheme": false,
+                    "css": null
+                }
             }
         }
     ]

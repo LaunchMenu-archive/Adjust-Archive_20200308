@@ -1,6 +1,6 @@
 import {
-    ModuleClassCreator as AdjustModuleClassCreator,
-    Module as AdjustModule,
+    ModuleClassCreator as CoreModuleClassCreator,
+    Module as CoreModule,
 } from "@adjust/core";
 import {ExtendsClass, ExtendedModuleClass} from "@adjust/core/types";
 import {Module} from "./module";
@@ -9,12 +9,12 @@ import {Registry} from "../registry/registry";
 import {LocationManagerType} from "../modules/location/locationManager.type";
 
 // Specify that the default module to be used is our extend module
-export class ModuleClassCreator extends AdjustModuleClassCreator {
+export class ModuleClassCreator extends CoreModuleClassCreator {
     /** @override */
     public static createModule<
         MC extends ParameterizedModuleConfig,
         // Can't use Module<{}, {}, any> instead of {}, due to it expecting private members
-        X extends ExtendsClass<typeof AdjustModule, {}> = ExtendsClass<
+        X extends ExtendsClass<typeof CoreModule, {}> = ExtendsClass<
             typeof Module,
             Module
         >

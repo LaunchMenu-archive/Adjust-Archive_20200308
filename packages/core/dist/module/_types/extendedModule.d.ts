@@ -37,6 +37,7 @@ export declare type ExtendedModule<MC extends ParameterizedModuleConfig, M exten
     setSettings(settings: DataChange<OrEmpty<SettingsConfigSetData<MC["settings"]> & SettingsConfigData<ExtractModuleSettings<M>>>>, conditions?: SettingsConditions): Promise<void>;
     getRequest(): ModuleRequestData<GetTypeInterface<MC["type"]>>;
     getParent(): GetTypeInterface<MC["type"]>["parent"];
+    getParents(): GetTypeInterface<MC["type"]>["parent"][];
     getData(): GetTypeInterface<MC["type"]>["data"];
 } & M & Module<OrEmpty<MC["initialState"]>, SettingsConfig<MC["settings"]>, GetTypeInterface<MC["type"]>>;
 /**

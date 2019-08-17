@@ -33,9 +33,13 @@ export declare const baseConfig: {
     getPriority: () => number;
 };
 /**
- * A class containing data for importing it (its actual file location),
- * a state that can be serialized and deserialized and
- * a settings object that stores settings for this type of component
+ * The base class to build your app using adjust gui
+ *
+ * Takes care of the following tasks:
+ * -    Tracking modue file location for importing it
+ * -    Storing a serializable state
+ * -    Storing settings that can be altered by the user
+ *
  */
 export declare class Module<S extends ModuleState, C extends SettingsConfig<any>, I extends ModuleContract> implements ChildModule<{}> {
     readonly ID: ModuleID;

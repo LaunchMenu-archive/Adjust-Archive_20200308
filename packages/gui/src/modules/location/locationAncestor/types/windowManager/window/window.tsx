@@ -1,10 +1,11 @@
-import {Grid, Button, Box} from "@material-ui/core";
-import Close from "@material-ui/icons/Close";
+import {IconButton} from "office-ui-fabric-react";
+import {PrimaryButton} from "office-ui-fabric-react/lib-commonjs";
+import {Event} from "electron";
 import {
     WindowManager,
-    createModuleView,
     ModuleReference,
     SettingsManager,
+    createSettings,
 } from "@adjust/core";
 import {LocationAncestor} from "../../../locationAncestor.type";
 import {createModule} from "../../../../../../module/moduleClassCreator";
@@ -14,30 +15,23 @@ import {React} from "../../../../../../React";
 import {ModuleLocation} from "../../../../../../module/_types/ModuleLocation";
 import {LocationManagerType} from "../../../../locationManager.type";
 import {WindowType, Window} from "./window.type";
+import {Box} from "../../../../../../components/Box";
+import {createModuleView} from "../../../../../../module/moduleViewClassCreator";
 
 export const config = {
     initialState: {
         childLocationAncestor: null as Promise<LocationAncestor>,
         windowName: "",
     },
-    settings: {
-        width: {
-            default: 500,
-            type: "number",
+    settings: createSettings(
+        {
+            width: 500,
+            height: 500,
+            x: 0,
+            y: 0,
         },
-        height: {
-            default: 500,
-            type: "number",
-        },
-        x: {
-            default: 0,
-            type: "number",
-        },
-        y: {
-            default: 0,
-            type: "number",
-        },
-    },
+        {type: "number"}
+    ),
     type: WindowType,
 };
 
@@ -80,6 +74,8 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         // Open the window
         this.window = WindowManager.openWindow(this.getData().ID, this.getID(), {
             frame: false,
+            transparent: true,
+            backgroundColor: "#00000000",
             preloadModules: [this.getClass().getPath()],
         });
 
@@ -109,6 +105,13 @@ export default class WindowModule extends createModule(config, LocationAncestorM
         };
         window.on("move", updateBounds);
         window.on("resize", updateBounds);
+
+        // Handle window crashes
+        window.webContents.on("crashed", (event: Event) => {
+            //TODO:
+            console.log(event);
+            debugger;
+        });
 
         // Return the window
         return window;
@@ -378,9 +381,9 @@ export class WindowView extends createModuleView(WindowModule) {
      */
     protected renderHeader(): JSX.Element {
         return (
-            <Grid
-                container
-                direction="row-reverse"
+            <Box
+                display="flex"
+                flexDirection="row-reverse"
                 css={
                     {
                         WebkitAppRegion: "drag",
@@ -389,15 +392,21 @@ export class WindowView extends createModuleView(WindowModule) {
                         },
                     } as any
                 }>
-                <Grid item>
-                    <Button onClick={() => this.module.closeWindow()}>
-                        <Close />
-                    </Button>
-                </Grid>
-                <Grid item>
+                <Box>
+                    <PrimaryButton>Hallo?</PrimaryButton>
+                </Box>
+                <Box>
+                    <IconButton
+                        iconProps={{iconName: "close"}}
+                        onClick={() => this.module.closeWindow()}
+                        title="close"
+                        ariaLabel="close"
+                    />
+                </Box>
+                <Box>
                     {this.data.ID} {this.state.windowName}
-                </Grid>
-            </Grid>
+                </Box>
+            </Box>
         );
     }
 
@@ -405,11 +414,17 @@ export class WindowView extends createModuleView(WindowModule) {
     protected renderView(): JSX.Element {
         return (
             <Box
+                className="window"
                 display="flex"
+                background="neutralLight"
                 flexDirection="column"
+                shadowCustom="rgba(0, 0, 0, 0.36) 0px 3px 7px 0px"
+                marginXCustom={7}
+                marginTopCustom={4}
+                marginBottomCustom={10}
                 css={{position: "absolute", left: 0, right: 0, top: 0, bottom: 0} as any}>
                 <Box>{!this.data.previewMode && this.renderHeader()}</Box>
-                <Box flex={1} css={{position: "relative" as any}}>
+                <Box flexGrow={1} css={{position: "relative" as any}}>
                     {this.state.childLocationAncestor}
                 </Box>
             </Box>

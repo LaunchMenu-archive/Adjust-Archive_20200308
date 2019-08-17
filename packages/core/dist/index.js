@@ -16,6 +16,7 @@ __export(require("./module/moduleID"));
 __export(require("./module/module"));
 __export(require("./module/moduleClassCreator"));
 __export(require("./module/moduleView"));
+__export(require("./module/moduleViewWrapper"));
 __export(require("./module/moduleViewClassCreator"));
 __export(require("./module/moduleProxy"));
 __export(require("./module/remoteModuleProxy"));
@@ -36,7 +37,13 @@ __export(require("./storage/settings/settingsManager"));
 __export(require("./storage/settings/settingsDataID"));
 __export(require("./storage/settings/settingsFile"));
 __export(require("./storage/settings/settings"));
+__export(require("./storage/settings/utils/settingsFormatters"));
 __export(require("./storage/settings/settingsConditions/types/functionSettingsConditions"));
 __export(require("./storage/settings/settingsConditions/types/dataSettingsConditions"));
 __export(require("./storage/settings/settingsConditions/abstractSettingsConditions"));
+// Modules
+__export(require("./modules/contextProvider"));
+__export(require("./modules/contextProvider.type"));
+__export(require("./modules/viewNotFound"));
+__export(require("./modules/viewNotFound.type"));
 //# sourceMappingURL=index.js.map

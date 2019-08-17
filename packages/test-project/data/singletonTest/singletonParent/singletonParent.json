@@ -8,9 +8,18 @@
             },
             "ID": 0,
             "data": {
-                "location": [
-                    "65Pj-Seow-Agh9-Qkt9-Pddb"
-                ]
+                "location": "test",
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    },
+                    "resetTheme": false,
+                    "css": null
+                }
             }
         }
     ]

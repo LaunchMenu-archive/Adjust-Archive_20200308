@@ -2,15 +2,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@material-ui/core");
 const windowSelector_type_1 = require("./windowSelector.type");
-const core_2 = require("@adjust/core");
+const core_1 = require("@adjust/core");
 const moduleClassCreator_1 = require("../../../../../../module/moduleClassCreator");
 const React_1 = require("../../../../../../React");
 const locationAncestor_type_1 = require("../../../locationAncestor.type");
 const inputPrompt_type_1 = require("../../../../../prompts/inputPrompt.type");
 const window_type_1 = require("../window/window.type");
 const locationAncestor_1 = __importDefault(require("../../../locationAncestor"));
+const moduleViewClassCreator_1 = require("../../../../../../module/moduleViewClassCreator");
+const Box_1 = require("../../../../../../components/Box");
 const sizes = {
     barHeight: 40,
     windowHeight: 500,
@@ -37,7 +38,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
     async getWindow() {
         if (this.window)
             return this.window;
-        return (this.window = core_2.WindowManager.openWindow(this.windowID, this.getID(), {
+        return (this.window = core_1.WindowManager.openWindow(this.windowID, this.getID(), {
             useContentSize: true,
             height: sizes.barHeight,
         }));
@@ -49,7 +50,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
         // Check if the window has been opened
         if (this.window) {
             // Close the window
-            core_2.WindowManager.closeWindow(this.windowID);
+            core_1.WindowManager.closeWindow(this.windowID);
             this.window = null;
         }
     }
@@ -76,7 +77,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
         await this.setState({
             closedWindows: Object.assign({}, closed, { 
                 // Make sure to remove previous window data
-                [core_2.ExtendedObject.overwrite]: true }),
+                [core_1.ExtendedObject.overwrite]: true }),
         });
     }
     /** @override */
@@ -98,7 +99,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
         const parent = this.getParent();
         const currentData = await parent.getLocationsMoveData();
         // Set all hints to a path pointing at this location
-        const ID = core_2.UUID.generateShort();
+        const ID = core_1.UUID.generateShort();
         const path = [ID];
         currentData.locations.forEach(loc => {
             loc.hints = {
@@ -172,7 +173,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.con
     }
 }
 exports.default = WindowSelectorModule;
-class WindowSelectorView extends core_2.createModuleView(WindowSelectorModule) {
+class WindowSelectorView extends moduleViewClassCreator_1.createModuleView(WindowSelectorModule) {
     /** @override */
     componentWillMount() {
         super.componentWillMount();
@@ -239,16 +240,16 @@ class WindowSelectorView extends core_2.createModuleView(WindowSelectorModule) {
      */
     renderWindowNames() {
         return Object.entries(this.state.closedWindows).map(([ID, data]) => {
-            return (React_1.React.createElement(core_1.Box, { onDragEnter: e => this.onDragEnterWindow(ID, e), bgcolor: "orange", m: 1, key: ID }, data.name));
+            return (React_1.React.createElement(Box_1.Box, { onDragEnter: e => this.onDragEnterWindow(ID, e), background: "primary", margin: "m", key: ID }, data.name));
         });
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(core_1.Box, { display: "flex", flexDirection: "column", css: { width: "100%", height: "100%" } },
-            React_1.React.createElement(core_1.Box, { className: "selector", display: "flex", flexDirection: "row", css: { width: "100%", height: sizes.barHeight } },
+        return (React_1.React.createElement(Box_1.Box, { display: "flex", flexDirection: "column", css: { width: "100%", height: "100%" } },
+            React_1.React.createElement(Box_1.Box, { className: "selector", display: "flex", flexDirection: "row", css: { width: "100%", height: sizes.barHeight } },
                 this.renderWindowNames(),
-                React_1.React.createElement(core_1.Box, { bgcolor: "orange", m: 1, onDragOver: e => this.onDragOver(e), onDrop: e => this.onDropNew(e) }, "New window")),
-            React_1.React.createElement(core_1.Box, { className: "window", flexGrow: 1, css: { position: "relative" } }, this.renderWindow())));
+                React_1.React.createElement(Box_1.Box, { background: "primary", margin: "m", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDropNew(e) }, "New window")),
+            React_1.React.createElement(Box_1.Box, { className: "window", flexGrow: 1, css: { position: "relative" } }, this.renderWindow())));
     }
 }
 exports.WindowSelectorView = WindowSelectorView;

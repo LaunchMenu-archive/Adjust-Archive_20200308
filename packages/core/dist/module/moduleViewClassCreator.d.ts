@@ -18,6 +18,6 @@ export declare class ModuleViewClassCreator {
     static createModuleView<M extends Constructor<any>, S extends object = {}, V extends ExtendsClass<typeof ModuleView, {}> = ExtendsClass<typeof ModuleView, ModuleView<{}, {}, ParameterizedModule, {}>>>(module: M, initialState?: S, moduleView?: V): ExtendedModuleViewClass<M, S, V>;
 }
 /**
- * A shortcut for the module creation method
+ * A shortcut for the module view creation method
  */
 export declare const createModuleView: (typeof ModuleViewClassCreator)["createModuleView"];

@@ -10,18 +10,18 @@ const instanceModuleProvider_1 = require("../registry/moduleProviders/instanceMo
 const contextProvider_type_1 = require("./contextProvider.type");
 const requestFilters_1 = require("../registry/requestFilters");
 const moduleViewWrapper_1 = require("../module/moduleViewWrapper");
-exports.config = {
+exports.contextProviderConfig = {
     initialState: {
         childProvider: null,
     },
-    getPriority: () => 0.1,
+    getPriority: () => 1,
     settings: {},
     type: contextProvider_type_1.ContextProviderType,
 };
 /**
- * A module of this type is used as the root of the module
+ * A module of this type is used as the root of the window to provide contexts
  */
-class ContextProviderModule extends moduleClassCreator_1.createModule(exports.config) {
+class ContextProviderModule extends moduleClassCreator_1.createModule(exports.contextProviderConfig) {
     /** @override */
     async onInit(fromReload) {
         registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(contextProvider_type_1.ContextProviderType, this, () => 2));
@@ -35,6 +35,7 @@ class ContextProviderModule extends moduleClassCreator_1.createModule(exports.co
             });
     }
 }
+exports.ContextProviderModule = ContextProviderModule;
 exports.default = ContextProviderModule;
 class ContextProviderView extends moduleViewClassCreator_1.createModuleView(ContextProviderModule) {
     /**
@@ -42,7 +43,6 @@ class ContextProviderView extends moduleViewClassCreator_1.createModuleView(Cont
      * @param children The children to put in the provider
      */
     renderProvider(children) {
-        console.log("context");
         // Should be overwritten, this default has no effect
         return children;
     }

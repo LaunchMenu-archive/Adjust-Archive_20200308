@@ -1,10 +1,4 @@
-import {
-    createModule,
-    ModuleReference,
-    createModuleView,
-    ModuleID,
-    UUID,
-} from "@adjust/core";
+import {createModule, ModuleReference, ModuleID, UUID} from "@adjust/core";
 import {React} from "../../../React";
 import {DragEvent} from "react";
 import {LocationPath} from "../_types/LocationPath";
@@ -14,8 +8,9 @@ import {
     dragAndDropName,
 } from "./locationAncestor.type";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
-import {Box} from "@material-ui/core";
 import LocationAncestorModule from "./locationAncestor";
+import {createModuleView} from "../../../module/moduleViewClassCreator";
+import {Box} from "../../../components/Box";
 
 export const config = {
     initialState: {
@@ -328,10 +323,10 @@ export class LocationView extends createModuleView(LocationModule) {
             location.modules.forEach(module => {
                 boxes.push(
                     <Box
-                        mt={1}
+                        marginTop="m"
                         width="100%"
                         height="30px"
-                        bgcolor="blue"
+                        background="blue"
                         color="white"
                         key={module.ID}
                         onDragStart={e => this.onDragStart(e, locationID, module)}
@@ -350,11 +345,11 @@ export class LocationView extends createModuleView(LocationModule) {
     /**@override */
     protected renderView(): JSX.Element {
         return (
-            <Box css={this.cover} bgcolor="#ffdddd">
+            <Box css={this.cover} background="themeTertiary">
                 {this.state.inEditMode && (
                     <Box
                         css={this.cover}
-                        p={1}
+                        padding="m"
                         onDragOver={e => this.onDragOver(e)}
                         onDrop={e => this.onDrop(e)}>
                         {this.renderModuleBoxes()}

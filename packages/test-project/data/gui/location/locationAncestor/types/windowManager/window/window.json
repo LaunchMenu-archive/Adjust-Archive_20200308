@@ -6,13 +6,13 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "dvzZ-E4yM"
+                    "ID": "5oFv-SdWY"
                 }
             },
             "ID": 1,
             "data": {
-                "x": 1297,
-                "y": 94,
+                "x": 760,
+                "y": 395,
                 "width": 400,
                 "height": 250
             }
@@ -22,31 +22,23 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "default"
+                    "ID": "window1"
                 }
             },
-            "ID": 6,
+            "ID": 2,
             "data": {
-                "x": 99,
-                "y": 142,
-                "width": 500,
-                "height": 500
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "ID": "jmPO-I348"
+                "x": 710,
+                "y": 270,
+                "styleOverride": {
+                    "theme": {
+                        "palette": {
+                            "themePrimary": "orange"
+                        }
+                    },
+                    "css": {
+                        "color": "purple"
+                    }
                 }
-            },
-            "ID": 7,
-            "data": {
-                "x": 275,
-                "y": 80,
-                "width": 500,
-                "height": 500
             }
         },
         {
@@ -56,6 +48,15 @@
             },
             "ID": 0,
             "data": {
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    }
+                },
                 "width": 500,
                 "height": 500,
                 "x": 0,

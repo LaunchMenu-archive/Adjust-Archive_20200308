@@ -1,0 +1,1 @@
+{"version":3,"file":"getIcon.js","sourceRoot":"src/","sources":["modules/theming/theme/getIcon.ts"],"names":[],"mappings":";AAAA;;;;GAIG;AACH,SAAgB,OAAO,CAAC,IAAY;IAChC,IAAI,KAAK,CAAC;IACV,IAAI,CAAC,KAAK,GAAG,IAAI,CAAC,KAAK,CAAC,yBAAyB,CAAC,CAAC,EAAE;QACjD,OAAO,OAAO,CAAC,KAAK,CAAC,CAAC,CAAC,CAAC,CAAC,KAAK,CAAC,CAAC,CAAC,CAAC,CAAC;KACtC;AACL,CAAC;AALD,0BAKC"}

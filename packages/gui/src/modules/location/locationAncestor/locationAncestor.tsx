@@ -12,13 +12,16 @@ import {
 } from "./locationAncestor.type";
 import {LocationsMoveData} from "../_types/LocationsMoveData";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
+import {stylingSettings} from "../../../module/module";
 
 export const config = {
     initialState: {
         inEditMode: false,
         inDropMode: false,
     },
-    settings: {},
+    settings: {
+        ...stylingSettings,
+    },
     type: LocationAncestorType,
     abstract: true, // This is just inteded as module to be extended
 };

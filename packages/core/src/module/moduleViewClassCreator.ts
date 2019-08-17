@@ -60,7 +60,7 @@ export class ModuleViewClassCreator {
 }
 
 /**
- * A shortcut for the module creation method
+ * A shortcut for the module view creation method
  */
 export const createModuleView: (typeof ModuleViewClassCreator)["createModuleView"] = ModuleViewClassCreator.createModuleView.bind(
     ModuleViewClassCreator

@@ -1,12 +1,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@adjust/core");
 const locationAncestor_type_1 = require("./locationAncestor.type");
+const module_1 = require("../../../module/module");
 exports.config = {
     initialState: {
         inEditMode: false,
         inDropMode: false,
     },
-    settings: {},
+    settings: Object.assign({}, module_1.stylingSettings),
     type: locationAncestor_type_1.LocationAncestorType,
     abstract: true,
 };

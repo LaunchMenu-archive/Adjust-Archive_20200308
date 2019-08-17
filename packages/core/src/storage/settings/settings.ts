@@ -14,6 +14,9 @@ import {SettingsConditions} from "./settingsConditions/abstractSettingsCondition
 import {SettingsConfigData} from "./_types/settingsConfigData";
 import {SettingsConfigPriorityList} from "./_types/settingsConfigPriorityList";
 
+/**
+ * A setting class that filters the appropriate settings from a [settingsFile]
+ */
 export class Settings<C extends SettingsConfig> extends EventEmitter {
     protected settingsFile: SettingsFile<C>; // The file that stores settings
     protected settingsFileListener: (
@@ -22,6 +25,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
         condition: SettingsConditions
     ) => void; // The function that checks for settings changes
 
+    protected config: C;
     protected target: ParameterizedModule; // The target to track the applicable settings for
     protected settings: Data<SettingsConfigData<C>>; // The top level settings that apply to the target
     protected settingsPriorities: SettingsConfigPriorityList<C>; // The  whole list of settings that apply to the target
@@ -44,6 +48,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
     static async createInstance<C extends SettingsConfig>(target: Module<any, C, any>) {
         const settings = new this(target);
         settings.settingsFile = await target.getClass().getSettingsFile();
+        settings.config = settings.settingsFile.getConfig();
 
         // Load the settings that apply to this target
         // @ts-ignore
@@ -61,6 +66,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
      * @returns The getter object for the settings
      */
     protected loadApplicableSettingsFromFile(): DeepReadonly<SettingsConfigData<C>> {
+        // Create the settings priorities, will automatically be occupied by this.getPriorityList
         this.settingsPriorities = {} as SettingsConfigPriorityList<C>;
 
         // Go through all the settingsSets and their conditions
@@ -73,45 +79,64 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
                     settingsSet.data.get,
                     (key, value, path, parentPath) => {
                         // Get the list to store the value in
-                        const parent = ExtendedObject.getField(
-                            this.settingsPriorities,
-                            parentPath,
-                            true
-                        );
-                        let field: ParameterizedSettingPriorityList = parent[key];
-
-                        // Create the list if absent
-                        if (!field)
-                            field = parent[key] = new SortedList<
-                                ParameterizedConditionValue
-                            >(
-                                (a, b) =>
-                                    a.condition.getPriority() - b.condition.getPriority()
-                            );
+                        const field = this.getPriorityList(path);
 
                         // Store the value
                         field.push({condition: condition, value: value});
                     },
-                    true,
-                    true
+                    (key, value, path) =>
+                        !(
+                            "default" in
+                            ExtendedObject.getField(this.config.settings, path)
+                        )
                 );
             }
         });
 
         // Retrieve all the highest priority settings
-        const settings = {};
+        const settings = {} as any;
         ExtendedObject.forEach<ParameterizedSettingPriorityList>(
             this.settingsPriorities as any,
             (key, value, path, parentPath) => {
                 // Get the highest priority value, and store it
-                const val = value.get(-1).value;
+                const entry = value.get(-1);
+                const val = entry && entry.value;
                 const parent = ExtendedObject.getField(settings, parentPath, true);
                 parent[key] = val;
             },
             true
         );
-        this.settings = new Data(settings, false) as Data<SettingsConfigData<C>>;
+
+        // Create the settings data with the appropriate shape, and add the initial data
+        this.settings = new Data(this.settingsFile.getStucture() as any, false) as Data<
+            SettingsConfigData<C>
+        >;
+        this.settings.changeData(settings);
         return this.settings.get;
+    }
+
+    /**
+     * Retrieves the priority list for a given path
+     * @param path The path to retrieve the priority list for
+     * @returns The obtained priority list
+     */
+    protected getPriorityList(path: string): ParameterizedSettingPriorityList {
+        // Split the path
+        const nodes = path.split(".");
+        const parentPath = nodes.slice(0, nodes.length - 1).join(".");
+        const key = nodes[nodes.length - 1];
+
+        // Retrieve the object in the settings priorities to add the list to
+        const parent = ExtendedObject.getField(this.settingsPriorities, parentPath, true);
+
+        // Create and add the list if absent
+        if (!parent[key])
+            parent[key] = new SortedList<ParameterizedConditionValue>(
+                (a, b) => a.condition.getPriority() - b.condition.getPriority()
+            );
+
+        // Return the list
+        return parent[key];
     }
 
     /**
@@ -124,10 +149,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
                 let updateValue = false;
 
                 // Get the list to contain the value
-                const list: ParameterizedSettingPriorityList = ExtendedObject.getField(
-                    this.settingsPriorities,
-                    path
-                );
+                const list: ParameterizedSettingPriorityList = this.getPriorityList(path);
 
                 // Check if the value has been remvoed, change or inserted
                 if (value === undefined) {
@@ -203,6 +225,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
         condition?: SettingsConditions
     ): Promise<void> {
         // Change the data on the condition of the settings file
+        const n = this.getData(condition);
         return this.getData(condition).changeData(data);
     }
 

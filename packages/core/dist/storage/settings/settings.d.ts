@@ -1,4 +1,5 @@
 import { DeepReadonly } from "../../utils/_types/standardTypes";
+import { ParameterizedSettingPriorityList } from "./_types/settingPriorityList";
 import { DataChange } from "../_types/dataChange";
 import { Module, ParameterizedModule } from "../../module/module";
 import { SettingsConfig } from "./_types/settingsConfig";
@@ -8,9 +9,13 @@ import { EventEmitter } from "../../utils/eventEmitter";
 import { SettingsConditions } from "./settingsConditions/abstractSettingsConditions";
 import { SettingsConfigData } from "./_types/settingsConfigData";
 import { SettingsConfigPriorityList } from "./_types/settingsConfigPriorityList";
+/**
+ * A setting class that filters the appropriate settings from a [settingsFile]
+ */
 export declare class Settings<C extends SettingsConfig> extends EventEmitter {
     protected settingsFile: SettingsFile<C>;
     protected settingsFileListener: (path: string, value: any, condition: SettingsConditions) => void;
+    protected config: C;
     protected target: ParameterizedModule;
     protected settings: Data<SettingsConfigData<C>>;
     protected settingsPriorities: SettingsConfigPriorityList<C>;
@@ -30,6 +35,12 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * @returns The getter object for the settings
      */
     protected loadApplicableSettingsFromFile(): DeepReadonly<SettingsConfigData<C>>;
+    /**
+     * Retrieves the priority list for a given path
+     * @param path The path to retrieve the priority list for
+     * @returns The obtained priority list
+     */
+    protected getPriorityList(path: string): ParameterizedSettingPriorityList;
     /**
      * Adds the necessary listeners to the settings file, to keep the data in this bject synchronised
      */

@@ -1,6 +1,5 @@
-import {Grid, Button, Box} from "@material-ui/core";
 import {WindowSelectorType, WindowSelector} from "./windowSelector.type";
-import {WindowManager, createModuleView, UUID, ExtendedObject} from "@adjust/core";
+import {WindowManager, UUID, ExtendedObject} from "@adjust/core";
 import {DragEvent} from "react";
 import {createModule} from "../../../../../../module/moduleClassCreator";
 import {React} from "../../../../../../React";
@@ -9,6 +8,8 @@ import {InputPrompt, InputPromptType} from "../../../../../prompts/inputPrompt.t
 import {WindowsData} from "../_types/windowData";
 import {Window, WindowType} from "../window/window.type";
 import LocationAncestorModule from "../../../locationAncestor";
+import {createModuleView} from "../../../../../../module/moduleViewClassCreator";
+import {Box} from "../../../../../../components/Box";
 
 const sizes = {
     barHeight: 40,
@@ -271,8 +272,8 @@ export class WindowSelectorView extends createModuleView(WindowSelectorModule) {
             return (
                 <Box
                     onDragEnter={e => this.onDragEnterWindow(ID, e)}
-                    bgcolor="orange"
-                    m={1}
+                    background="primary"
+                    margin="m"
                     key={ID}>
                     {data.name}
                 </Box>
@@ -294,8 +295,8 @@ export class WindowSelectorView extends createModuleView(WindowSelectorModule) {
                     css={{width: "100%", height: sizes.barHeight}}>
                     {this.renderWindowNames()}
                     <Box
-                        bgcolor="orange"
-                        m={1}
+                        background="primary"
+                        margin="m"
                         onDragOver={e => this.onDragOver(e)}
                         onDrop={e => this.onDropNew(e)}>
                         New window

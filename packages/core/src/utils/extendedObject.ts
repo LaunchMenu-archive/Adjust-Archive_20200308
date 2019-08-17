@@ -222,9 +222,9 @@ export class ExtendedObject extends Object {
 
             // Check if we should recurse
             if (
-                this.isPlainObject(value) &&
-                recurse &&
-                (typeof recurse != "function" || recurse(key, value, p, path))
+                typeof recurse == "function"
+                    ? value instanceof Object && recurse(key, value, p, path)
+                    : recurse && this.isPlainObject(value)
             ) {
                 // Call the function
                 if (includeRecurseObj) func(key, value, p, path);
@@ -602,6 +602,9 @@ export class ExtendedObject extends Object {
             copyModel = src as any;
         }
 
+        // Handle the source being undefined
+        if (!src) return dest as any;
+
         // @ts-ignore If the whole object should be overwritten, straight up return the source
         if (src[this.overwrite]) return {...src};
 
@@ -666,7 +669,7 @@ export class ExtendedObject extends Object {
         });
 
         // return the altered dest object
-        return <any>dest;
+        return dest as any;
     }
 
     // Comparison methods

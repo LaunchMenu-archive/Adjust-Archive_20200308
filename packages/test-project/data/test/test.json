@@ -9,8 +9,19 @@
             "ID": 0,
             "data": {
                 "location": [
-                    "0YkQ-mfPH-Fb3n-vATq-y3YR"
+                    "root"
                 ],
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    },
+                    "resetTheme": false,
+                    "css": null
+                },
                 "stuff": false
             }
         }

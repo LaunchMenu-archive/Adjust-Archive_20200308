@@ -3,7 +3,7 @@ const gui_1 = require("@adjust/gui");
 const embed_type_1 = require("./embed.type");
 const colors = ["orange", "blue", "purple"];
 exports.config = {
-    initialState: { text: "", color: colors[0], child: undefined },
+    initialState: { text: "", color: colors[0], child: null },
     settings: {},
     type: embed_type_1.EmbedType,
 };

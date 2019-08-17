@@ -1,6 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@adjust/core");
 const locationManager_type_1 = require("../modules/location/locationManager.type");
+const themeSettings_1 = require("../modules/theming/themeSettings");
 /**
  * A method that syncrhonizes the locations with the location manager when a module's location changes
  * @param newValue The new locations of the module
@@ -23,24 +24,44 @@ exports.synchronizedLocations = async (newValue, condition, oldValue, settingsFi
     locationManager.updateModuleLocation(new core_1.SettingsDataID(ID, moduleClass.getPath()), newLocations, oldLocations);
 };
 /**
+ * The settings that apply to styling
+ */
+exports.stylingSettings = {
+    styleOverride: {
+        theme: themeSettings_1.themeSettingsEmpty,
+        resetTheme: {
+            default: false,
+            type: "boolean",
+        },
+        css: {
+            default: null,
+            type: "css",
+        },
+    },
+};
+/**
  * The default config for modules, adds location management to the Adjust core modules
  */
 exports.baseConfig = {
     initialState: {},
-    settings: {
-        location: {
+    settings: Object.assign({ location: {
             default: ["root"],
             type: "location",
             // Make sure that when a location changes, this is synchronized with the location manager
             onChange: exports.synchronizedLocations,
-        },
-    },
+        } }, exports.stylingSettings),
     type: undefined,
 };
 /**
- * A class containing data for importing it (its actual file location),
- * a state that can be serialized and deserialized,
- * a settings object that stores settings for this type of component
+ * The base class to build your app using adjust gui
+ *
+ * Takes care of the following tasks:
+ * -    Tracking modue file location for importing it
+ * -    Storing a serializable state
+ * -    Storing settings that can be altered by the user
+ * -    Allow for theming by the user
+ * -    Integrating the location system to show the module's view
+ *
  */
 class Module extends core_1.createModule(exports.baseConfig) {
     /** @override */

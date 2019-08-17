@@ -2,37 +2,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@material-ui/core");
-const Close_1 = __importDefault(require("@material-ui/icons/Close"));
-const core_2 = require("@adjust/core");
+const office_ui_fabric_react_1 = require("office-ui-fabric-react");
+const lib_commonjs_1 = require("office-ui-fabric-react/lib-commonjs");
+const core_1 = require("@adjust/core");
 const moduleClassCreator_1 = require("../../../../../../module/moduleClassCreator");
 const locationAncestor_1 = __importDefault(require("../../../locationAncestor"));
 const React_1 = require("../../../../../../React");
 const locationManager_type_1 = require("../../../../locationManager.type");
 const window_type_1 = require("./window.type");
+const Box_1 = require("../../../../../../components/Box");
+const moduleViewClassCreator_1 = require("../../../../../../module/moduleViewClassCreator");
 exports.config = {
     initialState: {
         childLocationAncestor: null,
         windowName: "",
     },
-    settings: {
-        width: {
-            default: 500,
-            type: "number",
-        },
-        height: {
-            default: 500,
-            type: "number",
-        },
-        x: {
-            default: 0,
-            type: "number",
-        },
-        y: {
-            default: 0,
-            type: "number",
-        },
-    },
+    settings: core_1.createSettings({
+        width: 500,
+        height: 500,
+        x: 0,
+        y: 0,
+    }, { type: "number" }),
     type: window_type_1.WindowType,
 };
 /**
@@ -68,8 +58,10 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         if (this.window)
             return this.window;
         // Open the window
-        this.window = core_2.WindowManager.openWindow(this.getData().ID, this.getID(), {
+        this.window = core_1.WindowManager.openWindow(this.getData().ID, this.getID(), {
             frame: false,
+            transparent: true,
+            backgroundColor: "#00000000",
             preloadModules: [this.getClass().getPath()],
         });
         // Indicate that this window is now open to the parent
@@ -95,6 +87,12 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         };
         window.on("move", updateBounds);
         window.on("resize", updateBounds);
+        // Handle window crashes
+        window.webContents.on("crashed", (event) => {
+            //TODO:
+            console.log(event);
+            debugger;
+        });
         // Return the window
         return window;
     }
@@ -108,7 +106,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
             this.parent.setWindowVisibility(false, this.getData().ID);
             // Close the window
             this.window = null;
-            await core_2.WindowManager.closeWindow(this.getData().ID);
+            await core_1.WindowManager.closeWindow(this.getData().ID);
         }
     }
     /** @override */
@@ -119,7 +117,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
     static onFileLoad(isMain, modulePath) {
         // Add a buffer of windows to increase loading times
         if (isMain)
-            core_2.WindowManager.createWindowBuffer({
+            core_1.WindowManager.createWindowBuffer({
                 frame: false,
                 preloadModules: [modulePath],
             });
@@ -135,7 +133,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
             // Obtain the hints for this window
             const hints = Object.assign({}, this.getLocationHints(location));
             // If no x or y coordinate was provided, center it
-            const screenSize = await core_2.WindowManager.getScreenSize();
+            const screenSize = await core_1.WindowManager.getScreenSize();
             if (!("x" in hints))
                 hints["x"] =
                     screenSize.width / 2 -
@@ -287,11 +285,11 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.config, loc
         LM.close();
     }
     async saveSettings() {
-        core_2.SettingsManager.saveAll();
+        core_1.SettingsManager.saveAll();
     }
 }
 exports.default = WindowModule;
-class WindowView extends core_2.createModuleView(WindowModule) {
+class WindowView extends moduleViewClassCreator_1.createModuleView(WindowModule) {
     /**@override */
     componentWillMount() {
         super.componentWillMount();
@@ -316,25 +314,26 @@ class WindowView extends core_2.createModuleView(WindowModule) {
      * Renders the header with the window's controls
      */
     renderHeader() {
-        return (React_1.React.createElement(core_1.Grid, { container: true, direction: "row-reverse", css: {
+        return (React_1.React.createElement(Box_1.Box, { display: "flex", flexDirection: "row-reverse", css: {
                 WebkitAppRegion: "drag",
                 "& > * ": {
                     WebkitAppRegion: "no-drag",
                 },
             } },
-            React_1.React.createElement(core_1.Grid, { item: true },
-                React_1.React.createElement(core_1.Button, { onClick: () => this.module.closeWindow() },
-                    React_1.React.createElement(Close_1.default, null))),
-            React_1.React.createElement(core_1.Grid, { item: true },
+            React_1.React.createElement(Box_1.Box, null,
+                React_1.React.createElement(lib_commonjs_1.PrimaryButton, null, "Hallo?")),
+            React_1.React.createElement(Box_1.Box, null,
+                React_1.React.createElement(office_ui_fabric_react_1.IconButton, { iconProps: { iconName: "close" }, onClick: () => this.module.closeWindow(), title: "close", ariaLabel: "close" })),
+            React_1.React.createElement(Box_1.Box, null,
                 this.data.ID,
                 " ",
                 this.state.windowName)));
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(core_1.Box, { display: "flex", flexDirection: "column", css: { position: "absolute", left: 0, right: 0, top: 0, bottom: 0 } },
-            React_1.React.createElement(core_1.Box, null, !this.data.previewMode && this.renderHeader()),
-            React_1.React.createElement(core_1.Box, { flex: 1, css: { position: "relative" } }, this.state.childLocationAncestor)));
+        return (React_1.React.createElement(Box_1.Box, { className: "window", display: "flex", background: "neutralLight", flexDirection: "column", shadowCustom: "rgba(0, 0, 0, 0.36) 0px 3px 7px 0px", marginXCustom: 7, marginTopCustom: 4, marginBottomCustom: 10, css: { position: "absolute", left: 0, right: 0, top: 0, bottom: 0 } },
+            React_1.React.createElement(Box_1.Box, null, !this.data.previewMode && this.renderHeader()),
+            React_1.React.createElement(Box_1.Box, { flexGrow: 1, css: { position: "relative" } }, this.state.childLocationAncestor)));
     }
 }
 exports.WindowView = WindowView;

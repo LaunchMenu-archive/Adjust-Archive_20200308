@@ -1,4 +1,23 @@
 {
     "version": "0.0.0",
-    "data": []
+    "data": [
+        {
+            "condition": {
+                "type": "constant",
+                "priority": 0
+            },
+            "ID": 0,
+            "data": {
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    }
+                }
+            }
+        }
+    ]
 }

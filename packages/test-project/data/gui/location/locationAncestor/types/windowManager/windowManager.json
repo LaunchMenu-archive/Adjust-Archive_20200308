@@ -13,11 +13,11 @@
                     "default": {
                         "name": "default"
                     },
-                    "dvzZ-E4yM": {
+                    "5oFv-SdWY": {
                         "name": "Prompt"
                     },
-                    "jmPO-I348": {
-                        "name": "jmPO-I348"
+                    "window1": {
+                        "name": "window1"
                     }
                 }
             }
@@ -29,6 +29,15 @@
             },
             "ID": 0,
             "data": {
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    }
+                },
                 "windows": {}
             }
         }

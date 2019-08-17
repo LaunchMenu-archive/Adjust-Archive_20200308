@@ -276,34 +276,31 @@ export class WindowManagerSingleton {
             // Apply the settings to the window
             const window = await bufferedWindow.window;
 
+            // Store what properties have been used
             const used = {preloadModules: true};
-            ExtendedObject.forEach(
-                bufferedWindow.options as any,
-                (optionName, optionValue) => {
-                    if (used[optionName]) return; // Use each field only once
-                    used[optionName] = true;
-                    if (optionValue == options[optionName]) return;
+            ExtendedObject.forEach(options as any, (optionName, optionValue) => {
+                if (used[optionName]) return; // Use each field only once
+                used[optionName] = true;
+                if (optionValue == bufferedWindow.options[optionName]) return;
+                if (optionValue == windowPropertyFunctionMap[optionName].default) return;
 
-                    // Get the data for this option
-                    const optionData = windowPropertyFunctionMap[optionName];
-                    const methodName =
-                        optionData.method instanceof Function
-                            ? optionData.method(options)
-                            : optionData.method;
-                    const method = window[methodName] || (() => {});
+                // Get the data for this option
+                const optionData = windowPropertyFunctionMap[optionName];
+                const methodName =
+                    optionData.method instanceof Function
+                        ? optionData.method(options)
+                        : optionData.method;
+                const method = window[methodName] || (() => {});
 
-                    // Get the arguments
-                    const args = (optionData.args || []).map(argName => {
-                        used[argName] = true;
-                        return (
-                            options[argName] || windowPropertyFunctionMap[argName].default
-                        );
-                    });
+                // Get the arguments
+                const args = (optionData.args || []).map(argName => {
+                    used[argName] = true;
+                    return options[argName] || windowPropertyFunctionMap[argName].default;
+                });
 
-                    // Apply the method
-                    method.apply(window, args);
-                }
-            );
+                // // Apply the method
+                method.apply(window, args);
+            });
 
             // Return the result
             return window;

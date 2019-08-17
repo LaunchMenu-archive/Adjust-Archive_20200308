@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import { ContextProvider } from "./contextProvider.type";
-export declare const config: {
+export declare const contextProviderConfig: {
     initialState: {
         childProvider: {
             close(): Promise<void>;
@@ -24,12 +24,13 @@ declare const ContextProviderModule_base: import("../module/_types/extendedModul
     isStopped: boolean;
 }, import("../storage/settings/_types/settingsConfig").SettingsConfig<import("../utils/_types/standardTypes").Empty>, import("../module/_types/moduleContract").ModuleContract>>>;
 /**
- * A module of this type is used as the root of the module
+ * A module of this type is used as the root of the window to provide contexts
  */
-export default class ContextProviderModule extends ContextProviderModule_base implements ContextProvider {
+export declare class ContextProviderModule extends ContextProviderModule_base implements ContextProvider {
     /** @override */
     protected onInit(fromReload: boolean): Promise<void>;
 }
+export default ContextProviderModule;
 declare const ContextProviderView_base: import("../module/_types/extendedModuleView").ExtendedModuleViewClass<typeof ContextProviderModule, {}, import("../utils/_types/standardTypes").ExtendsClass<typeof import("..").ModuleView, import("..").ModuleView<{}, {}, import("..").Module<import("../module/_types/moduleState").ModuleState, import("../storage/settings/_types/settingsConfig").SettingsConfig<any>, import("../module/_types/moduleContract").ModuleContract>, {}>>>;
 export declare class ContextProviderView extends ContextProviderView_base {
     /**
@@ -40,4 +41,3 @@ export declare class ContextProviderView extends ContextProviderView_base {
     /** @override */
     protected renderView(): JSX.Element;
 }
-export {};

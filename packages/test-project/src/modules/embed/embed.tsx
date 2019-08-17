@@ -3,7 +3,7 @@ import {EmbedType, Embed} from "./embed.type";
 
 const colors = ["orange", "blue", "purple"];
 export const config = {
-    initialState: {text: "", color: colors[0], child: undefined as Embed},
+    initialState: {text: "", color: colors[0], child: null as Embed},
     settings: {},
     type: EmbedType,
 };
@@ -65,6 +65,7 @@ export class EmbedView extends createModuleView(EmbedModule) {
                 {this.state.text}
                 <div style={{marginLeft: 30}}> {this.state.child}</div>
                 {this.state.isStopped && "stopped"}
+                {/* {this.state.child} */}
             </div>
         );
     }
