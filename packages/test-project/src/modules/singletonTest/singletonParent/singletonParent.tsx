@@ -13,7 +13,11 @@ export const config = {
         ID: "test",
         hints: {
             window: {
-                ID: "window1",
+                sameAs: "root",
+            },
+            tab: {
+                after: "root",
+                ID: "tab1",
             },
         },
     },

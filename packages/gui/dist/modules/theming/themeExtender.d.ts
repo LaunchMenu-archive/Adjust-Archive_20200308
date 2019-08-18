@@ -9,12 +9,6 @@ export declare const ThemeExtender: ({ children, themeChanges, resetTheme, }: {
     children: (ITheme: any) => JSX.Element;
     /** The changes to apply to the theme */
     themeChanges: {
-        shadows?: {
-            tiny?: string;
-            small?: string;
-            medium?: string;
-            large?: string;
-        };
         palette?: {
             themePrimary?: string;
             themeLighterAlt?: string;
@@ -1114,6 +1108,12 @@ export declare const ThemeExtender: ({ children, themeChanges, resetTheme, }: {
                 MozOsxFontSmoothing?: string;
                 WebkitFontSmoothing?: string;
             };
+        };
+        shadows?: {
+            tiny?: string;
+            small?: string;
+            medium?: string;
+            large?: string;
         };
     };
     /** Whether or not the theme should be extended from the base theme, rather than an inherited theme */

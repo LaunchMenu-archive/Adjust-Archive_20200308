@@ -645,10 +645,14 @@ export class ExtendedObject extends Object {
                 } else delete dest[key];
             } else {
                 // Recurse on the field
-
                 // Make sure the destination exists
-                if (!destValue || destValue.__proto__ != Object.prototype)
+                if (
+                    !destValue ||
+                    (!this.isPlainObject(destValue) &&
+                        !(destValue instanceof Array && key in destValue))
+                ) {
                     destValue = dest[key] = {};
+                }
 
                 // Only recurse if the src exists
                 if (srcValue) {

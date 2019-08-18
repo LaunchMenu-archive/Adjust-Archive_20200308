@@ -12,7 +12,7 @@ const locationManager_type_1 = require("../../../../locationManager.type");
 const window_type_1 = require("./window.type");
 const Box_1 = require("../../../../../../components/Box");
 const moduleViewClassCreator_1 = require("../../../../../../module/moduleViewClassCreator");
-exports.config = {
+exports.windowConfig = {
     initialState: {
         childLocationAncestor: null,
         windowName: "",
@@ -32,7 +32,7 @@ exports.config = {
  * - x: Number (The initial x coordinate that the window should have)
  * - y: Number (The initial y coordinate that the window should have)
  */
-class WindowModule extends moduleClassCreator_1.createModule(exports.config, locationAncestor_1.default) {
+class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfig, locationAncestor_1.default) {
     constructor() {
         super(...arguments);
         // The name of this ancestor type to be used in the location path and hints

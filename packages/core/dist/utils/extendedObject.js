@@ -482,8 +482,11 @@ class ExtendedObject extends Object {
             else {
                 // Recurse on the field
                 // Make sure the destination exists
-                if (!destValue || destValue.__proto__ != Object.prototype)
+                if (!destValue ||
+                    (!this.isPlainObject(destValue) &&
+                        !(destValue instanceof Array && key in destValue))) {
                     destValue = dest[key] = {};
+                }
                 // Only recurse if the src exists
                 if (srcValue) {
                     this.copyData(srcValue, destValue, check || value, keepUndefined, keepEmpty, overwriteValues, check ? (path ? path + "." + key : key) : undefined);

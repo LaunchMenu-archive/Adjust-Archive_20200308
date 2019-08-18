@@ -15,7 +15,9 @@
                         "spacing": {},
                         "fontStyles": {},
                         "shadows": {}
-                    }
+                    },
+                    "resetTheme": false,
+                    "css": null
                 }
             }
         }

@@ -6,7 +6,7 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "5oFv-SdWY"
+                    "ID": "ZuZw-PIdA"
                 }
             },
             "ID": 1,
@@ -22,23 +22,13 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "window1"
+                    "ID": "default"
                 }
             },
             "ID": 2,
             "data": {
                 "x": 710,
-                "y": 270,
-                "styleOverride": {
-                    "theme": {
-                        "palette": {
-                            "themePrimary": "orange"
-                        }
-                    },
-                    "css": {
-                        "color": "purple"
-                    }
-                }
+                "y": 270
             }
         },
         {
@@ -55,7 +45,9 @@
                         "spacing": {},
                         "fontStyles": {},
                         "shadows": {}
-                    }
+                    },
+                    "resetTheme": false,
+                    "css": null
                 },
                 "width": 500,
                 "height": 500,

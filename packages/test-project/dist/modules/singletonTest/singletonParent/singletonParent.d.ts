@@ -16,6 +16,10 @@ export declare const config: {
         ID: string;
         hints: {
             window: {
+                sameAs: string;
+            };
+            tab: {
+                after: string;
                 ID: string;
             };
         };
@@ -38,6 +42,10 @@ declare const SingletonParentModule_base: import("@adjust/core/types").ExtendedM
         ID: string;
         hints: {
             window: {
+                sameAs: string;
+            };
+            tab: {
+                after: string;
                 ID: string;
             };
         };

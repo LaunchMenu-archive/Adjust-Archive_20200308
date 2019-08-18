@@ -16,7 +16,7 @@ const sizes = {
     barHeight: 40,
     windowHeight: 500,
 };
-exports.config = {
+exports.windowSelectorConfig = {
     initialState: {
         closedWindows: {},
         windowModule: null,
@@ -24,7 +24,7 @@ exports.config = {
     settings: {},
     type: windowSelector_type_1.WindowSelectorType,
 };
-class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.config, locationAncestor_1.default) {
+class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.windowSelectorConfig, locationAncestor_1.default) {
     constructor() {
         super(...arguments);
         // The name of the window

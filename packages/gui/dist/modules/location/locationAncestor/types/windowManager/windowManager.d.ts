@@ -5,7 +5,7 @@ import { LocationPath } from "../../../_types/LocationPath";
 import { Window, WindowParent } from "./window/window.type";
 import { LocationAncestor } from "../../locationAncestor.type";
 import { WindowsData } from "./_types/windowData";
-export declare const config: {
+export declare const windowManagerConfig: {
     initialState: {
         windows: {
             [windowID: string]: {
@@ -24,6 +24,7 @@ export declare const config: {
             type: string;
         };
     };
+    getPriority: () => number;
     type: import("@adjust/core/types").ContractID<import("../../locationAncestor.type").LocationAncestorContract>;
 };
 declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
@@ -45,6 +46,7 @@ declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedMod
             type: string;
         };
     };
+    getPriority: () => number;
     type: import("@adjust/core/types").ContractID<import("../../locationAncestor.type").LocationAncestorContract>;
 }, typeof LocationAncestorModule>;
 /**
@@ -54,28 +56,33 @@ declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedMod
  * - new: String (Whether a new window should be created)
  *
  * And if 'new' is set:
- * - windowName: String (The name that any newly created window should have)
+ * - name: String (The name that any newly created window should have)
  */
 /**
  * The window manager, responsible for keeping track and opening all windows that are used as locations
  */
-export default class WindowManagerModule extends WindowManagerModule_base implements LocationAncestor, WindowParent {
+export declare class WindowManagerModule extends WindowManagerModule_base implements LocationAncestor, WindowParent {
     protected ancestorName: string;
     /** @override */
     protected onInit(fromReload: boolean): Promise<void>;
     /**
-     * Retrieves the window with a given ID
+     * Retrieves the window with a given ID, or creates it if absent and open is true
      * @param windowID The ID of the window to retrieve
-     * @param create Whether or not to create the window if not present
+     * @param open Whether or not to open the window if not present
      * @param name THe name of the window
      * @returns The window hat was either already loaded, or was just opened
      */
-    protected getWindow(windowID: string, create?: boolean, name?: string): Promise<Window>;
+    protected getWindow(windowID: string, open?: boolean, name?: string): Promise<Window>;
     /**
      * Closes the window with a given ID if currently opened
-     * @param ancestorID The ID of the window to close
+     * @param windowID The ID of the window to close
      */
-    protected closeWindow(ancestorID: string): Promise<void>;
+    protected closeWindow(windowID: string): Promise<void>;
+    /**
+     * Removes all the associated data of a window
+     * @param windowID The ID of the window to remove
+     */
+    protected removeWindow(windowID: string): Promise<void>;
     /** @override */
     changeWindowName(name: string, windowID: string): Promise<void>;
     /** @override */
@@ -101,4 +108,4 @@ export default class WindowManagerModule extends WindowManagerModule_base implem
     /** @override */
     setEditMode(edit: boolean): Promise<void>;
 }
-export {};
+export default WindowManagerModule;

@@ -15,35 +15,17 @@
                         "spacing": {},
                         "fontStyles": {},
                         "shadows": {}
-                    }
+                    },
+                    "resetTheme": false,
+                    "css": null
                 },
                 "locations": {
-                    "prompt": {
+                    "root": {
                         "modules": [
                             {
                                 "settingsID": 0,
-                                "modulePath": "gui\\prompts\\inputPrompt.js"
-                            }
-                        ],
-                        "path": {
-                            "nodes": [
-                                "5oFv-SdWY"
-                            ],
-                            "location": {
-                                "ID": "prompt",
-                                "hints": {
-                                    "window": {
-                                        "new": true,
-                                        "windowName": "Prompt",
-                                        "width": 400,
-                                        "height": 250
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "root": {
-                        "modules": [
+                                "modulePath": "gui\\location\\locationAncestor\\types\\tabManager\\tabHandle\\tabHandle.js"
+                            },
                             {
                                 "settingsID": 0,
                                 "modulePath": "\\embed\\embed.js"
@@ -58,6 +40,31 @@
                             }
                         ]
                     },
+                    "prompt": {
+                        "modules": [
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\prompts\\inputPrompt.js"
+                            }
+                        ],
+                        "path": {
+                            "nodes": [
+                                "ZuZw-PIdA",
+                                "default"
+                            ],
+                            "location": {
+                                "ID": "prompt",
+                                "hints": {
+                                    "window": {
+                                        "new": true,
+                                        "windowName": "Prompt",
+                                        "width": 400,
+                                        "height": 250
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "test": {
                         "modules": [
                             {
@@ -67,13 +74,17 @@
                         ],
                         "path": {
                             "nodes": [
-                                "window1"
+                                "default",
+                                "tab1"
                             ],
                             "location": {
                                 "ID": "test",
                                 "hints": {
                                     "window": {
-                                        "ID": "window1"
+                                        "ID": "default"
+                                    },
+                                    "tab": {
+                                        "ID": "tab1"
                                     }
                                 }
                             }

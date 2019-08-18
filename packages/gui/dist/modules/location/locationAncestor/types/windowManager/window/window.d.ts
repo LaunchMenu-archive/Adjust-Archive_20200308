@@ -5,14 +5,17 @@ import LocationAncestorModule from "../../../locationAncestor";
 import { LocationPath } from "../../../../_types/LocationPath";
 import { ModuleLocation } from "../../../../../../module/_types/ModuleLocation";
 import { Window } from "./window.type";
-export declare const config: {
+export declare const windowConfig: {
     initialState: {
         childLocationAncestor: Promise<import("@adjust/core/types").ChildModule<{
             openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
             closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             createLocation(location: ModuleLocation): Promise<LocationPath>;
-            removeLocation(locationPath: LocationPath): Promise<boolean>;
+            removeLocation(locationPath: LocationPath): Promise<boolean>; /**
+             * Opens the window that this module instance represents
+             * @returns The opened or retrieved window, or undefined
+             */
             removeAncestor(): Promise<void>;
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;
@@ -50,7 +53,10 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
             closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             createLocation(location: ModuleLocation): Promise<LocationPath>;
-            removeLocation(locationPath: LocationPath): Promise<boolean>;
+            removeLocation(locationPath: LocationPath): Promise<boolean>; /**
+             * Opens the window that this module instance represents
+             * @returns The opened or retrieved window, or undefined
+             */
             removeAncestor(): Promise<void>;
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;

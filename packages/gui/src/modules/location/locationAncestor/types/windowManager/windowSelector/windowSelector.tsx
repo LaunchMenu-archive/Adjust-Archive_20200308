@@ -15,7 +15,7 @@ const sizes = {
     barHeight: 40,
     windowHeight: 500,
 };
-export const config = {
+export const windowSelectorConfig = {
     initialState: {
         closedWindows: {} as WindowsData,
         windowModule: null as Promise<Window>,
@@ -25,7 +25,7 @@ export const config = {
 };
 
 export default class WindowSelectorModule
-    extends createModule(config, LocationAncestorModule)
+    extends createModule(windowSelectorConfig, LocationAncestorModule)
     implements WindowSelector {
     // The name of the window
     protected windowID: string = "#windowSelector";

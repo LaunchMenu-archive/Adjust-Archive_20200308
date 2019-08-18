@@ -18,7 +18,7 @@ import {WindowType, Window} from "./window.type";
 import {Box} from "../../../../../../components/Box";
 import {createModuleView} from "../../../../../../module/moduleViewClassCreator";
 
-export const config = {
+export const windowConfig = {
     initialState: {
         childLocationAncestor: null as Promise<LocationAncestor>,
         windowName: "",
@@ -43,7 +43,8 @@ export const config = {
  * - y: Number (The initial y coordinate that the window should have)
  */
 
-export default class WindowModule extends createModule(config, LocationAncestorModule)
+export default class WindowModule
+    extends createModule(windowConfig, LocationAncestorModule)
     implements Window {
     // The name of this ancestor type to be used in the location path and hints
     protected ancestorName: string = "window";

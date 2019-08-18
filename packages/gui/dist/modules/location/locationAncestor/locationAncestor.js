@@ -87,22 +87,22 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
         const isNewID = ID != undefined;
         if (ID == undefined)
             ID = this.getData().ID;
-        // Obtain this module's path
+        // Obtain this module's path, and child's path
         const path = this.getData().path || [];
+        const childPath = isNewID ? [...path, ID] : path;
         // Request the location
         const locationAncestor = (await this.request({
             type: locationAncestor_type_1.LocationAncestorType,
             use: providers => {
                 // Get the index of this module class
-                const thisPath = this.getData().path;
-                const nextIndex = thisPath ? thisPath.length : 0;
+                const nextIndex = childPath.length;
                 // Get the module with the next (lower priority) index
                 const provider = providers[nextIndex].provider;
                 return [provider];
             },
             data: {
                 ID: ID,
-                path: isNewID ? [...path, ID] : path,
+                path: childPath,
             },
         }))[0];
         // Make sure to initialise the correct state

@@ -75,8 +75,10 @@ class ModuleView extends react_1.default.Component {
             const curValue = oldState[key];
             // Copy the missing values from current into the changes
             if (extendedObject_1.ExtendedObject.isPlainObject(value) &&
-                extendedObject_1.ExtendedObject.isPlainObject(curValue))
-                return extendedObject_1.ExtendedObject.copyData(value, extendedObject_1.ExtendedObject.copyData(curValue, {}), undefined, false);
+                (extendedObject_1.ExtendedObject.isPlainObject(curValue) || curValue instanceof Array))
+                return extendedObject_1.ExtendedObject.copyData(value, curValue instanceof Array
+                    ? curValue
+                    : extendedObject_1.ExtendedObject.copyData(curValue, {}), undefined, false);
             // If either the new or old value is not a plain object, return it
             return value;
         }));

@@ -3,7 +3,7 @@ import { DragEvent } from "react";
 import { WindowsData } from "../_types/windowData";
 import { Window } from "../window/window.type";
 import LocationAncestorModule from "../../../locationAncestor";
-export declare const config: {
+export declare const windowSelectorConfig: {
     initialState: {
         closedWindows: WindowsData;
         windowModule: Promise<Window>;

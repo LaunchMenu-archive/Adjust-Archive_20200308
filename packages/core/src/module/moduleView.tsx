@@ -116,11 +116,13 @@ export abstract class ModuleView<
             // Copy the missing values from current into the changes
             if (
                 ExtendedObject.isPlainObject(value) &&
-                ExtendedObject.isPlainObject(curValue)
+                (ExtendedObject.isPlainObject(curValue) || curValue instanceof Array)
             )
                 return ExtendedObject.copyData(
                     value,
-                    ExtendedObject.copyData(curValue, {}),
+                    curValue instanceof Array
+                        ? curValue
+                        : ExtendedObject.copyData(curValue, {}),
                     undefined,
                     false
                 );

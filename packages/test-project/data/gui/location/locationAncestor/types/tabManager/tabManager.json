@@ -1,0 +1,62 @@
+{
+    "version": "0.0.0",
+    "data": [
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "default"
+                }
+            },
+            "ID": 1,
+            "data": {
+                "tabs": [
+                    {
+                        "ID": "tab1",
+                        "name": "tab1"
+                    }
+                ]
+            }
+        },
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "ZuZw-PIdA"
+                }
+            },
+            "ID": 2,
+            "data": {
+                "tabs": [
+                    {
+                        "ID": "default",
+                        "name": "default"
+                    }
+                ]
+            }
+        },
+        {
+            "condition": {
+                "type": "constant",
+                "priority": 0
+            },
+            "ID": 0,
+            "data": {
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    },
+                    "resetTheme": false,
+                    "css": null
+                },
+                "tabs": []
+            }
+        }
+    ]
+}

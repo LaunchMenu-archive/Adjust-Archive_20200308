@@ -13,11 +13,8 @@
                     "default": {
                         "name": "default"
                     },
-                    "5oFv-SdWY": {
-                        "name": "Prompt"
-                    },
-                    "window1": {
-                        "name": "window1"
+                    "ZuZw-PIdA": {
+                        "name": "ZuZw-PIdA"
                     }
                 }
             }
@@ -36,7 +33,9 @@
                         "spacing": {},
                         "fontStyles": {},
                         "shadows": {}
-                    }
+                    },
+                    "resetTheme": false,
+                    "css": null
                 },
                 "windows": {}
             }

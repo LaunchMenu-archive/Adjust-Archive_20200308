@@ -6,38 +6,10 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "default"
+                    "ID": "tab1"
                 }
             },
             "ID": 1,
-            "data": {
-                "locations": []
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "ID": "5oFv-SdWY"
-                }
-            },
-            "ID": 2,
-            "data": {
-                "locations": [
-                    "prompt"
-                ]
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "ID": "window1"
-                }
-            },
-            "ID": 3,
             "data": {
                 "locations": [
                     "test"
@@ -58,7 +30,9 @@
                         "spacing": {},
                         "fontStyles": {},
                         "shadows": {}
-                    }
+                    },
+                    "resetTheme": false,
+                    "css": null
                 },
                 "locations": []
             }
