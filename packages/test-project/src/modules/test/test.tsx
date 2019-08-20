@@ -15,6 +15,18 @@ export const config = {
             type: "boolean",
         },
     },
+    defineLocation: {
+        ID: "onion",
+        hints: {
+            window: {
+                sameAs: "root",
+            },
+            tab: {
+                after: "root",
+                ID: "tab2",
+            },
+        },
+    },
     type: TestType,
 };
 

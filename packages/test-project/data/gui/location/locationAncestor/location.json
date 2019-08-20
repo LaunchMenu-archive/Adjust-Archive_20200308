@@ -18,6 +18,36 @@
         },
         {
             "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "tab2"
+                }
+            },
+            "ID": 2,
+            "data": {
+                "locations": [
+                    "onion"
+                ]
+            }
+        },
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "ID": "default"
+                }
+            },
+            "ID": 3,
+            "data": {
+                "locations": [
+                    "root"
+                ]
+            }
+        },
+        {
+            "condition": {
                 "type": "constant",
                 "priority": 0
             },

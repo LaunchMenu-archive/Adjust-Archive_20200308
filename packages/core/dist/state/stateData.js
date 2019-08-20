@@ -37,7 +37,7 @@ class StateData extends data_1.Data {
                 return moduleProxy;
             }
             // Connect the procies, and return the module proxy
-            moduleProxy.connect(contextProxy);
+            moduleProxy._connect(contextProxy);
             return moduleProxy;
         }));
     }

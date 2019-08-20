@@ -24,11 +24,7 @@
                         "modules": [
                             {
                                 "settingsID": 0,
-                                "modulePath": "gui\\location\\locationAncestor\\types\\tabManager\\tabHandle\\tabHandle.js"
-                            },
-                            {
-                                "settingsID": 0,
-                                "modulePath": "\\embed\\embed.js"
+                                "modulePath": "\\test\\test.js"
                             },
                             {
                                 "settingsID": 0,
@@ -36,9 +32,23 @@
                             },
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\test\\test.js"
+                                "modulePath": "\\embed\\embed.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\location\\locationAncestor\\types\\tabManager\\tabHandle\\tabHandle.js"
                             }
-                        ]
+                        ],
+                        "path": {
+                            "nodes": [
+                                "default",
+                                "default"
+                            ],
+                            "location": {
+                                "ID": "root",
+                                "hints": {}
+                            }
+                        }
                     },
                     "prompt": {
                         "modules": [
@@ -49,7 +59,7 @@
                         ],
                         "path": {
                             "nodes": [
-                                "SaxF-8dhl",
+                                "dA14-mCO5",
                                 "default"
                             ],
                             "location": {
@@ -86,6 +96,32 @@
                                     "tab": {
                                         "after": "root",
                                         "ID": "tab1"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "onion": {
+                        "modules": [
+                            {
+                                "settingsID": 0,
+                                "modulePath": "\\test\\test.js"
+                            }
+                        ],
+                        "path": {
+                            "nodes": [
+                                "default",
+                                "tab2"
+                            ],
+                            "location": {
+                                "ID": "onion",
+                                "hints": {
+                                    "window": {
+                                        "sameAs": "root"
+                                    },
+                                    "tab": {
+                                        "after": "root",
+                                        "ID": "tab2"
                                     }
                                 }
                             }

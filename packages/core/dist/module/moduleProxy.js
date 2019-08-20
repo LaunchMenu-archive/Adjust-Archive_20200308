@@ -6,6 +6,10 @@ class ModuleProxy {
      * @param target The module tp proxy
      */
     constructor(target) {
+        // Stores the methods that are currently processing
+        this._processing = {};
+        // A promise that's resolved when no more methods are processing
+        this._processingWaiter = { promise: Promise.resolve(), resolver: null };
         this._target = target;
         this._moduleID = target.getID();
     }
@@ -19,13 +23,14 @@ class ModuleProxy {
      * @param onClose An option callback for when close is called
      * @throws {IllegalStateException} If called when already connected
      */
-    connect(proxy, onClose) {
+    _connect(proxy, onClose) {
         if (this._source)
             throw Error("Connect may only be called once");
         proxy._source = this;
         this._source = proxy;
         this._onClose = onClose;
     }
+    // Instance checking methods
     /**
      * Checks whether this is a proxy for a node of the given interface
      * @param interfaceID The interface to check
@@ -69,11 +74,34 @@ class ModuleProxy {
     isAdditionalParentof(module) {
         return this.isParentof(module) && !this.isMainParentof(module);
     }
+    // Declaration of close, since any module will have this method
     /**
      * A method to close this proxy and its module.
      * Body gets created by the `createClass` method
      */
     async close() { }
+    // Methods to support proxying
+    _setProcessing(name, processing) {
+        if (processing) {
+            this._processing[name] = true;
+            // If there is no resolver, the processing is currently resolved
+            if (!this._processingWaiter.resolver) {
+                let resolver;
+                const promise = new Promise(res => (resolver = res));
+                this._processingWaiter = { promise, resolver };
+            }
+        }
+        else {
+            delete this._processing[name];
+            // If nothing is processing anymore, resolve the processing waiter
+            if (Object.keys(this._processing).length == 0 &&
+                this._processingWaiter.resolver) {
+                this._processingWaiter.resolver();
+                this._processingWaiter.resolver = null;
+            }
+        }
+    }
+    // Static methods to create a proxy
     /**
      * Retrieves the methods of an object, including inherited methods
      * @param obj The object to get the methods from
@@ -110,6 +138,38 @@ class ModuleProxy {
         return new Function("cls", `return class ${name} extends cls {}`)(cls);
     }
     /**
+     * Wraps a method of a module with some extra behaviour for when modules interact with each other
+     * @param name The name of the method
+     * @param method The method itself
+     * @returns The wrapped method
+     */
+    static createProxiedMethod(name, method) {
+        return function () {
+            if (!this._target)
+                throw Error("Module has already been closed");
+            // Update the context
+            this._target.setCallContext(this._source);
+            // Indicate this method is now processing
+            this._setProcessing(name, true);
+            // Make the original call
+            const result = method.apply(this._target, arguments);
+            // Indicate this method is no longer processing on resolve
+            if (result instanceof Promise)
+                result
+                    .then(() => this._setProcessing(name, false))
+                    .catch(e => {
+                    this._setProcessing(name, false);
+                    throw e;
+                });
+            else
+                this._setProcessing(name, false);
+            // Reset the context
+            this._target.setCallContext(undefined);
+            // Return the actual result
+            return result;
+        };
+    }
+    /**
      * Creates a dynamic module proxy class for a specific Module class
      * @param traceableCls The module class for which to create a proxy class
      * @returns The moduleProxy for a module class
@@ -121,22 +181,13 @@ class ModuleProxy {
         const methods = this.getMethods(traceableCls);
         // Create a proxy for each method
         extendedObject_1.ExtendedObject.forEach(methods, (name, method) => {
-            cls.prototype[name] = function () {
-                if (!this._target)
-                    throw Error("Module has already been closed");
-                // Update the context
-                this._target.setCallContext(this._source);
-                // Make the original call
-                const result = method.apply(this._target, arguments);
-                // Reset the context
-                this._target.setCallContext(undefined);
-                // Return the actual result
-                return result;
-            };
+            cls.prototype[name] = this.createProxiedMethod(name, method);
         });
         // Make a specialised method for closing, that automatically closes the channel (proxy)
         const close = cls.prototype.close;
         cls.prototype.close = async function () {
+            // Make sure no processing is going on, before closing
+            await this._processingWaiter.promise;
             // Perform regular closing
             await close.apply(this, arguments);
             // Call a possible on close handler

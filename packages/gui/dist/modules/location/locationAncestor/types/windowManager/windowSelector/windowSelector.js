@@ -240,7 +240,7 @@ class WindowSelectorView extends moduleViewClassCreator_1.createModuleView(Windo
      */
     renderWindowNames() {
         return Object.entries(this.state.closedWindows).map(([ID, data]) => {
-            return (React_1.React.createElement(Box_1.Box, { onDragEnter: e => this.onDragEnterWindow(ID, e), background: "primary", margin: "m", key: ID }, data.name));
+            return (React_1.React.createElement(Box_1.Box, { onDragEnter: e => this.onDragEnterWindow(ID, e), background: "primary", margin: "s", key: ID }, data.name));
         });
     }
     /**@override */
@@ -248,7 +248,7 @@ class WindowSelectorView extends moduleViewClassCreator_1.createModuleView(Windo
         return (React_1.React.createElement(Box_1.Box, { display: "flex", flexDirection: "column", css: { width: "100%", height: "100%" } },
             React_1.React.createElement(Box_1.Box, { className: "selector", display: "flex", flexDirection: "row", css: { width: "100%", height: sizes.barHeight } },
                 this.renderWindowNames(),
-                React_1.React.createElement(Box_1.Box, { background: "primary", margin: "m", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDropNew(e) }, "New window")),
+                React_1.React.createElement(Box_1.Box, { background: "primary", margin: "s", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDropNew(e) }, "New window")),
             React_1.React.createElement(Box_1.Box, { className: "window", flexGrow: 1, css: { position: "relative" } }, this.renderWindow())));
     }
 }

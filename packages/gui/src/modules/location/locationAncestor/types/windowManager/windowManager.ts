@@ -136,6 +136,8 @@ export class WindowManagerModule
         let windowData = this.state.windows[windowID];
 
         if (windowData) {
+            const window = await windowData.window;
+
             // Remove it from the state
             this.setState({
                 windows: {
@@ -144,7 +146,6 @@ export class WindowManagerModule
             });
 
             // Close it
-            const window = await windowData.window;
             await window.close();
 
             // Send updated data to the window selector

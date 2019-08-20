@@ -8,6 +8,13 @@ export declare class ModuleProxy {
     protected _source: ModuleProxy;
     protected _onClose: () => void;
     protected _moduleID: ModuleID;
+    protected _processing: {
+        [methodName: string]: boolean;
+    };
+    protected _processingWaiter: {
+        promise: Promise<void>;
+        resolver: () => void;
+    };
     /**
      * Creates a proxy for a module
      * @param target The module tp proxy
@@ -21,7 +28,7 @@ export declare class ModuleProxy {
      * @param onClose An option callback for when close is called
      * @throws {IllegalStateException} If called when already connected
      */
-    connect(proxy: ModuleProxy, onClose?: () => void): void;
+    _connect(proxy: ModuleProxy, onClose?: () => void): void;
     /**
      * Checks whether this is a proxy for a node of the given interface
      * @param interfaceID The interface to check
@@ -58,6 +65,7 @@ export declare class ModuleProxy {
      * Body gets created by the `createClass` method
      */
     close(): Promise<void>;
+    protected _setProcessing(name: string, processing: boolean): void;
     /**
      * Retrieves the methods of an object, including inherited methods
      * @param obj The object to get the methods from
@@ -72,6 +80,13 @@ export declare class ModuleProxy {
      * @param cls The class to extend
      */
     protected static createNamedClass(name: string, cls: Function): Function;
+    /**
+     * Wraps a method of a module with some extra behaviour for when modules interact with each other
+     * @param name The name of the method
+     * @param method The method itself
+     * @returns The wrapped method
+     */
+    protected static createProxiedMethod(name: string, method: Function): Function;
     /**
      * Creates a dynamic module proxy class for a specific Module class
      * @param traceableCls The module class for which to create a proxy class

@@ -479,6 +479,7 @@ export class WindowManagerSingleton {
     protected listenToModule(moduleID: ModuleID | string, windowID: string): void {
         // Get the module by its request path
         const module = ProgramState.getModule(moduleID);
+        if (!module) return;
 
         // Add a listener to the state
         module.getStateObject().on(

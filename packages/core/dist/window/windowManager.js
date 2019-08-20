@@ -361,6 +361,8 @@ class WindowManagerSingleton {
     listenToModule(moduleID, windowID) {
         // Get the module by its request path
         const module = programState_1.ProgramState.getModule(moduleID);
+        if (!module)
+            return;
         // Add a listener to the state
         module.getStateObject().on("change", (data) => {
             this.sendStateData(module, windowID, data);

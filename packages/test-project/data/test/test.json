@@ -8,9 +8,7 @@
             },
             "ID": 0,
             "data": {
-                "location": [
-                    "root"
-                ],
+                "location": "onion",
                 "styleOverride": {
                     "theme": {
                         "palette": {},

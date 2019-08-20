@@ -35,7 +35,7 @@ class ClassModuleProvider extends abstractModuleProvider_1.AbstractModuleProvide
         // Create the proxy for the module and connect to the parent proxy
         const moduleProxy = module.createProxy();
         if (parentProxy) {
-            moduleProxy.connect(parentProxy, () => {
+            moduleProxy._connect(parentProxy, () => {
                 parentProxy.notifyChildRemoved(moduleProxy);
             });
         }

@@ -238,6 +238,10 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      */
     close(): Promise<void>;
     /**
+     * A hook for tasks to execute when the node is closed
+     */
+    protected onClose(): Promise<void>;
+    /**
      * Stops the program node's tasks
      */
     stop(): Promise<void>;

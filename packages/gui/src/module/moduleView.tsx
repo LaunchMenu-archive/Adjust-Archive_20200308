@@ -44,8 +44,9 @@ export abstract class ModuleView<
      * @override The normal react render method
      */
     public render(): JSX.Element {
-        // Render the loader while the state is not loaded
-        if (Object.keys(this.state).length == 0) return this.renderLoader();
+        // Render one of the not ready screens if the data isn't ready
+        const notReady = this.notReadyRender();
+        if (notReady) return notReady;
 
         // Otherwise call the usual render after setting the theme
         const styleOverride = this.settings.styleOverride as any;

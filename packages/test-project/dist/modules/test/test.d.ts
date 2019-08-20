@@ -15,6 +15,18 @@ export declare const config: {
             type: string;
         };
     };
+    defineLocation: {
+        ID: string;
+        hints: {
+            window: {
+                sameAs: string;
+            };
+            tab: {
+                after: string;
+                ID: string;
+            };
+        };
+    };
     type: import("@adjust/core/types").ContractID<import("./test.type").TestContract>;
 };
 declare const TestModule_base: import("@adjust/core/types").ExtendedModuleClass<{
@@ -30,6 +42,18 @@ declare const TestModule_base: import("@adjust/core/types").ExtendedModuleClass<
         stuff: {
             default: boolean;
             type: string;
+        };
+    };
+    defineLocation: {
+        ID: string;
+        hints: {
+            window: {
+                sameAs: string;
+            };
+            tab: {
+                after: string;
+                ID: string;
+            };
         };
     };
     type: import("@adjust/core/types").ContractID<import("./test.type").TestContract>;

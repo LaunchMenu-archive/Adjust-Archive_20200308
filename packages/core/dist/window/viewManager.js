@@ -101,7 +101,7 @@ class ViewManagerSingleton {
             else {
                 // Otherwise, don't even resolve the promise,
                 // and make sure it is removed (should already be the case because of unmount)
-                reject("test");
+                reject("Module removed");
                 this.deregisterView(promise, moduleID);
             }
         });

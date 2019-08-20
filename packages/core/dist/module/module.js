@@ -350,6 +350,7 @@ class Module {
                 // Stop and destroy this module
                 await this.stop();
                 await this.destroy();
+                await this.onClose();
             }
             // Close the parent
             this.notifyParentRemoved(context);
@@ -357,6 +358,10 @@ class Module {
         else
             throw Error("Module may only be closed by its parent");
     }
+    /**
+     * A hook for tasks to execute when the node is closed
+     */
+    async onClose() { }
     /**
      * Stops the program node's tasks
      */

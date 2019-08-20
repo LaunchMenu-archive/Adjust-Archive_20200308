@@ -60,6 +60,11 @@ export declare abstract class ModuleView<S extends ModuleState, C extends Settin
      */
     render(): JSX.Element;
     /**
+     * Performs one of the render options if the module data isn't ready
+     * @returns An appropriate rendering if the data isn't ready, or null otherwise
+     */
+    protected notReadyRender(): JSX.Element;
+    /**
      * Renders a loader element
      * @returns An element to be displayed while the module is loading
      */

@@ -25,9 +25,10 @@ class ModuleView extends core_1.ModuleView {
      * @override The normal react render method
      */
     render() {
-        // Render the loader while the state is not loaded
-        if (Object.keys(this.state).length == 0)
-            return this.renderLoader();
+        // Render one of the not ready screens if the data isn't ready
+        const notReady = this.notReadyRender();
+        if (notReady)
+            return notReady;
         // Otherwise call the usual render after setting the theme
         const styleOverride = this.settings.styleOverride;
         return (React_1.React.createElement(themeExtender_1.ThemeExtender, { themeChanges: styleOverride.theme, resetTheme: styleOverride.resetTheme }, theme => {

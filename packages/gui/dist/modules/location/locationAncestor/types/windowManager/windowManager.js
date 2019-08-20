@@ -113,6 +113,7 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
         // Get the window if opened
         let windowData = this.state.windows[windowID];
         if (windowData) {
+            const window = await windowData.window;
             // Remove it from the state
             this.setState({
                 windows: {
@@ -120,7 +121,6 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
                 },
             });
             // Close it
-            const window = await windowData.window;
             await window.close();
             // Send updated data to the window selector
             await this.updateWindowSelectorData();

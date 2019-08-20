@@ -13,8 +13,16 @@
             "data": {
                 "tabs": [
                     {
+                        "ID": "default",
+                        "name": "default"
+                    },
+                    {
                         "ID": "tab1",
                         "name": "tab1"
+                    },
+                    {
+                        "ID": "tab2",
+                        "name": "tab2"
                     }
                 ]
             }
@@ -24,7 +32,7 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "SaxF-8dhl"
+                    "ID": "dA14-mCO5"
                 }
             },
             "ID": 2,

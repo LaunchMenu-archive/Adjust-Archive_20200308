@@ -57,7 +57,7 @@ export class StateData<
             }
 
             // Connect the procies, and return the module proxy
-            moduleProxy.connect(contextProxy);
+            moduleProxy._connect(contextProxy);
             return moduleProxy;
         }) as any);
     }

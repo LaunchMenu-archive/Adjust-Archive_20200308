@@ -65,7 +65,7 @@ export class InstanceModuleProvider<
         // Only connect and inform the module of a connection if a parent was specified
         if (parentProxy) {
             // Connect the proxies and add this as a parent
-            moduleProxy.connect(parentProxy, () => {
+            moduleProxy._connect(parentProxy, () => {
                 parentProxy.notifyChildRemoved(moduleProxy);
             });
             this.module.notifyParentAdded(parentProxy as any);

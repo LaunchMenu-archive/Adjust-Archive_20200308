@@ -151,6 +151,15 @@ export abstract class ModuleView<
      * @override The normal react render method
      */
     public render(): JSX.Element {
+        // Renders replacement data if needed, or the actual view otherwise
+        return this.notReadyRender() || this.renderView();
+    }
+
+    /**
+     * Performs one of the render options if the module data isn't ready
+     * @returns An appropriate rendering if the data isn't ready, or null otherwise
+     */
+    protected notReadyRender(): JSX.Element {
         // Render the loader while the state is not loaded
         if (Object.keys(this.state).length == 0) return this.renderLoader();
 
@@ -159,9 +168,6 @@ export abstract class ModuleView<
 
         // If an error eccured, render the error
         if (this.state.error) return this.renderError();
-
-        // Renders the actual view otherwise
-        return this.renderView();
     }
 
     /**

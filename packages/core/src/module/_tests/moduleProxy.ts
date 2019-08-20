@@ -45,7 +45,7 @@ describe("ModuleProxy", () => {
         it("Should set up a bidirectional source connection", () => {
             const proxy1 = new ModuleProxy(node);
             const proxy2 = new ModuleProxy(node2);
-            proxy1.connect(proxy2);
+            proxy1._connect(proxy2);
             expect(proxy1["_source"]).toBe(proxy2);
             expect(proxy2["_source"]).toBe(proxy1);
         });

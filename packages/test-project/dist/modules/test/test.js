@@ -15,6 +15,18 @@ exports.config = {
             type: "boolean",
         },
     },
+    defineLocation: {
+        ID: "onion",
+        hints: {
+            window: {
+                sameAs: "root",
+            },
+            tab: {
+                after: "root",
+                ID: "tab2",
+            },
+        },
+    },
     type: test_type_1.TestType,
 };
 class TestModule extends gui_1.createModule(exports.config) {

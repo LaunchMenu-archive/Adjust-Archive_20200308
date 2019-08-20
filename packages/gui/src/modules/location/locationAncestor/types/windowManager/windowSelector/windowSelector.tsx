@@ -273,7 +273,7 @@ export class WindowSelectorView extends createModuleView(WindowSelectorModule) {
                 <Box
                     onDragEnter={e => this.onDragEnterWindow(ID, e)}
                     background="primary"
-                    margin="m"
+                    margin="s"
                     key={ID}>
                     {data.name}
                 </Box>
@@ -296,7 +296,7 @@ export class WindowSelectorView extends createModuleView(WindowSelectorModule) {
                     {this.renderWindowNames()}
                     <Box
                         background="primary"
-                        margin="m"
+                        margin="s"
                         onDragOver={e => this.onDragOver(e)}
                         onDrop={e => this.onDropNew(e)}>
                         New window

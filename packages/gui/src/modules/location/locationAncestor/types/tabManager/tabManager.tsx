@@ -1,4 +1,10 @@
-import {createModule, ModuleReference, UUID, createModuleView} from "@adjust/core";
+import {
+    createModule,
+    ModuleReference,
+    UUID,
+    createModuleView,
+    ExtendedObject,
+} from "@adjust/core";
 import {ModuleLocation} from "../../../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "../../locationAncestor";
 import {LocationPath} from "../../../_types/LocationPath";
@@ -443,11 +449,30 @@ export class TabManagerModule
         // Update the state
         await super.setEditMode(edit);
 
-        // Inform ancestors
-        const promises = this.state.tabs.map(async tab =>
-            (await tab.childAncestor).setEditMode(edit)
-        );
-        await Promise.all(promises);
+        // Check whether edit mode got enabled or disabled
+        if (edit) {
+            // Open all the tabs and inform them about the edit mode
+            const promises = this.settings.tabs.map(async tabData => {
+                const tab = await this.getTab(tabData.ID);
+                await (await tab.childAncestor).setEditMode(edit);
+            });
+            await Promise.all(promises);
+        } else {
+            // Inform ancestors of the change
+            const promises = this.state.tabs.map(async tab => {
+                const openedModules = await this.getModulesAtPath([
+                    ...this.getData().path,
+                    tab.ID,
+                ]);
+                // If there are modules in this tab, update the edit mode, otherwise close the tab
+                if (openedModules.length > 0) {
+                    await (await tab.childAncestor).setEditMode(edit);
+                } else {
+                    await this.closeTab(tab.ID);
+                }
+            });
+            await Promise.all(promises);
+        }
     }
 }
 export default TabManagerModule;
