@@ -27,6 +27,7 @@ export declare const baseConfig: {
         isStopped: boolean;
     };
     onInstall: () => void;
+    onLoad: () => void;
     abstract: boolean;
     type: any;
     viewClass: any;
@@ -288,6 +289,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
             isStopped: boolean;
         };
         onInstall: () => void;
+        onLoad: () => void;
         abstract: boolean;
         type: any;
         viewClass: any;
@@ -304,10 +306,10 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      */
     static getSettingsFile(): Promise<SettingsFile<any>>;
     /**
-     * Installs the module if there is no settings file present for it
+     * Loads the module and installs if there is no settings file present for it
      * @returns A promise that resolves when installation is complete, indicating whether installation happened
      */
-    static installIfRequired(): Promise<boolean>;
+    static loadAndInstallIfRequired(): Promise<boolean>;
     /**
      * Retrieves the config of the module
      * @returns The module's config

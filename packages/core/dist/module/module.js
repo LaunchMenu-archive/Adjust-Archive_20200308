@@ -17,6 +17,7 @@ exports.baseConfig = {
         isStopped: false,
     },
     onInstall: () => { },
+    onLoad: () => { },
     abstract: true,
     type: null,
     viewClass: undefined,
@@ -449,17 +450,19 @@ class Module {
         return settingsManager_1.SettingsManager.getSettingsFile(this);
     }
     /**
-     * Installs the module if there is no settings file present for it
+     * Loads the module and installs if there is no settings file present for it
      * @returns A promise that resolves when installation is complete, indicating whether installation happened
      */
-    static async installIfRequired() {
+    static async loadAndInstallIfRequired() {
+        // Load the module
+        await this.getConfig().onLoad(this);
         // Check if an install is required or whether the mdoule has been installed already
         if (!settingsManager_1.SettingsManager.fileExists(this.getPath())) {
             // Create the settings file once to call all listeners and save it
             const settingsFile = await this.getSettingsFile();
             settingsFile.setDirty(true);
             // Call the installation method
-            await this.getConfig().onInstall();
+            await this.getConfig().onInstall(this);
             return true;
         }
         return false;

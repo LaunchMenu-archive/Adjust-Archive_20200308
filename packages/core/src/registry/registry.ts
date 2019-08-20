@@ -296,10 +296,6 @@ export class RegistrySingleton {
                 );
                 if (viewClass) config.viewClass = viewClass;
 
-                // Indicate that the module was loaded
-                // @ts-ignore
-                def.onFileLoad(isMain, modulePath);
-
                 // Return the module
                 return def;
             }
@@ -365,7 +361,7 @@ export class RegistrySingleton {
 
         // Install all modules that require it, and save their settings
         await Promise.all(
-            moduleClasses.map(moduleClass => moduleClass.installIfRequired())
+            moduleClasses.map(moduleClass => moduleClass.loadAndInstallIfRequired())
         );
         await SettingsManager.saveAll();
         SettingsManager.destroySettingsFiles();

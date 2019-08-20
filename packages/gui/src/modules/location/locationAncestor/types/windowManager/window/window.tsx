@@ -5,6 +5,7 @@ import {
     ModuleReference,
     SettingsManager,
     createSettings,
+    Module,
 } from "@adjust/core";
 import {LocationAncestor} from "../../../locationAncestor.type";
 import {createModule} from "../../../../../../module/moduleClassCreator";
@@ -31,6 +32,12 @@ export const windowConfig = {
         },
         {type: "number"}
     ),
+    onLoad: (moduleClass: typeof Module) => {
+        WindowManager.createWindowBuffer({
+            frame: false,
+            preloadModules: [moduleClass.getPath()],
+        });
+    },
     type: WindowType,
 };
 
@@ -135,16 +142,6 @@ export default class WindowModule
     /** @override */
     protected async onStop(): Promise<void> {
         await this.closeWindow();
-    }
-
-    /** @override */
-    protected static onFileLoad(isMain: boolean, modulePath: string): void {
-        // Add a buffer of windows to increase loading times
-        if (isMain)
-            WindowManager.createWindowBuffer({
-                frame: false,
-                preloadModules: [modulePath],
-            });
     }
 
     // Location management

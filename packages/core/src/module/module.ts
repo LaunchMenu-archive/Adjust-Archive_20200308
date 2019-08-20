@@ -35,6 +35,7 @@ export const baseConfig = {
         isStopped: false,
     },
     onInstall: () => {},
+    onLoad: () => {},
     abstract: true,
     type: null,
     viewClass: undefined,
@@ -620,10 +621,13 @@ export class Module<
     }
 
     /**
-     * Installs the module if there is no settings file present for it
+     * Loads the module and installs if there is no settings file present for it
      * @returns A promise that resolves when installation is complete, indicating whether installation happened
      */
-    public static async installIfRequired(): Promise<boolean> {
+    public static async loadAndInstallIfRequired(): Promise<boolean> {
+        // Load the module
+        await this.getConfig().onLoad(this);
+
         // Check if an install is required or whether the mdoule has been installed already
         if (!SettingsManager.fileExists(this.getPath())) {
             // Create the settings file once to call all listeners and save it
@@ -631,7 +635,7 @@ export class Module<
             settingsFile.setDirty(true);
 
             // Call the installation method
-            await this.getConfig().onInstall();
+            await this.getConfig().onInstall(this);
 
             return true;
         }

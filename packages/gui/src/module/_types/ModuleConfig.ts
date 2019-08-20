@@ -5,6 +5,7 @@ import {
     ModuleContract,
 } from "@adjust/core/types";
 import {ModuleLocation} from "./ModuleLocation";
+import {Module} from "../module";
 
 /**
  * The config type for all Adjust GUI modules

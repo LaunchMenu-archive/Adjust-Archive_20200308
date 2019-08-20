@@ -153,6 +153,7 @@ export class ModuleClassCreator {
             initialState,
             abstract: config.abstract,
             onInstall: config.onInstall || (() => {}),
+            onLoad: config.onLoad || (() => {}),
             type: config.type || superConfig.type,
             viewClass: config.viewClass || superConfig.viewClass,
             getPriority: config.getPriority || superConfig.getPriority || (() => 1),

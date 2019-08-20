@@ -22,6 +22,12 @@ exports.windowConfig = {
         x: 0,
         y: 0,
     }, { type: "number" }),
+    onLoad: (moduleClass) => {
+        core_1.WindowManager.createWindowBuffer({
+            frame: false,
+            preloadModules: [moduleClass.getPath()],
+        });
+    },
     type: window_type_1.WindowType,
 };
 /**
@@ -111,15 +117,6 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
     /** @override */
     async onStop() {
         await this.closeWindow();
-    }
-    /** @override */
-    static onFileLoad(isMain, modulePath) {
-        // Add a buffer of windows to increase loading times
-        if (isMain)
-            core_1.WindowManager.createWindowBuffer({
-                frame: false,
-                preloadModules: [modulePath],
-            });
     }
     // Location management
     /** @override */

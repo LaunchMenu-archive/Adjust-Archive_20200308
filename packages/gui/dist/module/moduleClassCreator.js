@@ -13,7 +13,7 @@ class ModuleClassCreator extends core_1.ModuleClassCreator {
         // Add location definition to the install method if present
         if (config.defineLocation) {
             const install = config.onInstall;
-            config.onInstall = async () => {
+            config.onInstall = async (moduleClass) => {
                 // Obtain the location manager instance
                 const locationManager = await registry_1.Registry.createRoot({
                     type: locationManager_type_1.LocationManagerType,
@@ -21,7 +21,7 @@ class ModuleClassCreator extends core_1.ModuleClassCreator {
                 await locationManager.updateLocation(config.defineLocation);
                 // Call the original install function
                 if (install)
-                    return install();
+                    return install(moduleClass);
             };
             if (!config.location)
                 config.location = config.defineLocation.ID;

@@ -6,6 +6,7 @@ import { ModuleContract } from "./moduleContract";
 import { ContractID } from "../../registry/_types/contractID";
 import { SettingsConfigSet } from "../../storage/settings/_types/settingsConfigSet";
 import { ModuleSettingsMigrators } from "./moduleSettingsMigrators";
+import { Module } from "../module";
 /**
  * An interface that contains all config data for the module
  */
@@ -15,7 +16,8 @@ export declare type ModuleConfig<S extends ModuleState, C extends SettingsConfig
     settingsMigrators?: ModuleSettingsMigrators;
     initialState: S;
     type: ContractID<I>;
-    onInstall?: () => Promise<void> | void;
+    onInstall?: (moduleClass: typeof Module) => Promise<void> | void;
+    onLoad?: (moduleClass: typeof Module) => Promise<void> | void;
     abstract?: boolean;
     viewClass?: ExtendsClass<typeof ModuleView, any>;
     getPriority?: (request: ModuleRequestData<I>) => number;

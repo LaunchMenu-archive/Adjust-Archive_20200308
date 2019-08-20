@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { ModuleReference } from "@adjust/core";
+import { ModuleReference, Module } from "@adjust/core";
 import { LocationAncestor } from "../../../locationAncestor.type";
 import LocationAncestorModule from "../../../locationAncestor";
 import { LocationPath } from "../../../../_types/LocationPath";
@@ -41,6 +41,7 @@ export declare const windowConfig: {
             default: number;
         };
     };
+    onLoad: (moduleClass: typeof Module) => void;
     type: import("@adjust/core/types").ContractID<import("./window.type").WindowContract>;
 };
 declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClass<{
@@ -79,6 +80,7 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
             default: number;
         };
     };
+    onLoad: (moduleClass: typeof Module) => void;
     type: import("@adjust/core/types").ContractID<import("./window.type").WindowContract>;
 }, typeof LocationAncestorModule>;
 /**
@@ -104,8 +106,6 @@ export default class WindowModule extends WindowModule_base implements Window {
     closeWindow(): Promise<void>;
     /** @override */
     protected onStop(): Promise<void>;
-    /** @override */
-    protected static onFileLoad(isMain: boolean, modulePath: string): void;
     /** @override */
     createLocation(location: ModuleLocation): Promise<LocationPath>;
     /** @override */

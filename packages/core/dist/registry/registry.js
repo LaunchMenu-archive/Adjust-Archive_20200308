@@ -223,9 +223,6 @@ class RegistrySingleton {
                 const viewClass = extendedObject_1.ExtendedObject.find(exports, (exp, k) => k != "default" && exp.prototype instanceof moduleView_1.ModuleView);
                 if (viewClass)
                     config.viewClass = viewClass;
-                // Indicate that the module was loaded
-                // @ts-ignore
-                def.onFileLoad(isMain_1.isMain, modulePath);
                 // Return the module
                 return def;
             }
@@ -264,7 +261,7 @@ class RegistrySingleton {
         // Add all of the module providers to the registry
         moduleProviders.forEach(moduleProvider => this.addProvider(moduleProvider));
         // Install all modules that require it, and save their settings
-        await Promise.all(moduleClasses.map(moduleClass => moduleClass.installIfRequired()));
+        await Promise.all(moduleClasses.map(moduleClass => moduleClass.loadAndInstallIfRequired()));
         await settingsManager_1.SettingsManager.saveAll();
         settingsManager_1.SettingsManager.destroySettingsFiles();
     }
