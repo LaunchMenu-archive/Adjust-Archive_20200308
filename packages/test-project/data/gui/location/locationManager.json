@@ -49,7 +49,7 @@
                         ],
                         "path": {
                             "nodes": [
-                                "ZuZw-PIdA",
+                                "SaxF-8dhl",
                                 "default"
                             ],
                             "location": {
@@ -81,9 +81,10 @@
                                 "ID": "test",
                                 "hints": {
                                     "window": {
-                                        "ID": "default"
+                                        "sameAs": "root"
                                     },
                                     "tab": {
+                                        "after": "root",
                                         "ID": "tab1"
                                     }
                                 }

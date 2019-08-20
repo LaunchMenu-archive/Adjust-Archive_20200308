@@ -279,6 +279,16 @@ export declare const themeSettings: {
         } & {
             default: string;
         };
+        left: {
+            type: string;
+        } & {
+            default: string;
+        };
+        right: {
+            type: string;
+        } & {
+            default: string;
+        };
     };
     spacing: {
         xxs: {

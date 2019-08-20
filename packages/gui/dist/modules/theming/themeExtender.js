@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = require("react");
 const emotion_theming_1 = require("emotion-theming");
-const lib_commonjs_1 = require("office-ui-fabric-react/lib-commonjs");
+const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const deep_equal_1 = __importDefault(require("deep-equal"));
 const themer_type_1 = require("./themer.type");
 const React_1 = require("../../React");
@@ -40,6 +40,6 @@ exports.ThemeExtender = ({ children, themeChanges, resetTheme, }) => {
     // Provide the theme to all channels
     return (React_1.React.createElement(themer_type_1.ThemeContext.Provider, { value: extendedThemeData.themeContext },
         React_1.React.createElement(emotion_theming_1.ThemeProvider, { theme: () => extendedThemeData.themeContext.theme },
-            React_1.React.createElement(lib_commonjs_1.Customizer, { settings: { theme: extendedThemeData.fabricTheme } }, children(extendedThemeData.themeContext.theme)))));
+            React_1.React.createElement(office_ui_fabric_react_1.Customizer, { settings: { theme: extendedThemeData.fabricTheme } }, children(extendedThemeData.themeContext.theme)))));
 };
 //# sourceMappingURL=themeExtender.js.map

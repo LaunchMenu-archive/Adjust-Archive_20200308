@@ -1,5 +1,7 @@
 import {React} from "../React";
-import {useCallback, useRef} from "react";
+import {useCallback, useRef, WheelEvent, useState} from "react";
+import {Box} from "./Box";
+import {useTheme} from "../modules/theming/themer.type";
 
 /**
  * A component that allows for automatic horizontal scrolling
@@ -38,8 +40,10 @@ export const HorizontalScroller = ({
      */
     showScrollArrows?: boolean;
 }): JSX.Element => {
+    const theme = useTheme();
     const scrollElementRef = useRef(null as HTMLDivElement | null);
     const interval = useRef(-1);
+    const [, forceUpdate] = useState({});
 
     // Define the event handlers
     const stopScrolling = () => {
@@ -66,41 +70,108 @@ export const HorizontalScroller = ({
         }, stepDelay) as any;
     }, [stepSize, stepDelay]);
 
+    const scroll = useCallback((e: WheelEvent) => {
+        const el = scrollElementRef.current;
+        if (el) {
+            if (e.deltaY > 0)
+                el.scrollLeft = Math.min(
+                    el.scrollWidth - el.clientWidth,
+                    el.scrollLeft + scrollStepSize
+                );
+            else el.scrollLeft = Math.max(0, el.scrollLeft - scrollStepSize);
+        }
+    }, []);
+
+    const hasOverflow = useCallback(() => {
+        const el = scrollElementRef.current;
+        return el && el.scrollWidth - el.clientWidth < 0;
+    }, []);
+
+    const LeftIcon = theme.getIcon("left");
+    const RightIcon = theme.getIcon("right");
+
     // Return the element
     return (
         <div
             className="horizontalScroller"
+            onWheel={e => scroll(e)}
             style={{whiteSpace: "nowrap", position: "relative"}}>
-            <div
-                className="horizontalScrollerLeft"
-                onMouseOver={scrollLeft}
-                onMouseOut={stopScrolling}
-                style={{
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    position: "absolute",
-                    width: 20,
-                    backgroundColor: "orange",
-                }}
-            />
-            <div
-                className="horizontalScrollerRight"
-                onMouseOver={scrollRight}
-                onMouseOut={stopScrolling}
-                style={{
-                    top: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: "absolute",
-                    width: 20,
-                    backgroundColor: "orange",
-                }}
-            />
+            {hasOverflow() && enabled && (
+                <>
+                    <Box
+                        className="horizontalScrollerLeft"
+                        background="whiteTranslucent40"
+                        onDragOver={scrollLeft}
+                        onDragLeave={stopScrolling}
+                        onMouseDown={scrollLeft}
+                        onMouseUp={stopScrolling}
+                        onMouseOut={stopScrolling}
+                        css={{
+                            top: 0,
+                            bottom: 0,
+                            left: 0,
+                            position: "absolute",
+                            width: 20,
+                            opacity: showScrollArrows ? 1 : 0,
+                            zIndex: 1,
+                            "&:hover": {
+                                backgroundColor: theme.getColor("white"),
+                            },
+                        }}>
+                        {
+                            <LeftIcon
+                                css={{
+                                    position: "absolute" as "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                }}
+                            />
+                        }
+                    </Box>
+                    <Box
+                        className="horizontalScrollerRight"
+                        background="whiteTranslucent40"
+                        onDragOver={scrollRight}
+                        onDragLeave={stopScrolling}
+                        onMouseDown={scrollRight}
+                        onMouseUp={stopScrolling}
+                        onMouseOut={stopScrolling}
+                        css={{
+                            top: 0,
+                            bottom: 0,
+                            right: 0,
+                            position: "absolute",
+                            width: 20,
+                            opacity: showScrollArrows ? 1 : 0,
+                            zIndex: 1,
+                            "&:hover": {
+                                backgroundColor: theme.getColor("white"),
+                            },
+                        }}>
+                        {
+                            <RightIcon
+                                css={{
+                                    position: "absolute" as "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                }}
+                            />
+                        }
+                    </Box>
+                </>
+            )}
+
             <div
                 className="horizontalScrollerContent"
-                ref={element => (scrollElementRef.current = element)}
-                style={{overflowX: "hidden"}}>
+                ref={element => {
+                    if (!scrollElementRef.current) {
+                        scrollElementRef.current = element;
+                        forceUpdate({});
+                    }
+                }}
+                style={{overflow: "hidden"}}>
                 {children}
             </div>
         </div>

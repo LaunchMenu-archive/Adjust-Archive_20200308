@@ -70,6 +70,8 @@ export declare const ThemeExtender: ({ children, themeChanges, resetTheme, }: {
             maximize?: string;
             minimize?: string;
             emoji?: string;
+            left?: string;
+            right?: string;
         };
         spacing?: {
             xxs?: string | number;

@@ -5,7 +5,7 @@ const themer_type_1 = require("../themer.type");
 const themeSettings_1 = require("../themeSettings");
 const theme_1 = require("./theme");
 const emotion_theming_1 = require("emotion-theming");
-const lib_commonjs_1 = require("office-ui-fabric-react/lib-commonjs");
+const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const box_1 = require("./box");
 exports.themerConfig = {
     initialState: {},
@@ -55,10 +55,10 @@ class ThemerView extends core_1.createModuleView(ThemerModule) {
         const theme = new theme_1.Theme(this.settings);
         const fabricTheme = theme.getFabricUItheme();
         const icons = theme.getFabricUIicons();
-        lib_commonjs_1.registerIcons(icons);
+        office_ui_fabric_react_1.registerIcons(icons);
         return (React_1.React.createElement(themer_type_1.ThemeContext.Provider, { value: { theme, Box: box_1.Box } },
             React_1.React.createElement(emotion_theming_1.ThemeProvider, { theme: () => theme },
-                React_1.React.createElement(lib_commonjs_1.Customizer, { settings: { theme: fabricTheme } }, this.props.children))));
+                React_1.React.createElement(office_ui_fabric_react_1.Customizer, { settings: { theme: fabricTheme } }, this.props.children))));
     }
 }
 exports.ThemerView = ThemerView;

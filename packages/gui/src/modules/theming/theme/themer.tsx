@@ -11,7 +11,7 @@ import {themeSettings, IThemeData} from "../themeSettings";
 import {ITheme} from "../_types/ITheme";
 import {Theme} from "./theme";
 import {ThemeProvider} from "emotion-theming";
-import {Customizer, registerIcons} from "office-ui-fabric-react/lib-commonjs";
+import {Customizer, registerIcons} from "office-ui-fabric-react";
 import {Box} from "./box";
 
 export const themerConfig = {

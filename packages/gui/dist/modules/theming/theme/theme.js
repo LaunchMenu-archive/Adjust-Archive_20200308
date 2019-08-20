@@ -31,7 +31,12 @@ class Theme {
     }
     /** @override */
     getIcon(icon) {
-        return getIcon_1.getIcon(icon);
+        for (var i = 0; i < 100; i++) {
+            if (typeof icon == "string" && this.icons[icon])
+                icon = this.icons[icon];
+            else
+                return getIcon_1.getIcon(icon);
+        }
     }
     /** @override */
     getSpacing(spacingName) {

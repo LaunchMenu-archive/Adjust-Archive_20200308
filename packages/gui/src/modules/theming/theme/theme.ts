@@ -47,7 +47,11 @@ export class Theme implements ITheme {
 
     /** @override */
     public getIcon(icon: string): React.ComponentClass | React.FunctionComponent {
-        return getIcon(icon);
+        for (var i = 0; i < 100; i++) {
+            if (typeof icon == "string" && this.icons[icon])
+                icon = this.icons[icon] as any;
+            else return getIcon(icon);
+        }
     }
 
     /** @override */

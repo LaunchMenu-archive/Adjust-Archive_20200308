@@ -18,6 +18,16 @@ export declare const tabManagerConfig: {
             default: Tab[];
             type: string;
         };
+        handles: {
+            scrollSpeed: {
+                default: number;
+                type: string;
+            };
+            wheelScrollSpeed: {
+                default: number;
+                type: string;
+            };
+        };
     };
     getPriority: () => number;
     type: import("@adjust/core/types").ContractID<import("../../locationAncestor.type").LocationAncestorContract>;
@@ -33,6 +43,16 @@ declare const TabManagerModule_base: import("@adjust/core/types").ExtendedModule
         tabs: {
             default: Tab[];
             type: string;
+        };
+        handles: {
+            scrollSpeed: {
+                default: number;
+                type: string;
+            };
+            wheelScrollSpeed: {
+                default: number;
+                type: string;
+            };
         };
     };
     getPriority: () => number;
@@ -112,7 +132,7 @@ export declare class TabManagerView extends TabManagerView_base {
     /**
      * Render the tab handles
      */
-    protected renderHandles(): JSX.Element[];
+    protected renderHandles(): JSX.Element;
     /**
      * Renders what the tab should look like if empty
      */

@@ -24,7 +24,7 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "ZuZw-PIdA"
+                    "ID": "SaxF-8dhl"
                 }
             },
             "ID": 2,
@@ -55,7 +55,11 @@
                     "resetTheme": false,
                     "css": null
                 },
-                "tabs": []
+                "tabs": [],
+                "handles": {
+                    "scrollSpeed": 10,
+                    "wheelScrollSpeed": 20
+                }
             }
         }
     ]

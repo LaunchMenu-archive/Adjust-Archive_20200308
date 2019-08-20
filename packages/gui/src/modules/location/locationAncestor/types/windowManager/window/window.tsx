@@ -1,5 +1,4 @@
-import {IconButton} from "office-ui-fabric-react";
-import {PrimaryButton} from "office-ui-fabric-react/lib-commonjs";
+import {IconButton, PrimaryButton} from "office-ui-fabric-react";
 import {Event} from "electron";
 import {
     WindowManager,

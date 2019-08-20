@@ -1,6 +1,6 @@
 import {useContext, useRef} from "react";
 import {ThemeProvider} from "emotion-theming";
-import {Customizer} from "office-ui-fabric-react/lib-commonjs";
+import {Customizer} from "office-ui-fabric-react";
 import deepEqual from "deep-equal";
 import {DeepPartial} from "@adjust/core/types";
 import {ThemeContext} from "./themer.type";

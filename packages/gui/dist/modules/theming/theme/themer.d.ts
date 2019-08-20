@@ -282,6 +282,16 @@ export declare const themerConfig: {
             } & {
                 default: string;
             };
+            left: {
+                type: string;
+            } & {
+                default: string;
+            };
+            right: {
+                type: string;
+            } & {
+                default: string;
+            };
         };
         spacing: {
             xxs: {
@@ -1689,6 +1699,16 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                 default: string;
             };
             emoji: {
+                type: string;
+            } & {
+                default: string;
+            };
+            left: {
+                type: string;
+            } & {
+                default: string;
+            };
+            right: {
                 type: string;
             } & {
                 default: string;

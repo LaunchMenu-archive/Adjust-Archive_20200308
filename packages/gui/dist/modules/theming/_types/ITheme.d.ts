@@ -14,7 +14,7 @@ export declare type ITheme = {
      * @param icon The name of the icon to retrieve
      * @returns The JSX icon element
      */
-    getIcon(icon: string): React.ComponentClass | React.FunctionComponent;
+    getIcon(icon: keyof IThemeData["icons"]): React.ComponentClass | React.FunctionComponent;
     /**
      * Retrieves a string spacing from the theme
      * @param spacingName The name of the spacing value to retrieve

@@ -52,3 +52,7 @@ export declare const ThemeContext: import("react").Context<{
     theme: ITheme;
     Box: IBoxComponent;
 }>;
+/**
+ * Retrieves the theme
+ */
+export declare const useTheme: () => ITheme;

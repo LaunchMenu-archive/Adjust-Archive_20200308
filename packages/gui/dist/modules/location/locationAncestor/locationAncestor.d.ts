@@ -287,6 +287,16 @@ export declare const config: {
                     } & {
                         default: string;
                     };
+                    left: {
+                        type: string;
+                    } & {
+                        default: string;
+                    };
+                    right: {
+                        type: string;
+                    } & {
+                        default: string;
+                    };
                 };
                 spacing: {
                     xxs: {
@@ -382,19 +392,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -470,19 +479,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -558,19 +566,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -646,19 +653,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -734,19 +740,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -822,19 +827,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -910,19 +914,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -998,19 +1001,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -1086,19 +1088,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -1174,19 +1175,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -1262,19 +1262,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -1350,19 +1349,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -1438,19 +1436,18 @@ export declare const config: {
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -1791,6 +1788,16 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                     } & {
                         default: string;
                     };
+                    left: {
+                        type: string;
+                    } & {
+                        default: string;
+                    };
+                    right: {
+                        type: string;
+                    } & {
+                        default: string;
+                    };
                 };
                 spacing: {
                     xxs: {
@@ -1886,19 +1893,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -1974,19 +1980,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2062,19 +2067,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2150,19 +2154,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2238,19 +2241,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2326,19 +2328,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2414,19 +2415,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2502,19 +2502,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2590,19 +2589,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2678,19 +2676,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2766,19 +2763,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2854,19 +2850,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
@@ -2942,19 +2937,18 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
-                            fontSize: string;
+                            fontSize: string; /**
+                             * Gets the child location ancestor given a specified location path
+                             * @param ID The ID of the child, may be left out if the child has the same ID
+                             * Leaving it out would result in this instance and child sharing the same ID and path
+                             * @returns The child ancestor
+                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;
                             WebkitFontSmoothing: string;
                         } | {
                             fontSize: string;
-                            /**
-                             * Gets the child location ancestor given a specified location path
-                             * @param ID The ID of the child, may be left out if the child has the same ID
-                             * Leaving it out would result in this instance and child sharing the same ID and path
-                             * @returns The child ancestor
-                             */
                             fontWeight: number;
                             fontFamily: string;
                             MozOsxFontSmoothing: string;

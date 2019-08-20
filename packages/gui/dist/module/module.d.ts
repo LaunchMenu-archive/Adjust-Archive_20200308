@@ -291,6 +291,16 @@ export declare const stylingSettings: {
                 } & {
                     default: string;
                 };
+                left: {
+                    type: string;
+                } & {
+                    default: string;
+                };
+                right: {
+                    type: string;
+                } & {
+                    default: string;
+                };
             };
             spacing: {
                 xxs: {
@@ -332,7 +342,6 @@ export declare const stylingSettings: {
             fontStyles: {
                 tiny: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -415,7 +424,6 @@ export declare const stylingSettings: {
                 };
                 xSmall: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -498,7 +506,6 @@ export declare const stylingSettings: {
                 };
                 small: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -581,7 +588,6 @@ export declare const stylingSettings: {
                 };
                 smallPlus: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -664,7 +670,6 @@ export declare const stylingSettings: {
                 };
                 medium: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -747,7 +752,6 @@ export declare const stylingSettings: {
                 };
                 mediumPlus: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -830,7 +834,6 @@ export declare const stylingSettings: {
                 };
                 large: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -913,7 +916,6 @@ export declare const stylingSettings: {
                 };
                 xLarge: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -996,7 +998,6 @@ export declare const stylingSettings: {
                 };
                 xLargePlus: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -1079,7 +1080,6 @@ export declare const stylingSettings: {
                 };
                 xxLarge: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -1162,7 +1162,6 @@ export declare const stylingSettings: {
                 };
                 xxLargePlus: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -1245,7 +1244,6 @@ export declare const stylingSettings: {
                 };
                 superLarge: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -1328,7 +1326,6 @@ export declare const stylingSettings: {
                 };
                 mega: {
                     default: {
-                        /** @override */
                         fontSize: string;
                         fontFamily: string;
                         fontWeight: number;
@@ -1727,6 +1724,16 @@ export declare const baseConfig: {
                     } & {
                         default: string;
                     };
+                    left: {
+                        type: string;
+                    } & {
+                        default: string;
+                    };
+                    right: {
+                        type: string;
+                    } & {
+                        default: string;
+                    };
                 };
                 spacing: {
                     xxs: {
@@ -1768,7 +1775,6 @@ export declare const baseConfig: {
                 fontStyles: {
                     tiny: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -1851,7 +1857,6 @@ export declare const baseConfig: {
                     };
                     xSmall: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -1934,7 +1939,6 @@ export declare const baseConfig: {
                     };
                     small: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2017,7 +2021,6 @@ export declare const baseConfig: {
                     };
                     smallPlus: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2100,7 +2103,6 @@ export declare const baseConfig: {
                     };
                     medium: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2183,7 +2185,6 @@ export declare const baseConfig: {
                     };
                     mediumPlus: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2266,7 +2267,6 @@ export declare const baseConfig: {
                     };
                     large: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2349,7 +2349,6 @@ export declare const baseConfig: {
                     };
                     xLarge: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2432,7 +2431,6 @@ export declare const baseConfig: {
                     };
                     xLargePlus: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2515,7 +2513,6 @@ export declare const baseConfig: {
                     };
                     xxLarge: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2598,7 +2595,6 @@ export declare const baseConfig: {
                     };
                     xxLargePlus: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2681,7 +2677,6 @@ export declare const baseConfig: {
                     };
                     superLarge: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -2764,7 +2759,6 @@ export declare const baseConfig: {
                     };
                     mega: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3167,6 +3161,16 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     } & {
                         default: string;
                     };
+                    left: {
+                        type: string;
+                    } & {
+                        default: string;
+                    };
+                    right: {
+                        type: string;
+                    } & {
+                        default: string;
+                    };
                 };
                 spacing: {
                     xxs: {
@@ -3208,7 +3212,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                 fontStyles: {
                     tiny: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3291,7 +3294,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     xSmall: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3374,7 +3376,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     small: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3457,7 +3458,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     smallPlus: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3540,7 +3540,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     medium: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3623,7 +3622,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     mediumPlus: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3706,7 +3704,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     large: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3789,7 +3786,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     xLarge: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3872,7 +3868,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     xLargePlus: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -3955,7 +3950,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     xxLarge: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -4038,7 +4032,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     xxLargePlus: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -4121,7 +4114,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     superLarge: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;
@@ -4204,7 +4196,6 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     };
                     mega: {
                         default: {
-                            /** @override */
                             fontSize: string;
                             fontFamily: string;
                             fontWeight: number;

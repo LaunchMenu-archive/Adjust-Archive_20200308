@@ -69,6 +69,8 @@ exports.themeSettings = {
         maximize: "react-icons/md/MdWebAsset",
         minimize: "react-icons/md/MdRemove",
         emoji: "react-icons/md/MdMood",
+        left: "react-icons/md/MdKeyboardArrowLeft",
+        right: "react-icons/md/MdKeyboardArrowRight",
     }, { type: "icon" }),
     spacing: core_1.createSettings({
         xxs: 2,

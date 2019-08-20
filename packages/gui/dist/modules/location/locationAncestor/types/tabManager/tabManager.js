@@ -10,6 +10,7 @@ const tabHandle_type_1 = require("./tabHandle/tabHandle.type");
 const Box_1 = require("../../../../../components/Box");
 const ChildBox_1 = require("../../../../../components/ChildBox");
 const ParentBox_1 = require("../../../../../components/ParentBox");
+const HorizontalScroller_1 = require("../../../../../components/HorizontalScroller");
 exports.tabManagerConfig = {
     initialState: {
         tabs: [],
@@ -21,6 +22,16 @@ exports.tabManagerConfig = {
         tabs: {
             default: [],
             type: "tabs",
+        },
+        handles: {
+            scrollSpeed: {
+                default: 10,
+                type: "number",
+            },
+            wheelScrollSpeed: {
+                default: 20,
+                type: "number",
+            },
         },
     },
     getPriority: () => 2,
@@ -340,6 +351,8 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
         // Obtain the tab if present
         const tab = await this.getTab(ID, false);
         if (tab) {
+            // Focus this tab
+            this.selectTab(tab.ID);
             // Forward closing the module to the tab
             return await (await tab.childAncestor).showModule(module, path);
         }
@@ -370,7 +383,7 @@ class TabManagerView extends core_1.createModuleView(TabManagerModule) {
      * Render the tab handles
      */
     renderHandles() {
-        return this.state.tabs.map(tab => tab.tabHandle);
+        return (React_1.React.createElement(HorizontalScroller_1.HorizontalScroller, { stepSize: this.settings.handles.scrollSpeed, scrollStepSize: this.settings.handles.wheelScrollSpeed }, this.state.tabs.map(tab => tab.tabHandle)));
     }
     /**
      * Renders what the tab should look like if empty

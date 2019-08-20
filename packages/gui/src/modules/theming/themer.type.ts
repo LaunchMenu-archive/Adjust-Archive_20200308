@@ -3,7 +3,7 @@ import {ChildModule, ParentModule} from "@adjust/core/types";
 import {ITheme} from "./_types/ITheme";
 import {IBoxComponent} from "./_types/IBoxComponent";
 import {IThemeData} from "./themeSettings";
-import {CSSProperties} from "react";
+import {CSSProperties, useContext} from "react";
 
 /**
  * A module used to provide consistent theming throughout the application
@@ -62,3 +62,8 @@ export const ThemeContext = React.createContext(null as {
     theme: ITheme;
     Box: IBoxComponent;
 });
+
+/**
+ * Retrieves the theme
+ */
+export const useTheme = () => useContext(ThemeContext).theme;

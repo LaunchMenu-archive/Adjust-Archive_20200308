@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const office_ui_fabric_react_1 = require("office-ui-fabric-react");
-const lib_commonjs_1 = require("office-ui-fabric-react/lib-commonjs");
 const core_1 = require("@adjust/core");
 const moduleClassCreator_1 = require("../../../../../../module/moduleClassCreator");
 const locationAncestor_1 = __importDefault(require("../../../locationAncestor"));
@@ -321,7 +320,7 @@ class WindowView extends moduleViewClassCreator_1.createModuleView(WindowModule)
                 },
             } },
             React_1.React.createElement(Box_1.Box, null,
-                React_1.React.createElement(lib_commonjs_1.PrimaryButton, null, "Hallo?")),
+                React_1.React.createElement(office_ui_fabric_react_1.PrimaryButton, null, "Hallo?")),
             React_1.React.createElement(Box_1.Box, null,
                 React_1.React.createElement(office_ui_fabric_react_1.IconButton, { iconProps: { iconName: "close" }, onClick: () => this.module.closeWindow(), title: "close", ariaLabel: "close" })),
             React_1.React.createElement(Box_1.Box, null,

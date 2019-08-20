@@ -68,7 +68,9 @@
                     "close": "react-icons/md/MdClose",
                     "maximize": "react-icons/md/MdWebAsset",
                     "minimize": "react-icons/md/MdRemove",
-                    "emoji": "react-icons/md/MdMood"
+                    "emoji": "react-icons/md/MdMood",
+                    "left": "react-icons/md/MdKeyboardArrowLeft",
+                    "right": "react-icons/md/MdKeyboardArrowRight"
                 },
                 "spacing": {
                     "xxs": 2,

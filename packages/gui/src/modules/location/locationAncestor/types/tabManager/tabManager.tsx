@@ -9,6 +9,7 @@ import {TabHandleType, TabHandleParent} from "./tabHandle/tabHandle.type";
 import {Box} from "../../../../../components/Box";
 import {ChildBox} from "../../../../../components/ChildBox";
 import {ParentBox} from "../../../../../components/ParentBox";
+import {HorizontalScroller} from "../../../../../components/HorizontalScroller";
 
 export const tabManagerConfig = {
     initialState: {
@@ -21,6 +22,16 @@ export const tabManagerConfig = {
         tabs: {
             default: [] as Tab[],
             type: "tabs",
+        },
+        handles: {
+            scrollSpeed: {
+                default: 10,
+                type: "number",
+            },
+            wheelScrollSpeed: {
+                default: 20,
+                type: "number",
+            },
         },
     },
     getPriority: () => 2,
@@ -404,6 +415,9 @@ export class TabManagerModule
         // Obtain the tab if present
         const tab = await this.getTab(ID, false);
         if (tab) {
+            // Focus this tab
+            this.selectTab(tab.ID);
+
             // Forward closing the module to the tab
             return await (await tab.childAncestor).showModule(module, path);
         }
@@ -442,8 +456,14 @@ export class TabManagerView extends createModuleView(TabManagerModule) {
     /**
      * Render the tab handles
      */
-    protected renderHandles(): JSX.Element[] {
-        return this.state.tabs.map(tab => tab.tabHandle);
+    protected renderHandles(): JSX.Element {
+        return (
+            <HorizontalScroller
+                stepSize={this.settings.handles.scrollSpeed}
+                scrollStepSize={this.settings.handles.wheelScrollSpeed}>
+                {this.state.tabs.map(tab => tab.tabHandle)}
+            </HorizontalScroller>
+        );
     }
 
     /**

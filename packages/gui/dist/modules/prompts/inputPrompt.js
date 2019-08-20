@@ -1,9 +1,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@adjust/core");
+const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const inputPrompt_type_1 = require("./inputPrompt.type");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
 const Box_1 = require("../../components/Box");
-const lib_commonjs_1 = require("office-ui-fabric-react/lib-commonjs");
 exports.config = {
     initialState: {
         type: "string",
@@ -137,7 +137,7 @@ class InputPromptView extends core_1.createModuleView(InputPromptModule) {
         return (core_1.React.createElement(Box_1.Box, { padding: "l" },
             this.state.title && core_1.React.createElement(Box_1.Box, { className: "title" }, this.state.title),
             this.state.description && (core_1.React.createElement(Box_1.Box, { className: "description" }, this.state.description)),
-            core_1.React.createElement(lib_commonjs_1.TextField, { className: "inputField", borderless: true, placeholder: this.state.placeHolder, errorMessage: this.state.errorMessage, onChange: (e, value) => this.module.setValue(value), onKeyUp: e => this.keyEvent(e) })));
+            core_1.React.createElement(office_ui_fabric_react_1.TextField, { className: "inputField", borderless: true, placeholder: this.state.placeHolder, errorMessage: this.state.errorMessage, onChange: (e, value) => this.module.setValue(value), onKeyUp: e => this.keyEvent(e) })));
     }
 }
 exports.InputPromptView = InputPromptView;

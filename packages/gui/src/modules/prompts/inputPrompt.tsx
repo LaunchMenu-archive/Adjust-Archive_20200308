@@ -1,9 +1,9 @@
 import {createModuleView, React} from "@adjust/core";
 import {KeyboardEvent} from "react";
+import {TextField} from "office-ui-fabric-react";
 import {InputPromptType, InputPrompt, PromptData} from "./inputPrompt.type";
 import {createModule} from "../../module/moduleClassCreator";
 import {Box} from "../../components/Box";
-import {TextField} from "office-ui-fabric-react/lib-commonjs";
 
 export const config = {
     initialState: {
