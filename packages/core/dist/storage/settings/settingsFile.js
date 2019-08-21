@@ -241,7 +241,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
             // Emit the change event, and add it to promises to wait for
             promises.push(this.emitAsync("change", path, newValue, condition, oldValue));
         }, 
-        // Only recurse when we haven't hit a setting value yet TODO: check if this can be optimised by extracting the field from "value"
+        // Only recurse when we haven't hit a setting value yet
         (key, [newValue, oldValue, config], path) => !("default" in config), true);
         // Wait for the promises to resolve
         await Promise.all(promises);
@@ -396,6 +396,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         // Emit change events for all settings
         this.setDirty(false);
         const promises = this.settings.map(settings => this.valueChange(settings.condition, settings.data.get, undefined, true));
+        await Promise.all(promises);
     }
     /**
      * Changes whether or not this file is dirty

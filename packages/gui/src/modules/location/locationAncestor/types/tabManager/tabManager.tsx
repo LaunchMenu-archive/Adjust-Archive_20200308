@@ -4,11 +4,17 @@ import {
     UUID,
     createModuleView,
     ExtendedObject,
+    AsyncMutualExcluder,
 } from "@adjust/core";
+import {DragEvent as ReactDragEvent} from "react";
 import {ModuleLocation} from "../../../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "../../locationAncestor";
 import {LocationPath} from "../../../_types/LocationPath";
-import {LocationAncestorType, LocationAncestor} from "../../locationAncestor.type";
+import {
+    LocationAncestorType,
+    LocationAncestor,
+    dragAndDropName,
+} from "../../locationAncestor.type";
 import {React} from "../../../../../React";
 import {OpenedTab, Tab} from "./_types/TabData";
 import {TabHandleType, TabHandleParent} from "./tabHandle/tabHandle.type";
@@ -16,13 +22,13 @@ import {Box} from "../../../../../components/Box";
 import {ChildBox} from "../../../../../components/ChildBox";
 import {ParentBox} from "../../../../../components/ParentBox";
 import {HorizontalScroller} from "../../../../../components/HorizontalScroller";
+import {TabHandleData} from "./_types/TabHandleData";
 
 export const tabManagerConfig = {
     initialState: {
         tabs: [] as OpenedTab[],
         selectedTabID: null as string,
         tabsVisible: false,
-        removed: false, // Whether or not this tab manager has been removed from memory
     },
     settings: {
         tabs: {
@@ -52,8 +58,10 @@ export const tabManagerConfig = {
  *
  * And if 'new' is set:
  * - name: String (The name that any newly created tab should have)
+ * - index: number (The exact index that the tab should have in the list)
  * - before: String (The ID of the tab or location that this tab should be in front of)
  * - after: String (The ID of the tab or location that this tab should be behind, can't be used with before)
+ * - handleData: object (Any additional data that the tab handle wants to represent the tab)
  */
 
 /**
@@ -64,6 +72,9 @@ export class TabManagerModule
     implements LocationAncestor, TabHandleParent {
     // The name of this ancestor type to be used in the location path and hints
     protected ancestorName: string = "tab";
+
+    // An async excluder to make sure that tabs aren't being modified at the same time
+    protected excluder: AsyncMutualExcluder = new AsyncMutualExcluder();
 
     // Tab management
     /**
@@ -82,20 +93,26 @@ export class TabManagerModule
      * Retrieves the data available for a tab, or creates it if absent and open is true
      * @param ID THe ID of the tab to obtain
      * @param open Whether or not to open the tab if not present
-     * @param name The name of the tab to add
+     * @param create Whether or not to create the tab if not existent, and requested to be open
+     * @param visible Whether or not the tab should be visibly opened, may be null to leave unaltered
+     * @param tabHandleData The data to represent the tab
      * @param index The index to add the tab at
      * @returns The tab information
      */
     protected async getTab(
         ID: string,
-        open: boolean = true,
-        name?: string,
+        open: boolean = false,
+        create: boolean = false,
+        visible: boolean = null,
+        tabHandleData?: TabHandleData,
         index: number = 0
     ): Promise<OpenedTab> {
         // Check if the tab is already opened
         let tabData = this.state.tabs.find(tab => tab.ID == ID);
 
         if (!tabData && open) {
+            if (!create && this.getTabIndex(ID, false) == -1) return;
+
             // Request the child ancestor and the tab handle
             tabData = {
                 ID,
@@ -104,13 +121,13 @@ export class TabManagerModule
                     data: {ID: ID, path: [...this.getData().path, ID]},
                 }),
                 childAncestor: this.getChildLocationAncestor(ID),
-                closed: false,
+                visible: visible == null ? false : visible,
             };
 
             // Define the tab data if absent
             let tabStoredData = this.settings.tabs.find(tab => tab.ID == ID);
             if (!tabStoredData) {
-                tabStoredData = {ID, name: name || ID};
+                tabStoredData = {ID};
                 this.setSettings(
                     {
                         tabs: [
@@ -121,12 +138,15 @@ export class TabManagerModule
                     },
                     this.settingsConditions
                 );
+            } else {
+                // Otherwise obtain the index of the tab from the settings
+                index = this.getTabIndex(ID, false);
             }
 
             // Obtain the index the tab should have in the opened tabs list
             let openedIndex = 0;
             for (let beforeIndex = index - 1; beforeIndex >= 0; beforeIndex--) {
-                const tabBeforeID = this.settings.tabs[index].ID;
+                const tabBeforeID = this.settings.tabs[beforeIndex].ID;
                 const openedIndexBefore = this.getTabIndex(tabBeforeID, true);
                 if (openedIndexBefore !== -1) {
                     openedIndex = openedIndexBefore + 1;
@@ -144,10 +164,21 @@ export class TabManagerModule
             });
 
             // Set the tab's name
-            (await tabData.tabHandle).setName(tabStoredData.name);
+            if (!tabHandleData) tabHandleData = {name: ID};
+            if (!tabHandleData.name) tabHandleData.name = ID;
+            (await tabData.tabHandle).setInitialData(tabHandleData);
 
             // Update derived misc data
             await this.updateTabs();
+        }
+
+        // Update visible if required
+        if (tabData && visible != null && tabData.visible != visible) {
+            this.setState({
+                tabs: this.state.tabs.map(tab =>
+                    tab.ID == ID ? {...tab, visible} : tab
+                ),
+            });
         }
 
         return tabData;
@@ -158,29 +189,28 @@ export class TabManagerModule
      * @param ID The ID of the tab to close
      */
     protected async closeTab(ID: string): Promise<void> {
-        // Get the tab if opened
-        const tab = await this.getTab(ID, false);
-        if (tab) {
-            const openedIndex = this.getTabIndex(ID, true);
+        return this.excluder.schedule(async () => {
+            // Get the tab if opened
+            const tab = await this.getTab(ID, false, false, false);
+            if (tab) {
+                const openedIndex = this.getTabIndex(ID, true);
 
-            // Immediately indicate this tab is closed, for any existing references
-            tab.closed = true;
+                // Remove it from the state
+                this.setState({
+                    tabs: [
+                        ...this.state.tabs.slice(0, openedIndex),
+                        ...this.state.tabs.slice(openedIndex + 1),
+                    ],
+                });
 
-            // Remove it from the state
-            this.setState({
-                tabs: [
-                    ...this.state.tabs.slice(0, openedIndex),
-                    ...this.state.tabs.slice(openedIndex + 1),
-                ],
-            });
+                // Close it
+                (await tab.childAncestor).close();
+                (await tab.tabHandle).close();
 
-            // Close it
-            (await tab.childAncestor).close();
-            (await tab.tabHandle).close();
-
-            // Update derived misc data
-            await this.updateTabs();
-        }
+                // Update derived misc data
+                await this.updateTabs();
+            }
+        });
     }
 
     /**
@@ -193,14 +223,9 @@ export class TabManagerModule
         const index = this.getTabIndex(ID);
         if (index !== -1) {
             // Retrieve all the tabs data in order to remove it
-            let tab = await this.getTab(ID);
-            if (this.state.removed) return;
+            let tabPromise = this.getTab(ID, true);
 
-            // Remove the tab handle and children
-            await (await tab.tabHandle).remove();
-            await (await tab.childAncestor).removeAncestor();
-
-            // Remove the associated data
+            // Remove the associated data ASAP
             this.setSettings(
                 {
                     tabs: [
@@ -210,6 +235,11 @@ export class TabManagerModule
                 },
                 this.settingsConditions
             );
+            const tab = await tabPromise;
+
+            // Remove the tab handle and children
+            await (await tab.tabHandle).remove();
+            await (await tab.childAncestor).removeAncestor();
 
             // Close the tab
             await this.closeTab(ID);
@@ -217,28 +247,9 @@ export class TabManagerModule
     }
 
     /** @override */
-    public async changeTabName(name: string, tabID: string): Promise<void> {
-        const index = this.getTabIndex(tabID);
-        if (index !== -1) {
-            const tab = this.settings.tabs.find(tab => tab.ID == tabID);
-            this.setSettings({
-                tabs: [
-                    ...this.settings.tabs.slice(0, index),
-                    {...tab, name},
-                    ...this.settings.tabs.slice(index + 1),
-                ],
-            });
-        }
-
-        // Rename the tab if opened
-        const tab = await this.getTab(tabID, false);
-        if (tab) (await tab.tabHandle).setName(name);
-    }
-
-    /** @override */
     public async selectTab(tabID: string): Promise<void> {
         // Deselect the old tab
-        const oldTab = await this.getTab(this.state.selectedTabID, false);
+        const oldTab = await this.getTab(this.state.selectedTabID);
         if (oldTab) (await oldTab.tabHandle).setSelected(false);
 
         // Store the newly selected tab
@@ -247,7 +258,7 @@ export class TabManagerModule
         });
 
         // Inform the tab about it being selected
-        const newTab = await this.getTab(tabID, false);
+        const newTab = await this.getTab(tabID);
         if (newTab) (await newTab.tabHandle).setSelected(true);
     }
 
@@ -256,9 +267,9 @@ export class TabManagerModule
      */
     protected async updateTabs(): Promise<void> {
         // Make sure the selected tab ID is valid
-        let tab = await this.getTab(this.state.selectedTabID, false);
+        let tab = await this.getTab(this.state.selectedTabID);
         if (!tab) {
-            tab = this.state.tabs[0];
+            tab = this.state.tabs.find(tab => tab.visible);
             if (tab) await this.selectTab(tab.ID);
         }
 
@@ -287,23 +298,37 @@ export class TabManagerModule
         }
 
         // Default to default
-        if (!tabID) tabID = "default";
+        if (!tabID)
+            tabID = this.settings.tabs.length > 0 ? this.settings.tabs[0].ID : "default";
 
         // Obtain the tab
         let tab = await this.getTab(tabID, true);
         if (!tab) {
-            const name = hints["name"];
+            // Get the data for the handle, and a default index
+            const handleData = hints["handleData"] || {};
+            handleData.name = hints["name"] || tabID;
             let index = this.settings.tabs.length;
+
+            // Check whether before or after is specified
             if ("before" in hints || "after" in hints) {
-                let relIndex = this.getTabIndex(hints["before"]);
+                const ID = hints["before"] || hints["after"];
+                // Get the tab's index to place relative to
+                let relIndex = this.getTabIndex(ID);
                 if (relIndex == -1) {
-                    const locationPath = await this.getLocationPath(hints["sameAs"]);
+                    // If no tab was found, look for a location with this ID instead
+                    const locationPath = await this.getLocationPath(ID);
                     const relTabID = locationPath.nodes[this.getData().path.length];
                     relIndex = this.getTabIndex(relTabID);
                 }
+                // Obtain the index of the new tab
                 index = "before" in hints ? relIndex : relIndex + 1;
             }
-            tab = await this.getTab(tabID, true, name, index);
+
+            // If an index was specified, use it
+            if ("index" in hints) index = hints["index"];
+
+            // Create the tab
+            tab = await this.getTab(tabID, true, true, false, handleData, index);
         }
 
         // Create the new location path, and return it
@@ -316,7 +341,7 @@ export class TabManagerModule
         const {ID, path} = this.getExtractID(locationPath);
 
         // Obtain the tab
-        const tab = await this.getTab(ID);
+        const tab = await this.getTab(ID, true);
 
         // Remove the location from the tab
         const removed = (await tab.childAncestor).removeLocation(path);
@@ -332,6 +357,13 @@ export class TabManagerModule
                 // Remove the ancestor
                 await this.removeTab(ID);
             }
+
+            // Close the tab if there are no more modules opened in it
+            const modulesAtPath = await this.getModulesAtPath([
+                ...this.getData().path,
+                ID,
+            ]);
+            if (modulesAtPath.length == 0) await this.closeTab(ID);
         }
 
         // Return whether or not the location existed here, and was removed
@@ -340,29 +372,29 @@ export class TabManagerModule
 
     /** @override */
     public async removeAncestor(): Promise<void> {
-        this.setState({removed: true});
+        return this.excluder.schedule(async () => {
+            const promises = this.settings.tabs.map(async tab => {
+                // Obtain the tab
+                const tabData = await this.getTab(tab.ID, true, false, false);
 
-        const promises = this.settings.tabs.map(async tab => {
-            // Obtain the tab
-            const tabData = await this.getTab(tab.ID);
+                // Dispose the tab
+                await (await tabData.childAncestor).removeAncestor();
+                await (await tabData.tabHandle).remove();
 
-            // Dispose the tab
-            await (await tabData.childAncestor).removeAncestor();
-            await (await tabData.tabHandle).remove();
+                // Close the tab
+                await (await tabData.childAncestor).close();
+                await (await tabData.tabHandle).close();
+            });
 
-            // Close the tab
-            await (await tabData.childAncestor).close();
-            await (await tabData.tabHandle).close();
+            // Clear the settings ASAP
+            this.setSettings({tabs: []});
+            await this.settingsObject
+                .getSettingsFile()
+                .removeConditionData(this.settingsConditions);
+
+            // Await all the windows disposals
+            await Promise.all(promises);
         });
-
-        // Clear the settings
-        this.setSettings({tabs: []});
-        await this.settingsObject
-            .getSettingsFile()
-            .removeConditionData(this.settingsConditions);
-
-        // Await all the windows disposals
-        await Promise.all(promises);
     }
 
     // Module management
@@ -375,7 +407,7 @@ export class TabManagerModule
         const {ID, path} = this.getExtractID(locationPath);
 
         // Obtain the tab
-        const tab = await this.getTab(ID, true);
+        const tab = await this.getTab(ID, true, true, true);
 
         // Forward opening the module to the tab's child ancestor
         return (await tab.childAncestor).openModule(module, path);
@@ -390,7 +422,7 @@ export class TabManagerModule
         const {ID, path} = this.getExtractID(locationPath);
 
         // Obtain the tab if present
-        const tab = await this.getTab(ID, false);
+        const tab = await this.getTab(ID);
         if (tab) {
             // Forward closing the module to the tab
             const closed = await (await tab.childAncestor).closeModule(module, path);
@@ -419,7 +451,7 @@ export class TabManagerModule
         const {ID, path} = this.getExtractID(locationPath);
 
         // Obtain the tab if present
-        const tab = await this.getTab(ID, false);
+        const tab = await this.getTab(ID);
         if (tab) {
             // Focus this tab
             this.selectTab(tab.ID);
@@ -438,9 +470,10 @@ export class TabManagerModule
         await super.setDropMode(drop);
 
         // Inform ancestors
-        const promises = this.state.tabs.map(async tab =>
-            (await tab.childAncestor).setDropMode(drop)
-        );
+        const promises = this.state.tabs.map(async tab => {
+            await (await tab.childAncestor).setDropMode(drop);
+            await (await tab.tabHandle).setDropMode(drop);
+        });
         await Promise.all(promises);
     }
 
@@ -453,8 +486,9 @@ export class TabManagerModule
         if (edit) {
             // Open all the tabs and inform them about the edit mode
             const promises = this.settings.tabs.map(async tabData => {
-                const tab = await this.getTab(tabData.ID);
+                const tab = await this.getTab(tabData.ID, true, false, true);
                 await (await tab.childAncestor).setEditMode(edit);
+                await (await tab.tabHandle).setEditMode(edit);
             });
             await Promise.all(promises);
         } else {
@@ -467,6 +501,7 @@ export class TabManagerModule
                 // If there are modules in this tab, update the edit mode, otherwise close the tab
                 if (openedModules.length > 0) {
                     await (await tab.childAncestor).setEditMode(edit);
+                    await (await tab.tabHandle).setEditMode(edit);
                 } else {
                     await this.closeTab(tab.ID);
                 }
@@ -474,10 +509,81 @@ export class TabManagerModule
             await Promise.all(promises);
         }
     }
+
+    // Drag and drop methods
+    /** @override */
+    public async onDragStart(ID: string, handleData: TabHandleData): Promise<void> {
+        const path = [...this.getData().path, ID];
+
+        // Obtain all the locations within this tab
+        const locations = await this.getParent().getLocationsAtPath(path);
+
+        // Get the index of the tab
+        const index = this.getTabIndex(ID, false);
+        const tab = this.getParent() // Store them all in the move data, defaulting to this tab if not moved
+            .setLocationsMoveData({
+                locations: locations.map(location => ({
+                    ID: location.ID,
+                    hints: {path: [...path], [this.ancestorName]: {index, ...handleData}},
+                })),
+            });
+    }
+
+    /** @override */
+    public async onDragEnd(ID: string): Promise<void> {
+        this.getParent().updateMovedLocations();
+    }
+
+    /**
+     * Updates data to open in a new tab of this manager
+     */
+    public async onDrop(): Promise<void> {
+        // Retrieve the move data
+        const parent = this.getParent();
+        const currentData = await parent.getLocationsMoveData();
+
+        // Set all hints to a path pointing at this location
+        const newTabID = UUID.generateShort();
+        const path = this.getData().path;
+        currentData.locations.forEach(loc => {
+            loc.hints = {
+                path: [...path],
+                [this.ancestorName]: {
+                    ...(loc.hints && (loc.hints[this.ancestorName] as any)),
+                    ID: newTabID,
+                },
+            };
+        });
+
+        // Update the data
+        await parent.updateLocationsMoveData(currentData);
+    }
 }
 export default TabManagerModule;
 
 export class TabManagerView extends createModuleView(TabManagerModule) {
+    // Drag and drop methods
+    /**
+     * Checks whether this is valid data for a drop
+     * @param event The DOM event of the user dragging data
+     */
+    protected onDragOver(event: ReactDragEvent): void {
+        if (this.state.inDropMode) event.preventDefault(); // Allows for dropping
+    }
+
+    /**
+     * Updates the locations when draging a location finishes
+     * @param event The DOM event of the user dragging data
+     */
+    protected onDrop(event: ReactDragEvent): void {
+        event.preventDefault(); // Allows for dropping
+        const data = event.dataTransfer.getData("text");
+        if (data == dragAndDropName && this.state.inDropMode) {
+            this.module.onDrop();
+        }
+    }
+
+    // Rendering methods
     /**
      * Render the tab handles
      */
@@ -486,7 +592,18 @@ export class TabManagerView extends createModuleView(TabManagerModule) {
             <HorizontalScroller
                 stepSize={this.settings.handles.scrollSpeed}
                 scrollStepSize={this.settings.handles.wheelScrollSpeed}>
-                {this.state.tabs.map(tab => tab.tabHandle)}
+                {this.state.tabs.filter(tab => tab.visible).map(tab => tab.tabHandle)}
+                {this.state.inDropMode && (
+                    <Box
+                        display="inline-block"
+                        background="primary"
+                        verticalAlign="bottom"
+                        padding="s"
+                        onDragOver={e => this.onDragOver(e)}
+                        onDrop={e => this.onDrop(e)}>
+                        Add
+                    </Box>
+                )}
             </HorizontalScroller>
         );
     }

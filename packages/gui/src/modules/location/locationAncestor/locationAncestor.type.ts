@@ -90,6 +90,12 @@ export type LocationAncestorParent = ParentModule<{
     getLocationsMoveData(): Promise<LocationsMoveData>;
 
     /**
+     * Make use of the location move data in order to actually move the locations
+     * @param delay The number of miliseconds that should be waited to perform updateLocationsMoveData calls
+     */
+    updateMovedLocations(delay?: number): Promise<void>;
+
+    /**
      * Retrieves the locations that are located somewhere along the given partial path
      * @param partialPath The partial path too get the locations from
      * @returns The module locations at the path
@@ -109,12 +115,6 @@ export type LocationAncestorParent = ParentModule<{
      * @returns The retrieve location path
      */
     getLocationPath(location: string): Promise<LocationPath>;
-
-    /**
-     * Make use of the location move data in order to actually move the locations
-     * @param delay The number of miliseconds that should be waited to perform updateLocationsMoveData calls
-     */
-    updateMovedLocations(delay?: number): Promise<void>;
 }>;
 export type LocationAncestorContract = {
     parent: LocationAncestorParent;

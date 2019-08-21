@@ -31,6 +31,18 @@ export type CssPosition =
     | "sticky"
     | "initial"
     | "inherit";
+export type CssVerticalAlign =
+    | "baseline"
+    | "bottom"
+    | "inherit"
+    | "initial"
+    | "middle"
+    | "sub"
+    | "super"
+    | "text-bottom"
+    | "text-top"
+    | "top"
+    | "unset";
 
 export type CssFlexDirection = "row" | "row-reverse" | "column" | "column-reverse";
 export type CssFlexWrap = "nowrap" | "wrap" | "wrap-reverse";

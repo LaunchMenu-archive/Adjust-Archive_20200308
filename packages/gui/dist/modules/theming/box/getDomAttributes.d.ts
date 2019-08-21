@@ -7,6 +7,7 @@ import { ReactNode, CSSProperties, DOMAttributes } from "react";
 export declare const domAttributes: {
     children: boolean;
     className: boolean;
+    elRef: string;
     style: boolean;
     draggable: boolean;
 };
@@ -18,6 +19,7 @@ export declare type DomAttributes = {
     className?: string;
     style?: CSSProperties;
     draggable?: boolean;
+    elRef?: (element: HTMLElement) => void;
 } & DOMAttributes<Element>;
 /**
  * Retrieves all aplicable attributes

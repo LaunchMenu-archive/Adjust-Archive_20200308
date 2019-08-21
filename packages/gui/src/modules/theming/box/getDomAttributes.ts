@@ -9,6 +9,7 @@ import {ReactNode, CSSProperties, DOMAttributes} from "react";
 export const domAttributes = {
     children: true,
     className: true,
+    elRef: "ref",
     style: true,
     draggable: true,
 };
@@ -21,6 +22,7 @@ export type DomAttributes = {
     className?: string;
     style?: CSSProperties;
     draggable?: boolean;
+    elRef?: (element: HTMLElement) => void;
 } & DOMAttributes<Element>; // Standard event listeners
 
 /**

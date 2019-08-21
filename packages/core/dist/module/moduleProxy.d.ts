@@ -3,18 +3,13 @@ import { ContractID } from "../registry/_types/contractID";
 import { ParameterizedModule, Module } from "./module";
 import { ModuleContract, ParentModule } from "./_types/moduleContract";
 import { ModuleID } from "./moduleID";
+import { AsyncSequencer } from "../utils/async/AsyncSequencer";
 export declare class ModuleProxy {
     protected _target: ParameterizedModule;
     protected _source: ModuleProxy;
     protected _onClose: () => void;
     protected _moduleID: ModuleID;
-    protected _processing: {
-        [methodName: string]: boolean;
-    };
-    protected _processingWaiter: {
-        promise: Promise<void>;
-        resolver: () => void;
-    };
+    protected _processing: AsyncSequencer;
     /**
      * Creates a proxy for a module
      * @param target The module tp proxy
@@ -65,7 +60,6 @@ export declare class ModuleProxy {
      * Body gets created by the `createClass` method
      */
     close(): Promise<void>;
-    protected _setProcessing(name: string, processing: boolean): void;
     /**
      * Retrieves the methods of an object, including inherited methods
      * @param obj The object to get the methods from

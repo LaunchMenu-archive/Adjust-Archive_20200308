@@ -5,16 +5,18 @@
             "condition": {
                 "type": "data",
                 "priority": 1,
-                "data": {}
+                "data": {
+                    "path": []
+                }
             },
             "ID": 1,
             "data": {
                 "windows": {
-                    "default": {
-                        "name": "default"
+                    "63fO-nyeo": {
+                        "name": "Prompt"
                     },
-                    "dA14-mCO5": {
-                        "name": "dA14-mCO5"
+                    "NLdl-UxM2": {
+                        "name": "NLdl-UxM2"
                     }
                 }
             }

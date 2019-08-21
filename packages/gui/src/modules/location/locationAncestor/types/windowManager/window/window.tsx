@@ -17,6 +17,8 @@ import {LocationManagerType} from "../../../../locationManager.type";
 import {WindowType, Window} from "./window.type";
 import {Box} from "../../../../../../components/Box";
 import {createModuleView} from "../../../../../../module/moduleViewClassCreator";
+import {ChildBox} from "../../../../../../components/ChildBox";
+import {ParentBox} from "../../../../../../components/ParentBox";
 
 export const windowConfig = {
     initialState: {
@@ -410,7 +412,7 @@ export class WindowView extends createModuleView(WindowModule) {
     /**@override */
     protected renderView(): JSX.Element {
         return (
-            <Box
+            <ChildBox
                 className="window"
                 display="flex"
                 background="neutralLight"
@@ -418,13 +420,10 @@ export class WindowView extends createModuleView(WindowModule) {
                 shadowCustom="rgba(0, 0, 0, 0.36) 0px 3px 7px 0px"
                 marginXCustom={7}
                 marginTopCustom={4}
-                marginBottomCustom={10}
-                css={{position: "absolute", left: 0, right: 0, top: 0, bottom: 0} as any}>
+                marginBottomCustom={10}>
                 <Box>{!this.data.previewMode && this.renderHeader()}</Box>
-                <Box flexGrow={1} css={{position: "relative" as any}}>
-                    {this.state.childLocationAncestor}
-                </Box>
-            </Box>
+                <ParentBox flexGrow={1}>{this.state.childLocationAncestor}</ParentBox>
+            </ChildBox>
         );
     }
 }

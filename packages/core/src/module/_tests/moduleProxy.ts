@@ -64,7 +64,7 @@ describe("ModuleProxy", () => {
             // Set up proxies
             const proxy = MProxy.createInstance(await M.customConstruct(a, b, c, d));
             const proxy2 = new ModuleProxy(await M.customConstruct(a, b, c, d));
-            proxy.connect(proxy2);
+            proxy._connect(proxy2);
 
             // Call the method
             expect(proxy.someMethod()).toBe("shit");
@@ -105,7 +105,7 @@ describe("ModuleProxy", () => {
                 [parentProxy]
             );
             const childProxy = child.createProxy();
-            parentProxy.connect(childProxy);
+            parentProxy._connect(childProxy);
             expect(parentProxy.isParentof(child)).toBeTruthy(); // Would be called from within child, with arg 'this'
         });
 

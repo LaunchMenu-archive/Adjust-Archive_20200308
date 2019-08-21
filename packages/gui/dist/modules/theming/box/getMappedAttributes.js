@@ -9,6 +9,7 @@ exports.mappedAttributes = {
     height: true,
     display: true,
     position: true,
+    verticalAlign: true,
     flexDirection: true,
     flexWrap: true,
     justifyContent: true,

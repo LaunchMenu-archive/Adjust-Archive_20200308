@@ -8,6 +8,7 @@ import {
     CssAlignItems,
     CssAlignContent,
     CssAlignSelf,
+    CssVerticalAlign,
 } from "./_types/cssTypes";
 
 /**
@@ -19,6 +20,7 @@ export const mappedAttributes = {
     height: true,
     display: true,
     position: true,
+    verticalAlign: true,
     flexDirection: true,
     flexWrap: true,
     justifyContent: true,
@@ -40,6 +42,7 @@ export const mappedAttributes = {
 export type MappedAttributes = {
     display?: CssDisplay;
     position?: CssPosition;
+    verticalAlign?: CssVerticalAlign;
     flexDirection?: CssFlexDirection;
     flexWrap?: CssFlexDirection;
     justifyContent?: CssJustifyContent;

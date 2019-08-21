@@ -13,6 +13,7 @@ import {SortedList} from "../../utils/sortedList";
 import {SettingsConditions} from "./settingsConditions/abstractSettingsConditions";
 import {SettingsConfigData} from "./_types/settingsConfigData";
 import {SettingsConfigPriorityList} from "./_types/settingsConfigPriorityList";
+import {SettingsDataID} from "./SettingsDataID";
 
 /**
  * A setting class that filters the appropriate settings from a [settingsFile]
@@ -259,6 +260,16 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
         // If no data is present, store the passed data
         if (!dataObj)
             this.changeData(data instanceof Function ? await data() : data, condition);
+    }
+
+    /**
+     * Removes the data associated with a given condition
+     * @param condition The condition for which to remove a Data instance
+     */
+    public removeConditionData(
+        condition?: SettingsConditions | SettingsDataID | number
+    ): void {
+        return this.settingsFile.removeConditionData(condition);
     }
 
     // Data retrieval methods

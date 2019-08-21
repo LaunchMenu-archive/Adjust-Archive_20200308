@@ -11,6 +11,8 @@ const locationManager_type_1 = require("../../../../locationManager.type");
 const window_type_1 = require("./window.type");
 const Box_1 = require("../../../../../../components/Box");
 const moduleViewClassCreator_1 = require("../../../../../../module/moduleViewClassCreator");
+const ChildBox_1 = require("../../../../../../components/ChildBox");
+const ParentBox_1 = require("../../../../../../components/ParentBox");
 exports.windowConfig = {
     initialState: {
         childLocationAncestor: null,
@@ -327,9 +329,9 @@ class WindowView extends moduleViewClassCreator_1.createModuleView(WindowModule)
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(Box_1.Box, { className: "window", display: "flex", background: "neutralLight", flexDirection: "column", shadowCustom: "rgba(0, 0, 0, 0.36) 0px 3px 7px 0px", marginXCustom: 7, marginTopCustom: 4, marginBottomCustom: 10, css: { position: "absolute", left: 0, right: 0, top: 0, bottom: 0 } },
+        return (React_1.React.createElement(ChildBox_1.ChildBox, { className: "window", display: "flex", background: "neutralLight", flexDirection: "column", shadowCustom: "rgba(0, 0, 0, 0.36) 0px 3px 7px 0px", marginXCustom: 7, marginTopCustom: 4, marginBottomCustom: 10 },
             React_1.React.createElement(Box_1.Box, null, !this.data.previewMode && this.renderHeader()),
-            React_1.React.createElement(Box_1.Box, { flexGrow: 1, css: { position: "relative" } }, this.state.childLocationAncestor)));
+            React_1.React.createElement(ParentBox_1.ParentBox, { flexGrow: 1 }, this.state.childLocationAncestor)));
     }
 }
 exports.WindowView = WindowView;

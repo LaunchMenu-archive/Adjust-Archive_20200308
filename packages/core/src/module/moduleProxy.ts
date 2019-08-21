@@ -4,6 +4,7 @@ import {ExtendedObject} from "../utils/extendedObject";
 import {ParameterizedModule, Module} from "./module";
 import {ModuleContract, ParentModule} from "./_types/moduleContract";
 import {ModuleID} from "./moduleID";
+import {AsyncSequencer} from "../utils/async/AsyncSequencer";
 
 export class ModuleProxy {
     // The module that is being proxied
@@ -19,12 +20,7 @@ export class ModuleProxy {
     protected _moduleID: ModuleID;
 
     // Stores the methods that are currently processing
-    protected _processing: {[methodName: string]: boolean} = {};
-    // A promise that's resolved when no more methods are processing
-    protected _processingWaiter = {promise: Promise.resolve(), resolver: null} as {
-        promise: Promise<void>;
-        resolver: () => void;
-    };
+    protected _processing: AsyncSequencer = new AsyncSequencer();
 
     /**
      * Creates a proxy for a module
@@ -121,31 +117,6 @@ export class ModuleProxy {
      */
     public async close(): Promise<void> {}
 
-    // Methods to support proxying
-    protected _setProcessing(name: string, processing: boolean): void {
-        if (processing) {
-            this._processing[name] = true;
-
-            // If there is no resolver, the processing is currently resolved
-            if (!this._processingWaiter.resolver) {
-                let resolver;
-                const promise = new Promise(res => (resolver = res)) as Promise<void>;
-                this._processingWaiter = {promise, resolver};
-            }
-        } else {
-            delete this._processing[name];
-
-            // If nothing is processing anymore, resolve the processing waiter
-            if (
-                Object.keys(this._processing).length == 0 &&
-                this._processingWaiter.resolver
-            ) {
-                this._processingWaiter.resolver();
-                this._processingWaiter.resolver = null;
-            }
-        }
-    }
-
     // Static methods to create a proxy
     /**
      * Retrieves the methods of an object, including inherited methods
@@ -200,21 +171,11 @@ export class ModuleProxy {
             // Update the context
             this._target.setCallContext(this._source);
 
-            // Indicate this method is now processing
-            this._setProcessing(name, true);
-
             // Make the original call
             const result = method.apply(this._target, arguments);
 
             // Indicate this method is no longer processing on resolve
-            if (result instanceof Promise)
-                result
-                    .then(() => this._setProcessing(name, false))
-                    .catch(e => {
-                        this._setProcessing(name, false);
-                        throw e;
-                    });
-            else this._setProcessing(name, false);
+            if (result instanceof Promise) this._processing.add(result);
 
             // Reset the context
             this._target.setCallContext(undefined);
@@ -247,16 +208,18 @@ export class ModuleProxy {
         const close = cls.prototype.close;
         cls.prototype.close = async function(this: ModuleProxy) {
             // Make sure no processing is going on, before closing
-            await this._processingWaiter.promise;
+            await this._processing.finished;
 
             // Perform regular closing
-            await close.apply(this, arguments);
+            if (this._target) {
+                await close.apply(this, arguments);
 
-            // Call a possible on close handler
-            if (this._onClose) this._onClose();
+                // Call a possible on close handler
+                if (this._onClose) this._onClose();
 
-            // Renove the target reference
-            this._target = null;
+                // Renove the target reference
+                this._target = null;
+            }
         };
 
         // Make a method to return the module ID, even if the module was closed

@@ -29,6 +29,8 @@ __export(require("./utils/isMain"));
 __export(require("./utils/extendedObject"));
 __export(require("./utils/UUID"));
 __export(require("./utils/semver"));
+__export(require("./utils/async/AsyncMutualExcluder"));
+__export(require("./utils/async/AsyncSequencer"));
 // Communication
 __export(require("./communication/ipcMain"));
 __export(require("./communication/ipcRenderer"));

@@ -9,6 +9,7 @@ __export(require("../dist/modules/location/locationAncestor/location"));
 __export(require("../dist/modules/location/locationAncestor/locationAncestor"));
 __export(require("../dist/modules/location/locationAncestor/locationAncestor.type"));
 __export(require("../dist/modules/location/locationAncestor/types/tabManager/_types/TabData"));
+__export(require("../dist/modules/location/locationAncestor/types/tabManager/_types/TabHandleData"));
 __export(require("../dist/modules/location/locationAncestor/types/tabManager/tabHandle/tabHandle"));
 __export(require("../dist/modules/location/locationAncestor/types/tabManager/tabHandle/tabHandle.type"));
 __export(require("../dist/modules/location/locationAncestor/types/tabManager/tabManager"));

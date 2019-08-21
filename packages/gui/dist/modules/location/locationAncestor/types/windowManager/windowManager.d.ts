@@ -69,10 +69,11 @@ export declare class WindowManagerModule extends WindowManagerModule_base implem
      * Retrieves the window with a given ID, or creates it if absent and open is true
      * @param windowID The ID of the window to retrieve
      * @param open Whether or not to open the window if not present
+     * @param create Whether or not to create the window if not existent and requested to open
      * @param name THe name of the window
      * @returns The window hat was either already loaded, or was just opened
      */
-    protected getWindow(windowID: string, open?: boolean, name?: string): Promise<Window>;
+    protected getWindow(windowID: string, open?: boolean, create?: boolean, name?: string): Promise<Window>;
     /**
      * Closes the window with a given ID if currently opened
      * @param windowID The ID of the window to close

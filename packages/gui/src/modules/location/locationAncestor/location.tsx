@@ -1,6 +1,6 @@
 import {createModule, ModuleReference, ModuleID, UUID} from "@adjust/core";
 import {React} from "../../../React";
-import {DragEvent} from "react";
+import {DragEvent as ReactDragEvent} from "react";
 import {LocationPath} from "../_types/LocationPath";
 import {
     LocationAncestorType,
@@ -11,6 +11,7 @@ import {ModuleLocation} from "../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "./locationAncestor";
 import {createModuleView} from "../../../module/moduleViewClassCreator";
 import {Box} from "../../../components/Box";
+import {ChildBox} from "../../../components/ChildBox";
 
 export const config = {
     initialState: {
@@ -191,7 +192,7 @@ export default class LocationModule extends createModule(config, LocationAncesto
                 draggingModule: null,
             });
 
-            // Obtain the ccondition to change the location for TODO: show a GUI fo rthe user to choose
+            // Obtain the ccondition to change the location for TODO: show a GUI for the user to choose
             const condition = undefined;
             // await new Promise(res => setTimeout(res, 0)); // Emulate something async
 
@@ -275,20 +276,12 @@ export class LocationView extends createModuleView(LocationModule) {
      * @param module The data of the module being dragged
      */
     protected onDragStart(
-        event: DragEvent,
+        event: ReactDragEvent,
         locationID: string,
         module: {ID: string; module: JSX.Element}
     ): void {
         event.dataTransfer.setData("text", dragAndDropName);
         this.module.onDragStart(locationID, module.ID);
-    }
-
-    /**
-     * Checks whether this is valid data for a drop
-     * @param event The DOM event of the user dragging data
-     */
-    protected onDragOver(event: DragEvent): void {
-        if (this.state.inDropMode) event.preventDefault(); // Allows for dropping
     }
 
     /**
@@ -300,10 +293,18 @@ export class LocationView extends createModuleView(LocationModule) {
     }
 
     /**
+     * Checks whether this is valid data for a drop
+     * @param event The DOM event of the user dragging data
+     */
+    protected onDragOver(event: ReactDragEvent): void {
+        if (this.state.inDropMode) event.preventDefault(); // Allows for dropping
+    }
+
+    /**
      * Handles the dropping of data
      * @param event The DOM event of the user dragging data
      */
-    protected onDrop(event: DragEvent): void {
+    protected onDrop(event: ReactDragEvent): void {
         event.preventDefault(); // Allows for dropping
         const data = event.dataTransfer.getData("text");
         if (data == dragAndDropName && this.state.inDropMode) {
@@ -312,8 +313,6 @@ export class LocationView extends createModuleView(LocationModule) {
     }
 
     // Rendering methods
-    cover = {position: "absolute" as any, left: 0, top: 0, right: 0, bottom: 0};
-
     /**
      * Renders a daragable box for every module in edit mode
      */
@@ -326,13 +325,17 @@ export class LocationView extends createModuleView(LocationModule) {
                         marginTop="m"
                         width="100%"
                         height="30px"
-                        background="blue"
+                        background="themeSecondary"
                         color="white"
+                        shadow="medium"
                         key={module.ID}
                         onDragStart={e => this.onDragStart(e, locationID, module)}
                         onDragOver={e => this.onDragOver(e)}
                         onDrop={e => this.onDrop(e)}
-                        onDragEnd={e => this.onDragEnd(e)}
+                        elRef={el => {
+                            // Use the element's ondragend, since react's ondragend doesn't trigger once the element has unmounted
+                            if (el) el.ondragend = e => this.onDragEnd(e);
+                        }}
                         draggable>
                         {locationID} {module.ID}
                     </Box>
@@ -345,21 +348,17 @@ export class LocationView extends createModuleView(LocationModule) {
     /**@override */
     protected renderView(): JSX.Element {
         return (
-            <Box css={this.cover} background="themeTertiary">
+            <ChildBox background="themeTertiary">
                 {this.state.inEditMode && (
-                    <Box
-                        css={this.cover}
+                    <ChildBox
                         padding="m"
                         onDragOver={e => this.onDragOver(e)}
                         onDrop={e => this.onDrop(e)}>
                         {this.renderModuleBoxes()}
-                    </Box>
+                    </ChildBox>
                 )}
                 {this.state.modules[0]}
-                {Object.keys(this.state.locations).map(key => (
-                    <div key={key}>{key}</div>
-                ))}
-            </Box>
+            </ChildBox>
         );
     }
 }

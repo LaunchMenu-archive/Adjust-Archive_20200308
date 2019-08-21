@@ -103,6 +103,7 @@ export declare const Box: (props: {
     className?: string;
     style?: import("react").CSSProperties;
     draggable?: boolean;
+    elRef?: (element: HTMLElement) => void;
 } & import("react").DOMAttributes<Element> & {
     theme: ITheme;
 }) => JSX.Element;

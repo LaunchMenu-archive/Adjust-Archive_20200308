@@ -15,7 +15,7 @@ export declare const config: {
         hints: {
             window: {
                 new: boolean;
-                windowName: string;
+                name: string;
                 width: number;
                 height: number;
             };
@@ -38,7 +38,7 @@ declare const InputPromptModule_base: import("@adjust/core/types").ExtendedModul
         hints: {
             window: {
                 new: boolean;
-                windowName: string;
+                name: string;
                 width: number;
                 height: number;
             };

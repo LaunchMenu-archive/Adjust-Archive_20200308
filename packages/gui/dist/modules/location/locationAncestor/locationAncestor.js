@@ -21,7 +21,7 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
     async onInit(fromReload) {
         await super.onInit(fromReload);
         // Save data under the ID of this ancestor
-        this.settingsConditions = new core_1.DataSettingsConditions({ ID: this.getData().ID }, 1);
+        this.settingsConditions = new core_1.DataSettingsConditions({ path: this.getData().path }, 1);
     }
     // Location creation related methods
     /**
@@ -49,12 +49,14 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
      */
     getLocationHints(location) {
         if (location.hints) {
+            // Get the hints targeted to this ancestor type
+            const hints = location.hints[this.ancestorName] || {};
             // If there is a path ID node for this ancestor's child in the hints, return it
             const thisPath = this.getData().path || [];
-            if (location.hints.path && location.hints.path.length >= thisPath.length)
-                return { ID: location.hints.path[thisPath.length] };
-            // Otherwise return the hints targeted to this ancestor type
-            return location.hints[this.ancestorName] || {};
+            if (location.hints.path && location.hints.path.length > thisPath.length)
+                return Object.assign({ ID: location.hints.path[thisPath.length] }, hints);
+            // Otherwise return the targetted hints
+            return hints;
         }
         // If there are no hints, just return an empty object
         return {};

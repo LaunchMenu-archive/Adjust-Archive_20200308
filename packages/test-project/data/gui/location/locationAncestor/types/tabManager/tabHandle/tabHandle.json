@@ -3,6 +3,54 @@
     "data": [
         {
             "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "path": [
+                        "63fO-nyeo",
+                        "default"
+                    ]
+                }
+            },
+            "ID": 1,
+            "data": {
+                "name": "default"
+            }
+        },
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "path": [
+                        "63fO-nyeo",
+                        "tab2"
+                    ]
+                }
+            },
+            "ID": 3,
+            "data": {
+                "name": "tab2"
+            }
+        },
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "path": [
+                        "NLdl-UxM2",
+                        "default"
+                    ]
+                }
+            },
+            "ID": 4,
+            "data": {
+                "name": "default"
+            }
+        },
+        {
+            "condition": {
                 "type": "constant",
                 "priority": 0
             },
@@ -21,7 +69,8 @@
                     },
                     "resetTheme": false,
                     "css": null
-                }
+                },
+                "name": "John"
             }
         }
     ]

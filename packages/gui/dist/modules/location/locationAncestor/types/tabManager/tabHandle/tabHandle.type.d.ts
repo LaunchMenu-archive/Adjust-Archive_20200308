@@ -1,13 +1,24 @@
 import { ChildModule, ParentModule } from "@adjust/core/types";
+import { TabHandleData } from "../_types/TabHandleData";
 /**
  * The TabsHandle type, to represent the tab in the tabsManager.
  */
 export declare type TabHandle = ChildModule<{
     /**
-     * Updates the name of the tab
-     * @param name The name that the tab now has
+     * Set the initial data to represent the tab
+     * @param data The data to represent the tab
      */
-    setName(name: string): Promise<void>;
+    setInitialData(data: TabHandleData): Promise<void>;
+    /**
+     * Sets whether or not the user is currently able to change the locations and their ancestors
+     * @param edit Whether or not editing will be enabled
+     */
+    setEditMode(edit: boolean): Promise<void>;
+    /**
+     * Sets whether or not drop indicators should be shown on the ancestor
+     * @param drop Whether or not droping will be enabled
+     */
+    setDropMode(drop: boolean): Promise<void>;
     /**
      * Updates whether or not this tab is selected
      * @param selected Whether or not it's selected
@@ -20,16 +31,21 @@ export declare type TabHandle = ChildModule<{
 }>;
 export declare type TabHandleParent = ParentModule<{
     /**
-     * Updates the name of the tab
-     * @param name The name that the tab wants to have
-     * @param tabID The ID of the tab whose name to change
-     */
-    changeTabName(name: string, tabID: string): Promise<void>;
-    /**
      * Selects the tab
      * @param tabID The ID of the tab to select
      */
     selectTab(tabID: string): Promise<void>;
+    /**
+     * Starts moving the locations elsewhere
+     * @param ID The ID of the tab to move
+     * @param handleData The data that the handle uses to represent itself
+     */
+    onDragStart(ID: string, handleData: TabHandleData): Promise<void>;
+    /**
+     * Moves the locations when the drag ends
+     * @param ID The ID of the tab that finished dragging
+     */
+    onDragEnd(ID: string): Promise<void>;
 }>;
 export declare type TabHandleContract = {
     parent: TabHandleParent;

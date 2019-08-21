@@ -1,5 +1,5 @@
 import { ModuleReference } from "@adjust/core";
-import { DragEvent } from "react";
+import { DragEvent as ReactDragEvent } from "react";
 import { LocationPath } from "../_types/LocationPath";
 import { LocationAncestor } from "./locationAncestor.type";
 import { ModuleLocation } from "../../../module/_types/ModuleLocation";
@@ -99,32 +99,25 @@ export declare class LocationView extends LocationView_base {
      * @param locationID The location that is dragged from
      * @param module The data of the module being dragged
      */
-    protected onDragStart(event: DragEvent, locationID: string, module: {
+    protected onDragStart(event: ReactDragEvent, locationID: string, module: {
         ID: string;
         module: JSX.Element;
     }): void;
-    /**
-     * Checks whether this is valid data for a drop
-     * @param event The DOM event of the user dragging data
-     */
-    protected onDragOver(event: DragEvent): void;
     /**
      * Updates the locations when draging a location finishes
      * @param event The DOM event of the user dragging data
      */
     protected onDragEnd(event: DragEvent): void;
     /**
+     * Checks whether this is valid data for a drop
+     * @param event The DOM event of the user dragging data
+     */
+    protected onDragOver(event: ReactDragEvent): void;
+    /**
      * Handles the dropping of data
      * @param event The DOM event of the user dragging data
      */
-    protected onDrop(event: DragEvent): void;
-    cover: {
-        position: any;
-        left: number;
-        top: number;
-        right: number;
-        bottom: number;
-    };
+    protected onDrop(event: ReactDragEvent): void;
     /**
      * Renders a daragable box for every module in edit mode
      */

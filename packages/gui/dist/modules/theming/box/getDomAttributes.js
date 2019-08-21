@@ -7,6 +7,7 @@ const getAttributes_1 = require("./getAttributes");
 exports.domAttributes = {
     children: true,
     className: true,
+    elRef: "ref",
     style: true,
     draggable: true,
 };

@@ -67,18 +67,22 @@ export class WindowManagerModule
      * Retrieves the window with a given ID, or creates it if absent and open is true
      * @param windowID The ID of the window to retrieve
      * @param open Whether or not to open the window if not present
+     * @param create Whether or not to create the window if not existent and requested to open
      * @param name THe name of the window
      * @returns The window hat was either already loaded, or was just opened
      */
     protected async getWindow(
         windowID: string,
         open: boolean = true,
+        create: boolean = true,
         name?: string
     ): Promise<Window> {
         // Check if the window is already opened
         let windowData = this.state.windows[windowID];
 
         if (!windowData && open) {
+            if (!create && !this.settings.windows[windowID]) return;
+
             // Request the window
             windowData = {
                 window: this.request({
@@ -159,7 +163,7 @@ export class WindowManagerModule
      */
     protected async removeWindow(windowID: string): Promise<void> {
         // Retrieve the window in order to remove all its data
-        const window = await this.getWindow(windowID);
+        const window = await this.getWindow(windowID, true, false);
 
         // Remove the window completely
         if (window) await window.removeAncestor();
@@ -250,11 +254,11 @@ export class WindowManagerModule
         }
 
         // Default to default
-        if (!windowID) windowID = "default";
+        if (!windowID) windowID = Object.keys(this.settings.windows)[0] || "default";
 
         // Obtain the window
         const name = hints["name"];
-        const window = await this.getWindow(windowID, true, name);
+        const window = await this.getWindow(windowID, true, true, name);
 
         // Create the new location path, and return it
         return window.createLocation(location);
@@ -266,7 +270,8 @@ export class WindowManagerModule
         const {ID, path} = this.getExtractID(locationPath);
 
         // Obtain the window
-        const window = await this.getWindow(ID);
+        const window = await this.getWindow(ID, true, false);
+        if (!window) return false;
 
         // Remove the location from the window
         const removed = await window.removeLocation(path);
@@ -282,6 +287,13 @@ export class WindowManagerModule
                 // Remove all of the window data
                 await this.removeWindow(ID);
             }
+
+            // Close the window if there are no more modules opened in it
+            const modulesAtPath = await this.getModulesAtPath([
+                ...this.getData().path,
+                ID,
+            ]);
+            if (modulesAtPath.length == 0) await this.closeWindow(ID);
         }
 
         // Return whether or not the location existed here, and was removed
@@ -292,7 +304,7 @@ export class WindowManagerModule
     public async removeAncestor(): Promise<void> {
         const promises = Object.entries(this.settings.windows).map(async ([ID, data]) => {
             // Obtain the window
-            const window = await this.getWindow(ID);
+            const window = await this.getWindow(ID, true, false);
 
             // Dispose the window
             await window.removeAncestor();
@@ -366,7 +378,7 @@ export class WindowManagerModule
         const {ID, path} = this.getExtractID(locationPath);
 
         // Obtain the window if present
-        const window = await this.getWindow(ID, false);
+        const window = await this.getWindow(ID, false, false);
         if (window) {
             // Forward closing the module to the window
             return await window.showModule(module, path);

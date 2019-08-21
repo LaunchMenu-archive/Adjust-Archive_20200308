@@ -6,13 +6,16 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "tab1"
+                    "path": [
+                        "63fO-nyeo",
+                        "default"
+                    ]
                 }
             },
             "ID": 1,
             "data": {
                 "locations": [
-                    "test"
+                    "prompt"
                 ]
             }
         },
@@ -21,10 +24,13 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "tab2"
+                    "path": [
+                        "63fO-nyeo",
+                        "tab2"
+                    ]
                 }
             },
-            "ID": 2,
+            "ID": 3,
             "data": {
                 "locations": [
                     "onion"
@@ -36,13 +42,16 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "ID": "default"
+                    "path": [
+                        "NLdl-UxM2",
+                        "default"
+                    ]
                 }
             },
-            "ID": 3,
+            "ID": 4,
             "data": {
                 "locations": [
-                    "root"
+                    "test"
                 ]
             }
         },

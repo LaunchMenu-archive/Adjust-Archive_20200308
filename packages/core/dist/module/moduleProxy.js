@@ -1,5 +1,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const extendedObject_1 = require("../utils/extendedObject");
+const AsyncSequencer_1 = require("../utils/async/AsyncSequencer");
 class ModuleProxy {
     /**
      * Creates a proxy for a module
@@ -7,9 +8,7 @@ class ModuleProxy {
      */
     constructor(target) {
         // Stores the methods that are currently processing
-        this._processing = {};
-        // A promise that's resolved when no more methods are processing
-        this._processingWaiter = { promise: Promise.resolve(), resolver: null };
+        this._processing = new AsyncSequencer_1.AsyncSequencer();
         this._target = target;
         this._moduleID = target.getID();
     }
@@ -80,27 +79,6 @@ class ModuleProxy {
      * Body gets created by the `createClass` method
      */
     async close() { }
-    // Methods to support proxying
-    _setProcessing(name, processing) {
-        if (processing) {
-            this._processing[name] = true;
-            // If there is no resolver, the processing is currently resolved
-            if (!this._processingWaiter.resolver) {
-                let resolver;
-                const promise = new Promise(res => (resolver = res));
-                this._processingWaiter = { promise, resolver };
-            }
-        }
-        else {
-            delete this._processing[name];
-            // If nothing is processing anymore, resolve the processing waiter
-            if (Object.keys(this._processing).length == 0 &&
-                this._processingWaiter.resolver) {
-                this._processingWaiter.resolver();
-                this._processingWaiter.resolver = null;
-            }
-        }
-    }
     // Static methods to create a proxy
     /**
      * Retrieves the methods of an object, including inherited methods
@@ -149,20 +127,11 @@ class ModuleProxy {
                 throw Error("Module has already been closed");
             // Update the context
             this._target.setCallContext(this._source);
-            // Indicate this method is now processing
-            this._setProcessing(name, true);
             // Make the original call
             const result = method.apply(this._target, arguments);
             // Indicate this method is no longer processing on resolve
             if (result instanceof Promise)
-                result
-                    .then(() => this._setProcessing(name, false))
-                    .catch(e => {
-                    this._setProcessing(name, false);
-                    throw e;
-                });
-            else
-                this._setProcessing(name, false);
+                this._processing.add(result);
             // Reset the context
             this._target.setCallContext(undefined);
             // Return the actual result
@@ -187,14 +156,16 @@ class ModuleProxy {
         const close = cls.prototype.close;
         cls.prototype.close = async function () {
             // Make sure no processing is going on, before closing
-            await this._processingWaiter.promise;
+            await this._processing.finished;
             // Perform regular closing
-            await close.apply(this, arguments);
-            // Call a possible on close handler
-            if (this._onClose)
-                this._onClose();
-            // Renove the target reference
-            this._target = null;
+            if (this._target) {
+                await close.apply(this, arguments);
+                // Call a possible on close handler
+                if (this._onClose)
+                    this._onClose();
+                // Renove the target reference
+                this._target = null;
+            }
         };
         // Make a method to return the module ID, even if the module was closed
         cls.prototype.getID = function () {

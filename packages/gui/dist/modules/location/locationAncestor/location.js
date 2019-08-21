@@ -8,6 +8,7 @@ const locationAncestor_type_1 = require("./locationAncestor.type");
 const locationAncestor_1 = __importDefault(require("./locationAncestor"));
 const moduleViewClassCreator_1 = require("../../../module/moduleViewClassCreator");
 const Box_1 = require("../../../components/Box");
+const ChildBox_1 = require("../../../components/ChildBox");
 exports.config = {
     initialState: {
         // The modules being displayed
@@ -141,7 +142,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
             this.setState({
                 draggingModule: null,
             });
-            // Obtain the ccondition to change the location for TODO: show a GUI fo rthe user to choose
+            // Obtain the ccondition to change the location for TODO: show a GUI for the user to choose
             const condition = undefined;
             // await new Promise(res => setTimeout(res, 0)); // Emulate something async
             // Change the location for the condition
@@ -209,11 +210,6 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
 }
 exports.default = LocationModule;
 class LocationView extends moduleViewClassCreator_1.createModuleView(LocationModule) {
-    constructor() {
-        super(...arguments);
-        // Rendering methods
-        this.cover = { position: "absolute", left: 0, top: 0, right: 0, bottom: 0 };
-    }
     // Drag and drop methods
     /**
      * Starts the dragging of a location
@@ -226,19 +222,19 @@ class LocationView extends moduleViewClassCreator_1.createModuleView(LocationMod
         this.module.onDragStart(locationID, module.ID);
     }
     /**
+     * Updates the locations when draging a location finishes
+     * @param event The DOM event of the user dragging data
+     */
+    onDragEnd(event) {
+        this.module.onDragEnd();
+    }
+    /**
      * Checks whether this is valid data for a drop
      * @param event The DOM event of the user dragging data
      */
     onDragOver(event) {
         if (this.state.inDropMode)
             event.preventDefault(); // Allows for dropping
-    }
-    /**
-     * Updates the locations when draging a location finishes
-     * @param event The DOM event of the user dragging data
-     */
-    onDragEnd(event) {
-        this.module.onDragEnd();
     }
     /**
      * Handles the dropping of data
@@ -251,6 +247,7 @@ class LocationView extends moduleViewClassCreator_1.createModuleView(LocationMod
             this.module.onDrop();
         }
     }
+    // Rendering methods
     /**
      * Renders a daragable box for every module in edit mode
      */
@@ -258,7 +255,11 @@ class LocationView extends moduleViewClassCreator_1.createModuleView(LocationMod
         const boxes = [];
         Object.entries(this.state.locations).forEach(([locationID, location]) => {
             location.modules.forEach(module => {
-                boxes.push(React_1.React.createElement(Box_1.Box, { marginTop: "m", width: "100%", height: "30px", background: "blue", color: "white", key: module.ID, onDragStart: e => this.onDragStart(e, locationID, module), onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e), onDragEnd: e => this.onDragEnd(e), draggable: true },
+                boxes.push(React_1.React.createElement(Box_1.Box, { marginTop: "m", width: "100%", height: "30px", background: "themeSecondary", color: "white", shadow: "medium", key: module.ID, onDragStart: e => this.onDragStart(e, locationID, module), onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e), elRef: el => {
+                        // Use the element's ondragend, since react's ondragend doesn't trigger once the element has unmounted
+                        if (el)
+                            el.ondragend = e => this.onDragEnd(e);
+                    }, draggable: true },
                     locationID,
                     " ",
                     module.ID));
@@ -268,10 +269,9 @@ class LocationView extends moduleViewClassCreator_1.createModuleView(LocationMod
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(Box_1.Box, { css: this.cover, background: "themeTertiary" },
-            this.state.inEditMode && (React_1.React.createElement(Box_1.Box, { css: this.cover, padding: "m", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e) }, this.renderModuleBoxes())),
-            this.state.modules[0],
-            Object.keys(this.state.locations).map(key => (React_1.React.createElement("div", { key: key }, key)))));
+        return (React_1.React.createElement(ChildBox_1.ChildBox, { background: "themeTertiary" },
+            this.state.inEditMode && (React_1.React.createElement(ChildBox_1.ChildBox, { padding: "m", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e) }, this.renderModuleBoxes())),
+            this.state.modules[0]));
     }
 }
 exports.LocationView = LocationView;

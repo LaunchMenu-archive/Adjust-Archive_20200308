@@ -3,6 +3,7 @@ import {
     InstanceModuleProvider,
     ModuleReference,
     SettingsManager,
+    ExtendedObject,
 } from "@adjust/core";
 import {SettingsDataID} from "@adjust/core";
 import {LocationManagerType, LocationManager} from "./locationManager.type";
@@ -109,37 +110,28 @@ export default class LocationManagerModule
         // Block system from saving
         const allowSave = SettingsManager.preventSave();
 
-        // Remove old
-        {
-            // Get the location ID and the location's current path
-            const path = await this.getLocationPath(location);
+        // Retrieve the location ancestor
+        const locationAncestor = await this.getAncestor();
 
-            // Retrieve the location ancestor
-            const locationAncestor = await this.getAncestor();
+        // Get the location ID and the location's current path
+        const currentPath = await this.getLocationPath(location);
 
-            // Temporarily change the nodes of the location to indicate removal
-            this.updateLocationPath({nodes: [], location});
+        // Create the new location path, and update the path
+        const newPath = await locationAncestor.createLocation(location);
+        this.updateLocationPath(newPath);
 
+        // Only perform the updates if the location actually changed
+        if (!ExtendedObject.equals(currentPath.nodes, newPath.nodes)) {
             // Remove the location from the ancestor
-            await locationAncestor.removeLocation(path);
+            await locationAncestor.removeLocation(currentPath);
+
+            // Reopen the modules from this location
+            const modules = this.getModulesAtLocation(location.ID);
+            const promises = modules.map(moduleReference =>
+                this.openModule(moduleReference, location.ID)
+            );
+            await Promise.all(promises);
         }
-
-        // Add new
-        {
-            // Retrieve the location ancestor
-            const locationAncestor = await this.getAncestor();
-
-            // Create the new location path, and store it
-            const locationPath = await locationAncestor.createLocation(location);
-            this.updateLocationPath(locationPath);
-        }
-
-        // Reopen the modules from this location
-        const modules = this.getModulesAtLocation(location.ID);
-        const promises = modules.map(moduleReference =>
-            this.openModule(moduleReference, location.ID)
-        );
-        await Promise.all(promises);
 
         // Allow saving again
         allowSave();
@@ -157,6 +149,31 @@ export default class LocationManagerModule
         // Normalize the location ids
         if (!newLocationIDs) newLocationIDs = [];
         if (!oldLocationIDs) oldLocationIDs = [];
+
+        // Add the module to the new location
+        const addPromises = newLocationIDs.map(async newLocationID => {
+            // Only remove locations that got removed
+            if (oldLocationIDs.includes(newLocationID)) return;
+
+            let current = this.settings.locations[newLocationID];
+            await await this.setSettings({
+                locations: {
+                    [newLocationID]: {
+                        path: current && current.path,
+                        modules: [
+                            // Keep everything that is not the new ID to prevent duplicates
+                            ...((current && current.modules) || []).filter(
+                                ms => !settingsDataID.equals(ms)
+                            ),
+
+                            // Add the new ID
+                            settingsDataID,
+                        ],
+                    },
+                },
+            });
+        });
+        await Promise.all(addPromises);
 
         // Remove the module from the old location
         const removePromises = oldLocationIDs.map(async oldLocationID => {
@@ -198,31 +215,6 @@ export default class LocationManagerModule
             }
         });
         await Promise.all(removePromises);
-
-        // Add the module to the new location
-        const addPromises = newLocationIDs.map(async newLocationID => {
-            // Only remove locations that got removed
-            if (oldLocationIDs.includes(newLocationID)) return;
-
-            let current = this.settings.locations[newLocationID];
-            await await this.setSettings({
-                locations: {
-                    [newLocationID]: {
-                        path: current && current.path,
-                        modules: [
-                            // Keep everything that is not the new ID to prevent duplicates
-                            ...((current && current.modules) || []).filter(
-                                ms => !settingsDataID.equals(ms)
-                            ),
-
-                            // Add the new ID
-                            settingsDataID,
-                        ],
-                    },
-                },
-            });
-        });
-        await Promise.all(addPromises);
 
         // Allow saving again
         allowSave();
@@ -335,7 +327,9 @@ export default class LocationManagerModule
             locations: {
                 [location]: {
                     modules: [
-                        ...(this.state.locations[location] || {modules: []}).modules,
+                        ...(
+                            this.state.locations[location] || {modules: []}
+                        ).modules.filter(m => !m.equals(module)),
                         module,
                     ],
                 },

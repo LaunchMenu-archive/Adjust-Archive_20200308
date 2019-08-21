@@ -360,9 +360,9 @@ export class RegistrySingleton {
         moduleProviders.forEach(moduleProvider => this.addProvider(moduleProvider));
 
         // Install all modules that require it, and save their settings
-        await Promise.all(
-            moduleClasses.map(moduleClass => moduleClass.loadAndInstallIfRequired())
-        );
+        for (let moduleClass of moduleClasses) {
+            await moduleClass.loadAndInstallIfRequired();
+        }
         await SettingsManager.saveAll();
         SettingsManager.destroySettingsFiles();
     }

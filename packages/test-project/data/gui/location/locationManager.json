@@ -24,10 +24,6 @@
                         "modules": [
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\test\\test.js"
-                            },
-                            {
-                                "settingsID": 0,
                                 "modulePath": "\\singletonTest\\singleton\\singleton.js"
                             },
                             {
@@ -38,17 +34,7 @@
                                 "settingsID": 0,
                                 "modulePath": "gui\\location\\locationAncestor\\types\\tabManager\\tabHandle\\tabHandle.js"
                             }
-                        ],
-                        "path": {
-                            "nodes": [
-                                "default",
-                                "default"
-                            ],
-                            "location": {
-                                "ID": "root",
-                                "hints": {}
-                            }
-                        }
+                        ]
                     },
                     "prompt": {
                         "modules": [
@@ -59,7 +45,7 @@
                         ],
                         "path": {
                             "nodes": [
-                                "dA14-mCO5",
+                                "63fO-nyeo",
                                 "default"
                             ],
                             "location": {
@@ -67,7 +53,7 @@
                                 "hints": {
                                     "window": {
                                         "new": true,
-                                        "windowName": "Prompt",
+                                        "name": "Prompt",
                                         "width": 400,
                                         "height": 250
                                     }
@@ -84,8 +70,8 @@
                         ],
                         "path": {
                             "nodes": [
-                                "default",
-                                "tab1"
+                                "NLdl-UxM2",
+                                "default"
                             ],
                             "location": {
                                 "ID": "test",
@@ -96,7 +82,10 @@
                                     "tab": {
                                         "after": "root",
                                         "ID": "tab1"
-                                    }
+                                    },
+                                    "path": [
+                                        "NLdl-UxM2"
+                                    ]
                                 }
                             }
                         }
@@ -110,7 +99,7 @@
                         ],
                         "path": {
                             "nodes": [
-                                "default",
+                                "63fO-nyeo",
                                 "tab2"
                             ],
                             "location": {

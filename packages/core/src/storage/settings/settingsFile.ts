@@ -338,7 +338,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
                     this.emitAsync("change", path, newValue, condition, oldValue)
                 );
             },
-            // Only recurse when we haven't hit a setting value yet TODO: check if this can be optimised by extracting the field from "value"
+            // Only recurse when we haven't hit a setting value yet
             (key, [newValue, oldValue, config], path) => !("default" in config),
             true
         );
@@ -568,6 +568,7 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         const promises = this.settings.map(settings =>
             this.valueChange(settings.condition, settings.data.get, undefined, true)
         );
+        await Promise.all(promises);
     }
 
     /**

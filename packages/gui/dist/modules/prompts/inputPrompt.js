@@ -19,7 +19,7 @@ exports.config = {
         hints: {
             window: {
                 new: true,
-                windowName: "Prompt",
+                name: "Prompt",
                 width: 400,
                 height: 250,
             },

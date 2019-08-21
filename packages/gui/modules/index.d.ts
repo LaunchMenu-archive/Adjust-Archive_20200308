@@ -5,6 +5,7 @@ export * from "../dist/modules/location/locationAncestor/location";
 export * from "../dist/modules/location/locationAncestor/locationAncestor";
 export * from "../dist/modules/location/locationAncestor/locationAncestor.type";
 export * from "../dist/modules/location/locationAncestor/types/tabManager/_types/TabData";
+export * from "../dist/modules/location/locationAncestor/types/tabManager/_types/TabHandleData";
 export * from "../dist/modules/location/locationAncestor/types/tabManager/tabHandle/tabHandle";
 export * from "../dist/modules/location/locationAncestor/types/tabManager/tabHandle/tabHandle.type";
 export * from "../dist/modules/location/locationAncestor/types/tabManager/tabManager";

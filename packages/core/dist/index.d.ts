@@ -17,6 +17,8 @@ export * from "./utils/isMain";
 export * from "./utils/extendedObject";
 export * from "./utils/UUID";
 export * from "./utils/semver";
+export * from "./utils/async/AsyncMutualExcluder";
+export * from "./utils/async/AsyncSequencer";
 export * from "./communication/ipcMain";
 export * from "./communication/ipcRenderer";
 export * from "./storage/settings/settingsManager";

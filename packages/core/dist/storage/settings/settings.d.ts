@@ -9,6 +9,7 @@ import { EventEmitter } from "../../utils/eventEmitter";
 import { SettingsConditions } from "./settingsConditions/abstractSettingsConditions";
 import { SettingsConfigData } from "./_types/settingsConfigData";
 import { SettingsConfigPriorityList } from "./_types/settingsConfigPriorityList";
+import { SettingsDataID } from "./SettingsDataID";
 /**
  * A setting class that filters the appropriate settings from a [settingsFile]
  */
@@ -69,6 +70,11 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * @param condition The condition to store the data under
      */
     setInitialData(data: DataChange<SettingsConfigData<C>> | (() => DataChange<SettingsConfigData<C>> | Promise<DataChange<SettingsConfigData<C>>>), condition?: SettingsConditions): Promise<void>;
+    /**
+     * Removes the data associated with a given condition
+     * @param condition The condition for which to remove a Data instance
+     */
+    removeConditionData(condition?: SettingsConditions | SettingsDataID | number): void;
     /**
      * Retrieves the settings file storing all the settings
      * @returns The settings file

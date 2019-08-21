@@ -176,6 +176,13 @@ class Settings extends eventEmitter_1.EventEmitter {
         if (!dataObj)
             this.changeData(data instanceof Function ? await data() : data, condition);
     }
+    /**
+     * Removes the data associated with a given condition
+     * @param condition The condition for which to remove a Data instance
+     */
+    removeConditionData(condition) {
+        return this.settingsFile.removeConditionData(condition);
+    }
     // Data retrieval methods
     /**
      * Retrieves the settings file storing all the settings
