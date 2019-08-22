@@ -8,6 +8,7 @@ import { AbstractModuleProvider as ModuleProvider } from "./moduleProviders/abst
 import { ClassModuleProvider } from "./moduleProviders/classModuleProvider";
 import { ExtendsClass } from "../utils/_types/standardTypes";
 import { Package } from "../utils/_types/package";
+import { AsyncMutualExcluder } from "../utils/async/AsyncMutualExcluder";
 /**
  * Keeps track of all modules classes and module providers
  */
@@ -18,6 +19,7 @@ export declare class RegistrySingleton {
     protected collectionFolders: {
         [collectionName: string]: string;
     };
+    protected excluder: AsyncMutualExcluder;
     /**
      * Retrieves modules based on the given request specification
      * @param request The request to base the modules to retrieve on

@@ -12,6 +12,7 @@ const extendedObject_1 = require("../utils/extendedObject");
 const moduleView_1 = require("../module/moduleView");
 const settingsManager_1 = require("../storage/settings/settingsManager");
 const packageRetriever_1 = require("../utils/packageRetriever");
+const AsyncMutualExcluder_1 = require("../utils/async/AsyncMutualExcluder");
 /**
  * Keeps track of all modules classes and module providers
  */
@@ -23,6 +24,8 @@ class RegistrySingleton {
         this.collectionFolders = {
             default: path_1.default.join(process.cwd(), "dist", "modules"),
         };
+        // A mutual excluder to make sure the previous set of modules is retrieved before handling the next set
+        this.excluder = new AsyncMutualExcluder_1.AsyncMutualExcluder();
         // Today I had sandwiches for breakfast -SpaceWalker 18/6/2019
     }
     async request(request) {
@@ -34,10 +37,15 @@ class RegistrySingleton {
             parent: request.parent,
             openView: request.openView || false,
         };
-        // Retrieve the providers for this request
-        const providers = await this.getProviders(normalizedRequest);
+        // Retrieve the module promises, and make sure only one set can be retrieved at once
+        let modulePromises = await this.excluder.schedule(async () => {
+            // Retrieve the providers for this request
+            const providers = await this.getProviders(normalizedRequest);
+            // Create the modules from the promises
+            return providers.map(provider => provider.getModule(normalizedRequest));
+        });
         // Retrieve the modules for each of the providers that should be used
-        const modules = await Promise.all(providers.map(provider => provider.getModule(normalizedRequest)));
+        const modules = await Promise.all(modulePromises);
         // Only return a single module and not an array if use was set to "one"
         if (normalizedRequest.use == "one")
             return modules[0];

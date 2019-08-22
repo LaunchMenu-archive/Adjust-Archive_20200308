@@ -83,6 +83,16 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      */
     static createInstance(request: ParameterizedRequest, moduleID: ModuleID): Promise<any>;
     /**
+     * A method that gets called to perform initialisation, immediately when the module was created
+     * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been pbtained (and thus can't used them)
+     */
+    preInit(): Promise<void>;
+    /**
+     * A method that gets called to perform initialisation, immediately when the module was created
+     * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been pbtained (and thus can't used them)
+     */
+    protected onPreInit(): Promise<void>;
+    /**
      * A method that gets called to perform initialisation,
      * should be called only once, after having been added to the program state
      * (will be called by external setup method, such as in classModuleProvider)

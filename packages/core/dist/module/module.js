@@ -58,16 +58,18 @@ class Module {
         // @ts-ignore
         module.parents = parents;
         module.parent = module.parents[0];
-        // Settings initialization
-        // @ts-ignore
-        module.settingsObject = await settings_1.Settings.createInstance(module);
-        // @ts-ignore
-        module.settings = module.settingsObject.get;
         // State initialization
         // @ts-ignore
         module.stateObject = new stateData_1.StateData(initialState);
         // @ts-ignore
         module.state = module.stateObject.get;
+        // Call the preinit hook
+        await module.preInit();
+        // Settings initialization
+        // @ts-ignore
+        module.settingsObject = await settings_1.Settings.createInstance(module);
+        // @ts-ignore
+        module.settings = module.settingsObject.get;
         return module;
     }
     /**
@@ -103,6 +105,18 @@ class Module {
         return this.construct(request, moduleID, initialState, parents);
     }
     // Initialisation
+    /**
+     * A method that gets called to perform initialisation, immediately when the module was created
+     * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been pbtained (and thus can't used them)
+     */
+    async preInit() {
+        await this.onPreInit();
+    }
+    /**
+     * A method that gets called to perform initialisation, immediately when the module was created
+     * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been pbtained (and thus can't used them)
+     */
+    async onPreInit() { }
     /**
      * A method that gets called to perform initialisation,
      * should be called only once, after having been added to the program state
