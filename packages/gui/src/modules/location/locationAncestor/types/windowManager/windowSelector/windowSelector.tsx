@@ -114,9 +114,7 @@ export default class WindowSelectorModule
         const ID = UUID.generateShort();
         const path = [ID];
         currentData.locations.forEach(loc => {
-            loc.hints = {
-                path,
-            };
+            loc.hints.path = path;
         });
 
         // Update the data

@@ -8,7 +8,9 @@
             },
             "ID": 0,
             "data": {
-                "location": "test",
+                "location": [
+                    "KWPu-7u4g-fw1D-6RQX-4H1S"
+                ],
                 "styleOverride": {
                     "theme": {
                         "palette": {},

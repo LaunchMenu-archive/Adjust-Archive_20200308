@@ -432,11 +432,15 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
         const locations = await this.getParent().getLocationsAtPath(path);
         // Get the index of the tab
         const index = this.getTabIndex(ID, false);
-        const tab = this.getParent() // Store them all in the move data, defaulting to this tab if not moved
-            .setLocationsMoveData({
+        // Store them all in the move data, defaulting to this tab if not moved
+        const newTabID = core_1.UUID.generateShort();
+        this.getParent().setLocationsMoveData({
             locations: locations.map(location => ({
                 ID: location.ID,
-                hints: { path: [...path], [this.ancestorName]: Object.assign({ index }, handleData) },
+                hints: {
+                    path: [...path],
+                    [this.ancestorName]: Object.assign({ index }, handleData, { ID: newTabID }),
+                },
             })),
         });
     }
@@ -452,8 +456,8 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
         const parent = this.getParent();
         const currentData = await parent.getLocationsMoveData();
         // Set all hints to a path pointing at this location
-        const newTabID = core_1.UUID.generateShort();
         const path = this.getData().path;
+        const newTabID = core_1.UUID.generateShort();
         currentData.locations.forEach(loc => {
             loc.hints = {
                 path: [...path],

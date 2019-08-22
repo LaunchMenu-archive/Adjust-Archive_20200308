@@ -15,17 +15,15 @@ export const config = {
 
 export default class SingletonModule extends createModule(config) implements Singleton {
     /** @override */
-    public async onInit() {
+    public async onInit(fromReload: boolean) {
+        console.log("singleton created");
         Registry.addProvider(new InstanceModuleProvider(SingletonType, this, () => 2));
-        const data = this.getData();
-        this.setState({
-            text: data.text,
-        });
-    }
-
-    /** @override */
-    public async onReloadInit() {
-        Registry.addProvider(new InstanceModuleProvider(SingletonType, this, () => 2));
+        if (!fromReload) {
+            const data = this.getData();
+            this.setState({
+                text: data.text,
+            });
+        }
     }
 
     /** @override */

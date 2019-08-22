@@ -9,15 +9,6 @@ export declare const ThemeExtender: ({ children, themeChanges, resetTheme, }: {
     children: (ITheme: any) => JSX.Element;
     /** The changes to apply to the theme */
     themeChanges: {
-        spacing?: {
-            xxs?: string | number;
-            xs?: string | number;
-            s?: string | number;
-            m?: string | number;
-            l?: string | number;
-            xl?: string | number;
-            xxl?: string | number;
-        };
         palette?: {
             themePrimary?: string;
             themeLighterAlt?: string;
@@ -75,12 +66,21 @@ export declare const ThemeExtender: ({ children, themeChanges, resetTheme, }: {
             primaryLight?: string;
         };
         icons?: {
-            right?: string;
-            left?: string;
             close?: string;
             maximize?: string;
             minimize?: string;
             emoji?: string;
+            left?: string;
+            right?: string;
+        };
+        spacing?: {
+            xxs?: string | number;
+            xs?: string | number;
+            s?: string | number;
+            m?: string | number;
+            l?: string | number;
+            xl?: string | number;
+            xxl?: string | number;
         };
         fontStyles?: {
             tiny?: {

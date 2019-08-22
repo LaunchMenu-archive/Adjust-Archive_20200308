@@ -102,9 +102,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.win
         const ID = core_1.UUID.generateShort();
         const path = [ID];
         currentData.locations.forEach(loc => {
-            loc.hints = {
-                path,
-            };
+            loc.hints.path = path;
         });
         // Update the data
         const movePromise = parent.updateLocationsMoveData(currentData);

@@ -11,6 +11,7 @@ import {ContractID} from "@adjust/gui/types";
 import {LocationManagerType} from "@adjust/gui/modules";
 import {TestType} from "./modules/test/test.type";
 import {SingletonParentType} from "./modules/singletonTest/singletonParent/singletonParent.type";
+import {SingletonType} from "./modules/singletonTest/singleton/singleton.type";
 
 (async () => {
     console.log("loading");
@@ -18,7 +19,7 @@ import {SingletonParentType} from "./modules/singletonTest/singletonParent/singl
     await Registry.loadClassModuleProviders();
 
     console.log("starting");
-    let test = 3;
+    let test = 6;
 
     if (test == 1) {
         //TODO: reject interfaces that require a parent as the root
@@ -66,6 +67,23 @@ import {SingletonParentType} from "./modules/singletonTest/singletonParent/singl
 
         // Load the state
         ProgramState.deserialize(state);
+    } else if (test == 6) {
+        const promises = [];
+        promises.push(
+            Registry.createRoot({
+                type: SingletonType,
+                openView: true,
+                data: {text: "yo"},
+            })
+        );
+        promises.push(
+            Registry.createRoot({
+                type: SingletonType,
+                openView: true,
+                data: {text: "yo"},
+            })
+        );
+        await Promise.all(promises);
     }
 })();
 

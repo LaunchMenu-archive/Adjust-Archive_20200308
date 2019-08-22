@@ -8,16 +8,15 @@ exports.config = {
 };
 class SingletonModule extends gui_1.createModule(exports.config) {
     /** @override */
-    async onInit() {
+    async onInit(fromReload) {
+        console.log("singleton created");
         gui_1.Registry.addProvider(new gui_1.InstanceModuleProvider(singleton_type_1.SingletonType, this, () => 2));
-        const data = this.getData();
-        this.setState({
-            text: data.text,
-        });
-    }
-    /** @override */
-    async onReloadInit() {
-        gui_1.Registry.addProvider(new gui_1.InstanceModuleProvider(singleton_type_1.SingletonType, this, () => 2));
+        if (!fromReload) {
+            const data = this.getData();
+            this.setState({
+                text: data.text,
+            });
+        }
     }
     /** @override */
     async onStop() {

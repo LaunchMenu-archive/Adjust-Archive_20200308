@@ -16,9 +16,7 @@ declare const SingletonModule_base: import("@adjust/core/types").ExtendedModuleC
 }, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").Module, import("@adjust/gui").Module>>;
 export default class SingletonModule extends SingletonModule_base implements Singleton {
     /** @override */
-    onInit(): Promise<void>;
-    /** @override */
-    onReloadInit(): Promise<void>;
+    onInit(fromReload: boolean): Promise<void>;
     /** @override */
     onStop(): Promise<void>;
     /** @override */

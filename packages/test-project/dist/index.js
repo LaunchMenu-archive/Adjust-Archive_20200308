@@ -8,12 +8,13 @@ const gui_1 = require("@adjust/gui");
 const modules_1 = require("@adjust/gui/modules");
 const test_type_1 = require("./modules/test/test.type");
 const singletonParent_type_1 = require("./modules/singletonTest/singletonParent/singletonParent.type");
+const singleton_type_1 = require("./modules/singletonTest/singleton/singleton.type");
 (async () => {
     console.log("loading");
     await gui_1.Registry.loadDefaultClassModuleProviders();
     await gui_1.Registry.loadClassModuleProviders();
     console.log("starting");
-    let test = 3;
+    let test = 6;
     if (test == 1) {
         //TODO: reject interfaces that require a parent as the root
         gui_1.Registry.createRoot({ type: test_type_1.TestType }).then(root => {
@@ -56,6 +57,20 @@ const singletonParent_type_1 = require("./modules/singletonTest/singletonParent/
         const state = JSON.parse(fs_1.default.readFileSync(path_1.default.join(process.cwd(), "data", "stateTest4.json"), "utf8"));
         // Load the state
         gui_1.ProgramState.deserialize(state);
+    }
+    else if (test == 6) {
+        const promises = [];
+        promises.push(gui_1.Registry.createRoot({
+            type: singleton_type_1.SingletonType,
+            openView: true,
+            data: { text: "yo" },
+        }));
+        promises.push(gui_1.Registry.createRoot({
+            type: singleton_type_1.SingletonType,
+            openView: true,
+            data: { text: "yo" },
+        }));
+        await Promise.all(promises);
     }
 })();
 function isModule(module) {

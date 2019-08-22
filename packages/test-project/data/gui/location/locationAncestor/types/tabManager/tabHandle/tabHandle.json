@@ -23,30 +23,14 @@
                 "priority": 1,
                 "data": {
                     "path": [
-                        "63fO-nyeo",
-                        "tab2"
+                        "AFsO-IsUD",
+                        "13Y4-NOvD"
                     ]
                 }
             },
-            "ID": 3,
+            "ID": 5,
             "data": {
-                "name": "tab2"
-            }
-        },
-        {
-            "condition": {
-                "type": "data",
-                "priority": 1,
-                "data": {
-                    "path": [
-                        "NLdl-UxM2",
-                        "default"
-                    ]
-                }
-            },
-            "ID": 4,
-            "data": {
-                "name": "default"
+                "name": "John"
             }
         },
         {

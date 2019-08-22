@@ -61,35 +61,6 @@
                             }
                         }
                     },
-                    "test": {
-                        "modules": [
-                            {
-                                "settingsID": 0,
-                                "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
-                            }
-                        ],
-                        "path": {
-                            "nodes": [
-                                "NLdl-UxM2",
-                                "default"
-                            ],
-                            "location": {
-                                "ID": "test",
-                                "hints": {
-                                    "window": {
-                                        "sameAs": "root"
-                                    },
-                                    "tab": {
-                                        "after": "root",
-                                        "ID": "tab1"
-                                    },
-                                    "path": [
-                                        "NLdl-UxM2"
-                                    ]
-                                }
-                            }
-                        }
-                    },
                     "onion": {
                         "modules": [
                             {
@@ -99,8 +70,8 @@
                         ],
                         "path": {
                             "nodes": [
-                                "63fO-nyeo",
-                                "tab2"
+                                "AFsO-IsUD",
+                                "13Y4-NOvD"
                             ],
                             "location": {
                                 "ID": "onion",
@@ -110,11 +81,43 @@
                                     },
                                     "tab": {
                                         "after": "root",
-                                        "ID": "tab2"
-                                    }
+                                        "ID": "13Y4-NOvD",
+                                        "index": 0,
+                                        "name": "John"
+                                    },
+                                    "path": [
+                                        "AFsO-IsUD"
+                                    ]
                                 }
                             }
                         }
+                    },
+                    "KWPu-7u4g-fw1D-6RQX-4H1S": {
+                        "path": {
+                            "nodes": [
+                                "AFsO-IsUD",
+                                "13Y4-NOvD"
+                            ],
+                            "location": {
+                                "ID": "KWPu-7u4g-fw1D-6RQX-4H1S",
+                                "hints": {
+                                    "path": [
+                                        "AFsO-IsUD"
+                                    ],
+                                    "tab": {
+                                        "index": 0,
+                                        "name": "John",
+                                        "ID": "13Y4-NOvD"
+                                    }
+                                }
+                            }
+                        },
+                        "modules": [
+                            {
+                                "settingsID": 0,
+                                "modulePath": "\\singletonTest\\singletonParent\\singletonParent.js"
+                            }
+                        ]
                     }
                 }
             }

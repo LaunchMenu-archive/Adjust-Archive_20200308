@@ -520,13 +520,18 @@ export class TabManagerModule
 
         // Get the index of the tab
         const index = this.getTabIndex(ID, false);
-        const tab = this.getParent() // Store them all in the move data, defaulting to this tab if not moved
-            .setLocationsMoveData({
-                locations: locations.map(location => ({
-                    ID: location.ID,
-                    hints: {path: [...path], [this.ancestorName]: {index, ...handleData}},
-                })),
-            });
+
+        // Store them all in the move data, defaulting to this tab if not moved
+        const newTabID = UUID.generateShort();
+        this.getParent().setLocationsMoveData({
+            locations: locations.map(location => ({
+                ID: location.ID,
+                hints: {
+                    path: [...path],
+                    [this.ancestorName]: {index, ...handleData, ID: newTabID},
+                },
+            })),
+        });
     }
 
     /** @override */
@@ -543,8 +548,8 @@ export class TabManagerModule
         const currentData = await parent.getLocationsMoveData();
 
         // Set all hints to a path pointing at this location
-        const newTabID = UUID.generateShort();
         const path = this.getData().path;
+        const newTabID = UUID.generateShort();
         currentData.locations.forEach(loc => {
             loc.hints = {
                 path: [...path],
