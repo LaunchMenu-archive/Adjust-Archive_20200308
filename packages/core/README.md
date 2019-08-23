@@ -16,4 +16,4 @@ All modules can have an associated GUI representation which will display their d
 Adjust is only in its early stages due to several redesigns. A more complete usage guide as well as details on Adjust's implementation will follow in the future.
 
 Here is a rough class diagram overview of Adjust for now:
-![cdgm](https://raw.githubusercontent.com/LaunchMenu/Adjust/master/docs/diagrams/overview.png)
+![cdgm](https://raw.githubusercontent.com/LaunchMenu/Adjust/master/packages/core/docs/diagrams/overview.png)
