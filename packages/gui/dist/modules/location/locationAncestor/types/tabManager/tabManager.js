@@ -508,11 +508,15 @@ class TabManagerView extends core_1.createModuleView(TabManagerModule) {
     }
     /** @override */
     renderView() {
-        const selectedTabData = this.state.tabs.find(tab => tab.ID == this.state.selectedTabID);
-        const tabContent = (selectedTabData && selectedTabData.childAncestor) || this.renderEmpty();
+        // Find the ID of the selected tab
+        const selectedID = this.state.tabs.findIndex(tab => tab.ID == this.state.selectedTabID);
+        // Map the tabs to their content, making all but the first invisible
+        let tabsContent = this.state.tabs.map((tab, index) => (React_1.React.createElement(ChildBox_1.ChildBox, { display: index == selectedID ? "block" : "none", key: tab.ID }, tab.childAncestor)));
         return (React_1.React.createElement(ChildBox_1.ChildBox, { className: "tabsManager", display: "flex", flexDirection: "column" },
             React_1.React.createElement(Box_1.Box, null, this.renderHandles()),
-            React_1.React.createElement(ParentBox_1.ParentBox, { flex: "1", position: "relative" }, tabContent)));
+            React_1.React.createElement(ParentBox_1.ParentBox, { flex: "1" },
+                tabsContent,
+                selectedID == -1 && this.renderEmpty())));
     }
 }
 exports.TabManagerView = TabManagerView;

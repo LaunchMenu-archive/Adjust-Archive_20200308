@@ -681,9 +681,14 @@ export class ExtendedObject extends Object {
      * Checks if the contents of object 1 and 2 are equal, except for subobjects
      * @param obj1 The first object
      * @param obj2 The second object
+     * @param includeObjects Whether object difference should be taken into account
      * @returns Whether or not the contents of the two objects are equivalent
      */
-    public static equals(obj1: object, obj2: object): boolean {
+    public static equals(
+        obj1: object,
+        obj2: object,
+        includeObjects: boolean = true
+    ): boolean {
         // Check if there are the same number of values present
         const obj1Keys = Object.keys(obj1);
         const obj2Keys = Object.keys(obj2);
@@ -694,7 +699,11 @@ export class ExtendedObject extends Object {
             const key = obj1Keys[i];
 
             // Values may only differ if they are objects
-            if (typeof obj1[key] != "object" && obj1[key] !== obj2[key]) return false;
+            if (
+                (typeof obj1[key] != "object" || includeObjects) &&
+                obj1[key] !== obj2[key]
+            )
+                return false;
         }
 
         return true;
@@ -715,7 +724,7 @@ export class ExtendedObject extends Object {
         // Check if all values are equivalent
         for (let i = 0; i < obj1Keys.length; i++) {
             const key = obj1Keys[i];
-            if (typeof obj1[key] == "object") {
+            if (typeof obj1[key] == "object" && obj1[key] != null && obj2[key] != null) {
                 // Recurse if object
                 if (!this.deepEquals(obj1[key], obj2[key])) return false;
             } else {
@@ -731,9 +740,14 @@ export class ExtendedObject extends Object {
      * Checks if the contents of object 2 are contained in object 1, excluding subobjects
      * @param obj1 The first object
      * @param obj2 The second object
+     * @param includeObjects Whether object difference should be taken into account
      * @returns Whether or not the contents of object 1 are contained in object 2
      */
-    public static contains(obj1: object, obj2: object): boolean {
+    public static contains(
+        obj1: object,
+        obj2: object,
+        includeObjects: boolean = true
+    ): boolean {
         const obj2Keys = Object.keys(obj2);
 
         // Check if all values are equivalent
@@ -741,7 +755,11 @@ export class ExtendedObject extends Object {
             const key = obj2Keys[i];
 
             // Values may only differ if they are objects
-            if (typeof obj1[key] != "object" && obj1[key] !== obj2[key]) return false;
+            if (
+                (typeof obj1[key] != "object" || includeObjects) &&
+                obj1[key] !== obj2[key]
+            )
+                return false;
         }
 
         return true;
@@ -759,7 +777,7 @@ export class ExtendedObject extends Object {
         // Check if all values are equivalent
         for (let i = 0; i < obj2Keys.length; i++) {
             const key = obj2Keys[i];
-            if (typeof obj1[key] == "object") {
+            if (typeof obj1[key] == "object" && obj1[key] != null && obj2[key] != null) {
                 // Recurse if object
                 if (!this.deepContains(obj1[key], obj2[key])) return false;
             } else {

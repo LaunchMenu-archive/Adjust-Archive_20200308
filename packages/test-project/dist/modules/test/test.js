@@ -36,7 +36,7 @@ class TestModule extends gui_1.createModule(exports.config) {
         this.setState({
             children: await this.request({
                 type: embed_type_1.EmbedType,
-                data: { text: "hello", count: 4 },
+                data: { text: "hello", count: 400 },
             }).then(child => [child]),
         });
         // this.setState({

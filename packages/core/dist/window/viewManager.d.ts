@@ -4,6 +4,7 @@ import { ParameterizedModuleView } from "../module/moduleView";
 import { ParameterizedModuleViewState } from "../module/_types/moduleViewState";
 import { SerializeableData } from "../utils/_types/serializeableData";
 import { ModuleID, ModuleReference } from "../module/moduleID";
+import { ViewCache } from "./viewCache";
 /**
  * Keeps track of all of the views in the window and makes sure they are updated
  */
@@ -19,6 +20,13 @@ declare class ViewManagerSingleton {
         };
     };
     protected viewNotFoundID: ModuleID;
+    protected batchDelay: number;
+    protected stateBatch: {
+        timeout: number;
+        promise: Promise<ParameterizedModuleViewState[]>;
+        requests: string[];
+    };
+    protected viewCache: ViewCache;
     /**
      * Creates a view manager
      */
@@ -35,6 +43,12 @@ declare class ViewManagerSingleton {
      * @returns The list of module views, or undefined if there is no such list
      */
     protected getViews(moduleID: ModuleReference | string, create?: boolean): Promise<ParameterizedModuleView>[] | undefined;
+    /**
+     * Retrieves the state of a module, and applies batching
+     * @param moduleID The ID of the module to retrieve
+     * @returns The state that was obtained
+     */
+    protected retrieveViewState(moduleID: string | ModuleReference): Promise<ParameterizedModuleViewState>;
     /**
      * Registers a view such that it will receive updates
      * @param view The view to register

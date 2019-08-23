@@ -69,7 +69,11 @@ export class Serialize {
 
             // If the data is a promise, await it
             if (data instanceof Promise) {
+                // Perform a sort of caching on promises, to reduce asyncness and unnecessary updates
+                if ((data as any).result) return this.serialize((data as any).result); //TODO: fix TS
+
                 data.then(value => {
+                    (data as any).result = value; //TODO: fix TS
                     asyncCallback(path, value, data);
                 });
                 return undefined;

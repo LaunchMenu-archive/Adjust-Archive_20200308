@@ -38,7 +38,7 @@ export default class TestModule extends createModule(config) implements Test {
         this.setState({
             children: await this.request({
                 type: EmbedType,
-                data: {text: "hello", count: 4}, //421},
+                data: {text: "hello", count: 400}, //421},
             }).then(child => [child]),
         });
         // this.setState({

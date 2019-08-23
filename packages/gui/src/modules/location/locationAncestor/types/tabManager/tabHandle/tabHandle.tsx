@@ -119,6 +119,10 @@ export class TabHandleView extends createModuleView(TabHandleModule) {
     }
 
     // Rendering methods
+    public renderLoader(): JSX.Element {
+        return <span></span>;
+    }
+
     /** @override */
     public renderView(): JSX.Element {
         return (

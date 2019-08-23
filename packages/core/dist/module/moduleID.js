@@ -44,6 +44,8 @@ class ModuleReference {
      * @returns Whether the references are quivalent
      */
     equals(ref) {
+        if (typeof ref == "string")
+            return this.toString() == ref;
         return ref.ID == this.ID && ref.modulePath == this.modulePath;
     }
 }

@@ -1,11 +1,11 @@
-import { ModuleReference, ModuleID } from "../moduleID";
+import { ModuleID } from "../moduleID";
 import ViewNotFoundModule from "../../modules/viewNotFound";
 import { Module } from "../module";
 /**
  * The interface for the react properties, which can't be customised
  */
 export declare type ModuleViewProps<M> = M extends ViewNotFoundModule ? {
-    moduleID: ModuleReference;
+    moduleID: string;
     module: M;
     target: {
         cls: typeof Module;
@@ -13,7 +13,7 @@ export declare type ModuleViewProps<M> = M extends ViewNotFoundModule ? {
     };
     children?: undefined;
 } : {
-    moduleID: ModuleReference;
+    moduleID: string;
     module: M;
     children?: undefined;
 };

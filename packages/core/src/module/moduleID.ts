@@ -66,7 +66,8 @@ export class ModuleReference {
      * @param ref The reference to compare this to
      * @returns Whether the references are quivalent
      */
-    public equals(ref: ModuleReference): boolean {
+    public equals(ref: ModuleReference | string): boolean {
+        if (typeof ref == "string") return this.toString() == ref;
         return ref.ID == this.ID && ref.modulePath == this.modulePath;
     }
 }

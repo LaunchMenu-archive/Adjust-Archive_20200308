@@ -74,6 +74,7 @@ export declare class TabHandleView extends TabHandleView_base {
      * @param event The DOM event of the user dragging data
      */
     protected onDragEnd(event: DragEvent): void;
+    renderLoader(): JSX.Element;
     /** @override */
     renderView(): JSX.Element;
 }

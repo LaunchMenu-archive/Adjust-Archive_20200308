@@ -19,7 +19,7 @@ import {SingletonType} from "./modules/singletonTest/singleton/singleton.type";
     await Registry.loadClassModuleProviders();
 
     console.log("starting");
-    let test = 6;
+    let test = 3;
 
     if (test == 1) {
         //TODO: reject interfaces that require a parent as the root

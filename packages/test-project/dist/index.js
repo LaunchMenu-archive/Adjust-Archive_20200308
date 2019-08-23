@@ -14,7 +14,7 @@ const singleton_type_1 = require("./modules/singletonTest/singleton/singleton.ty
     await gui_1.Registry.loadDefaultClassModuleProviders();
     await gui_1.Registry.loadClassModuleProviders();
     console.log("starting");
-    let test = 6;
+    let test = 3;
     if (test == 1) {
         //TODO: reject interfaces that require a parent as the root
         gui_1.Registry.createRoot({ type: test_type_1.TestType }).then(root => {

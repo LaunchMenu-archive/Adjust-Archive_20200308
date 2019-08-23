@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const viewManager_1 = require("../window/viewManager");
 const extendedObject_1 = require("../utils/extendedObject");
+const moduleID_1 = require("./moduleID");
 /**
  * A class that can visually represent the module
  */
@@ -27,7 +28,7 @@ class ModuleView extends react_1.default.Component {
      * @override Will load the initial state and start listening for updates
      */
     componentWillMount() {
-        this.self = viewManager_1.ViewManager.registerView(this, this.props.moduleID);
+        this.self = viewManager_1.ViewManager.registerView(this, new moduleID_1.ModuleReference(this.props.moduleID));
         this.self.catch(() => {
             // Unmounted before having been initalized
         });
@@ -36,7 +37,7 @@ class ModuleView extends react_1.default.Component {
      * @override Will stop listening for updates
      */
     componentWillUnmount() {
-        viewManager_1.ViewManager.deregisterView(this.self, this.props.moduleID);
+        viewManager_1.ViewManager.deregisterView(this.self, new moduleID_1.ModuleReference(this.props.moduleID));
         this.unmounted = true;
     }
     // State methods

@@ -269,9 +269,11 @@ class LocationView extends moduleViewClassCreator_1.createModuleView(LocationMod
     }
     /**@override */
     renderView() {
-        return (React_1.React.createElement(ChildBox_1.ChildBox, { background: "themeTertiary" },
-            this.state.inEditMode && (React_1.React.createElement(ChildBox_1.ChildBox, { padding: "m", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e) }, this.renderModuleBoxes())),
-            this.state.modules[0]));
+        // Only render the top most module
+        const content = this.state.modules.map((module, index) => (React_1.React.createElement(ChildBox_1.ChildBox, { display: index == 0 ? "block" : "none" }, module)));
+        return (React_1.React.createElement(ChildBox_1.ChildBox, { background: "themeTertiary", overflow: "auto" },
+            content,
+            this.state.inEditMode && (React_1.React.createElement(ChildBox_1.ChildBox, { padding: "m", onDragOver: e => this.onDragOver(e), onDrop: e => this.onDrop(e) }, this.renderModuleBoxes()))));
     }
 }
 exports.LocationView = LocationView;

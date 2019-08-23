@@ -137,9 +137,9 @@ export class WindowManagerSingleton {
         );
 
         // Listen for windows requesting states
-        IpcMain.on("WindowManager.getState", (moduleID: string, windowID: string) => {
+        IpcMain.on("WindowManager.getState", (moduleIDs: string[], windowID: string) => {
             // Get the data (and make it forward any promises that get resolved)
-            return this.getModuleData(moduleID, windowID);
+            return moduleIDs.map(moduleID => this.getModuleData(moduleID, windowID));
         });
 
         // Listen for module calls

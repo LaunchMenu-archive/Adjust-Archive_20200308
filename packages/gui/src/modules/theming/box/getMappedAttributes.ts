@@ -9,6 +9,7 @@ import {
     CssAlignContent,
     CssAlignSelf,
     CssVerticalAlign,
+    CssOverflow,
 } from "./_types/cssTypes";
 
 /**
@@ -20,6 +21,9 @@ export const mappedAttributes = {
     height: true,
     display: true,
     position: true,
+    overflow: true,
+    overflowX: true,
+    overflowY: true,
     verticalAlign: true,
     flexDirection: true,
     flexWrap: true,
@@ -42,6 +46,9 @@ export const mappedAttributes = {
 export type MappedAttributes = {
     display?: CssDisplay;
     position?: CssPosition;
+    overflow?: CssOverflow;
+    overflowX?: CssOverflow;
+    overflowY?: CssOverflow;
     verticalAlign?: CssVerticalAlign;
     flexDirection?: CssFlexDirection;
     flexWrap?: CssFlexDirection;

@@ -44,6 +44,14 @@ export type CssVerticalAlign =
     | "top"
     | "unset";
 
+export type CssOverflow =
+    | "visible"
+    | "hidden"
+    | "scroll"
+    | "auto"
+    | "initial"
+    | "inherit";
+
 export type CssFlexDirection = "row" | "row-reverse" | "column" | "column-reverse";
 export type CssFlexWrap = "nowrap" | "wrap" | "wrap-reverse";
 export type CssJustifyContent =

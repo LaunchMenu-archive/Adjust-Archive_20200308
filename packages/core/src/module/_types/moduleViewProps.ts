@@ -7,13 +7,13 @@ import {Module} from "../module";
  */
 export type ModuleViewProps<M> = M extends ViewNotFoundModule
     ? {
-          moduleID: ModuleReference;
+          moduleID: string;
           module: M;
           target: {cls: typeof Module; id: ModuleID};
           children?: undefined;
       }
     : {
-          moduleID: ModuleReference;
+          moduleID: string;
           module: M;
           children?: undefined;
       };

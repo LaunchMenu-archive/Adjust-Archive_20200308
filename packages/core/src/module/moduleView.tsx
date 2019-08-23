@@ -9,6 +9,8 @@ import {ModuleViewProps} from "./_types/moduleViewProps";
 import {SettingsConfigSetData} from "../storage/settings/_types/settingsConfigSetData";
 import {ExtendedObject} from "../utils/extendedObject";
 import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";
+import {ModuleReference} from "./moduleID";
+import {deepEqual} from "assert";
 
 /**
  * A class that can visually represent the module
@@ -53,7 +55,10 @@ export abstract class ModuleView<
      * @override Will load the initial state and start listening for updates
      */
     public componentWillMount(): void {
-        this.self = ViewManager.registerView(this, this.props.moduleID) as any;
+        this.self = ViewManager.registerView(
+            this,
+            new ModuleReference(this.props.moduleID)
+        ) as any;
         this.self.catch(() => {
             // Unmounted before having been initalized
         });
@@ -63,7 +68,7 @@ export abstract class ModuleView<
      * @override Will stop listening for updates
      */
     public componentWillUnmount(): void {
-        ViewManager.deregisterView(this.self, this.props.moduleID);
+        ViewManager.deregisterView(this.self, new ModuleReference(this.props.moduleID));
         this.unmounted = true;
     }
 

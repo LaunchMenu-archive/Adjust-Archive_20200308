@@ -34,7 +34,13 @@
                                 "settingsID": 0,
                                 "modulePath": "gui\\location\\locationAncestor\\types\\tabManager\\tabHandle\\tabHandle.js"
                             }
-                        ]
+                        ],
+                        "path": {
+                            "nodes": ["AFsO-IsUD", "poop"],
+                            "location": {
+                                "ID": "root"
+                            }
+                        }
                     },
                     "prompt": {
                         "modules": [
@@ -44,10 +50,7 @@
                             }
                         ],
                         "path": {
-                            "nodes": [
-                                "63fO-nyeo",
-                                "default"
-                            ],
+                            "nodes": ["63fO-nyeo", "default"],
                             "location": {
                                 "ID": "prompt",
                                 "hints": {
@@ -69,10 +72,7 @@
                             }
                         ],
                         "path": {
-                            "nodes": [
-                                "AFsO-IsUD",
-                                "13Y4-NOvD"
-                            ],
+                            "nodes": ["AFsO-IsUD", "13Y4-NOvD"],
                             "location": {
                                 "ID": "onion",
                                 "hints": {
@@ -85,29 +85,20 @@
                                         "index": 0,
                                         "name": "John"
                                     },
-                                    "path": [
-                                        "AFsO-IsUD"
-                                    ]
+                                    "path": ["AFsO-IsUD"]
                                 }
                             }
                         }
                     },
-                    "KWPu-7u4g-fw1D-6RQX-4H1S": {
+                    "F4hs-NK1X-Wczs-TOy3-EbAJ": {
                         "path": {
-                            "nodes": [
-                                "AFsO-IsUD",
-                                "13Y4-NOvD"
-                            ],
+                            "nodes": ["AFsO-IsUD", "tpPi-7F93"],
                             "location": {
-                                "ID": "KWPu-7u4g-fw1D-6RQX-4H1S",
+                                "ID": "F4hs-NK1X-Wczs-TOy3-EbAJ",
                                 "hints": {
-                                    "path": [
-                                        "AFsO-IsUD"
-                                    ],
+                                    "path": ["AFsO-IsUD"],
                                     "tab": {
-                                        "index": 0,
-                                        "name": "John",
-                                        "ID": "13Y4-NOvD"
+                                        "ID": "tpPi-7F93"
                                     }
                                 }
                             }

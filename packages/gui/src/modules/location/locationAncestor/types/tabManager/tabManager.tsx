@@ -622,17 +622,24 @@ export class TabManagerView extends createModuleView(TabManagerModule) {
 
     /** @override */
     public renderView(): JSX.Element {
-        const selectedTabData = this.state.tabs.find(
+        // Find the ID of the selected tab
+        const selectedID = this.state.tabs.findIndex(
             tab => tab.ID == this.state.selectedTabID
         );
-        const tabContent =
-            (selectedTabData && selectedTabData.childAncestor) || this.renderEmpty();
+
+        // Map the tabs to their content, making all but the first invisible
+        let tabsContent = this.state.tabs.map((tab, index) => (
+            <ChildBox display={index == selectedID ? "block" : "none"} key={tab.ID}>
+                {tab.childAncestor}
+            </ChildBox>
+        ));
 
         return (
             <ChildBox className="tabsManager" display="flex" flexDirection="column">
                 <Box>{this.renderHandles()}</Box>
-                <ParentBox flex="1" position="relative">
-                    {tabContent}
+                <ParentBox flex="1">
+                    {tabsContent}
+                    {selectedID == -1 && this.renderEmpty()}
                 </ParentBox>
             </ChildBox>
         );

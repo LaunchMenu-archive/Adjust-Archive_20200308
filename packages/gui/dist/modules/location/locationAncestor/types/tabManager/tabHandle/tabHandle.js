@@ -96,6 +96,9 @@ class TabHandleView extends moduleViewClassCreator_1.createModuleView(TabHandleM
             this.module.onDragEnd();
     }
     // Rendering methods
+    renderLoader() {
+        return React_1.React.createElement("span", null);
+    }
     /** @override */
     renderView() {
         return (React_1.React.createElement(Box_1.Box, { display: "inline-block", onDragStart: e => this.onDragStart(e), elRef: el => {

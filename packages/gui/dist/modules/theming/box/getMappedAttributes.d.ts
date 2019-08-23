@@ -1,5 +1,5 @@
 import { AnyProps } from "./_types/anyProps";
-import { CssDisplay, CssPosition, CssFlexDirection, CssJustifyContent, CssAlignItems, CssAlignContent, CssAlignSelf, CssVerticalAlign } from "./_types/cssTypes";
+import { CssDisplay, CssPosition, CssFlexDirection, CssJustifyContent, CssAlignItems, CssAlignContent, CssAlignSelf, CssVerticalAlign, CssOverflow } from "./_types/cssTypes";
 /**
  * All the standard attributes, mapped to either true if the css camelcase name is the same,
  * or a string if it's different
@@ -9,6 +9,9 @@ export declare const mappedAttributes: {
     height: boolean;
     display: boolean;
     position: boolean;
+    overflow: boolean;
+    overflowX: boolean;
+    overflowY: boolean;
     verticalAlign: boolean;
     flexDirection: boolean;
     flexWrap: boolean;
@@ -30,6 +33,9 @@ export declare const mappedAttributes: {
 export declare type MappedAttributes = {
     display?: CssDisplay;
     position?: CssPosition;
+    overflow?: CssOverflow;
+    overflowX?: CssOverflow;
+    overflowY?: CssOverflow;
     verticalAlign?: CssVerticalAlign;
     flexDirection?: CssFlexDirection;
     flexWrap?: CssFlexDirection;

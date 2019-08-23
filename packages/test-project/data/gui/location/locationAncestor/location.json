@@ -33,8 +33,25 @@
             "ID": 5,
             "data": {
                 "locations": [
-                    "onion",
-                    "KWPu-7u4g-fw1D-6RQX-4H1S"
+                    "onion"
+                ]
+            }
+        },
+        {
+            "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "path": [
+                        "AFsO-IsUD",
+                        "tpPi-7F93"
+                    ]
+                }
+            },
+            "ID": 6,
+            "data": {
+                "locations": [
+                    "F4hs-NK1X-Wczs-TOy3-EbAJ"
                 ]
             }
         },

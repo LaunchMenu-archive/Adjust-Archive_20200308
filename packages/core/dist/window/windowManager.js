@@ -98,9 +98,9 @@ class WindowManagerSingleton {
             }
         });
         // Listen for windows requesting states
-        ipcMain_1.IpcMain.on("WindowManager.getState", (moduleID, windowID) => {
+        ipcMain_1.IpcMain.on("WindowManager.getState", (moduleIDs, windowID) => {
             // Get the data (and make it forward any promises that get resolved)
-            return this.getModuleData(moduleID, windowID);
+            return moduleIDs.map(moduleID => this.getModuleData(moduleID, windowID));
         });
         // Listen for module calls
         ipcMain_1.IpcMain.on("WindowManager.moduleCall", (moduleID, methodName, args) => {

@@ -35,7 +35,7 @@ export declare class ModuleReference {
      * @param ref The reference to compare this to
      * @returns Whether the references are quivalent
      */
-    equals(ref: ModuleReference): boolean;
+    equals(ref: ModuleReference | string): boolean;
 }
 /**
  * The class used internally to identify modules,

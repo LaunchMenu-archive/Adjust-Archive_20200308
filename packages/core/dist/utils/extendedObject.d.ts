@@ -184,9 +184,10 @@ export declare class ExtendedObject extends Object {
      * Checks if the contents of object 1 and 2 are equal, except for subobjects
      * @param obj1 The first object
      * @param obj2 The second object
+     * @param includeObjects Whether object difference should be taken into account
      * @returns Whether or not the contents of the two objects are equivalent
      */
-    static equals(obj1: object, obj2: object): boolean;
+    static equals(obj1: object, obj2: object, includeObjects?: boolean): boolean;
     /**
      * Checks if the contents of object 1 and 2 are equal, including subobjects
      * @param obj1 The first object
@@ -198,9 +199,10 @@ export declare class ExtendedObject extends Object {
      * Checks if the contents of object 2 are contained in object 1, excluding subobjects
      * @param obj1 The first object
      * @param obj2 The second object
+     * @param includeObjects Whether object difference should be taken into account
      * @returns Whether or not the contents of object 1 are contained in object 2
      */
-    static contains(obj1: object, obj2: object): boolean;
+    static contains(obj1: object, obj2: object, includeObjects?: boolean): boolean;
     /**
      * Checks if the contents of object 2 are contained in object 1, including subobjects
      * @param obj1 The first object

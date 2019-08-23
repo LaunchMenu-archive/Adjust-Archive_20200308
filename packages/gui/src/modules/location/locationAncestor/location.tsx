@@ -347,8 +347,14 @@ export class LocationView extends createModuleView(LocationModule) {
 
     /**@override */
     protected renderView(): JSX.Element {
+        // Only render the top most module
+        const content = this.state.modules.map((module, index) => (
+            <ChildBox display={index == 0 ? "block" : "none"}>{module}</ChildBox>
+        ));
+
         return (
-            <ChildBox background="themeTertiary">
+            <ChildBox background="themeTertiary" overflow="auto">
+                {content}
                 {this.state.inEditMode && (
                     <ChildBox
                         padding="m"
@@ -357,7 +363,6 @@ export class LocationView extends createModuleView(LocationModule) {
                         {this.renderModuleBoxes()}
                     </ChildBox>
                 )}
-                {this.state.modules[0]}
             </ChildBox>
         );
     }

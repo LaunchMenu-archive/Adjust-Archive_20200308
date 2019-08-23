@@ -6,6 +6,8 @@ import {ParameterizedModuleViewState} from "../module/_types/moduleViewState";
 import {Serialize} from "../utils/serialize";
 import {SerializeableData} from "../utils/_types/serializeableData";
 import {ModuleID, ModuleReference} from "../module/moduleID";
+import {ViewCache} from "./viewCache";
+import {isMain} from "../utils/isMain";
 
 // Any window will have a global windowID
 declare const windowID: string;
@@ -30,6 +32,17 @@ class ViewManagerSingleton {
 
     // The ID of the module whose view should be used of the view can't be found
     protected viewNotFoundID: ModuleID;
+
+    // Data used to batch state fetches
+    protected batchDelay = 1;
+    protected stateBatch: {
+        timeout: number;
+        promise: Promise<ParameterizedModuleViewState[]>;
+        requests: string[];
+    } = {timeout: null, promise: null, requests: []};
+
+    // Cache to store views that are (temporarily?) not visible
+    protected viewCache = new ViewCache();
 
     /**
      * Creates a view manager
@@ -89,6 +102,44 @@ class ViewManagerSingleton {
     }
 
     /**
+     * Retrieves the state of a module, and applies batching
+     * @param moduleID The ID of the module to retrieve
+     * @returns The state that was obtained
+     */
+    protected async retrieveViewState(
+        moduleID: string | ModuleReference
+    ): Promise<ParameterizedModuleViewState> {
+        // Store the index that should be retrieved from the batched response, and add the request
+        const index = this.stateBatch.requests.length;
+        this.stateBatch.requests.push(moduleID.toString());
+
+        // Initiate the request if none is present
+        if (!this.stateBatch.timeout) {
+            this.stateBatch.promise = new Promise(res => {
+                this.stateBatch.timeout = setTimeout(async () => {
+                    // Indicate that no request is present anymore to add to
+                    this.stateBatch.timeout = null;
+                    const requests = this.stateBatch.requests;
+                    this.stateBatch.requests = [];
+
+                    // Make the request and return its response
+                    res(
+                        (await IpcRenderer.send(
+                            "WindowManager.getState",
+                            requests,
+                            windowID
+                        ))[0]
+                    );
+                }, this.batchDelay) as any;
+            });
+        }
+
+        // Wait for the request to resolve, and retrieve the correct response
+        const states = await this.stateBatch.promise;
+        return states[index];
+    }
+
+    /**
      * Registers a view such that it will receive updates
      * @param view The view to register
      * @param moduleID The moduleID of the module that the view represents
@@ -103,6 +154,10 @@ class ViewManagerSingleton {
 
         // Store the new promise that will resolve in a view
         let promise = new Promise(async (resolve, reject) => {
+            // Set the initial state of the view from cache if possible
+            const cachedState = this.viewCache.getViewState(moduleID);
+            if (cachedState) view.loadInitialState(cachedState);
+
             // Get the initial state of the view
             let initialState: ParameterizedModuleViewState;
             if (moduleViews.length) {
@@ -116,11 +171,7 @@ class ViewManagerSingleton {
             // If either now such view existed, or it was removed before resolving
             if (!initialState) {
                 // Get the initial state from the window manager
-                const stateData = (await IpcRenderer.send(
-                    "WindowManager.getState",
-                    moduleID.toString(),
-                    windowID
-                ))[0] || {isStopped: true};
+                const stateData = await this.retrieveViewState(moduleID);
 
                 initialState = this.deserializeData(stateData) as any;
             }
@@ -170,6 +221,11 @@ class ViewManagerSingleton {
 
         // Update the module count
         this.updateWindowModuleCount(moduleID);
+
+        // Add the view's state to the cache
+        view.then(view => {
+            this.viewCache.addViewState(view.props.moduleID.toString(), view.state);
+        });
     }
 
     /**
@@ -218,7 +274,7 @@ class ViewManagerSingleton {
         return (
             <ModuleViewClass
                 key={moduleID.toString()} // Make sure that a new instance is created for a new module ID
-                moduleID={moduleID}
+                moduleID={moduleID.toString()}
                 module={moduleProxy}
             />
         );
