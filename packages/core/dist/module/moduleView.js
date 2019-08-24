@@ -19,7 +19,7 @@ class ModuleView extends react_1.default.Component {
         // Indicates whether this react component has been completely unmounted
         this.unmounted = false;
         // @ts-ignore
-        this.state = this.getClass().initialState;
+        this.state = this.getClass().state;
         // Make a shortcut to the module
         this.module = this.props.module;
     }
@@ -141,6 +141,6 @@ class ModuleView extends react_1.default.Component {
         return react_1.default.createElement("span", { style: { color: "red" } }, this.state.error.toString());
     }
 }
-ModuleView.initialState = {}; // The initial state to be loaded for this class, will be replaced by createModuleView
+ModuleView.state = {}; // The initial state to be loaded for this class, will be replaced by createModuleView
 exports.ModuleView = ModuleView;
 //# sourceMappingURL=moduleView.js.map

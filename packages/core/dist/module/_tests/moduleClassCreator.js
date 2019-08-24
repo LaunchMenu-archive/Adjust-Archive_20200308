@@ -4,7 +4,7 @@ const moduleClassCreator_1 = require("../moduleClassCreator");
 // A config for our module
 const config = {
     version: "0.0.5",
-    initialState: {
+    state: {
         val: "hello",
     },
     settings: {
@@ -22,7 +22,7 @@ const config = {
 // A config for a module that extends our module
 const config2 = {
     version: "0.0.2",
-    initialState: {
+    state: {
         category: {
             val: 7,
         },
@@ -51,10 +51,10 @@ describe("ModuleClassCreator", () => {
             // Creating a new module
             class OurImplementation extends moduleClassCreator_1.createModule(config) {
                 somethings(inp) {
-                    this.setState({ val: "yes" });
-                    this.setState({});
-                    this.setState({ val: 3 });
-                    // this.setState({val: false}); // errors, since val us string | number
+                    this.changeState({ val: "yes" });
+                    this.changeState({});
+                    this.changeState({ val: 3 });
+                    // this.changeState({val: false}); // errors, since val us string | number
                     // const p: string = this.settings.val; // error, cus stuff is of type number
                 }
             }
@@ -78,7 +78,7 @@ describe("ModuleClassCreator", () => {
             });
             const instance = Object.create(OurImplementation.prototype);
             expect(instance.somethings).not.toBeFalsy();
-            expect(instance.setState).not.toBeFalsy();
+            expect(instance.changeState).not.toBeFalsy();
         });
         it("Should be able to be used to extend any module class", () => {
             // Creating a new module
@@ -93,16 +93,16 @@ describe("ModuleClassCreator", () => {
                 stuff() {
                     // this.somethings(); // errors since it requires an input
                     this.somethings({});
-                    this.setState({ category: { val: 3 } });
+                    this.changeState({ category: { val: 3 } });
                     const o = this.state.val; // Still has the original state
                     const p = this.state.category.val; // Also has the new state
-                    this.setState({ val: 3, category: { val: 2 } }); // Can change the new and old parts of the state
-                    this.settingsObject.changeData({ category: { val3: 3 } });
-                    this.settingsObject.changeData({ category: { val3: true } });
-                    // this.setSettings({category: {val2: 3}}); // Error, since category has no val2
-                    // this.setSettings({category: {val1: true}}); // Error, since category has no val1
-                    // this.setState({category: {v: 3}}); // errors, since category has no v
-                    // this.setState({something: "test"}); // errors, since something should be of type number
+                    this.changeState({ val: 3, category: { val: 2 } }); // Can change the new and old parts of the state
+                    this.getSettingsObject().changeData({ category: { val3: 3 } });
+                    this.getSettingsObject().changeData({ category: { val3: true } });
+                    // this.changeSettings({category: {val2: 3}}); // Error, since category has no val2
+                    // this.changeSettings({category: {val1: true}}); // Error, since category has no val1
+                    // this.changeState({category: {v: 3}}); // errors, since category has no v
+                    // this.changeState({something: "test"}); // errors, since something should be of type number
                 }
                 somethingsElse() {
                     return 8;
@@ -151,7 +151,7 @@ describe("ModuleClassCreator", () => {
             const instance = Object.create(ExtendsOurImplementation.prototype);
             expect(instance.stuff).not.toBeFalsy();
             expect(instance.somethings).not.toBeFalsy();
-            expect(instance.setState).not.toBeFalsy();
+            expect(instance.changeState).not.toBeFalsy();
         });
     });
 });

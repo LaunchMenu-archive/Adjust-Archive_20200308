@@ -40,7 +40,7 @@ export class InstanceModuleProvider<
     /** @override*/
     public getPriority(request: NormalizedRequest<M>): number {
         // Check if the module that we are providing for is still alive
-        if (this.module.state.isStopping) {
+        if (this.module.getStateObject().get.isStopping) {
             Registry.removeProvider(this);
             return 0;
         }

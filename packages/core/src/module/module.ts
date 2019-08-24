@@ -30,7 +30,7 @@ export const baseConfig = {
     version: "0.0.0",
     settings: {},
     settingsMigrators: {},
-    initialState: {
+    state: {
         isStopping: false,
         isStopped: false,
     },
@@ -57,22 +57,23 @@ export class Module<
     I extends ModuleContract
 > implements ChildModule<{}> {
     // ID
-    readonly ID: ModuleID;
+    private readonly ID: ModuleID;
 
     // Request
     private readonly requestData: ModuleRequestData<I>;
     parent: I["parent"];
-    readonly parents: I["parent"][]; // A list of all 'parents'
-    readonly type: I; // Only used to extract information, no value gets assigned
+    private readonly parents: I["parent"][]; // A list of all 'parents'
 
     // Settings
     readonly settings: DeepReadonly<SettingsConfigData<C>>;
-    readonly settingsObject: Settings<C>;
+    private readonly settingsObject: Settings<C>;
 
     // State
     readonly state: DeepReadonly<S>; // An easy to reference object to get state properties
-    readonly stateObject: StateData<S>; // The full state object, to which listeners can be added
-    readonly children: (ModuleProxy | Promise<ModuleProxy | ModuleProxy[]>)[] = []; // A list of all the modules that have been requested and not closed yet
+    private readonly stateObject: StateData<S>; // The full state object, to which listeners can be added
+    private readonly children: (
+        | ModuleProxy
+        | Promise<ModuleProxy | ModuleProxy[]>)[] = []; // A list of all the modules that have been requested and not closed yet
 
     /**
      * The core building block for Adjust applications
@@ -160,7 +161,7 @@ export class Module<
         moduleID: ModuleID
     ): Promise<any> {
         // Obtain the required data to instanciate the module
-        const initialState = this.getConfig().initialState;
+        const initialState = this.getConfig().state;
         (request as any).requestPath = this.createRequestPath(
             moduleID,
             request.parent as any,
@@ -216,7 +217,7 @@ export class Module<
      * @param changedProps An object containing any fields of the state that have changed
      * @returns A promise that resolves once all listeners have resolved
      */
-    public async setState(changedProps: DataChange<S>): Promise<void> {
+    public async changeState(changedProps: DataChange<S>): Promise<void> {
         return this.stateObject.changeData(changedProps as any);
     }
 
@@ -235,7 +236,7 @@ export class Module<
      * @param condition The settings condition to store the data under
      * @returns A promise that resolves once all listeners have resolved
      */
-    public async setSettings(
+    public async changeSettings(
         changedProps: DataChange<SettingsConfigData<C>>,
         condition?: SettingsConditions
     ): Promise<void> {
@@ -530,7 +531,7 @@ export class Module<
      */
     public async stop(): Promise<void> {
         // Indicate we are now attempting to stop
-        await this.setState({
+        await this.changeState({
             isStopping: true,
         } as any);
 
@@ -539,7 +540,7 @@ export class Module<
         await this.onStop();
 
         // Indicate the module has now stopped
-        this.setState({
+        this.changeState({
             isStopped: true,
         } as any);
     }

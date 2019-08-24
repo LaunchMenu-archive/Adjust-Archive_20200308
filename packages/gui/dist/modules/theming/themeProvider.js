@@ -4,7 +4,7 @@ const React_1 = require("../../React");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
 const themer_type_1 = require("./themer.type");
 exports.themeProviderConfig = {
-    initialState: {
+    state: {
         themer: null,
     },
     getPriority: () => 1,
@@ -19,7 +19,7 @@ class ThemeProviderModule extends moduleClassCreator_1.createModule(exports.them
     async onInit(fromReload) {
         await super.onInit(fromReload);
         if (!fromReload)
-            this.setState({ themer: await this.request({ type: themer_type_1.ThemerType }) });
+            this.changeState({ themer: await this.request({ type: themer_type_1.ThemerType }) });
     }
     /** @override */
     async onThemeUpdate(field) {

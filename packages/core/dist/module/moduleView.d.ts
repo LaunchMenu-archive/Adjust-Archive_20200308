@@ -30,7 +30,7 @@ export declare abstract class ModuleView<S extends ModuleState, C extends Settin
      */
     componentWillUnmount(): void;
     getClass<V extends ExtendsClass<typeof ModuleView> = typeof ModuleView>(): V;
-    static initialState: any;
+    static state: any;
     /**
      * Loads the initial state into the view
      * @param state The state to load

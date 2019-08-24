@@ -3,7 +3,7 @@ const gui_1 = require("@adjust/gui");
 const singleton_type_1 = require("../singleton/singleton.type");
 const singletonParent_type_1 = require("./singletonParent.type");
 exports.config = {
-    initialState: {
+    state: {
         singleton: undefined,
         child: undefined,
         text: "test",
@@ -27,7 +27,7 @@ exports.config = {
 class SingletonParentModule extends gui_1.createModule(exports.config) {
     async onInit() {
         const data = this.getData();
-        this.setState({
+        this.changeState({
             text: data.count + "",
             singleton: await this.request({
                 type: singleton_type_1.SingletonType,
@@ -35,7 +35,7 @@ class SingletonParentModule extends gui_1.createModule(exports.config) {
             }),
         });
         if (data.count > 0)
-            this.setState({
+            this.changeState({
                 child: await this.request({
                     type: singletonParent_type_1.SingletonParentType,
                     data: { count: data.count - 1 },
@@ -44,7 +44,7 @@ class SingletonParentModule extends gui_1.createModule(exports.config) {
     }
     async createChild() {
         if (!this.state.child)
-            this.setState({
+            this.changeState({
                 child: await this.request({
                     type: singletonParent_type_1.SingletonParentType,
                     data: { count: 0 },
@@ -59,7 +59,7 @@ class SingletonParentModule extends gui_1.createModule(exports.config) {
     async closeSingleton() {
         if (this.state.singleton) {
             await this.state.singleton.close();
-            this.setState({ singleton: null });
+            this.changeState({ singleton: null });
         }
     }
 }

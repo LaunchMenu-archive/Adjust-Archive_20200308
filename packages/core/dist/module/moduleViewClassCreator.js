@@ -13,25 +13,25 @@ class ModuleViewClassCreator {
     /**
      * A function to create a new module view class
      * @param module The module class to create the view for
-     * @param initialState The initial state to augment the module state with
+     * @param state The initial state to augment the module state with
      * @param moduleView The module view class to extend
      */
-    static createModuleView(module, initialState, moduleView) {
+    static createModuleView(module, state, moduleView) {
         // Set the initialState to the default state if not specified
-        if (!initialState)
-            initialState = {};
+        if (!state)
+            state = {};
         // Set the module view class to the default module if not specified
         if (!moduleView)
             moduleView = moduleView_1.ModuleView;
         // Create the class
         const cls = this.createNamedClass(moduleView.name, moduleView);
         // Get the initial state of the super class
-        const superInitialState = moduleView.initialState;
+        const superState = moduleView.state;
         // Combine the settings of both configs, giving priority to the new config
-        const combinedInitialStates = extendedObject_1.ExtendedObject.copyData(superInitialState, {});
-        extendedObject_1.ExtendedObject.copyData(initialState, combinedInitialStates);
+        const combinedStates = extendedObject_1.ExtendedObject.copyData(superState, {});
+        extendedObject_1.ExtendedObject.copyData(state, combinedStates);
         // Assign the combined initialState to the class
-        cls.initialState = combinedInitialStates;
+        cls.state = combinedStates;
         // Return the created class
         return cls;
     }

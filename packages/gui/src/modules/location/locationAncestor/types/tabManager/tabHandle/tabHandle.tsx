@@ -12,7 +12,7 @@ import {LocationsMoveData} from "../../../../_types/LocationsMoveData";
 import {TabHandleData} from "../_types/TabHandleData";
 
 export const tabHandleConfig = {
-    initialState: {
+    state: {
         inEditMode: false,
         inDropMode: false,
         index: 0,
@@ -44,32 +44,35 @@ export class TabHandleModule extends createModule(tabHandleConfig) implements Ta
 
     /** @override*/
     public async setIndex(index: number): Promise<void> {
-        this.setState({index});
+        this.changeState({index});
     }
 
     /** @override*/
     public async setInitialData(data: TabHandleData): Promise<void> {
-        this.settingsObject.setInitialData({name: data.name}, this.settingsConditions);
+        this.getSettingsObject().setInitialData(
+            {name: data.name},
+            this.settingsConditions
+        );
     }
 
     /** @override */
     public async setEditMode(edit: boolean): Promise<void> {
-        this.setState({inEditMode: edit});
+        this.changeState({inEditMode: edit});
     }
 
     /** @override */
     public async setDropMode(drop: boolean): Promise<void> {
-        this.setState({inDropMode: drop});
+        this.changeState({inDropMode: drop});
     }
 
     /** @override*/
     public async setSelected(selected: boolean): Promise<void> {
-        this.setState({selected});
+        this.changeState({selected});
     }
 
     /** @override*/
     public async remove(): Promise<void> {
-        this.settingsObject.removeConditionData(this.settingsConditions);
+        this.getSettingsObject().removeConditionData(this.settingsConditions);
     }
 
     /**

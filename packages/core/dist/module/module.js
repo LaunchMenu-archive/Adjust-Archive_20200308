@@ -12,7 +12,7 @@ exports.baseConfig = {
     version: "0.0.0",
     settings: {},
     settingsMigrators: {},
-    initialState: {
+    state: {
         isStopping: false,
         isStopped: false,
     },
@@ -98,7 +98,7 @@ class Module {
      */
     static async createInstance(request, moduleID) {
         // Obtain the required data to instanciate the module
-        const initialState = this.getConfig().initialState;
+        const initialState = this.getConfig().state;
         request.requestPath = this.createRequestPath(moduleID, request.parent, request.data);
         const parents = request.parent ? [request.parent] : [];
         // Create the instance
@@ -145,7 +145,7 @@ class Module {
      * @param changedProps An object containing any fields of the state that have changed
      * @returns A promise that resolves once all listeners have resolved
      */
-    async setState(changedProps) {
+    async changeState(changedProps) {
         return this.stateObject.changeData(changedProps);
     }
     // Settings related methods
@@ -162,7 +162,7 @@ class Module {
      * @param condition The settings condition to store the data under
      * @returns A promise that resolves once all listeners have resolved
      */
-    async setSettings(changedProps, condition) {
+    async changeSettings(changedProps, condition) {
         return this.settingsObject.changeData(changedProps, condition);
     }
     // Serialization related methods
@@ -381,14 +381,14 @@ class Module {
      */
     async stop() {
         // Indicate we are now attempting to stop
-        await this.setState({
+        await this.changeState({
             isStopping: true,
         });
         // Perform stopping methods
         await this.stopChildren();
         await this.onStop();
         // Indicate the module has now stopped
-        this.setState({
+        this.changeState({
             isStopped: true,
         });
     }

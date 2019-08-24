@@ -6,7 +6,7 @@ import { Window, WindowParent } from "./window/window.type";
 import { LocationAncestor } from "../../locationAncestor.type";
 import { WindowsData } from "./_types/windowData";
 export declare const windowManagerConfig: {
-    initialState: {
+    state: {
         windows: {
             [windowID: string]: {
                 opened: boolean;
@@ -28,7 +28,7 @@ export declare const windowManagerConfig: {
     type: import("@adjust/core/types").ContractID<import("../../locationAncestor.type").LocationAncestorContract>;
 };
 declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         windows: {
             [windowID: string]: {
                 opened: boolean;

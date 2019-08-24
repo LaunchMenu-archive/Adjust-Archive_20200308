@@ -29,14 +29,15 @@ class StateData extends data_1.Data {
             const module = programState_1.ProgramState.getModule(path);
             // Create a proxy for the module
             const moduleProxy = module.createProxy();
-            // Check if there is a context to connect to
-            const contextProxy = module.parents.find(parent => parent._target == context);
+            // Check if the module defines a proxy to this context, which we can connect to
+            const contextProxy = module
+                .getParents()
+                .find(parent => parent._target == context);
             if (!contextProxy) {
-                // TODO: add error once architecture has been changed such that locations don't require passing modules around
                 throw Error(`module doesn't specify context as parent`);
-                return moduleProxy;
+                // return moduleProxy;
             }
-            // Connect the procies, and return the module proxy
+            // Connect the proxies, and return the module proxy
             moduleProxy._connect(contextProxy);
             return moduleProxy;
         }));

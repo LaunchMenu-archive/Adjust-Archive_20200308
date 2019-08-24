@@ -17,7 +17,7 @@ const sizes = {
     windowHeight: 500,
 };
 exports.windowSelectorConfig = {
-    initialState: {
+    state: {
         closedWindows: {},
         windowModule: null,
     },
@@ -74,7 +74,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.win
     // Interface methods
     /** @override */
     async setWindows(closed, opened) {
-        await this.setState({
+        await this.changeState({
             closedWindows: Object.assign({}, closed, { 
                 // Make sure to remove previous window data
                 [core_1.ExtendedObject.overwrite]: true }),
@@ -138,7 +138,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.win
         if (this.state.windowModule) {
             const windowModule = await this.state.windowModule;
             // Remove the window
-            this.setState({ windowModule: undefined });
+            this.changeState({ windowModule: undefined });
             // Close the window
             windowModule.close();
             // Update the window size
@@ -148,7 +148,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.win
         // Open the new window
         if (windowID) {
             // Obtain the new window
-            this.setState({
+            this.changeState({
                 windowModule: this.request({
                     type: window_type_1.WindowType,
                     data: {

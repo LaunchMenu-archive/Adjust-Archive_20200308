@@ -80,14 +80,14 @@ class ModuleClassCreator {
             settingsMigrators = this.mergeMigrators(config.settingsMigrators, superConfig.settingsMigrators);
         }
         // Combine the initial states of both configs, giving priority to the new config
-        const initialState = extendedObject_1.ExtendedObject.copyData(superConfig.initialState, {});
-        extendedObject_1.ExtendedObject.copyData(config.initialState, initialState);
+        const state = extendedObject_1.ExtendedObject.copyData(superConfig.state, {});
+        extendedObject_1.ExtendedObject.copyData(config.state, state);
         // Create the normalized and extended config
         const normalizedConfig = {
             version: config.version,
             settings,
             settingsMigrators,
-            initialState,
+            state: state,
             abstract: config.abstract,
             onInstall: config.onInstall || (() => { }),
             onLoad: config.onLoad || (() => { }),

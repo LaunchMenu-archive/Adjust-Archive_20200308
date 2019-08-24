@@ -3,7 +3,7 @@ import {TestType, Test} from "./test.type";
 import {EmbedType, Embed} from "../embed/embed.type";
 
 export const config = {
-    initialState: {
+    state: {
         stuff: "test",
         children: [] as Embed[],
         somethingAsync: undefined as Promise<number>,
@@ -35,19 +35,19 @@ export default class TestModule extends createModule(config) implements Test {
     /** @override */
     public async onInit() {
         console.time();
-        this.setState({
+        this.changeState({
             children: await this.request({
                 type: EmbedType,
                 data: {text: "hello", count: 400}, //421},
             }).then(child => [child]),
         });
-        // this.setState({
+        // this.changeState({
         //     children: await this.request({
         //         type: EmbedType,
         //         data: {text: "hello", count: 842}, //421},
         //     }).then(child => [child]),
         // });
-        // this.setState({
+        // this.changeState({
         //     children: await Promise.all(
         //         new Array(840).fill(0).map(() =>
         //             this.request({
@@ -60,7 +60,7 @@ export default class TestModule extends createModule(config) implements Test {
         console.timeEnd();
         this.intervalID = setInterval(() => {
             if (this.state.smth == 0) this.show();
-            this.setState({
+            this.changeState({
                 smth: (this.state.smth + 1) % 100,
             });
         }, 100) as any;
@@ -76,7 +76,7 @@ export default class TestModule extends createModule(config) implements Test {
 
     /** @override */
     public async doSomething(stuff: string): Promise<string> {
-        this.setState({stuff: stuff});
+        this.changeState({stuff: stuff});
 
         return "yes";
     }
@@ -88,8 +88,8 @@ export default class TestModule extends createModule(config) implements Test {
         this.state.children.forEach(child => child.close());
     }
     public setStuff() {
-        this.setSettings({stuff: true});
-        this.setState({
+        this.changeSettings({stuff: true});
+        this.changeState({
             somethingAsync: new Promise(res => setTimeout(() => res(9), 1000)),
         });
     }

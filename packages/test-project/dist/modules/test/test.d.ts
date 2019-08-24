@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { Test } from "./test.type";
 export declare const config: {
-    initialState: {
+    state: {
         stuff: string;
         children: import("@adjust/core/types").ChildModule<{
             setText(text: string): Promise<void>;
@@ -30,7 +30,7 @@ export declare const config: {
     type: import("@adjust/core/types").ContractID<import("./test.type").TestContract>;
 };
 declare const TestModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         stuff: string;
         children: import("@adjust/core/types").ChildModule<{
             setText(text: string): Promise<void>;

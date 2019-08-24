@@ -3,18 +3,18 @@ const gui_1 = require("@adjust/gui");
 const embed_type_1 = require("./embed.type");
 const colors = ["orange", "blue", "purple"];
 exports.config = {
-    initialState: { text: "", color: colors[0], child: null },
+    state: { text: "", color: colors[0], child: null },
     settings: {},
     type: embed_type_1.EmbedType,
 };
 class EmbedModule extends gui_1.createModule(exports.config) {
     async onInit() {
         const data = this.getData();
-        this.setState({
+        this.changeState({
             text: data.text,
         });
         if (data.count > 0)
-            this.setState({
+            this.changeState({
                 child: await this.request({
                     type: embed_type_1.EmbedType,
                     data: { text: data.text + "t", count: data.count - 1 },
@@ -25,7 +25,7 @@ class EmbedModule extends gui_1.createModule(exports.config) {
         console.log("stopped");
     }
     async setText(text) {
-        this.setState({
+        this.changeState({
             text: text,
         });
         if (this.state.child)
@@ -41,7 +41,7 @@ class EmbedModule extends gui_1.createModule(exports.config) {
     cycleColor() {
         const colorIndex = colors.indexOf(this.state.color);
         const newColor = colors[(colorIndex + 1) % colors.length];
-        this.setState({
+        this.changeState({
             color: newColor,
         });
     }

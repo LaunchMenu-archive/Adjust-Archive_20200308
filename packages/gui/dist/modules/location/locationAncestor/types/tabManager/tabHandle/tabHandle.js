@@ -8,7 +8,7 @@ const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const locationAncestor_type_1 = require("../../../locationAncestor.type");
 const Box_1 = require("../../../../../../components/Box");
 exports.tabHandleConfig = {
-    initialState: {
+    state: {
         inEditMode: false,
         inDropMode: false,
         index: 0,
@@ -31,27 +31,27 @@ class TabHandleModule extends moduleClassCreator_1.createModule(exports.tabHandl
     }
     /** @override*/
     async setIndex(index) {
-        this.setState({ index });
+        this.changeState({ index });
     }
     /** @override*/
     async setInitialData(data) {
-        this.settingsObject.setInitialData({ name: data.name }, this.settingsConditions);
+        this.getSettingsObject().setInitialData({ name: data.name }, this.settingsConditions);
     }
     /** @override */
     async setEditMode(edit) {
-        this.setState({ inEditMode: edit });
+        this.changeState({ inEditMode: edit });
     }
     /** @override */
     async setDropMode(drop) {
-        this.setState({ inDropMode: drop });
+        this.changeState({ inDropMode: drop });
     }
     /** @override*/
     async setSelected(selected) {
-        this.setState({ selected });
+        this.changeState({ selected });
     }
     /** @override*/
     async remove() {
-        this.settingsObject.removeConditionData(this.settingsConditions);
+        this.getSettingsObject().removeConditionData(this.settingsConditions);
     }
     /**
      * Selects this tab in the tabs manager

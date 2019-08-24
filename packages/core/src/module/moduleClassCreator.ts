@@ -102,11 +102,7 @@ export class ModuleClassCreator {
         // Can't use Module<{}, {}, any> due to it expecting private members
         X extends ExtendsClass<typeof Module, {}> = ExtendsClass<
             typeof Module,
-            Module<
-                typeof Module.config.initialState,
-                SettingsConfig<Empty>,
-                ModuleContract
-            >
+            Module<typeof Module.config.state, SettingsConfig<Empty>, ModuleContract>
         >
     >(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X> {
         // Set the module class to the default module if not specified
@@ -142,15 +138,15 @@ export class ModuleClassCreator {
         }
 
         // Combine the initial states of both configs, giving priority to the new config
-        const initialState = ExtendedObject.copyData(superConfig.initialState, {});
-        ExtendedObject.copyData(config.initialState, initialState);
+        const state = ExtendedObject.copyData(superConfig.state, {});
+        ExtendedObject.copyData(config.state, state);
 
         // Create the normalized and extended config
         const normalizedConfig: ParameterizedNormalizedModuleConfig = {
             version: config.version,
             settings,
             settingsMigrators,
-            initialState,
+            state: state,
             abstract: config.abstract,
             onInstall: config.onInstall || (() => {}),
             onLoad: config.onLoad || (() => {}),

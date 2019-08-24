@@ -6,7 +6,7 @@ import { LocationPath } from "../../../../_types/LocationPath";
 import { ModuleLocation } from "../../../../../../module/_types/ModuleLocation";
 import { Window } from "./window.type";
 export declare const windowConfig: {
-    initialState: {
+    state: {
         childLocationAncestor: Promise<import("@adjust/core/types").ChildModule<{
             openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
             closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
@@ -45,7 +45,7 @@ export declare const windowConfig: {
     type: import("@adjust/core/types").ContractID<import("./window.type").WindowContract>;
 };
 declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         childLocationAncestor: Promise<import("@adjust/core/types").ChildModule<{
             openModule(module: ModuleReference, locationPath: LocationPath): Promise<LocationPath>;
             closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;

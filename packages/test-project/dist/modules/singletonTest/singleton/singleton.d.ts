@@ -1,14 +1,14 @@
 /// <reference types="react" />
 import { Singleton } from "./singleton.type";
 export declare const config: {
-    initialState: {
+    state: {
         text: string;
     };
     settings: {};
     type: import("@adjust/core/types").ContractID<import("./singleton.type").SingletonContract>;
 };
 declare const SingletonModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         text: string;
     };
     settings: {};

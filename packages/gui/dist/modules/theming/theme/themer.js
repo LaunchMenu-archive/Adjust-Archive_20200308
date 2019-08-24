@@ -8,7 +8,7 @@ const emotion_theming_1 = require("emotion-theming");
 const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const box_1 = require("./box");
 exports.themerConfig = {
-    initialState: {},
+    state: {},
     getPriority: () => 1,
     settings: themeSettings_1.themeSettings,
     type: themer_type_1.ThemerType,
@@ -20,7 +20,7 @@ class ThemerModule extends core_1.createModule(exports.themerConfig) {
     /** @override */
     async onInit(fromReload) {
         core_1.Registry.addProvider(new core_1.InstanceModuleProvider(themer_type_1.ThemerType, this, () => 2));
-        this.settingsObject.on("change", field => this.updateTheme(field));
+        this.getSettingsObject().on("change", field => this.updateTheme(field));
     }
     /**
      * Updates the theme object and notifies all the parents

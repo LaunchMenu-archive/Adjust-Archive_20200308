@@ -8,7 +8,7 @@ import { OpenedTab, Tab } from "./_types/TabData";
 import { TabHandleParent } from "./tabHandle/tabHandle.type";
 import { TabHandleData } from "./_types/TabHandleData";
 export declare const tabManagerConfig: {
-    initialState: {
+    state: {
         tabs: OpenedTab[];
         selectedTabID: string;
         tabsVisible: boolean;
@@ -33,7 +33,7 @@ export declare const tabManagerConfig: {
     type: import("@adjust/core/types").ContractID<import("../../locationAncestor.type").LocationAncestorContract>;
 };
 declare const TabManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         tabs: OpenedTab[];
         selectedTabID: string;
         tabsVisible: boolean;

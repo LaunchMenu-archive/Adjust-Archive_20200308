@@ -15,7 +15,7 @@ import {ModuleLocation} from "../../../module/_types/ModuleLocation";
 import {stylingSettings} from "../../../module/module";
 
 export const config = {
-    initialState: {
+    state: {
         inEditMode: false,
         inDropMode: false,
     },
@@ -163,12 +163,12 @@ export default class LocationAncestorModule extends createAdjustCoreModule(confi
     // State related methods
     /** @override */
     public async setEditMode(edit: boolean): Promise<any> {
-        await this.setState({inEditMode: edit});
+        await this.changeState({inEditMode: edit});
     }
 
     /** @override */
     public async setDropMode(drop: boolean): Promise<void> {
-        await this.setState({inDropMode: drop});
+        await this.changeState({inDropMode: drop});
     }
 
     // Location moving related methods

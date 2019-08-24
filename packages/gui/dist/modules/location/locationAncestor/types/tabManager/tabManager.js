@@ -12,7 +12,7 @@ const ChildBox_1 = require("../../../../../components/ChildBox");
 const ParentBox_1 = require("../../../../../components/ParentBox");
 const HorizontalScroller_1 = require("../../../../../components/HorizontalScroller");
 exports.tabManagerConfig = {
-    initialState: {
+    state: {
         tabs: [],
         selectedTabID: null,
         tabsVisible: false,
@@ -100,7 +100,7 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
             let tabStoredData = this.settings.tabs.find(tab => tab.ID == ID);
             if (!tabStoredData) {
                 tabStoredData = { ID };
-                this.setSettings({
+                this.changeSettings({
                     tabs: [
                         ...this.settings.tabs.slice(0, index),
                         tabStoredData,
@@ -123,7 +123,7 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
                 }
             }
             // Add the tab at this index
-            this.setState({
+            this.changeState({
                 tabs: [
                     ...this.state.tabs.slice(0, openedIndex),
                     tabData,
@@ -141,7 +141,7 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
         }
         // Update visible if required
         if (tabData && visible != null && tabData.visible != visible) {
-            this.setState({
+            this.changeState({
                 tabs: this.state.tabs.map(tab => tab.ID == ID ? Object.assign({}, tab, { visible }) : tab),
             });
         }
@@ -158,7 +158,7 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
             if (tab) {
                 const openedIndex = this.getTabIndex(ID, true);
                 // Remove it from the state
-                this.setState({
+                this.changeState({
                     tabs: [
                         ...this.state.tabs.slice(0, openedIndex),
                         ...this.state.tabs.slice(openedIndex + 1),
@@ -184,7 +184,7 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
             // Retrieve all the tabs data in order to remove it
             let tabPromise = this.getTab(ID, true);
             // Remove the associated data ASAP
-            this.setSettings({
+            this.changeSettings({
                 tabs: [
                     ...this.settings.tabs.slice(0, index),
                     ...this.settings.tabs.slice(index + 1),
@@ -205,7 +205,7 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
         if (oldTab)
             (await oldTab.tabHandle).setSelected(false);
         // Store the newly selected tab
-        this.setState({
+        this.changeState({
             selectedTabID: tabID,
         });
         // Inform the tab about it being selected
@@ -227,7 +227,7 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
         // Only show the tabs if multiple tabs are opened
         const shouldShowTabs = this.state.tabs.length > 1;
         if (this.state.tabsVisible != shouldShowTabs) {
-            this.setState({
+            this.changeState({
                 tabsVisible: shouldShowTabs,
             });
         }
@@ -325,10 +325,8 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
                 await (await tabData.tabHandle).close();
             });
             // Clear the settings ASAP
-            this.setSettings({ tabs: [] });
-            await this.settingsObject
-                .getSettingsFile()
-                .removeConditionData(this.settingsConditions);
+            this.changeSettings({ tabs: [] });
+            await this.getSettingsObject().removeConditionData(this.settingsConditions);
             // Await all the windows disposals
             await Promise.all(promises);
         });

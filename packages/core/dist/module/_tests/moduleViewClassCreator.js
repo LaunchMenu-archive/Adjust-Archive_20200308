@@ -4,7 +4,7 @@ const moduleClassCreator_1 = require("../moduleClassCreator");
 const moduleViewClassCreator_1 = require("../moduleViewClassCreator");
 // A config for our module
 const config = {
-    initialState: {
+    state: {
         val: "hello",
     },
     settings: {
@@ -33,7 +33,7 @@ describe("ModuleViewClassCreator", () => {
                     this.settings.val;
                     // this.state.shit; // Errors since value doesn't exist
                     /* May not change original state */
-                    // this.setState({val: 3});
+                    // this.changeState({val: 3});
                 }
                 renderView() {
                     throw new Error("Method not implemented.");
@@ -60,8 +60,8 @@ describe("ModuleViewClassCreator", () => {
                     return void 0;
                 }
             }
-            expect(SomeModuleView.initialState).toEqual({});
-            expect(SomeModuleView2.initialState).toEqual({ stuff: 3 });
+            expect(SomeModuleView.state).toEqual({});
+            expect(SomeModuleView2.state).toEqual({ stuff: 3 });
         });
         it("Should be able to be used to extend any moduleView class", () => {
             class SomeModuleView extends moduleViewClassCreator_1.createModuleView(SomeModule, { stuff: 3 }) {
@@ -88,11 +88,11 @@ describe("ModuleViewClassCreator", () => {
                     this.setState({ something: "te", stuff: 2 });
                     this.setState(state => ({ something: "te", stuff: 9 }));
                     /* Can't make up stuff */
-                    // this.setState({something: "te", crap: 2}); // Errors since crap doesn't exist
+                    // this.changeState({something: "te", crap: 2}); // Errors since crap doesn't exist
                     return "3";
                 }
             }
-            expect(ExtendsSomeModuleView.initialState).toEqual({
+            expect(ExtendsSomeModuleView.state).toEqual({
                 stuff: 3,
                 something: "test",
             });

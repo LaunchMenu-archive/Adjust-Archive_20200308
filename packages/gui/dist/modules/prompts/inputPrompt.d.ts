@@ -1,7 +1,7 @@
 import { KeyboardEvent } from "react";
 import { InputPrompt, PromptData } from "./inputPrompt.type";
 export declare const config: {
-    initialState: {
+    state: {
         type: string;
         title: string;
         description: string;
@@ -24,7 +24,7 @@ export declare const config: {
     type: import("@adjust/core/types").ContractID<import("./inputPrompt.type").InputPromptContract>;
 };
 declare const InputPromptModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         type: string;
         title: string;
         description: string;

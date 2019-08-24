@@ -10,7 +10,7 @@ const moduleViewClassCreator_1 = require("../../../module/moduleViewClassCreator
 const Box_1 = require("../../../components/Box");
 const ChildBox_1 = require("../../../components/ChildBox");
 exports.config = {
-    initialState: {
+    state: {
         // The modules being displayed
         locations: {},
         modules: [],
@@ -35,7 +35,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
     async createLocation(location) {
         // Add the location to the settings
         if (this.settings.locations.indexOf(location.ID) == -1)
-            this.setSettings({
+            this.changeSettings({
                 locations: [...this.settings.locations, location.ID],
             }, this.settingsConditions);
         // Return the path just including this module
@@ -50,7 +50,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
         const locData = this.state.locations[locationID];
         // Remove the data from the state if present
         if (locData) {
-            this.setState({
+            this.changeState({
                 // Keep all modules that weren't present in this location
                 modules: this.state.modules.filter(m => locData.modules.find(lm => m.equals(lm.module)) == undefined),
                 locations: {
@@ -61,7 +61,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
         // Check if the location existed here
         const contained = this.settings.locations.indexOf(locationID) != -1;
         // Remove the location from the settings
-        this.setSettings({
+        this.changeSettings({
             locations: this.settings.locations.filter(ID => ID != locationID),
         }, this.settingsConditions);
         // Return whether or not the location existed here
@@ -69,16 +69,14 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
     }
     /** @override */
     async removeAncestor() {
-        this.settingsObject
-            .getSettingsFile()
-            .removeConditionData(this.settingsConditions);
+        this.getSettingsObject().removeConditionData(this.settingsConditions);
     }
     // Module management
     /** @override*/
     async openModule(module, locationPath) {
         const locationID = locationPath.location.ID;
         const locData = this.state.locations[locationID];
-        this.setState({
+        this.changeState({
             modules: [module, ...this.state.modules],
             locations: {
                 [locationID]: {
@@ -99,7 +97,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
         const locData = this.state.locations[locationID];
         const l = this.state.modules.length;
         const contains = this.state.modules.find(m => m.equals(module)) != null;
-        this.setState({
+        this.changeState({
             modules: this.state.modules.filter(m => !m.equals(module)),
             locations: {
                 [locationID]: {
@@ -118,7 +116,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
         const contains = this.state.modules.find(m => m.equals(module)) != null;
         if (contains) {
             // Bring the module to the top
-            this.setState({
+            this.changeState({
                 modules: [module, ...this.state.modules.filter(m => !m.equals(module))],
             });
             // Return whether or not the locatin contains the module, and brought it to the front
@@ -139,14 +137,14 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
             // Obtain location data and remove it
             const oldLocationID = this.state.draggingModule.locationID;
             const newLocationID = this.state.draggingModule.newLocationID;
-            this.setState({
+            this.changeState({
                 draggingModule: null,
             });
             // Obtain the ccondition to change the location for TODO: show a GUI for the user to choose
             const condition = undefined;
             // await new Promise(res => setTimeout(res, 0)); // Emulate something async
             // Change the location for the condition
-            const so = module.settingsObject;
+            const so = module.getSettingsObject();
             try {
                 const data = so.getData(condition);
                 let currentLocations = data.get.location;
@@ -176,7 +174,7 @@ class LocationModule extends core_1.createModule(exports.config, locationAncesto
         this.getParent().setLocationsMoveData({
             locations: [{ ID: newLocationID, hints: { path: [...path] } }],
         });
-        this.setState({
+        this.changeState({
             draggingModule: {
                 moduleID,
                 locationID,

@@ -21,7 +21,7 @@ import {ChildBox} from "../../../../../../components/ChildBox";
 import {ParentBox} from "../../../../../../components/ParentBox";
 
 export const windowConfig = {
-    initialState: {
+    state: {
         childLocationAncestor: null as Promise<LocationAncestor>,
         windowName: "",
     },
@@ -154,7 +154,7 @@ export default class WindowModule
         const childResponse = child.createLocation(location);
 
         // Setup inittial settings if required
-        this.settingsObject.setInitialData(async () => {
+        this.getSettingsObject().setInitialData(async () => {
             // Obtain the hints for this window
             const hints = {...this.getLocationHints(location)};
 
@@ -191,9 +191,7 @@ export default class WindowModule
     /** @override */
     public async removeAncestor(): Promise<void> {
         // Remove own data
-        this.settingsObject
-            .getSettingsFile()
-            .removeConditionData(this.settingsConditions);
+        this.getSettingsObject().removeConditionData(this.settingsConditions);
 
         // Forward to child
         const child = await this.getChild();
@@ -216,7 +214,7 @@ export default class WindowModule
             const locationAncestor = this.getChildLocationAncestor();
 
             // Store child location ancestor
-            this.setState({
+            this.changeState({
                 childLocationAncestor: locationAncestor,
             });
         }
@@ -234,7 +232,7 @@ export default class WindowModule
             const child = await this.state.childLocationAncestor;
 
             // Remove child location ancestor
-            this.setState({
+            this.changeState({
                 childLocationAncestor: undefined,
             });
 
@@ -318,7 +316,7 @@ export default class WindowModule
     // Window specific methods
     /** @override */
     public async setName(name: string): Promise<void> {
-        this.setState({windowName: name});
+        this.changeState({windowName: name});
     }
 
     // Window settings methods
@@ -328,7 +326,7 @@ export default class WindowModule
      * @param height The height that the window now has
      */
     public saveWindowSize(width: number, height: number): void {
-        this.setSettings({width, height}, this.settingsConditions);
+        this.changeSettings({width, height}, this.settingsConditions);
     }
 
     /**
@@ -337,7 +335,7 @@ export default class WindowModule
      * @param y The y coordinate of the location
      */
     public saveWindowLocation(x: number, y: number): void {
-        this.setSettings({x, y}, this.settingsConditions);
+        this.changeSettings({x, y}, this.settingsConditions);
     }
 
     // Testing TODO: remove this

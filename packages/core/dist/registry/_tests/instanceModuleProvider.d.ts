@@ -12,7 +12,7 @@ export declare const dummyInterfaceID: import("../_types/contractID").ContractID
     }>;
 }>;
 declare const DummyModule_base: import("../../module/_types/extendedModule").ExtendedModuleClass<{
-    initialState: {};
+    state: {};
     settings: {};
     type: import("../_types/contractID").ContractID<{
         parent: dummyParentInterface;

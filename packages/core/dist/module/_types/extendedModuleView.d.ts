@@ -1,27 +1,22 @@
 /// <reference types="react" />
-import { ParameterizedModule } from "../module";
+import { ParameterizedModule, Module } from "../module";
 import { DeepPartial, Omit, Constructor, GetConstructed, DeepReadonly, Map } from "../../utils/_types/standardTypes";
 import { ModuleView, ParameterizedModuleView } from "../moduleView";
 import { ExtractModuleState } from "./extendedModule";
 import { Settings } from "../../storage/settings/settings";
 import { ModuleViewProps } from "./moduleViewProps";
 import { ModuleViewState } from "./moduleViewState";
-import { ModuleContract, ChildModule } from "./moduleContract";
-import { ModuleRequestData } from "./moduleRequestData";
+import { ChildModule } from "./moduleContract";
 import { ModuleState } from "./moduleState";
 import { ModuleReference } from "../moduleID";
 /**
  * Extracts the settingsConfig type from a given module
  */
-export declare type ExtractModuleSettingsConfig<M extends ParameterizedModule> = M["settingsObject"] extends Settings<infer C> ? C["settings"] : never;
+export declare type ExtractModuleSettingsConfig<M extends ParameterizedModule> = M["getSettingsObject"] extends () => Settings<infer S> ? S : never;
 /**
  * Extracts the request data type from a given module
  */
-export declare type ExtractModuleData<M extends {
-    type: ModuleContract;
-}> = ModuleRequestData<M["type"]> extends {
-    data: infer D;
-} ? D : undefined;
+export declare type ExtractModuleData<M extends ParameterizedModule> = M extends Module<any, any, infer D> ? D["data"] : undefined;
 /**
  * Extracts the assignable state type from a given module view
  */
@@ -39,13 +34,13 @@ export declare type TransformModuleViewState<S> = S extends ModuleState ? {
 /**
  * Filters out any methods from a module view that should be overwritten
  */
-export declare type FilterModuleView<M extends ParameterizedModuleView> = Omit<M, "setState">;
+export declare type FilterModuleView<M extends ParameterizedModuleView> = Omit<M, "changeState">;
 /**
  * Creates a new module type, based on a module config and a module type
  */
 export declare type ExtendedModuleView<M extends ParameterizedModule, S extends Map<any>, V extends ParameterizedModuleView> = {
-    setState(state: ((prevState: DeepReadonly<S & ExtractModuleViewState<V> & ModuleViewState<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>, ExtractModuleData<M>>>, props: ModuleViewProps<M>) => DeepPartial<S & ExtractModuleViewState<V>>) | DeepPartial<S & ExtractModuleViewState<V>>, callback?: () => any): void;
-} & V & ModuleView<S & TransformModuleViewState<ExtractModuleState<M>>, ExtractModuleSettingsConfig<M>, M, ExtractModuleData<M>>;
+    setState(state: ((prevState: DeepReadonly<S & ExtractModuleViewState<V> & ModuleViewState<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>["settings"], ExtractModuleData<M>>>, props: ModuleViewProps<M>) => DeepPartial<S & ExtractModuleViewState<V>>) | DeepPartial<S & ExtractModuleViewState<V>>, callback?: () => any): void;
+} & V & ModuleView<S & TransformModuleViewState<ExtractModuleState<M>>, ExtractModuleSettingsConfig<M>["settings"], M, ExtractModuleData<M>>;
 /**
  * Creates a new module constructor type, based on a module config and a module constructor type
  */

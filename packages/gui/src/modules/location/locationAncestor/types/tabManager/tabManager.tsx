@@ -25,7 +25,7 @@ import {HorizontalScroller} from "../../../../../components/HorizontalScroller";
 import {TabHandleData} from "./_types/TabHandleData";
 
 export const tabManagerConfig = {
-    initialState: {
+    state: {
         tabs: [] as OpenedTab[],
         selectedTabID: null as string,
         tabsVisible: false,
@@ -128,7 +128,7 @@ export class TabManagerModule
             let tabStoredData = this.settings.tabs.find(tab => tab.ID == ID);
             if (!tabStoredData) {
                 tabStoredData = {ID};
-                this.setSettings(
+                this.changeSettings(
                     {
                         tabs: [
                             ...this.settings.tabs.slice(0, index),
@@ -155,7 +155,7 @@ export class TabManagerModule
             }
 
             // Add the tab at this index
-            this.setState({
+            this.changeState({
                 tabs: [
                     ...this.state.tabs.slice(0, openedIndex),
                     tabData,
@@ -174,7 +174,7 @@ export class TabManagerModule
 
         // Update visible if required
         if (tabData && visible != null && tabData.visible != visible) {
-            this.setState({
+            this.changeState({
                 tabs: this.state.tabs.map(tab =>
                     tab.ID == ID ? {...tab, visible} : tab
                 ),
@@ -196,7 +196,7 @@ export class TabManagerModule
                 const openedIndex = this.getTabIndex(ID, true);
 
                 // Remove it from the state
-                this.setState({
+                this.changeState({
                     tabs: [
                         ...this.state.tabs.slice(0, openedIndex),
                         ...this.state.tabs.slice(openedIndex + 1),
@@ -226,7 +226,7 @@ export class TabManagerModule
             let tabPromise = this.getTab(ID, true);
 
             // Remove the associated data ASAP
-            this.setSettings(
+            this.changeSettings(
                 {
                     tabs: [
                         ...this.settings.tabs.slice(0, index),
@@ -253,7 +253,7 @@ export class TabManagerModule
         if (oldTab) (await oldTab.tabHandle).setSelected(false);
 
         // Store the newly selected tab
-        this.setState({
+        this.changeState({
             selectedTabID: tabID,
         });
 
@@ -276,7 +276,7 @@ export class TabManagerModule
         // Only show the tabs if multiple tabs are opened
         const shouldShowTabs = this.state.tabs.length > 1;
         if (this.state.tabsVisible != shouldShowTabs) {
-            this.setState({
+            this.changeState({
                 tabsVisible: shouldShowTabs,
             });
         }
@@ -387,10 +387,8 @@ export class TabManagerModule
             });
 
             // Clear the settings ASAP
-            this.setSettings({tabs: []});
-            await this.settingsObject
-                .getSettingsFile()
-                .removeConditionData(this.settingsConditions);
+            this.changeSettings({tabs: []});
+            await this.getSettingsObject().removeConditionData(this.settingsConditions);
 
             // Await all the windows disposals
             await Promise.all(promises);

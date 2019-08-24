@@ -3,7 +3,7 @@ const core_1 = require("@adjust/core");
 const locationAncestor_type_1 = require("./locationAncestor.type");
 const module_1 = require("../../../module/module");
 exports.config = {
-    initialState: {
+    state: {
         inEditMode: false,
         inDropMode: false,
     },
@@ -118,11 +118,11 @@ class LocationAncestorModule extends core_1.createModule(exports.config) {
     // State related methods
     /** @override */
     async setEditMode(edit) {
-        await this.setState({ inEditMode: edit });
+        await this.changeState({ inEditMode: edit });
     }
     /** @override */
     async setDropMode(drop) {
-        await this.setState({ inDropMode: drop });
+        await this.changeState({ inDropMode: drop });
     }
     // Location moving related methods
     /** @override */

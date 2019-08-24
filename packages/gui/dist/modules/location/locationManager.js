@@ -7,7 +7,7 @@ const locationManager_type_1 = require("./locationManager.type");
 const registry_1 = require("../../registry/registry");
 const locationAncestor_1 = __importDefault(require("./locationAncestor/locationAncestor"));
 exports.config = {
-    initialState: {
+    state: {
         // Keep track of currently used locations, and modules opened here in this session
         locations: {},
         // The data of locations currently being moved
@@ -38,7 +38,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
      */
     async getAncestor() {
         if (!this.state.locationAncestor) {
-            this.setState({ locationAncestor: this.getChildLocationAncestor() });
+            this.changeState({ locationAncestor: this.getChildLocationAncestor() });
         }
         return this.state.locationAncestor;
     }
@@ -69,7 +69,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
      */
     updateLocationPath(locationPath) {
         const current = this.settings.locations[locationPath.location.ID];
-        this.setSettings({
+        this.changeSettings({
             locations: {
                 [locationPath.location.ID]: {
                     path: locationPath,
@@ -116,7 +116,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
             if (oldLocationIDs.includes(newLocationID))
                 return;
             let current = this.settings.locations[newLocationID];
-            await await this.setSettings({
+            await await this.changeSettings({
                 locations: {
                     [newLocationID]: {
                         path: current && current.path,
@@ -138,7 +138,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
                 return;
             let current = this.settings.locations[oldLocationID];
             if (current) {
-                await this.setSettings({
+                await this.changeSettings({
                     locations: {
                         [oldLocationID]: {
                             path: current.path,
@@ -152,7 +152,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
                     // Retrieve the location path and obtain the window
                     const path = await this.getLocationPath(oldLocationID);
                     // Remove the location from the settings
-                    await await this.setSettings({
+                    await await this.changeSettings({
                         locations: {
                             [oldLocationID]: undefined,
                         },
@@ -194,7 +194,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         if (this.state.locationMoveData && data)
             return false;
         // Update own state
-        this.setState({ locationMoveData: data });
+        this.changeState({ locationMoveData: data });
         // Update whether we are able to drop elements now
         const locationAncestor = await this.getAncestor();
         await locationAncestor.setDropMode(data != null);
@@ -207,7 +207,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         if (!this.state.locationMoveData)
             return false;
         // Update state
-        this.setState({ locationMoveData: data });
+        this.changeState({ locationMoveData: data });
         // Return that the movement data was successfully updated
         return true;
     }
@@ -247,7 +247,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         // Obtain the ancestor
         const locationAncestor = await this.getAncestor();
         // Store the module at this path
-        this.setState({
+        this.changeState({
             locations: {
                 [location]: {
                     modules: [
@@ -271,7 +271,7 @@ class LocationManagerModule extends core_1.createModule(exports.config, location
         // Obtain the ancestor
         const locationAncestor = await this.getAncestor();
         // Remove the module at this path
-        this.setState({
+        this.changeState({
             locations: {
                 [location]: {
                     modules: (this.state.locations[location] || { modules: [] }).modules.filter(m => !m.equals(module)),

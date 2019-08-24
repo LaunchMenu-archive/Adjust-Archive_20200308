@@ -6,7 +6,7 @@ const programState_1 = require("../../state/programState");
 const module_1 = require("../../module/module");
 class P extends moduleClassCreator_1.createModule({
     type: dummyModules_helper_1.dummyInterfaceID,
-    initialState: {},
+    state: {},
     settings: {},
 }) {
     static async createCustomInstance() {

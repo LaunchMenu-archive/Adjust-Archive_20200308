@@ -8,7 +8,7 @@ import {createRecursiveRequestFilter} from "../registry/requestFilters";
 import {ViewWrapper} from "../module/moduleViewWrapper";
 
 export const contextProviderConfig = {
-    initialState: {
+    state: {
         childProvider: null as ContextProvider,
     },
     getPriority: () => 1,
@@ -29,7 +29,7 @@ export class ContextProviderModule extends createModule(contextProviderConfig)
 
         // If this is the creation of the module, create a child
         if (!fromReload)
-            this.setState({
+            this.changeState({
                 childProvider: (await this.request({
                     type: ContextProviderType,
                     use: createRecursiveRequestFilter(this),

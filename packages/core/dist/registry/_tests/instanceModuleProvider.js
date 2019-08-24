@@ -7,7 +7,7 @@ const programState_1 = require("../../state/programState");
 const requestPath_1 = require("../../module/requestPath/requestPath");
 const moduleID_1 = require("../../module/moduleID");
 exports.dummyInterfaceID = registry_1.Registry.createContractID(__filename + "1");
-class DummyModule extends moduleClassCreator_1.createModule({ initialState: {}, settings: {}, type: exports.dummyInterfaceID }) {
+class DummyModule extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID }) {
     constructor() {
         super(...arguments);
         this.instanceVal = 0;
@@ -19,7 +19,7 @@ class DummyModule extends moduleClassCreator_1.createModule({ initialState: {}, 
 exports.DummyModule = DummyModule;
 // @ts-ignore
 DummyModule.path = "../module/_tests/dummyModules.helper.js"; // A path that can be imported (doesn't matter that it doesn't import this)
-class DummyParent extends moduleClassCreator_1.createModule({ type: exports.dummyInterfaceID, initialState: {}, settings: {} }) {
+class DummyParent extends moduleClassCreator_1.createModule({ type: exports.dummyInterfaceID, state: {}, settings: {} }) {
     static async createCustomInstance(someMethod = () => { }) {
         const moduleID = new moduleID_1.ModuleID("test", 3);
         const instance = (await super.construct({ data: {}, requestPath: new requestPath_1.RequestPath(new moduleID_1.ModuleID("test", 0), {}) }, programState_1.ProgramState.getNextModuleID(DummyParent), {}, []));

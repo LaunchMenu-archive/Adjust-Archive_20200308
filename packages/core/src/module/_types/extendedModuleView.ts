@@ -22,17 +22,17 @@ import {ModuleReference} from "../moduleID";
  */
 export type ExtractModuleSettingsConfig<
     M extends ParameterizedModule
-> = M["settingsObject"] extends Settings<infer C> ? C["settings"] : never;
+> = M["getSettingsObject"] extends () => Settings<infer S> ? S : never;
 
 /**
  * Extracts the request data type from a given module
  */
-export type ExtractModuleData<M extends {type: ModuleContract}> = ModuleRequestData<
-    M["type"]
-> extends {
-    data: infer D;
-}
-    ? D
+export type ExtractModuleData<M extends ParameterizedModule> = M extends Module<
+    any,
+    any,
+    infer D
+>
+    ? D["data"]
     : undefined;
 
 /**
@@ -66,7 +66,7 @@ export type TransformModuleViewState<S> = S extends ModuleState
 /**
  * Filters out any methods from a module view that should be overwritten
  */
-export type FilterModuleView<M extends ParameterizedModuleView> = Omit<M, "setState">;
+export type FilterModuleView<M extends ParameterizedModuleView> = Omit<M, "changeState">;
 
 /**
  * Creates a new module type, based on a module config and a module type
@@ -76,7 +76,7 @@ export type ExtendedModuleView<
     S extends Map<any>,
     V extends ParameterizedModuleView
 > = {
-    // Intellisense for prevState won't work 'properly' due to contravariance, we would want to overwrite setState's signature, rather than merge it.
+    // Intellisense for prevState won't work 'properly' due to contravariance, we would want to overwrite changeState's signature, rather than merge it.
     // modified From https://github.com/DefinitelyTyped/DefinitelyTyped/blob/eafef8bd049017b3998939de2edbab5d8a96423b/types/react/v15/index.d.ts#L307
     setState(
         state:
@@ -86,7 +86,7 @@ export type ExtendedModuleView<
                           ExtractModuleViewState<V> &
                           ModuleViewState<
                               S & ExtractModuleState<M>,
-                              ExtractModuleSettingsConfig<M>,
+                              ExtractModuleSettingsConfig<M>["settings"],
                               ExtractModuleData<M>
                           >
                   >,
@@ -99,7 +99,7 @@ export type ExtendedModuleView<
     // FilterModuleView<ModuleView<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>, M>>
     ModuleView<
         S & TransformModuleViewState<ExtractModuleState<M>>,
-        ExtractModuleSettingsConfig<M>,
+        ExtractModuleSettingsConfig<M>["settings"],
         M,
         ExtractModuleData<M>
     >;

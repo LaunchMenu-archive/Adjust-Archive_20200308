@@ -43,7 +43,7 @@ exports.stylingSettings = {
  * The default config for modules, adds location management to the Adjust core modules
  */
 exports.baseConfig = {
-    initialState: {},
+    state: {},
     settings: Object.assign({ location: {
             default: ["root"],
             type: "location",
@@ -98,7 +98,7 @@ class Module extends core_1.createModule(exports.baseConfig) {
         const openingPromises = locations.map(location => this.locationManager.openModule(this.getID(), location));
         await Promise.all(openingPromises);
         // Setup listeners for location changes
-        this.settingsObject.on("change", async (prop, value, oldValue) => {
+        this.getSettingsObject().on("change", async (prop, value, oldValue) => {
             if (prop == "location") {
                 const newLocations = value instanceof Array ? value : value ? [value] : [];
                 const oldLocations = oldValue instanceof Array ? oldValue : oldValue ? [oldValue] : [];
@@ -133,7 +133,7 @@ class Module extends core_1.createModule(exports.baseConfig) {
         const openingPromises = locations.map(location => this.locationManager.closeModule(this.getID(), location));
         await Promise.all(openingPromises);
         // Remove listeners for location changes
-        this.settingsObject.off("change", "openViews");
+        this.getSettingsObject().off("change", "openViews");
     }
     /**
      * Shows the GUI of this module at its locations

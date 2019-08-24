@@ -3,7 +3,7 @@ import { Themer } from "../themer.type";
 import { IThemeData } from "../themeSettings";
 import { ITheme } from "../_types/ITheme";
 export declare const themerConfig: {
-    initialState: {};
+    state: {};
     getPriority: () => number;
     settings: {
         palette: {
@@ -1424,7 +1424,7 @@ export declare const themerConfig: {
     type: import("@adjust/core/types").ContractID<import("../themer.type").ThemerContract>;
 };
 declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {};
+    state: {};
     getPriority: () => number;
     settings: {
         palette: {

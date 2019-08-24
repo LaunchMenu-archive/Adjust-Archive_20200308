@@ -3,7 +3,7 @@ import {EmbedType, Embed} from "./embed.type";
 
 const colors = ["orange", "blue", "purple"];
 export const config = {
-    initialState: {text: "", color: colors[0], child: null as Embed},
+    state: {text: "", color: colors[0], child: null as Embed},
     settings: {},
     type: EmbedType,
 };
@@ -11,12 +11,12 @@ export const config = {
 export default class EmbedModule extends createModule(config) implements Embed {
     public async onInit() {
         const data = this.getData();
-        this.setState({
+        this.changeState({
             text: data.text,
         });
 
         if (data.count > 0)
-            this.setState({
+            this.changeState({
                 child: await this.request({
                     type: EmbedType,
                     data: {text: data.text + "t", count: data.count - 1},
@@ -29,7 +29,7 @@ export default class EmbedModule extends createModule(config) implements Embed {
     }
 
     public async setText(text: string) {
-        this.setState({
+        this.changeState({
             text: text,
         });
         if (this.state.child) this.state.child.setText(text + "t");
@@ -47,7 +47,7 @@ export default class EmbedModule extends createModule(config) implements Embed {
         const colorIndex = colors.indexOf(this.state.color);
         const newColor = colors[(colorIndex + 1) % colors.length];
 
-        this.setState({
+        this.changeState({
             color: newColor,
         });
     }

@@ -15,7 +15,7 @@ import {Customizer, registerIcons} from "office-ui-fabric-react";
 import {Box} from "./box";
 
 export const themerConfig = {
-    initialState: {},
+    state: {},
     getPriority: () => 1,
     settings: themeSettings,
     type: ThemerType,
@@ -31,7 +31,7 @@ export class ThemerModule extends createModule(themerConfig) implements Themer {
     protected async onInit(fromReload: boolean): Promise<void> {
         Registry.addProvider(new InstanceModuleProvider(ThemerType, this, () => 2));
 
-        this.settingsObject.on("change", field => this.updateTheme(field));
+        this.getSettingsObject().on("change", field => this.updateTheme(field));
     }
 
     /**

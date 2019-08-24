@@ -9,7 +9,7 @@ const moduleClassCreator_1 = require("../module/moduleClassCreator");
 const registry_1 = require("../registry/registry");
 const instanceModuleProvider_1 = require("../registry/moduleProviders/instanceModuleProvider");
 exports.viewNotFoundConfig = {
-    initialState: {},
+    state: {},
     getPriority: () => 1,
     settings: {},
     type: viewNotFound_type_1.ViewNotFoundType,

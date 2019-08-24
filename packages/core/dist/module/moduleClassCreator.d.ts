@@ -26,7 +26,7 @@ export declare class ModuleClassCreator {
      * @param module The module to extend
      * @returns The class created from the config data
      */
-    static createModule<MC extends ParameterizedModuleConfig, X extends ExtendsClass<typeof Module, {}> = ExtendsClass<typeof Module, Module<typeof Module.config.initialState, SettingsConfig<Empty>, ModuleContract>>>(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X>;
+    static createModule<MC extends ParameterizedModuleConfig, X extends ExtendsClass<typeof Module, {}> = ExtendsClass<typeof Module, Module<typeof Module.config.state, SettingsConfig<Empty>, ModuleContract>>>(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X>;
 }
 /**
  * A shortcut for the module creation method

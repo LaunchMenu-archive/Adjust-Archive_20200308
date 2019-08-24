@@ -1,13 +1,13 @@
 /// <reference types="react" />
 import { ViewNotFound } from "./viewNotFound.type";
 export declare const viewNotFoundConfig: {
-    initialState: {};
+    state: {};
     getPriority: () => number;
     settings: {};
     type: import("../registry/_types/contractID").ContractID<import("./viewNotFound.type").ViewNotFoundContract>;
 };
 declare const ViewNotFoundModule_base: import("../module/_types/extendedModule").ExtendedModuleClass<{
-    initialState: {};
+    state: {};
     getPriority: () => number;
     settings: {};
     type: import("../registry/_types/contractID").ContractID<import("./viewNotFound.type").ViewNotFoundContract>;

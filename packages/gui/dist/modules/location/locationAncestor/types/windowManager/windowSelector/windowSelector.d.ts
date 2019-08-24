@@ -4,7 +4,7 @@ import { WindowsData } from "../_types/windowData";
 import { Window } from "../window/window.type";
 import LocationAncestorModule from "../../../locationAncestor";
 export declare const windowSelectorConfig: {
-    initialState: {
+    state: {
         closedWindows: WindowsData;
         windowModule: Promise<Window>;
     };
@@ -12,7 +12,7 @@ export declare const windowSelectorConfig: {
     type: import("@adjust/core/types").ContractID<import("./windowSelector.type").WindowSelectorContract>;
 };
 declare const WindowSelectorModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         closedWindows: WindowsData;
         windowModule: Promise<Window>;
     };

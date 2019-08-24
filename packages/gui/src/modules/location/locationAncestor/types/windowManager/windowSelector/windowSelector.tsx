@@ -16,7 +16,7 @@ const sizes = {
     windowHeight: 500,
 };
 export const windowSelectorConfig = {
-    initialState: {
+    state: {
         closedWindows: {} as WindowsData,
         windowModule: null as Promise<Window>,
     },
@@ -82,7 +82,7 @@ export default class WindowSelectorModule
     // Interface methods
     /** @override */
     public async setWindows(closed: WindowsData, opened: WindowsData): Promise<void> {
-        await this.setState({
+        await this.changeState({
             closedWindows: {
                 ...closed,
                 // Make sure to remove previous window data
@@ -157,7 +157,7 @@ export default class WindowSelectorModule
             const windowModule = await this.state.windowModule;
 
             // Remove the window
-            this.setState({windowModule: undefined});
+            this.changeState({windowModule: undefined});
 
             // Close the window
             windowModule.close();
@@ -170,7 +170,7 @@ export default class WindowSelectorModule
         // Open the new window
         if (windowID) {
             // Obtain the new window
-            this.setState({
+            this.changeState({
                 windowModule: this.request({
                     type: WindowType,
                     data: {

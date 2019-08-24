@@ -533,7 +533,10 @@ export class WindowManagerSingleton {
             module.getID().toString(),
             Serialize.serialize(data, (path, value, promise) => {
                 // Make sure the latest value is still the promise that just resolved
-                if (ExtendedObject.getField(module.state, path) !== promise) return;
+                if (
+                    ExtendedObject.getField(module.getStateObject().get, path) !== promise
+                )
+                    return;
 
                 // IF a promise resolves, translate the path of the value into an object again
                 // And also send this data

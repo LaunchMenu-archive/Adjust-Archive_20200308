@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { ContextProvider } from "./contextProvider.type";
 export declare const contextProviderConfig: {
-    initialState: {
+    state: {
         childProvider: {
             close(): Promise<void>;
         };
@@ -11,7 +11,7 @@ export declare const contextProviderConfig: {
     type: import("../registry/_types/contractID").ContractID<import("./contextProvider.type").ContextProviderContract>;
 };
 declare const ContextProviderModule_base: import("../module/_types/extendedModule").ExtendedModuleClass<{
-    initialState: {
+    state: {
         childProvider: {
             close(): Promise<void>;
         };

@@ -16,7 +16,7 @@ export const dummyInterfaceID = Registry.createContractID<{
     child: ChildModule<dummyInterface>;
 }>(__filename + "1");
 export class DummyModule
-    extends createModule({initialState: {}, settings: {}, type: dummyInterfaceID})
+    extends createModule({state: {}, settings: {}, type: dummyInterfaceID})
     implements dummyInterface {
     public static async customConstruct<
         S extends ModuleState,
@@ -51,7 +51,7 @@ export const dummyInterfaceID2 = Registry.createContractID<{
     data: {shit: string};
 }>(__filename + "2");
 export class DummyModule2
-    extends createModule({initialState: {}, settings: {}, type: dummyInterfaceID2})
+    extends createModule({state: {}, settings: {}, type: dummyInterfaceID2})
     implements dummyInterface2 {
     public async test2(text: string) {
         // Example of type safe detection of what module called it
@@ -75,7 +75,7 @@ export const dummyInterfaceID3 = Registry.createContractID<{
 }>(__filename + "3");
 
 export class DummyModule4
-    extends createModule({initialState: {}, settings: {}, type: dummyInterfaceID})
+    extends createModule({state: {}, settings: {}, type: dummyInterfaceID})
     implements dummyInterface {
     public async test(text: string): Promise<string> {
         return text + "4";

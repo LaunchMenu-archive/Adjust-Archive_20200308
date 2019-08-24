@@ -6,7 +6,7 @@ import {createModule} from "../../module/moduleClassCreator";
 import {Box} from "../../components/Box";
 
 export const config = {
-    initialState: {
+    state: {
         type: "string",
         title: "",
         description: "",
@@ -59,7 +59,7 @@ export default class InputPromptModule extends createModule(config)
         this.resolve(null);
 
         // Set the state variables
-        this.setState({
+        this.changeState({
             type,
             title: data.title,
             description: data.description,
@@ -115,32 +115,32 @@ export default class InputPromptModule extends createModule(config)
         if (this.state.type == "number") value = Number(value);
 
         // Set the value
-        this.setState({value});
+        this.changeState({value});
 
         // Check constraints and set applicable error
         const c = this.constraints;
         if (c.minLength != null && this.state.value.length < c.minLength)
-            this.setState({
+            this.changeState({
                 errorMessage: `Value should have at least length ${c.minLength}`,
             });
         else if (c.maxLength != null && this.state.value.length > c.maxLength)
-            this.setState({
+            this.changeState({
                 errorMessage: `Value should have at most length ${c.maxLength}`,
             });
         else if (c.pattern != null && c.pattern.test(this.state.value))
-            this.setState({
+            this.changeState({
                 errorMessage: `Value is not allowed`,
             });
         else if (c.minValue != null && this.state.value > c.minValue)
-            this.setState({
+            this.changeState({
                 errorMessage: `Value should be at least ${c.minValue}`,
             });
         else if (c.maxValue != null && this.state.value < c.maxValue)
-            this.setState({
+            this.changeState({
                 errorMessage: `Value should be at most ${c.maxValue}`,
             });
         else
-            this.setState({
+            this.changeState({
                 errorMessage: "",
             });
     }

@@ -1444,7 +1444,7 @@ export declare const stylingSettings: {
  * The default config for modules, adds location management to the Adjust core modules
  */
 export declare const baseConfig: {
-    initialState: {};
+    state: {};
     settings: {
         styleOverride: {
             theme: {
@@ -2881,7 +2881,7 @@ export declare const baseConfig: {
     type: any;
 };
 declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {};
+    state: {};
     settings: {
         styleOverride: {
             theme: {

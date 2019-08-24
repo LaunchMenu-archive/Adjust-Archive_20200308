@@ -6,7 +6,7 @@ import {Registry} from "../registry/registry";
 import {InstanceModuleProvider} from "../registry/moduleProviders/instanceModuleProvider";
 
 export const viewNotFoundConfig = {
-    initialState: {},
+    state: {},
     getPriority: () => 1,
     settings: {},
     type: ViewNotFoundType,

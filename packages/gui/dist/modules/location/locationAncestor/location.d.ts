@@ -5,7 +5,7 @@ import { LocationAncestor } from "./locationAncestor.type";
 import { ModuleLocation } from "../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "./locationAncestor";
 export declare const config: {
-    initialState: {
+    state: {
         locations: {
             [locationID: string]: {
                 path: LocationPath;
@@ -32,7 +32,7 @@ export declare const config: {
     type: import("@adjust/core/types").ContractID<import("./locationAncestor.type").LocationAncestorContract>;
 };
 declare const LocationModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         locations: {
             [locationID: string]: {
                 path: LocationPath;

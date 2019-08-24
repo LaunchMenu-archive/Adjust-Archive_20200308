@@ -8,7 +8,7 @@ import {LocationAncestorType, LocationAncestor} from "../../locationAncestor.typ
 import {WindowsData} from "./_types/windowData";
 
 export const windowManagerConfig = {
-    initialState: {
+    state: {
         // Keep track of currently opened windows
         windows: {} as {
             [windowID: string]: {
@@ -54,7 +54,7 @@ export class WindowManagerModule
         await super.onInit(fromReload);
 
         if (!fromReload)
-            this.setState({
+            this.changeState({
                 windowSelector: await this.request({
                     type: WindowSelectorType,
                     data: {path: this.getData().path},
@@ -97,7 +97,7 @@ export class WindowManagerModule
             const window = windowData.window;
 
             // Update the state to contain this location ancestor
-            this.setState({
+            this.changeState({
                 windows: {
                     [windowID]: windowData,
                 },
@@ -105,7 +105,7 @@ export class WindowManagerModule
 
             // Define the window data if absent
             if (!this.settings.windows[windowID])
-                await this.setSettings(
+                await this.changeSettings(
                     {
                         windows: {
                             [windowID]: {
@@ -143,7 +143,7 @@ export class WindowManagerModule
             const window = await windowData.window;
 
             // Remove it from the state
-            this.setState({
+            this.changeState({
                 windows: {
                     [windowID]: undefined,
                 },
@@ -169,7 +169,7 @@ export class WindowManagerModule
         if (window) await window.removeAncestor();
 
         // Remove the associated data
-        await this.setSettings(
+        await this.changeSettings(
             {
                 windows: {
                     [windowID]: undefined,
@@ -184,7 +184,7 @@ export class WindowManagerModule
 
     /** @override */
     public async changeWindowName(name: string, windowID: string): Promise<void> {
-        await this.setSettings(
+        await this.changeSettings(
             {
                 windows: {
                     [windowID]: {
@@ -207,7 +207,7 @@ export class WindowManagerModule
     public async setWindowVisibility(visible: boolean, windowID: string): Promise<void> {
         // Make sure we haven't fully removed the window already
         if (this.state.windows[windowID]) {
-            await this.setState({
+            await this.changeState({
                 windows: {
                     [windowID]: {
                         opened: visible,
@@ -317,8 +317,8 @@ export class WindowManagerModule
         await Promise.all(promises);
 
         // Clear the settings
-        await this.setSettings({windows: undefined}, this.settingsConditions);
-        await this.setSettings({windows: {}}, this.settingsConditions);
+        await this.changeSettings({windows: undefined}, this.settingsConditions);
+        await this.changeSettings({windows: {}}, this.settingsConditions);
 
         // Send updated data to the window selector
         await this.updateWindowSelectorData();

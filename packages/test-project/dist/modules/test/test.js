@@ -3,7 +3,7 @@ const gui_1 = require("@adjust/gui");
 const test_type_1 = require("./test.type");
 const embed_type_1 = require("../embed/embed.type");
 exports.config = {
-    initialState: {
+    state: {
         stuff: "test",
         children: [],
         somethingAsync: undefined,
@@ -33,19 +33,19 @@ class TestModule extends gui_1.createModule(exports.config) {
     /** @override */
     async onInit() {
         console.time();
-        this.setState({
+        this.changeState({
             children: await this.request({
                 type: embed_type_1.EmbedType,
                 data: { text: "hello", count: 400 },
             }).then(child => [child]),
         });
-        // this.setState({
+        // this.changeState({
         //     children: await this.request({
         //         type: EmbedType,
         //         data: {text: "hello", count: 842}, //421},
         //     }).then(child => [child]),
         // });
-        // this.setState({
+        // this.changeState({
         //     children: await Promise.all(
         //         new Array(840).fill(0).map(() =>
         //             this.request({
@@ -59,7 +59,7 @@ class TestModule extends gui_1.createModule(exports.config) {
         this.intervalID = setInterval(() => {
             if (this.state.smth == 0)
                 this.show();
-            this.setState({
+            this.changeState({
                 smth: (this.state.smth + 1) % 100,
             });
         }, 100);
@@ -73,7 +73,7 @@ class TestModule extends gui_1.createModule(exports.config) {
     }
     /** @override */
     async doSomething(stuff) {
-        this.setState({ stuff: stuff });
+        this.changeState({ stuff: stuff });
         return "yes";
     }
     changeChildText() {
@@ -83,8 +83,8 @@ class TestModule extends gui_1.createModule(exports.config) {
         this.state.children.forEach(child => child.close());
     }
     setStuff() {
-        this.setSettings({ stuff: true });
-        this.setState({
+        this.changeSettings({ stuff: true });
+        this.changeState({
             somethingAsync: new Promise(res => setTimeout(() => res(9), 1000)),
         });
     }

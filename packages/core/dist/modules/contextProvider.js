@@ -11,7 +11,7 @@ const contextProvider_type_1 = require("./contextProvider.type");
 const requestFilters_1 = require("../registry/requestFilters");
 const moduleViewWrapper_1 = require("../module/moduleViewWrapper");
 exports.contextProviderConfig = {
-    initialState: {
+    state: {
         childProvider: null,
     },
     getPriority: () => 1,
@@ -27,7 +27,7 @@ class ContextProviderModule extends moduleClassCreator_1.createModule(exports.co
         registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(contextProvider_type_1.ContextProviderType, this, () => 2));
         // If this is the creation of the module, create a child
         if (!fromReload)
-            this.setState({
+            this.changeState({
                 childProvider: (await this.request({
                     type: contextProvider_type_1.ContextProviderType,
                     use: requestFilters_1.createRecursiveRequestFilter(this),

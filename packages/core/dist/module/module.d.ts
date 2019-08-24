@@ -22,7 +22,7 @@ export declare const baseConfig: {
     version: string;
     settings: {};
     settingsMigrators: {};
-    initialState: {
+    state: {
         isStopping: boolean;
         isStopped: boolean;
     };
@@ -43,16 +43,15 @@ export declare const baseConfig: {
  *
  */
 export declare class Module<S extends ModuleState, C extends SettingsConfig<any>, I extends ModuleContract> implements ChildModule<{}> {
-    readonly ID: ModuleID;
+    private readonly ID;
     private readonly requestData;
     parent: I["parent"];
-    readonly parents: I["parent"][];
-    readonly type: I;
+    private readonly parents;
     readonly settings: DeepReadonly<SettingsConfigData<C>>;
-    readonly settingsObject: Settings<C>;
+    private readonly settingsObject;
     readonly state: DeepReadonly<S>;
-    readonly stateObject: StateData<S>;
-    readonly children: (ModuleProxy | Promise<ModuleProxy | ModuleProxy[]>)[];
+    private readonly stateObject;
+    private readonly children;
     /**
      * The core building block for Adjust applications
      * @returns An unregistered instance of this module
@@ -115,7 +114,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param changedProps An object containing any fields of the state that have changed
      * @returns A promise that resolves once all listeners have resolved
      */
-    setState(changedProps: DataChange<S>): Promise<void>;
+    changeState(changedProps: DataChange<S>): Promise<void>;
     /**
      * Retrieves the entire settings object of the module
      * @returns The entire settings object on which listeners could be registered
@@ -127,7 +126,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param condition The settings condition to store the data under
      * @returns A promise that resolves once all listeners have resolved
      */
-    setSettings(changedProps: DataChange<SettingsConfigData<C>>, condition?: SettingsConditions): Promise<void>;
+    changeSettings(changedProps: DataChange<SettingsConfigData<C>>, condition?: SettingsConditions): Promise<void>;
     /**
      * Serializes the entire module, based on the state
      * @returns An object containing all the module's relevant data
@@ -298,7 +297,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
         version: string;
         settings: {};
         settingsMigrators: {};
-        initialState: {
+        state: {
             isStopping: boolean;
             isStopped: boolean;
         };

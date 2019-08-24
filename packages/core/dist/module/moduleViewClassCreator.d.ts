@@ -12,10 +12,10 @@ export declare class ModuleViewClassCreator {
     /**
      * A function to create a new module view class
      * @param module The module class to create the view for
-     * @param initialState The initial state to augment the module state with
+     * @param state The initial state to augment the module state with
      * @param moduleView The module view class to extend
      */
-    static createModuleView<M extends Constructor<any>, S extends object = {}, V extends ExtendsClass<typeof ModuleView, {}> = ExtendsClass<typeof ModuleView, ModuleView<{}, {}, ParameterizedModule, {}>>>(module: M, initialState?: S, moduleView?: V): ExtendedModuleViewClass<M, S, V>;
+    static createModuleView<M extends Constructor<any>, S extends object = {}, V extends ExtendsClass<typeof ModuleView, {}> = ExtendsClass<typeof ModuleView, ModuleView<{}, {}, ParameterizedModule, {}>>>(module: M, state?: S, moduleView?: V): ExtendedModuleViewClass<M, S, V>;
 }
 /**
  * A shortcut for the module view creation method

@@ -44,7 +44,7 @@ export abstract class ModuleView<
         super(props);
 
         // @ts-ignore
-        this.state = this.getClass().initialState;
+        this.state = this.getClass().state;
 
         // Make a shortcut to the module
         this.module = this.props.module as any;
@@ -77,7 +77,7 @@ export abstract class ModuleView<
         return (this as any).__proto__.constructor;
     }
 
-    static initialState: any = {}; // The initial state to be loaded for this class, will be replaced by createModuleView
+    static state: any = {}; // The initial state to be loaded for this class, will be replaced by createModuleView
 
     /**
      * Loads the initial state into the view

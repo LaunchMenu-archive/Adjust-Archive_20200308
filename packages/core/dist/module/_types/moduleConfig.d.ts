@@ -14,7 +14,7 @@ export declare type ModuleConfig<S extends ModuleState, C extends SettingsConfig
     version?: string;
     settings: C;
     settingsMigrators?: ModuleSettingsMigrators;
-    initialState: S;
+    state: S;
     type: ContractID<I>;
     onInstall?: (moduleClass: typeof Module) => Promise<void> | void;
     onLoad?: (moduleClass: typeof Module) => Promise<void> | void;

@@ -388,7 +388,7 @@ class WindowManagerSingleton {
         // Send the data
         ipcMain_1.IpcMain.send(window, "ViewManager.sendUpdate", module.getID().toString(), serialize_1.Serialize.serialize(data, (path, value, promise) => {
             // Make sure the latest value is still the promise that just resolved
-            if (extendedObject_1.ExtendedObject.getField(module.state, path) !== promise)
+            if (extendedObject_1.ExtendedObject.getField(module.getStateObject().get, path) !== promise)
                 return;
             // IF a promise resolves, translate the path of the value into an object again
             // And also send this data

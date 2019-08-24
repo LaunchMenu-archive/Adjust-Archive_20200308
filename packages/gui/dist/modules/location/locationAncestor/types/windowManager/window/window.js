@@ -14,7 +14,7 @@ const moduleViewClassCreator_1 = require("../../../../../../module/moduleViewCla
 const ChildBox_1 = require("../../../../../../components/ChildBox");
 const ParentBox_1 = require("../../../../../../components/ParentBox");
 exports.windowConfig = {
-    initialState: {
+    state: {
         childLocationAncestor: null,
         windowName: "",
     },
@@ -127,7 +127,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
         const child = await this.getChild();
         const childResponse = child.createLocation(location);
         // Setup inittial settings if required
-        this.settingsObject.setInitialData(async () => {
+        this.getSettingsObject().setInitialData(async () => {
             // Obtain the hints for this window
             const hints = Object.assign({}, this.getLocationHints(location));
             // If no x or y coordinate was provided, center it
@@ -159,9 +159,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
     /** @override */
     async removeAncestor() {
         // Remove own data
-        this.settingsObject
-            .getSettingsFile()
-            .removeConditionData(this.settingsConditions);
+        this.getSettingsObject().removeConditionData(this.settingsConditions);
         // Forward to child
         const child = await this.getChild();
         await child.removeAncestor();
@@ -180,7 +178,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
             // Get child location ancestor
             const locationAncestor = this.getChildLocationAncestor();
             // Store child location ancestor
-            this.setState({
+            this.changeState({
                 childLocationAncestor: locationAncestor,
             });
         }
@@ -195,7 +193,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
             // Get child location ancestor
             const child = await this.state.childLocationAncestor;
             // Remove child location ancestor
-            this.setState({
+            this.changeState({
                 childLocationAncestor: undefined,
             });
             // Close the child
@@ -257,7 +255,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
     // Window specific methods
     /** @override */
     async setName(name) {
-        this.setState({ windowName: name });
+        this.changeState({ windowName: name });
     }
     // Window settings methods
     /**
@@ -266,7 +264,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
      * @param height The height that the window now has
      */
     saveWindowSize(width, height) {
-        this.setSettings({ width, height }, this.settingsConditions);
+        this.changeSettings({ width, height }, this.settingsConditions);
     }
     /**
      * Saves the location of the window
@@ -274,7 +272,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
      * @param y The y coordinate of the location
      */
     saveWindowLocation(x, y) {
-        this.setSettings({ x, y }, this.settingsConditions);
+        this.changeSettings({ x, y }, this.settingsConditions);
     }
     // Testing TODO: remove this
     async setEdit(edit) {

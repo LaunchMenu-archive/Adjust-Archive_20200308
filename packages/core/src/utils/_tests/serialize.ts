@@ -7,7 +7,7 @@ import {SerializeableData} from "../_types/serializeableData";
 
 class P extends createModule({
     type: dummyInterfaceID,
-    initialState: {},
+    state: {},
     settings: {},
 }) {
     static async createCustomInstance() {

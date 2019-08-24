@@ -8,7 +8,7 @@ import {
 } from "@adjust/gui";
 
 export const config = {
-    initialState: {text: ""},
+    state: {text: ""},
     settings: {},
     type: SingletonType,
 };
@@ -24,7 +24,7 @@ export default class SingletonModule extends createModule(config) implements Sin
         console.log("singleton created");
         if (!fromReload) {
             const data = this.getData();
-            this.setState({
+            this.changeState({
                 text: data.text,
             });
         }
@@ -37,7 +37,7 @@ export default class SingletonModule extends createModule(config) implements Sin
 
     /** @override */
     public async setText(text: string) {
-        this.setState({
+        this.changeState({
             text: text,
         });
     }

@@ -11,7 +11,7 @@ import {createModule} from "../../module/moduleClassCreator";
 import {Themer, ThemerType, ThemerParent} from "./themer.type";
 
 export const themeProviderConfig = {
-    initialState: {
+    state: {
         themer: null as Themer,
     },
     getPriority: () => 1,
@@ -29,7 +29,7 @@ export class ThemeProviderModule
     protected async onInit(fromReload: boolean): Promise<void> {
         await super.onInit(fromReload);
 
-        if (!fromReload) this.setState({themer: await this.request({type: ThemerType})});
+        if (!fromReload) this.changeState({themer: await this.request({type: ThemerType})});
     }
 
     /** @override */

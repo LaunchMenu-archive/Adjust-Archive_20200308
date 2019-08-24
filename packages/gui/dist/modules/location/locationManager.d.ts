@@ -7,7 +7,7 @@ import { LocationPath } from "./_types/LocationPath";
 import { LocationsMoveData } from "./_types/LocationsMoveData";
 import { LocationAncestor } from "./locationAncestor/locationAncestor.type";
 export declare const config: {
-    initialState: {
+    state: {
         locations: {
             [locationID: string]: {
                 modules: ModuleReference[];
@@ -21,6 +21,11 @@ export declare const config: {
             createLocation(location: ModuleLocation): Promise<LocationPath>;
             removeLocation(locationPath: LocationPath): Promise<boolean>;
             removeAncestor(): Promise<void>;
+            /**
+             * Retrieves a location path for the given location
+             * @param location The module location to get the path for
+             * @returns The retrieve location path
+             */
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;
         }>>;
@@ -39,7 +44,7 @@ export declare const config: {
     type: import("@adjust/core/types").ContractID<import("./locationManager.type").LocationManagerContract>;
 };
 declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         locations: {
             [locationID: string]: {
                 modules: ModuleReference[];
@@ -53,6 +58,11 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
             createLocation(location: ModuleLocation): Promise<LocationPath>;
             removeLocation(locationPath: LocationPath): Promise<boolean>;
             removeAncestor(): Promise<void>;
+            /**
+             * Retrieves a location path for the given location
+             * @param location The module location to get the path for
+             * @returns The retrieve location path
+             */
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;
         }>>;

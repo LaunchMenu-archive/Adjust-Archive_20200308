@@ -8,7 +8,7 @@ const windowSelector_type_1 = require("./windowSelector/windowSelector.type");
 const window_type_1 = require("./window/window.type");
 const locationAncestor_type_1 = require("../../locationAncestor.type");
 exports.windowManagerConfig = {
-    initialState: {
+    state: {
         // Keep track of currently opened windows
         windows: {},
         // The window selector to handle windpws that are currently not opened
@@ -46,7 +46,7 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
     async onInit(fromReload) {
         await super.onInit(fromReload);
         if (!fromReload)
-            this.setState({
+            this.changeState({
                 windowSelector: await this.request({
                     type: windowSelector_type_1.WindowSelectorType,
                     data: { path: this.getData().path },
@@ -81,14 +81,14 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
             };
             const window = windowData.window;
             // Update the state to contain this location ancestor
-            this.setState({
+            this.changeState({
                 windows: {
                     [windowID]: windowData,
                 },
             });
             // Define the window data if absent
             if (!this.settings.windows[windowID])
-                await this.setSettings({
+                await this.changeSettings({
                     windows: {
                         [windowID]: {
                             name: name || windowID,
@@ -118,7 +118,7 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
         if (windowData) {
             const window = await windowData.window;
             // Remove it from the state
-            this.setState({
+            this.changeState({
                 windows: {
                     [windowID]: undefined,
                 },
@@ -140,7 +140,7 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
         if (window)
             await window.removeAncestor();
         // Remove the associated data
-        await this.setSettings({
+        await this.changeSettings({
             windows: {
                 [windowID]: undefined,
             },
@@ -150,7 +150,7 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
     }
     /** @override */
     async changeWindowName(name, windowID) {
-        await this.setSettings({
+        await this.changeSettings({
             windows: {
                 [windowID]: {
                     name: name,
@@ -168,7 +168,7 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
     async setWindowVisibility(visible, windowID) {
         // Make sure we haven't fully removed the window already
         if (this.state.windows[windowID]) {
-            await this.setState({
+            await this.changeState({
                 windows: {
                     [windowID]: {
                         opened: visible,
@@ -259,8 +259,8 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
         // Await all the windows disposals
         await Promise.all(promises);
         // Clear the settings
-        await this.setSettings({ windows: undefined }, this.settingsConditions);
-        await this.setSettings({ windows: {} }, this.settingsConditions);
+        await this.changeSettings({ windows: undefined }, this.settingsConditions);
+        await this.changeSettings({ windows: {} }, this.settingsConditions);
         // Send updated data to the window selector
         await this.updateWindowSelectorData();
     }

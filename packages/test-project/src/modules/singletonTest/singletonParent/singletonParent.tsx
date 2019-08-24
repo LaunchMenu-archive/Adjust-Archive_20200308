@@ -2,7 +2,7 @@ import {React, createModule, createModuleView} from "@adjust/gui";
 import {Singleton, SingletonType} from "../singleton/singleton.type";
 import {SingletonParentType, SingletonParent} from "./singletonParent.type";
 export const config = {
-    initialState: {
+    state: {
         singleton: undefined as Singleton,
         child: undefined as SingletonParent,
         text: "test",
@@ -28,7 +28,7 @@ export default class SingletonParentModule extends createModule(config)
     implements SingletonParent {
     public async onInit() {
         const data = this.getData();
-        this.setState({
+        this.changeState({
             text: data.count + "",
             singleton: await this.request({
                 type: SingletonType,
@@ -37,7 +37,7 @@ export default class SingletonParentModule extends createModule(config)
         });
 
         if (data.count > 0)
-            this.setState({
+            this.changeState({
                 child: await this.request({
                     type: SingletonParentType,
                     data: {count: data.count - 1},
@@ -47,7 +47,7 @@ export default class SingletonParentModule extends createModule(config)
 
     public async createChild() {
         if (!this.state.child)
-            this.setState({
+            this.changeState({
                 child: await this.request({
                     type: SingletonParentType,
                     data: {count: 0},
@@ -61,7 +61,7 @@ export default class SingletonParentModule extends createModule(config)
     public async closeSingleton() {
         if (this.state.singleton) {
             await this.state.singleton.close();
-            this.setState({singleton: null});
+            this.changeState({singleton: null});
         }
     }
 }

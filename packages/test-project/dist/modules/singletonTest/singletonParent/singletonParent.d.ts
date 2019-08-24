@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { SingletonParent } from "./singletonParent.type";
 export declare const config: {
-    initialState: {
+    state: {
         singleton: import("@adjust/core/types").ChildModule<{
             setText(text: string): Promise<void>;
         }>;
@@ -27,7 +27,7 @@ export declare const config: {
     type: import("@adjust/core/types").ContractID<import("./singletonParent.type").SingletonParentContract>;
 };
 declare const SingletonParentModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         singleton: import("@adjust/core/types").ChildModule<{
             setText(text: string): Promise<void>;
         }>;

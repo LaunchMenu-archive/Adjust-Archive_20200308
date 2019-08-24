@@ -8,7 +8,7 @@ export declare const dummyInterfaceID: import("../../../registry/_types/contract
     child: ChildModule<dummyInterface>;
 }>;
 declare const Target_base: import("../../../module/_types/extendedModule").ExtendedModuleClass<{
-    initialState: {};
+    state: {};
     settings: {
         a: {
             default: number;

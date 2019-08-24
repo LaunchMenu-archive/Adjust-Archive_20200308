@@ -15,7 +15,7 @@ import {LocationsMoveData} from "./_types/LocationsMoveData";
 import {LocationAncestor} from "./locationAncestor/locationAncestor.type";
 
 export const config = {
-    initialState: {
+    state: {
         // Keep track of currently used locations, and modules opened here in this session
         locations: {} as {
             [locationID: string]: {
@@ -61,7 +61,7 @@ export default class LocationManagerModule
      */
     protected async getAncestor(): Promise<LocationAncestor> {
         if (!this.state.locationAncestor) {
-            this.setState({locationAncestor: this.getChildLocationAncestor()});
+            this.changeState({locationAncestor: this.getChildLocationAncestor()});
         }
         return this.state.locationAncestor;
     }
@@ -95,7 +95,7 @@ export default class LocationManagerModule
      */
     protected updateLocationPath(locationPath: LocationPath): void {
         const current = this.settings.locations[locationPath.location.ID];
-        this.setSettings({
+        this.changeSettings({
             locations: {
                 [locationPath.location.ID]: {
                     path: locationPath,
@@ -156,7 +156,7 @@ export default class LocationManagerModule
             if (oldLocationIDs.includes(newLocationID)) return;
 
             let current = this.settings.locations[newLocationID];
-            await await this.setSettings({
+            await await this.changeSettings({
                 locations: {
                     [newLocationID]: {
                         path: current && current.path,
@@ -182,7 +182,7 @@ export default class LocationManagerModule
 
             let current = this.settings.locations[oldLocationID];
             if (current) {
-                await this.setSettings({
+                await this.changeSettings({
                     locations: {
                         [oldLocationID]: {
                             path: current.path,
@@ -200,7 +200,7 @@ export default class LocationManagerModule
                     const path = await this.getLocationPath(oldLocationID);
 
                     // Remove the location from the settings
-                    await await this.setSettings({
+                    await await this.changeSettings({
                         locations: {
                             [oldLocationID]: undefined,
                         },
@@ -250,7 +250,7 @@ export default class LocationManagerModule
         if (this.state.locationMoveData && data) return false;
 
         // Update own state
-        this.setState({locationMoveData: data});
+        this.changeState({locationMoveData: data});
 
         // Update whether we are able to drop elements now
         const locationAncestor = await this.getAncestor();
@@ -266,7 +266,7 @@ export default class LocationManagerModule
         if (!this.state.locationMoveData) return false;
 
         // Update state
-        this.setState({locationMoveData: data});
+        this.changeState({locationMoveData: data});
 
         // Return that the movement data was successfully updated
         return true;
@@ -323,7 +323,7 @@ export default class LocationManagerModule
         const locationAncestor = await this.getAncestor();
 
         // Store the module at this path
-        this.setState({
+        this.changeState({
             locations: {
                 [location]: {
                     modules: [
@@ -355,7 +355,7 @@ export default class LocationManagerModule
         const locationAncestor = await this.getAncestor();
 
         // Remove the module at this path
-        this.setState({
+        this.changeState({
             locations: {
                 [location]: {
                     modules: (

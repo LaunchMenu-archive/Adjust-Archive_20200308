@@ -3,11 +3,10 @@
 import { ContextProviderModule, ContextProvider, ContextProviderView } from "@adjust/core";
 import { ThemerParent } from "./themer.type";
 export declare const themeProviderConfig: {
-    initialState: {
+    state: {
         themer: import("@adjust/core/types").ChildModule<{
             getColor(colorName: "themePrimary" | "themeLighterAlt" | "themeLighter" | "themeLight" | "themeTertiary" | "themeSecondary" | "themeDarkAlt" | "themeDark" | "themeDarker" | "neutralLighterAlt" | "neutralLighter" | "neutralLight" | "neutralQuaternaryAlt" | "neutralQuaternary" | "neutralTertiaryAlt" | "neutralTertiary" | "neutralSecondary" | "neutralPrimaryAlt" | "neutralPrimary" | "neutralDark" | "black" | "white" | "accent" | "blackTranslucent40" | "whiteTranslucent40" | "yellowDark" | "yellow" | "yellowLight" | "orange" | "orangeLight" | "orangeLighter" | "redDark" | "red" | "magentaDark" | "magenta" | "magentaLight" | "purpleDark" | "purple" | "purpleLight" | "blueDark" | "blueMid" | "blue" | "blueLight" | "tealDark" | "teal" | "tealLight" | "greenDark" | "green" | "greenLight" | "primary" | "primaryDark" | "primaryLight"): Promise<string>;
-            getSpacing(spacingName: "xxs" | "xs" | "s" | "m" | "l" | "xl" | "xxl"): Promise<string | number>;
-            /** @override */
+            getSpacing(spacingName: "xxs" | "xs" | "s" | "m" | "l" | "xl" | "xxl"): Promise<string | number>; /** @override */
             getFontStyle(styleName: "tiny" | "xSmall" | "small" | "smallPlus" | "medium" | "mediumPlus" | "large" | "xLarge" | "xLargePlus" | "xxLarge" | "xxLargePlus" | "superLarge" | "mega"): Promise<import("react").CSSProperties>;
             getShadow(shadowName: "tiny" | "small" | "medium" | "large"): Promise<string>;
         }>;
@@ -17,11 +16,10 @@ export declare const themeProviderConfig: {
     type: import("@adjust/core/types").ContractID<import("@adjust/core").ContextProviderContract>;
 };
 declare const ThemeProviderModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         themer: import("@adjust/core/types").ChildModule<{
             getColor(colorName: "themePrimary" | "themeLighterAlt" | "themeLighter" | "themeLight" | "themeTertiary" | "themeSecondary" | "themeDarkAlt" | "themeDark" | "themeDarker" | "neutralLighterAlt" | "neutralLighter" | "neutralLight" | "neutralQuaternaryAlt" | "neutralQuaternary" | "neutralTertiaryAlt" | "neutralTertiary" | "neutralSecondary" | "neutralPrimaryAlt" | "neutralPrimary" | "neutralDark" | "black" | "white" | "accent" | "blackTranslucent40" | "whiteTranslucent40" | "yellowDark" | "yellow" | "yellowLight" | "orange" | "orangeLight" | "orangeLighter" | "redDark" | "red" | "magentaDark" | "magenta" | "magentaLight" | "purpleDark" | "purple" | "purpleLight" | "blueDark" | "blueMid" | "blue" | "blueLight" | "tealDark" | "teal" | "tealLight" | "greenDark" | "green" | "greenLight" | "primary" | "primaryDark" | "primaryLight"): Promise<string>;
-            getSpacing(spacingName: "xxs" | "xs" | "s" | "m" | "l" | "xl" | "xxl"): Promise<string | number>;
-            /** @override */
+            getSpacing(spacingName: "xxs" | "xs" | "s" | "m" | "l" | "xl" | "xxl"): Promise<string | number>; /** @override */
             getFontStyle(styleName: "tiny" | "xSmall" | "small" | "smallPlus" | "medium" | "mediumPlus" | "large" | "xLarge" | "xLargePlus" | "xxLarge" | "xxLargePlus" | "superLarge" | "mega"): Promise<import("react").CSSProperties>;
             getShadow(shadowName: "tiny" | "small" | "medium" | "large"): Promise<string>;
         }>;

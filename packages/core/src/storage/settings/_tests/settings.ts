@@ -39,7 +39,7 @@ export const dummyInterfaceID = Registry.createContractID<{
 }>(__filename + "1");
 export class Target
     extends createModule({
-        initialState: {},
+        state: {},
         settings: config.settings,
         type: dummyInterfaceID,
     })

@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { Embed } from "./embed.type";
 export declare const config: {
-    initialState: {
+    state: {
         text: string;
         color: string;
         child: import("@adjust/core/types").ChildModule<{
@@ -12,7 +12,7 @@ export declare const config: {
     type: import("@adjust/core/types").ContractID<import("./embed.type").EmbedContract>;
 };
 declare const EmbedModule_base: import("@adjust/core/types").ExtendedModuleClass<{
-    initialState: {
+    state: {
         text: string;
         color: string;
         child: import("@adjust/core/types").ChildModule<{

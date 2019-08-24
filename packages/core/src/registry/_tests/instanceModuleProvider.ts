@@ -19,7 +19,7 @@ export const dummyInterfaceID = Registry.createContractID<{
     child: dummyInterface;
 }>(__filename + "1");
 export class DummyModule
-    extends createModule({initialState: {}, settings: {}, type: dummyInterfaceID})
+    extends createModule({state: {}, settings: {}, type: dummyInterfaceID})
     implements dummyInterface {
     protected instanceVal: number = 0;
 
@@ -30,8 +30,7 @@ export class DummyModule
 // @ts-ignore
 DummyModule.path = "../module/_tests/dummyModules.helper.js"; // A path that can be imported (doesn't matter that it doesn't import this)
 
-class DummyParent
-    extends createModule({type: dummyInterfaceID, initialState: {}, settings: {}})
+class DummyParent extends createModule({type: dummyInterfaceID, state: {}, settings: {}})
     implements dummyParentInterface {
     protected someMethod: () => void;
 

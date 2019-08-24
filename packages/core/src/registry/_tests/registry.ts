@@ -15,7 +15,7 @@ import {Module} from "../../module/module";
 
 class P extends createModule({
     type: dummyInterfaceID,
-    initialState: {},
+    state: {},
     settings: {},
 }) {
     static async createCustomInstance() {

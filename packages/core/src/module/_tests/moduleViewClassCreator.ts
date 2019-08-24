@@ -4,7 +4,7 @@ import {createModuleView} from "../moduleViewClassCreator";
 
 // A config for our module
 const config = {
-    initialState: {
+    state: {
         val: "hello" as string | number,
     },
     settings: {
@@ -37,7 +37,7 @@ describe("ModuleViewClassCreator", () => {
                     // this.state.shit; // Errors since value doesn't exist
 
                     /* May not change original state */
-                    // this.setState({val: 3});
+                    // this.changeState({val: 3});
                 }
                 protected renderView(): JSX.Element {
                     throw new Error("Method not implemented.");
@@ -65,8 +65,8 @@ describe("ModuleViewClassCreator", () => {
                 }
             }
 
-            expect(SomeModuleView.initialState).toEqual({});
-            expect(SomeModuleView2.initialState).toEqual({stuff: 3});
+            expect(SomeModuleView.state).toEqual({});
+            expect(SomeModuleView2.state).toEqual({stuff: 3});
         });
         it("Should be able to be used to extend any moduleView class", () => {
             class SomeModuleView extends createModuleView(SomeModule, {stuff: 3}) {
@@ -101,12 +101,12 @@ describe("ModuleViewClassCreator", () => {
                     this.setState(state => ({something: "te", stuff: 9}));
 
                     /* Can't make up stuff */
-                    // this.setState({something: "te", crap: 2}); // Errors since crap doesn't exist
+                    // this.changeState({something: "te", crap: 2}); // Errors since crap doesn't exist
                     return "3";
                 }
             }
 
-            expect(ExtendsSomeModuleView.initialState).toEqual({
+            expect(ExtendsSomeModuleView.state).toEqual({
                 stuff: 3,
                 something: "test",
             });

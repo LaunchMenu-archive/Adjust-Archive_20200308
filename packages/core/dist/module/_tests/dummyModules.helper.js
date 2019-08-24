@@ -6,7 +6,7 @@ const path_1 = __importDefault(require("path"));
 const registry_1 = require("../../registry/registry");
 const moduleClassCreator_1 = require("../moduleClassCreator");
 exports.dummyInterfaceID = registry_1.Registry.createContractID(__filename + "1");
-class DummyModule extends moduleClassCreator_1.createModule({ initialState: {}, settings: {}, type: exports.dummyInterfaceID }) {
+class DummyModule extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID }) {
     static async customConstruct(request, moduleID, initialState, parents) {
         return this.construct(request, moduleID, initialState, parents);
     }
@@ -19,7 +19,7 @@ exports.default = DummyModule; // In order to import it as a module from the reg
 // @ts-ignore
 DummyModule.path = ["", "..", "module", "_tests", "dummyModules.helper.js"].join(path_1.default.sep); // A path that can be imported
 exports.dummyInterfaceID2 = registry_1.Registry.createContractID(__filename + "2");
-class DummyModule2 extends moduleClassCreator_1.createModule({ initialState: {}, settings: {}, type: exports.dummyInterfaceID2 }) {
+class DummyModule2 extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID2 }) {
     async test2(text) {
         // Example of type safe detection of what module called it
         const callContext = this.getCallContext();
@@ -35,7 +35,7 @@ exports.DummyModule2 = DummyModule2;
 // @ts-ignore
 DummyModule2.path = "test2";
 exports.dummyInterfaceID3 = registry_1.Registry.createContractID(__filename + "3");
-class DummyModule4 extends moduleClassCreator_1.createModule({ initialState: {}, settings: {}, type: exports.dummyInterfaceID }) {
+class DummyModule4 extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID }) {
     async test(text) {
         return text + "4";
     }

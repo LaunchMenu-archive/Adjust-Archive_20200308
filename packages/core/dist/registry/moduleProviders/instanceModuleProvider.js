@@ -21,7 +21,7 @@ class InstanceModuleProvider extends abstractModuleProvider_1.AbstractModuleProv
     /** @override*/
     getPriority(request) {
         // Check if the module that we are providing for is still alive
-        if (this.module.state.isStopping) {
+        if (this.module.getStateObject().get.isStopping) {
             registry_1.Registry.removeProvider(this);
             return 0;
         }

@@ -12,7 +12,7 @@ export declare const dummyInterfaceID: import("../../registry/_types/contractID"
     child: ChildModule<dummyInterface>;
 }>;
 declare const DummyModule_base: import("../_types/extendedModule").ExtendedModuleClass<{
-    initialState: {};
+    state: {};
     settings: {};
     type: import("../../registry/_types/contractID").ContractID<{
         parent: {};
@@ -40,7 +40,7 @@ export declare const dummyInterfaceID2: import("../../registry/_types/contractID
     };
 }>;
 declare const DummyModule2_base: import("../_types/extendedModule").ExtendedModuleClass<{
-    initialState: {};
+    state: {};
     settings: {};
     type: import("../../registry/_types/contractID").ContractID<{
         parent: {
@@ -66,7 +66,7 @@ export declare const dummyInterfaceID3: import("../../registry/_types/contractID
     child: ChildModule<dummyInterface3>;
 }>;
 declare const DummyModule4_base: import("../_types/extendedModule").ExtendedModuleClass<{
-    initialState: {};
+    state: {};
     settings: {};
     type: import("../../registry/_types/contractID").ContractID<{
         parent: {};
