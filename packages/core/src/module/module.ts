@@ -25,9 +25,17 @@ import {SettingsManager} from "../storage/settings/settingsManager";
 import {SettingsFile} from "../storage/settings/settingsFile";
 import {SettingsConditions} from "../storage/settings/settingsConditions/abstractSettingsConditions";
 import {SettingsConfigData} from "../storage/settings/_types/settingsConfigData";
+import {ModuleDetails, NormalizedModuleDetails} from "./_types/moduleDetails";
+import {Package} from "../utils/_types/package";
 
 export const baseConfig = {
     version: "0.0.0",
+    details: {
+        icon: "",
+        name: "Module",
+        description: "The base module",
+    },
+    package: null,
     settings: {},
     settingsMigrators: {},
     state: {
@@ -38,7 +46,7 @@ export const baseConfig = {
     onLoad: () => {},
     abstract: true,
     type: null,
-    viewClass: undefined,
+    viewClass: null,
     getPriority: () => 1,
 };
 
@@ -641,6 +649,22 @@ export class Module<
      */
     public static async getSettingsFile(): Promise<SettingsFile<any>> {
         return SettingsManager.getSettingsFile(this);
+    }
+
+    /**
+     * Retrieves the package of the module
+     * @returns THe module's package
+     */
+    public static getPackage(): Package {
+        return this.config.package;
+    }
+
+    /**
+     * Retrieves the details of the module to be displayed to the user
+     * @returns The module's details
+     */
+    public static getDetails(): NormalizedModuleDetails {
+        return this.config.details;
     }
 
     /**

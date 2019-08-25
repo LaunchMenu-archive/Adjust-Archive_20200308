@@ -18,8 +18,16 @@ import { ModuleID } from "./moduleID";
 import { SettingsFile } from "../storage/settings/settingsFile";
 import { SettingsConditions } from "../storage/settings/settingsConditions/abstractSettingsConditions";
 import { SettingsConfigData } from "../storage/settings/_types/settingsConfigData";
+import { NormalizedModuleDetails } from "./_types/moduleDetails";
+import { Package } from "../utils/_types/package";
 export declare const baseConfig: {
     version: string;
+    details: {
+        icon: string;
+        name: string;
+        description: string;
+    };
+    package: any;
     settings: {};
     settingsMigrators: {};
     state: {
@@ -295,6 +303,12 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
     protected static onFileLoad(isMain: boolean, modulePath: string): void;
     static config: {
         version: string;
+        details: {
+            icon: string;
+            name: string;
+            description: string;
+        };
+        package: any;
         settings: {};
         settingsMigrators: {};
         state: {
@@ -318,6 +332,16 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @returns The settings file instance
      */
     static getSettingsFile(): Promise<SettingsFile<any>>;
+    /**
+     * Retrieves the package of the module
+     * @returns THe module's package
+     */
+    static getPackage(): Package;
+    /**
+     * Retrieves the details of the module to be displayed to the user
+     * @returns The module's details
+     */
+    static getDetails(): NormalizedModuleDetails;
     /**
      * Loads the module and installs if there is no settings file present for it
      * @returns A promise that resolves when installation is complete, indicating whether installation happened

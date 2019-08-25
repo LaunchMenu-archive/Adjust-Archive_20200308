@@ -144,6 +144,13 @@ export class ModuleClassCreator {
         // Create the normalized and extended config
         const normalizedConfig: ParameterizedNormalizedModuleConfig = {
             version: config.version,
+            details: {
+                icon: "",
+                name: "",
+                description: "",
+                ...config.details,
+            },
+            package: null,
             settings,
             settingsMigrators,
             state: state,

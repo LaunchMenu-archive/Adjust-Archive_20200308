@@ -7,6 +7,8 @@ import {ContractID} from "../../registry/_types/contractID";
 import {SettingsConfigSet} from "../../storage/settings/_types/settingsConfigSet";
 import {ModuleSettingsMigrators} from "./moduleSettingsMigrators";
 import {Module} from "../module";
+import {ModuleDetails, NormalizedModuleDetails} from "./moduleDetails";
+import {Package} from "../../utils/_types/package";
 
 /**
  * An interface that contains all config data for the module
@@ -17,6 +19,7 @@ export type ModuleConfig<
     I extends ModuleContract
 > = {
     version?: string;
+    details?: ModuleDetails;
     settings: C;
     settingsMigrators?: ModuleSettingsMigrators;
     state: S;
@@ -44,7 +47,12 @@ export type NormalizedModuleConfig<
     S extends ModuleState,
     C extends SettingsConfigSet,
     I extends ModuleContract
-> = {[P in keyof ModuleConfig<S, C, I>]-?: ModuleConfig<S, C, I>[P]};
+> = {
+    [P in keyof ModuleConfig<S, C, I>]-?: ModuleConfig<S, C, I>[P];
+} & {
+    details: NormalizedModuleDetails;
+    package: Package;
+};
 
 /**
  * Default parameterized version of ModuleConfig

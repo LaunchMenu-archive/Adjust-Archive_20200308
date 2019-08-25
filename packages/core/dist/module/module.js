@@ -10,6 +10,12 @@ const extendedObject_1 = require("../utils/extendedObject");
 const settingsManager_1 = require("../storage/settings/settingsManager");
 exports.baseConfig = {
     version: "0.0.0",
+    details: {
+        icon: "",
+        name: "Module",
+        description: "The base module",
+    },
+    package: null,
     settings: {},
     settingsMigrators: {},
     state: {
@@ -20,7 +26,7 @@ exports.baseConfig = {
     onLoad: () => { },
     abstract: true,
     type: null,
-    viewClass: undefined,
+    viewClass: null,
     getPriority: () => 1,
 };
 /**
@@ -467,6 +473,20 @@ class Module {
      */
     static async getSettingsFile() {
         return settingsManager_1.SettingsManager.getSettingsFile(this);
+    }
+    /**
+     * Retrieves the package of the module
+     * @returns THe module's package
+     */
+    static getPackage() {
+        return this.config.package;
+    }
+    /**
+     * Retrieves the details of the module to be displayed to the user
+     * @returns The module's details
+     */
+    static getDetails() {
+        return this.config.details;
     }
     /**
      * Loads the module and installs if there is no settings file present for it

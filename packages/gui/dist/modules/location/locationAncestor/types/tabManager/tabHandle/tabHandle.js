@@ -8,6 +8,11 @@ const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const locationAncestor_type_1 = require("../../../locationAncestor.type");
 const Box_1 = require("../../../../../../components/Box");
 exports.tabHandleConfig = {
+    details: {
+        name: "John",
+        description: "Cool kid",
+        icon: "someURL",
+    },
     state: {
         inEditMode: false,
         inDropMode: false,

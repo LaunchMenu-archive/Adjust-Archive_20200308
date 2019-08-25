@@ -3,6 +3,11 @@ import { TabHandle } from "./tabHandle.type";
 import { DragEvent as ReactDragEvent } from "react";
 import { TabHandleData } from "../_types/TabHandleData";
 export declare const tabHandleConfig: {
+    details: {
+        name: string;
+        description: string;
+        icon: string;
+    };
     state: {
         inEditMode: boolean;
         inDropMode: boolean;
@@ -18,6 +23,11 @@ export declare const tabHandleConfig: {
     type: import("@adjust/core/types").ContractID<import("./tabHandle.type").TabHandleContract>;
 };
 declare const TabHandleModule_base: import("@adjust/core/types").ExtendedModuleClass<{
+    details: {
+        name: string;
+        description: string;
+        icon: string;
+    };
     state: {
         inEditMode: boolean;
         inDropMode: boolean;

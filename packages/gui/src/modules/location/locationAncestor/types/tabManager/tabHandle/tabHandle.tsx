@@ -7,11 +7,15 @@ import {Pivot, PivotItem} from "office-ui-fabric-react";
 import {dragAndDropName} from "../../../locationAncestor.type";
 import {DragEvent as ReactDragEvent} from "react";
 import {Box} from "../../../../../../components/Box";
-import {number} from "prop-types";
 import {LocationsMoveData} from "../../../../_types/LocationsMoveData";
 import {TabHandleData} from "../_types/TabHandleData";
 
 export const tabHandleConfig = {
+    details: {
+        name: "John",
+        description: "Cool kid",
+        icon: "someURL",
+    },
     state: {
         inEditMode: false,
         inDropMode: false,

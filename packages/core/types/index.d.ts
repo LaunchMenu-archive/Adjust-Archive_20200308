@@ -2,6 +2,7 @@ export * from "../dist/module/_types/extendedModule";
 export * from "../dist/module/_types/extendedModuleView";
 export * from "../dist/module/_types/moduleConfig";
 export * from "../dist/module/_types/moduleContract";
+export * from "../dist/module/_types/moduleDetails";
 export * from "../dist/module/_types/moduleRequestData";
 export * from "../dist/module/_types/moduleSettingsMigrators";
 export * from "../dist/module/_types/moduleState";

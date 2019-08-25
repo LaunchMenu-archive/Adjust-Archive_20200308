@@ -218,11 +218,13 @@ class RegistrySingleton {
                 // @ts-ignore
                 def.path =
                     (collectionName != "default" ? collectionName : "") + path_1.default.sep + path;
-                // Copy the version from the package if absent
+                // Assign the package to the config
                 const config = def.getConfig();
+                const packag = this.requireModulePackage(collectionName, path);
+                config.package = packag;
+                // Assign the version number of abscent
                 if (!config.version) {
-                    const packag = this.requireModulePackage(collectionName, path);
-                    if (packag)
+                    if (packag && packag.version)
                         config.version = packag.version;
                     else
                         config.version = "0.0.0";

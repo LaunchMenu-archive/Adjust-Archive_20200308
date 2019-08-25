@@ -85,6 +85,8 @@ class ModuleClassCreator {
         // Create the normalized and extended config
         const normalizedConfig = {
             version: config.version,
+            details: Object.assign({ icon: "", name: "", description: "" }, config.details),
+            package: null,
             settings,
             settingsMigrators,
             state: state,
