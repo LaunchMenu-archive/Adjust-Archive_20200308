@@ -11,7 +11,8 @@ const Box_1 = require("../../../../../components/Box");
 const ChildBox_1 = require("../../../../../components/ChildBox");
 const ParentBox_1 = require("../../../../../components/ParentBox");
 const HorizontalScroller_1 = require("../../../../../components/HorizontalScroller");
-exports.tabManagerConfig = {
+const moduleViewClassCreator_1 = require("../../../../../module/moduleViewClassCreator");
+exports.tabManagerConfig = core_1.createConfig({
     state: {
         tabs: [],
         selectedTabID: null,
@@ -35,7 +36,7 @@ exports.tabManagerConfig = {
     },
     getPriority: () => 2,
     type: locationAncestor_type_1.LocationAncestorType,
-};
+});
 /**
  * type "tab" Accepts one of location hints:
  * - ID: String (The ID of the tab to open in)
@@ -468,7 +469,7 @@ class TabManagerModule extends core_1.createModule(exports.tabManagerConfig, loc
 }
 exports.TabManagerModule = TabManagerModule;
 exports.default = TabManagerModule;
-class TabManagerView extends core_1.createModuleView(TabManagerModule) {
+class TabManagerView extends moduleViewClassCreator_1.createModuleView(TabManagerModule) {
     // Drag and drop methods
     /**
      * Checks whether this is valid data for a drop

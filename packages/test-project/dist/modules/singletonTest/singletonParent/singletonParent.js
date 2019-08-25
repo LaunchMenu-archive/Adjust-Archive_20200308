@@ -2,7 +2,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const gui_1 = require("@adjust/gui");
 const singleton_type_1 = require("../singleton/singleton.type");
 const singletonParent_type_1 = require("./singletonParent.type");
-exports.config = {
+exports.config = gui_1.createConfig({
     state: {
         singleton: undefined,
         child: undefined,
@@ -23,7 +23,7 @@ exports.config = {
         },
     },
     type: singletonParent_type_1.SingletonParentType,
-};
+});
 class SingletonParentModule extends gui_1.createModule(exports.config) {
     async onInit() {
         const data = this.getData();

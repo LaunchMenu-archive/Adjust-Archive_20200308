@@ -1,7 +1,7 @@
-import {React, createModule, createModuleView} from "@adjust/gui";
+import {React, createModule, createModuleView, createConfig} from "@adjust/gui";
 import {Singleton, SingletonType} from "../singleton/singleton.type";
 import {SingletonParentType, SingletonParent} from "./singletonParent.type";
-export const config = {
+export const config = createConfig({
     state: {
         singleton: undefined as Singleton,
         child: undefined as SingletonParent,
@@ -22,7 +22,7 @@ export const config = {
         },
     },
     type: SingletonParentType,
-};
+});
 
 export default class SingletonParentModule extends createModule(config)
     implements SingletonParent {

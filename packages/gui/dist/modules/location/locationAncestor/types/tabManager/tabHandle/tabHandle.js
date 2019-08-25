@@ -7,7 +7,7 @@ const React_1 = require("../../../../../../React");
 const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const locationAncestor_type_1 = require("../../../locationAncestor.type");
 const Box_1 = require("../../../../../../components/Box");
-exports.tabHandleConfig = {
+exports.tabHandleConfig = moduleClassCreator_1.createConfig({
     details: {
         name: "John",
         description: "Cool kid",
@@ -26,7 +26,7 @@ exports.tabHandleConfig = {
         },
     },
     type: tabHandle_type_1.TabHandleType,
-};
+});
 class TabHandleModule extends moduleClassCreator_1.createModule(exports.tabHandleConfig) {
     /** @override */
     async onInit(fromReload) {

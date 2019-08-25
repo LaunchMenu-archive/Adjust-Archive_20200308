@@ -1,8 +1,8 @@
 import {
-    createModule,
+    createModule as createCoreModule,
+    createConfig as createCoreConfig,
     ModuleReference,
     UUID,
-    createModuleView,
     ExtendedObject,
     AsyncMutualExcluder,
 } from "@adjust/core";
@@ -23,12 +23,13 @@ import {ChildBox} from "../../../../../components/ChildBox";
 import {ParentBox} from "../../../../../components/ParentBox";
 import {HorizontalScroller} from "../../../../../components/HorizontalScroller";
 import {TabHandleData} from "./_types/TabHandleData";
+import {createModuleView} from "../../../../../module/moduleViewClassCreator";
 
-export const tabManagerConfig = {
+export const tabManagerConfig = createCoreConfig({
     state: {
         tabs: [] as OpenedTab[],
         selectedTabID: null as string,
-        tabsVisible: false,
+        tabsVisible: false as boolean,
     },
     settings: {
         tabs: {
@@ -48,7 +49,7 @@ export const tabManagerConfig = {
     },
     getPriority: () => 2,
     type: LocationAncestorType,
-};
+});
 
 /**
  * type "tab" Accepts one of location hints:
@@ -68,7 +69,7 @@ export const tabManagerConfig = {
  * The tabs manager, responsible for keeping track and opening tabs
  */
 export class TabManagerModule
-    extends createModule(tabManagerConfig, LocationAncestorModule)
+    extends createCoreModule(tabManagerConfig, LocationAncestorModule)
     implements LocationAncestor, TabHandleParent {
     // The name of this ancestor type to be used in the location path and hints
     protected ancestorName: string = "tab";

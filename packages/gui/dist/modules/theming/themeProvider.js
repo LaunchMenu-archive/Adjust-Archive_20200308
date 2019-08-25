@@ -3,14 +3,14 @@ const core_1 = require("@adjust/core");
 const React_1 = require("../../React");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
 const themer_type_1 = require("./themer.type");
-exports.themeProviderConfig = {
+exports.themeProviderConfig = moduleClassCreator_1.createConfig({
     state: {
         themer: null,
     },
     getPriority: () => 1,
     settings: {},
     type: core_1.ContextProviderType,
-};
+});
 /**
  * A module to put the themer's context into the component tree
  */

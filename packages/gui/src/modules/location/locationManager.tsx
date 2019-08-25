@@ -1,5 +1,6 @@
 import {
-    createModule,
+    createModule as createCoreModule,
+    createConfig as createCoreConfig,
     InstanceModuleProvider,
     ModuleReference,
     SettingsManager,
@@ -14,7 +15,7 @@ import {LocationPath} from "./_types/LocationPath";
 import {LocationsMoveData} from "./_types/LocationsMoveData";
 import {LocationAncestor} from "./locationAncestor/locationAncestor.type";
 
-export const config = {
+export const config = createCoreConfig({
     state: {
         // Keep track of currently used locations, and modules opened here in this session
         locations: {} as {
@@ -40,13 +41,13 @@ export const config = {
         },
     },
     type: LocationManagerType,
-};
+});
 
 /**
  * The location manager, responsible for keeping track of all locations in the system, and linking them with modules
  */
 export default class LocationManagerModule
-    extends createModule(config, LocationAncestorModule)
+    extends createCoreModule(config, LocationAncestorModule)
     implements LocationManager {
     /** @override */
     protected async onInit(fromReload: boolean): Promise<void> {

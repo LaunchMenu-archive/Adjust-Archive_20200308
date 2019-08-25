@@ -6,7 +6,7 @@ const core_1 = require("@adjust/core");
 const locationManager_type_1 = require("./locationManager.type");
 const registry_1 = require("../../registry/registry");
 const locationAncestor_1 = __importDefault(require("./locationAncestor/locationAncestor"));
-exports.config = {
+exports.config = core_1.createConfig({
     state: {
         // Keep track of currently used locations, and modules opened here in this session
         locations: {},
@@ -23,7 +23,7 @@ exports.config = {
         },
     },
     type: locationManager_type_1.LocationManagerType,
-};
+});
 /**
  * The location manager, responsible for keeping track of all locations in the system, and linking them with modules
  */

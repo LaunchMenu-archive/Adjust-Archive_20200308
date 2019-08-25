@@ -9,7 +9,7 @@ const locationAncestor_1 = __importDefault(require("./locationAncestor"));
 const moduleViewClassCreator_1 = require("../../../module/moduleViewClassCreator");
 const Box_1 = require("../../../components/Box");
 const ChildBox_1 = require("../../../components/ChildBox");
-exports.config = {
+exports.config = core_1.createConfig({
     state: {
         // The modules being displayed
         locations: {},
@@ -24,7 +24,7 @@ exports.config = {
         },
     },
     type: locationAncestor_type_1.LocationAncestorType,
-};
+});
 /**
  * The location class that simply renders a location when requested
  */

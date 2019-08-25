@@ -7,17 +7,17 @@ import {
     ContextProviderView,
 } from "@adjust/core";
 import {React} from "../../React";
-import {createModule} from "../../module/moduleClassCreator";
+import {createModule, createConfig} from "../../module/moduleClassCreator";
 import {Themer, ThemerType, ThemerParent} from "./themer.type";
 
-export const themeProviderConfig = {
+export const themeProviderConfig = createConfig({
     state: {
         themer: null as Themer,
     },
     getPriority: () => 1,
     settings: {},
     type: ContextProviderType,
-};
+});
 
 /**
  * A module to put the themer's context into the component tree
@@ -29,7 +29,8 @@ export class ThemeProviderModule
     protected async onInit(fromReload: boolean): Promise<void> {
         await super.onInit(fromReload);
 
-        if (!fromReload) this.changeState({themer: await this.request({type: ThemerType})});
+        if (!fromReload)
+            this.changeState({themer: await this.request({type: ThemerType})});
     }
 
     /** @override */

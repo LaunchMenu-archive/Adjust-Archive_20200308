@@ -21,11 +21,6 @@ export declare const config: {
             createLocation(location: ModuleLocation): Promise<LocationPath>;
             removeLocation(locationPath: LocationPath): Promise<boolean>;
             removeAncestor(): Promise<void>;
-            /**
-             * Retrieves a location path for the given location
-             * @param location The module location to get the path for
-             * @returns The retrieve location path
-             */
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;
         }>>;
@@ -58,11 +53,6 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
             createLocation(location: ModuleLocation): Promise<LocationPath>;
             removeLocation(locationPath: LocationPath): Promise<boolean>;
             removeAncestor(): Promise<void>;
-            /**
-             * Retrieves a location path for the given location
-             * @param location The module location to get the path for
-             * @returns The retrieve location path
-             */
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;
         }>>;

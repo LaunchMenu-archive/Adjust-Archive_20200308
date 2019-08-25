@@ -5,13 +5,14 @@ import {
     createModuleView,
     Registry,
     InstanceModuleProvider,
+    createConfig,
 } from "@adjust/gui";
 
-export const config = {
+export const config = createConfig({
     state: {text: ""},
     settings: {},
     type: SingletonType,
-};
+});
 
 export default class SingletonModule extends createModule(config) implements Singleton {
     /** @override */

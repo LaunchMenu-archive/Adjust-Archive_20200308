@@ -1,26 +1,25 @@
 import {SettingsConditions, DataSettingsConditions, UUID} from "@adjust/core";
 import {TabHandleType, TabHandle} from "./tabHandle.type";
-import {createModule} from "../../../../../../module/moduleClassCreator";
+import {createModule, createConfig} from "../../../../../../module/moduleClassCreator";
 import {createModuleView} from "../../../../../../module/moduleViewClassCreator";
 import {React} from "../../../../../../React";
 import {Pivot, PivotItem} from "office-ui-fabric-react";
 import {dragAndDropName} from "../../../locationAncestor.type";
 import {DragEvent as ReactDragEvent} from "react";
 import {Box} from "../../../../../../components/Box";
-import {LocationsMoveData} from "../../../../_types/LocationsMoveData";
 import {TabHandleData} from "../_types/TabHandleData";
 
-export const tabHandleConfig = {
+export const tabHandleConfig = createConfig({
     details: {
         name: "John",
         description: "Cool kid",
         icon: "someURL",
     },
     state: {
-        inEditMode: false,
-        inDropMode: false,
+        inEditMode: false as boolean,
+        inDropMode: false as boolean,
         index: 0,
-        selected: false,
+        selected: false as boolean,
     },
     settings: {
         name: {
@@ -29,7 +28,7 @@ export const tabHandleConfig = {
         },
     },
     type: TabHandleType,
-};
+});
 
 export class TabHandleModule extends createModule(tabHandleConfig) implements TabHandle {
     // The settings conditions to save data under

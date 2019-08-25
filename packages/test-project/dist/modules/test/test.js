@@ -2,7 +2,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const gui_1 = require("@adjust/gui");
 const test_type_1 = require("./test.type");
 const embed_type_1 = require("../embed/embed.type");
-exports.config = {
+exports.config = gui_1.createConfig({
     state: {
         stuff: "test",
         children: [],
@@ -28,7 +28,7 @@ exports.config = {
         },
     },
     type: test_type_1.TestType,
-};
+});
 class TestModule extends gui_1.createModule(exports.config) {
     /** @override */
     async onInit() {

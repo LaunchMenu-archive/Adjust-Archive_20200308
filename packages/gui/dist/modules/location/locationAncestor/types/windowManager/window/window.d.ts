@@ -12,7 +12,7 @@ export declare const windowConfig: {
             closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             createLocation(location: ModuleLocation): Promise<LocationPath>;
-            removeLocation(locationPath: LocationPath): Promise<boolean>;
+            removeLocation(locationPath: LocationPath): Promise<boolean>; /** @override */
             removeAncestor(): Promise<void>;
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;
@@ -51,7 +51,7 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
             closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             createLocation(location: ModuleLocation): Promise<LocationPath>;
-            removeLocation(locationPath: LocationPath): Promise<boolean>;
+            removeLocation(locationPath: LocationPath): Promise<boolean>; /** @override */
             removeAncestor(): Promise<void>;
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;

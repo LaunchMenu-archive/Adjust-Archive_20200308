@@ -7,7 +7,7 @@ const locationAncestor_1 = __importDefault(require("../../../locationAncestor/lo
 const windowSelector_type_1 = require("./windowSelector/windowSelector.type");
 const window_type_1 = require("./window/window.type");
 const locationAncestor_type_1 = require("../../locationAncestor.type");
-exports.windowManagerConfig = {
+exports.windowManagerConfig = core_1.createConfig({
     state: {
         // Keep track of currently opened windows
         windows: {},
@@ -23,7 +23,7 @@ exports.windowManagerConfig = {
     },
     getPriority: () => 3,
     type: locationAncestor_type_1.LocationAncestorType,
-};
+});
 /**
  * type "Window" Accepts one of location hints:
  * - ID: String (The ID of the window to open)

@@ -34,10 +34,22 @@ class ModuleClassCreator extends core_1.ModuleClassCreator {
         // Call the method as per usual
         return super.createModule(config, moduleClass);
     }
+    /**
+     * Method may be used to perform typechecking on a config
+     * @param config The config to type check
+     * @returns A copy of the module
+     */
+    static createConfig(config) {
+        return config;
+    }
 }
 exports.ModuleClassCreator = ModuleClassCreator;
 /**
  * A shortcut for the module creation method
  */
 exports.createModule = ModuleClassCreator.createModule.bind(ModuleClassCreator);
+/**
+ * A shortcut for the config creation method
+ */
+exports.createConfig = ModuleClassCreator.createConfig.bind(ModuleClassCreator);
 //# sourceMappingURL=moduleClassCreator.js.map

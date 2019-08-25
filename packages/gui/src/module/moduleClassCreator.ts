@@ -48,11 +48,27 @@ export class ModuleClassCreator extends CoreModuleClassCreator {
         // Call the method as per usual
         return super.createModule(config, moduleClass);
     }
+
+    /**
+     * Method may be used to perform typechecking on a config
+     * @param config The config to type check
+     * @returns A copy of the module
+     */
+    public static createConfig<T extends ParameterizedModuleConfig>(config: T): T {
+        return config;
+    }
 }
 
 /**
  * A shortcut for the module creation method
  */
 export const createModule: (typeof ModuleClassCreator)["createModule"] = ModuleClassCreator.createModule.bind(
+    ModuleClassCreator
+);
+
+/**
+ * A shortcut for the config creation method
+ */
+export const createConfig: (typeof ModuleClassCreator)["createConfig"] = ModuleClassCreator.createConfig.bind(
     ModuleClassCreator
 );

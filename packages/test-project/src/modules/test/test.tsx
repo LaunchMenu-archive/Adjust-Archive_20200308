@@ -1,8 +1,8 @@
-import {createModule, createModuleView, WindowManager, React} from "@adjust/gui";
+import {createModule, createModuleView, React, createConfig} from "@adjust/gui";
 import {TestType, Test} from "./test.type";
 import {EmbedType, Embed} from "../embed/embed.type";
 
-export const config = {
+export const config = createConfig({
     state: {
         stuff: "test",
         children: [] as Embed[],
@@ -28,7 +28,7 @@ export const config = {
         },
     },
     type: TestType,
-};
+});
 
 export default class TestModule extends createModule(config) implements Test {
     intervalID: number;

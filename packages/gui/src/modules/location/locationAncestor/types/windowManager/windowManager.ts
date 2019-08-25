@@ -1,4 +1,10 @@
-import {createModule, ModuleReference, UUID, ExtendedObject} from "@adjust/core";
+import {
+    createModule,
+    ModuleReference,
+    UUID,
+    ExtendedObject,
+    createConfig,
+} from "@adjust/core";
 import {ModuleLocation} from "../../../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "../../../locationAncestor/locationAncestor";
 import {LocationPath} from "../../../_types/LocationPath";
@@ -7,7 +13,7 @@ import {Window, WindowType, WindowParent} from "./window/window.type";
 import {LocationAncestorType, LocationAncestor} from "../../locationAncestor.type";
 import {WindowsData} from "./_types/windowData";
 
-export const windowManagerConfig = {
+export const windowManagerConfig = createConfig({
     state: {
         // Keep track of currently opened windows
         windows: {} as {
@@ -28,7 +34,7 @@ export const windowManagerConfig = {
     },
     getPriority: () => 3,
     type: LocationAncestorType,
-};
+});
 
 /**
  * type "Window" Accepts one of location hints:

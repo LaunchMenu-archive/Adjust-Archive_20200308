@@ -16,14 +16,14 @@ const sizes = {
     barHeight: 40,
     windowHeight: 500,
 };
-exports.windowSelectorConfig = {
+exports.windowSelectorConfig = moduleClassCreator_1.createConfig({
     state: {
         closedWindows: {},
         windowModule: null,
     },
     settings: {},
     type: windowSelector_type_1.WindowSelectorType,
-};
+});
 class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.windowSelectorConfig, locationAncestor_1.default) {
     constructor() {
         super(...arguments);

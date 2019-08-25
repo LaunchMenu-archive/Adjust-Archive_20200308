@@ -7,19 +7,23 @@ const theme_1 = require("./theme");
 const emotion_theming_1 = require("emotion-theming");
 const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const box_1 = require("./box");
-exports.themerConfig = {
+const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
+exports.themerConfig = moduleClassCreator_1.createConfig({
     state: {},
     getPriority: () => 1,
     settings: themeSettings_1.themeSettings,
     type: themer_type_1.ThemerType,
-};
+});
 /**
  * A module of this type is used as the root of the module
  */
-class ThemerModule extends core_1.createModule(exports.themerConfig) {
+class ThemerModule extends moduleClassCreator_1.createModule(exports.themerConfig) {
+    /** @override */
+    async onPreInit() {
+        core_1.Registry.addProvider(new core_1.InstanceModuleProvider(themer_type_1.ThemerType, this, () => 2));
+    }
     /** @override */
     async onInit(fromReload) {
-        core_1.Registry.addProvider(new core_1.InstanceModuleProvider(themer_type_1.ThemerType, this, () => 2));
         this.getSettingsObject().on("change", field => this.updateTheme(field));
     }
     /**

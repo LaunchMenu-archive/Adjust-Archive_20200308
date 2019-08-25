@@ -27,8 +27,18 @@ export declare class ModuleClassCreator {
      * @returns The class created from the config data
      */
     static createModule<MC extends ParameterizedModuleConfig, X extends ExtendsClass<typeof Module, {}> = ExtendsClass<typeof Module, Module<typeof Module.config.state, SettingsConfig<Empty>, ModuleContract>>>(config: MC, moduleClass?: X): ExtendedModuleClass<MC, X>;
+    /**
+     * Method may be used to perform typechecking on a config
+     * @param config The config to type check
+     * @returns A copy of the module
+     */
+    static createConfig<T extends ParameterizedModuleConfig>(config: T): T;
 }
 /**
  * A shortcut for the module creation method
  */
 export declare const createModule: (typeof ModuleClassCreator)["createModule"];
+/**
+ * A shortcut for the config creation method
+ */
+export declare const createConfig: (typeof ModuleClassCreator)["createConfig"];

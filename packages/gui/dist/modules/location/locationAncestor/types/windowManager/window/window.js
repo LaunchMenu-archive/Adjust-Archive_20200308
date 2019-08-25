@@ -13,7 +13,7 @@ const Box_1 = require("../../../../../../components/Box");
 const moduleViewClassCreator_1 = require("../../../../../../module/moduleViewClassCreator");
 const ChildBox_1 = require("../../../../../../components/ChildBox");
 const ParentBox_1 = require("../../../../../../components/ParentBox");
-exports.windowConfig = {
+exports.windowConfig = moduleClassCreator_1.createConfig({
     state: {
         childLocationAncestor: null,
         windowName: "",
@@ -31,7 +31,7 @@ exports.windowConfig = {
         });
     },
     type: window_type_1.WindowType,
-};
+});
 /**
  * type "Window" accepts location hints:
  * - width: Number (The initial width that the window should have)

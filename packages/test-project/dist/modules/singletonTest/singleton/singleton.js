@@ -1,11 +1,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const singleton_type_1 = require("./singleton.type");
 const gui_1 = require("@adjust/gui");
-exports.config = {
+exports.config = gui_1.createConfig({
     state: { text: "" },
     settings: {},
     type: singleton_type_1.SingletonType,
-};
+});
 class SingletonModule extends gui_1.createModule(exports.config) {
     /** @override */
     async onPreInit() {

@@ -1,4 +1,10 @@
-import {createModule, ModuleReference, ModuleID, UUID} from "@adjust/core";
+import {
+    createModule as createCoreModule,
+    createConfig as createCoreConfig,
+    ModuleReference,
+    ModuleID,
+    UUID,
+} from "@adjust/core";
 import {React} from "../../../React";
 import {DragEvent as ReactDragEvent} from "react";
 import {LocationPath} from "../_types/LocationPath";
@@ -13,7 +19,7 @@ import {createModuleView} from "../../../module/moduleViewClassCreator";
 import {Box} from "../../../components/Box";
 import {ChildBox} from "../../../components/ChildBox";
 
-export const config = {
+export const config = createCoreConfig({
     state: {
         // The modules being displayed
         locations: {} as {
@@ -37,12 +43,13 @@ export const config = {
         },
     },
     type: LocationAncestorType,
-};
+});
 
 /**
  * The location class that simply renders a location when requested
  */
-export default class LocationModule extends createModule(config, LocationAncestorModule)
+export default class LocationModule
+    extends createCoreModule(config, LocationAncestorModule)
     implements LocationAncestor {
     //TODO: add list of multiple modules, and a request focus system
     // Location management

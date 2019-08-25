@@ -4,7 +4,8 @@ const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const inputPrompt_type_1 = require("./inputPrompt.type");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
 const Box_1 = require("../../components/Box");
-exports.config = {
+const moduleViewClassCreator_1 = require("../../module/moduleViewClassCreator");
+exports.config = moduleClassCreator_1.createConfig({
     state: {
         type: "string",
         title: "",
@@ -26,7 +27,7 @@ exports.config = {
         },
     },
     type: inputPrompt_type_1.InputPromptType,
-};
+});
 class InputPromptModule extends moduleClassCreator_1.createModule(exports.config) {
     /** @override */
     async prompt(type, data) {
@@ -120,7 +121,7 @@ class InputPromptModule extends moduleClassCreator_1.createModule(exports.config
     }
 }
 exports.default = InputPromptModule;
-class InputPromptView extends core_1.createModuleView(InputPromptModule) {
+class InputPromptView extends moduleViewClassCreator_1.createModuleView(InputPromptModule) {
     /**
      * Handles keyboard events
      * @param event The keyboard event

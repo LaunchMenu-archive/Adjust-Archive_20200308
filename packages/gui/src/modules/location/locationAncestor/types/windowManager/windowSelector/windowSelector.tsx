@@ -1,7 +1,7 @@
 import {WindowSelectorType, WindowSelector} from "./windowSelector.type";
 import {WindowManager, UUID, ExtendedObject} from "@adjust/core";
 import {DragEvent} from "react";
-import {createModule} from "../../../../../../module/moduleClassCreator";
+import {createModule, createConfig} from "../../../../../../module/moduleClassCreator";
 import {React} from "../../../../../../React";
 import {dragAndDropName} from "../../../locationAncestor.type";
 import {InputPrompt, InputPromptType} from "../../../../../prompts/inputPrompt.type";
@@ -15,14 +15,14 @@ const sizes = {
     barHeight: 40,
     windowHeight: 500,
 };
-export const windowSelectorConfig = {
+export const windowSelectorConfig = createConfig({
     state: {
         closedWindows: {} as WindowsData,
         windowModule: null as Promise<Window>,
     },
     settings: {},
     type: WindowSelectorType,
-};
+});
 
 export default class WindowSelectorModule
     extends createModule(windowSelectorConfig, LocationAncestorModule)

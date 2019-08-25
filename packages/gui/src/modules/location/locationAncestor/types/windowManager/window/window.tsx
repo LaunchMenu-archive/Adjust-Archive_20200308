@@ -8,7 +8,7 @@ import {
     Module,
 } from "@adjust/core";
 import {LocationAncestor} from "../../../locationAncestor.type";
-import {createModule} from "../../../../../../module/moduleClassCreator";
+import {createModule, createConfig} from "../../../../../../module/moduleClassCreator";
 import LocationAncestorModule from "../../../locationAncestor";
 import {LocationPath} from "../../../../_types/LocationPath";
 import {React} from "../../../../../../React";
@@ -20,7 +20,7 @@ import {createModuleView} from "../../../../../../module/moduleViewClassCreator"
 import {ChildBox} from "../../../../../../components/ChildBox";
 import {ParentBox} from "../../../../../../components/ParentBox";
 
-export const windowConfig = {
+export const windowConfig = createConfig({
     state: {
         childLocationAncestor: null as Promise<LocationAncestor>,
         windowName: "",
@@ -41,7 +41,7 @@ export const windowConfig = {
         });
     },
     type: WindowType,
-};
+});
 
 /**
  * type "Window" accepts location hints:

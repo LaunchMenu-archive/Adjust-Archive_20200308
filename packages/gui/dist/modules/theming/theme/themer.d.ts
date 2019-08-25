@@ -2843,15 +2843,14 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
         };
     };
     type: import("@adjust/core/types").ContractID<import("../themer.type").ThemerContract>;
-}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/core").Module, import("@adjust/core").Module<{
-    isStopping: boolean;
-    isStopped: boolean;
-}, import("@adjust/core/types").SettingsConfig<import("@adjust/core/types").Empty>, import("@adjust/core/types").ModuleContract>>>;
+}, import("@adjust/core/types").ExtendsClass<typeof import("../../..").Module, import("../../..").Module>>;
 /**
  * A module of this type is used as the root of the module
  */
 export declare class ThemerModule extends ThemerModule_base implements Themer {
     protected theme: ITheme;
+    /** @override */
+    protected onPreInit(): Promise<void>;
     /** @override */
     protected onInit(fromReload: boolean): Promise<void>;
     /**

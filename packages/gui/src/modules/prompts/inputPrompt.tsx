@@ -1,11 +1,12 @@
-import {createModuleView, React} from "@adjust/core";
+import {React} from "@adjust/core";
 import {KeyboardEvent} from "react";
 import {TextField} from "office-ui-fabric-react";
 import {InputPromptType, InputPrompt, PromptData} from "./inputPrompt.type";
-import {createModule} from "../../module/moduleClassCreator";
+import {createModule, createConfig} from "../../module/moduleClassCreator";
 import {Box} from "../../components/Box";
+import {createModuleView} from "../../module/moduleViewClassCreator";
 
-export const config = {
+export const config = createConfig({
     state: {
         type: "string",
         title: "",
@@ -27,7 +28,7 @@ export const config = {
         },
     },
     type: InputPromptType,
-};
+});
 
 export default class InputPromptModule extends createModule(config)
     implements InputPrompt {

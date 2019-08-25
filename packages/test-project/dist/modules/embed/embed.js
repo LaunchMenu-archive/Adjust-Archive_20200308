@@ -2,11 +2,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const gui_1 = require("@adjust/gui");
 const embed_type_1 = require("./embed.type");
 const colors = ["orange", "blue", "purple"];
-exports.config = {
+exports.config = gui_1.createConfig({
     state: { text: "", color: colors[0], child: null },
     settings: {},
     type: embed_type_1.EmbedType,
-};
+});
 class EmbedModule extends gui_1.createModule(exports.config) {
     async onInit() {
         const data = this.getData();

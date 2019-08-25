@@ -2,7 +2,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@adjust/core");
 const locationAncestor_type_1 = require("./locationAncestor.type");
 const module_1 = require("../../../module/module");
-exports.config = {
+exports.config = core_1.createConfig({
     state: {
         inEditMode: false,
         inDropMode: false,
@@ -10,7 +10,7 @@ exports.config = {
     settings: Object.assign({}, module_1.stylingSettings),
     type: locationAncestor_type_1.LocationAncestorType,
     abstract: true,
-};
+});
 /**
  * A base class for location ancestors to extend,
  * provides some common methods that location ancestors might use

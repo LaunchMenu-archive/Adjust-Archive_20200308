@@ -1,8 +1,7 @@
 import {
-    createModuleView,
-    createModule,
     Registry,
     InstanceModuleProvider,
+    createModuleView as createCoreModuleView,
 } from "@adjust/core";
 import {CSSProperties} from "react";
 import {React} from "../../../React";
@@ -13,13 +12,14 @@ import {Theme} from "./theme";
 import {ThemeProvider} from "emotion-theming";
 import {Customizer, registerIcons} from "office-ui-fabric-react";
 import {Box} from "./box";
+import {createModule, createConfig} from "../../../module/moduleClassCreator";
 
-export const themerConfig = {
+export const themerConfig = createConfig({
     state: {},
     getPriority: () => 1,
     settings: themeSettings,
     type: ThemerType,
-};
+});
 
 /**
  * A module of this type is used as the root of the module
@@ -28,9 +28,12 @@ export class ThemerModule extends createModule(themerConfig) implements Themer {
     protected theme: ITheme;
 
     /** @override */
-    protected async onInit(fromReload: boolean): Promise<void> {
+    protected async onPreInit(): Promise<void> {
         Registry.addProvider(new InstanceModuleProvider(ThemerType, this, () => 2));
+    }
 
+    /** @override */
+    protected async onInit(fromReload: boolean): Promise<void> {
         this.getSettingsObject().on("change", field => this.updateTheme(field));
     }
 
@@ -71,7 +74,7 @@ export class ThemerModule extends createModule(themerConfig) implements Themer {
 }
 export default ThemerModule;
 
-export class ThemerView extends createModuleView(ThemerModule) {
+export class ThemerView extends createCoreModuleView(ThemerModule) {
     /** @override  */
     public renderView(): JSX.Element {
         const theme = new Theme(this.settings);

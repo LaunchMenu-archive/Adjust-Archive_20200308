@@ -1,12 +1,12 @@
-import {createModule, createModuleView, React} from "@adjust/gui";
+import {createModule, createModuleView, React, createConfig} from "@adjust/gui";
 import {EmbedType, Embed} from "./embed.type";
 
 const colors = ["orange", "blue", "purple"];
-export const config = {
+export const config = createConfig({
     state: {text: "", color: colors[0], child: null as Embed},
     settings: {},
     type: EmbedType,
-};
+});
 
 export default class EmbedModule extends createModule(config) implements Embed {
     public async onInit() {

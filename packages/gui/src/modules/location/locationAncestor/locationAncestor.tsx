@@ -1,5 +1,6 @@
 import {
-    createModule as createAdjustCoreModule,
+    createModule as createCoreModule,
+    createConfig as createCoreConfig,
     ModuleReference,
     SettingsConditions,
     DataSettingsConditions,
@@ -14,24 +15,24 @@ import {LocationsMoveData} from "../_types/LocationsMoveData";
 import {ModuleLocation} from "../../../module/_types/ModuleLocation";
 import {stylingSettings} from "../../../module/module";
 
-export const config = {
+export const config = createCoreConfig({
     state: {
-        inEditMode: false,
-        inDropMode: false,
+        inEditMode: false as boolean,
+        inDropMode: false as boolean,
     },
     settings: {
         ...stylingSettings,
     },
     type: LocationAncestorType,
     abstract: true, // This is just inteded as module to be extended
-};
+});
 
 /**
  * A base class for location ancestors to extend,
  * provides some common methods that location ancestors might use
  * Note that we use adjust core's createModule, since location ancestors shouldn't have any location data themselves
  */
-export default class LocationAncestorModule extends createAdjustCoreModule(config)
+export default class LocationAncestorModule extends createCoreModule(config)
     implements LocationAncestorParent {
     // The name of the ancestor module
     protected readonly ancestorName: string;
