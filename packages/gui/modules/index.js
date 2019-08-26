@@ -23,6 +23,7 @@ __export(require("../dist/modules/location/locationManager"));
 __export(require("../dist/modules/location/locationManager.type"));
 __export(require("../dist/modules/prompts/inputPrompt"));
 __export(require("../dist/modules/prompts/inputPrompt.type"));
+__export(require("../dist/modules/settings/SettingsManager.type"));
 __export(require("../dist/modules/theming/_types/IBoxComponent"));
 __export(require("../dist/modules/theming/_types/ITheme"));
 __export(require("../dist/modules/theming/box/_types/anyProps"));

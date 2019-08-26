@@ -4,6 +4,7 @@ import {
     UUID,
     ExtendedObject,
     createConfig,
+    SettingJsonType,
 } from "@adjust/core";
 import {ModuleLocation} from "../../../../../module/_types/ModuleLocation";
 import LocationAncestorModule from "../../../locationAncestor/locationAncestor";
@@ -29,7 +30,7 @@ export const windowManagerConfig = createConfig({
         // Keep track of direct child locations
         windows: {
             default: {} as WindowsData,
-            type: "windows",
+            type: SettingJsonType,
         },
     },
     getPriority: () => 3,

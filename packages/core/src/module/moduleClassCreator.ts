@@ -15,6 +15,8 @@ import {ModuleContract} from "./_types/moduleContract";
 import {ExtendedObject} from "../utils/extendedObject";
 import {Module} from "./module";
 import {Semver} from "../utils/semver";
+import {SettingDefinition} from "../storage/settings/_types/settingDefinition";
+import {SettingInputContract} from "../storage/settings/settingInputTypes/_types/SettingInput";
 
 export class ModuleClassCreator {
     /**
@@ -148,6 +150,7 @@ export class ModuleClassCreator {
                 icon: "",
                 name: "",
                 description: "",
+                section: "",
                 ...config.details,
             },
             package: null,
@@ -172,10 +175,21 @@ export class ModuleClassCreator {
     /**
      * Method may be used to perform typechecking on a config
      * @param config The config to type check
-     * @returns A copy of the module
+     * @returns A copy of the config
      */
     public static createConfig<T extends ParameterizedModuleConfig>(config: T): T {
         return config;
+    }
+
+    /**
+     * Method may be used to perform typechecking on a setting
+     * @param setting The setting to type check
+     * @returns A copy of the setting
+     */
+    public static createSetting<V, T extends SettingInputContract<V, any>>(
+        setting: SettingDefinition<V, T>
+    ): SettingDefinition<V, T> {
+        return setting;
     }
 }
 
@@ -190,5 +204,12 @@ export const createModule: (typeof ModuleClassCreator)["createModule"] = ModuleC
  * A shortcut for the config creation method
  */
 export const createConfig: (typeof ModuleClassCreator)["createConfig"] = ModuleClassCreator.createConfig.bind(
+    ModuleClassCreator
+);
+
+/**
+ * A shortcut for the setting creation method
+ */
+export const createSetting: (typeof ModuleClassCreator)["createSetting"] = ModuleClassCreator.createSetting.bind(
     ModuleClassCreator
 );

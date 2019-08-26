@@ -5,16 +5,19 @@ import { ModuleState } from "./_types/moduleState";
 import { ModuleViewState } from "./_types/moduleViewState";
 import { RemoteModule } from "./_types/remoteModule";
 import { ModuleViewProps } from "./_types/moduleViewProps";
-import { SettingsConfigSetData } from "../storage/settings/_types/settingsConfigSetData";
 import { SettingsConfigSet } from "../storage/settings/_types/settingsConfigSet";
 /**
  * A class that can visually represent the module
  */
-export declare abstract class ModuleView<S extends ModuleState, C extends SettingsConfigSet, M extends ParameterizedModule, D extends any> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
+export declare abstract class ModuleView<S extends ModuleState, C extends {
+    [field: string]: any;
+}, M extends ParameterizedModule, D extends {
+    [field: string]: any;
+}> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
     unmounted: boolean;
     protected self: Promise<this>;
     protected readonly module: RemoteModule<M>;
-    protected readonly settings: DeepReadonly<SettingsConfigSetData<C>>;
+    protected readonly settings: DeepReadonly<C>;
     protected readonly data: DeepReadonly<D>;
     /**
      * Creates an instance of the module view

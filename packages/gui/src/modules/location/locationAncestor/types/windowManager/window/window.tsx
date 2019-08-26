@@ -6,6 +6,7 @@ import {
     SettingsManager,
     createSettings,
     Module,
+    SettingNumberType,
 } from "@adjust/core";
 import {LocationAncestor} from "../../../locationAncestor.type";
 import {createModule, createConfig} from "../../../../../../module/moduleClassCreator";
@@ -19,6 +20,11 @@ import {Box} from "../../../../../../components/Box";
 import {createModuleView} from "../../../../../../module/moduleViewClassCreator";
 import {ChildBox} from "../../../../../../components/ChildBox";
 import {ParentBox} from "../../../../../../components/ParentBox";
+import {
+    ParameterizedSettingDefinition,
+    SettingDefinition,
+    SettingInputContract,
+} from "@adjust/core/types";
 
 export const windowConfig = createConfig({
     state: {
@@ -32,7 +38,7 @@ export const windowConfig = createConfig({
             x: 0,
             y: 0,
         },
-        {type: "number"}
+        {type: SettingNumberType}
     ),
     onLoad: (moduleClass: typeof Module) => {
         WindowManager.createWindowBuffer({

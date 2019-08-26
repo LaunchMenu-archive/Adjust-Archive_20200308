@@ -2,13 +2,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dummyModules_helper_1 = require("./dummyModules.helper");
 const moduleClassCreator_1 = require("../moduleClassCreator");
 const moduleViewClassCreator_1 = require("../moduleViewClassCreator");
+const SettingNumber_type_1 = require("../../storage/settings/settingInputTypes/SettingNumber.type");
 // A config for our module
 const config = {
     state: {
         val: "hello",
     },
     settings: {
-        val: { default: 3, type: "number" },
+        val: { default: 3, type: SettingNumber_type_1.SettingNumberType },
     },
     type: dummyModules_helper_1.dummyInterfaceID2,
 };

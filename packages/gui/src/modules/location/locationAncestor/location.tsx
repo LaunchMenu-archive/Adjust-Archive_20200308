@@ -4,6 +4,7 @@ import {
     ModuleReference,
     ModuleID,
     UUID,
+    SettingJsonType,
 } from "@adjust/core";
 import {React} from "../../../React";
 import {DragEvent as ReactDragEvent} from "react";
@@ -39,7 +40,7 @@ export const config = createCoreConfig({
     settings: {
         locations: {
             default: [] as string[],
-            type: "locations",
+            type: SettingJsonType,
         },
     },
     type: LocationAncestorType,

@@ -21,16 +21,16 @@ exports.tabManagerConfig = core_1.createConfig({
     settings: {
         tabs: {
             default: [],
-            type: "tabs",
+            type: core_1.SettingJsonType,
         },
         handles: {
             scrollSpeed: {
                 default: 10,
-                type: "number",
+                type: core_1.SettingNumberType,
             },
             wheelScrollSpeed: {
                 default: 20,
-                type: "number",
+                type: core_1.SettingNumberType,
             },
         },
     },

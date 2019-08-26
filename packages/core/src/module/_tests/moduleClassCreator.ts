@@ -1,5 +1,6 @@
 import {dummyInterfaceID} from "./dummyModules.helper";
-import {createModule} from "../moduleClassCreator";
+import {createModule, createSetting} from "../moduleClassCreator";
+import {SettingNumberType} from "../../storage/settings/settingInputTypes/SettingNumber.type";
 
 // A config for our module
 const config = {
@@ -8,7 +9,11 @@ const config = {
         val: "hello" as string | number,
     },
     settings: {
-        val6: {default: 3, type: "number"},
+        val6: createSetting({
+            default: 3,
+            type: SettingNumberType,
+            constraints: {dependencies: ["test"], evaluator: () => ({min: 3})},
+        }),
     },
     settingsMigrators: {
         "0.0.1": data => ({val2: data.val}),
@@ -30,7 +35,7 @@ const config2 = {
     },
     settings: {
         category: {
-            val3: {default: true as any, type: "number"},
+            val3: {default: true as any, type: SettingNumberType},
         },
     },
     settingsMigrators: {
@@ -70,7 +75,7 @@ describe("ModuleClassCreator", () => {
                     isStopped: false,
                 },
                 settings: {
-                    val6: {default: 3, type: "number"},
+                    val6: {default: 3, type: SettingNumberType},
                 },
                 settingsMigrators: {...config.settingsMigrators},
                 onInstall: expect.any(Function),
@@ -110,7 +115,9 @@ describe("ModuleClassCreator", () => {
                     this.changeState({val: 3, category: {val: 2}}); // Can change the new and old parts of the state
                     this.getSettingsObject().changeData({category: {val3: 3}});
                     this.getSettingsObject().changeData({category: {val3: true}});
+                    this.changeSettings({val6: 3});
 
+                    // this.changeSettings({val6: "test"}); // Error, since val6 is of type number
                     // this.changeSettings({category: {val2: 3}}); // Error, since category has no val2
                     // this.changeSettings({category: {val1: true}}); // Error, since category has no val1
 
@@ -133,9 +140,9 @@ describe("ModuleClassCreator", () => {
                     isStopped: false,
                 },
                 settings: {
-                    val6: {default: 3, type: "number"},
+                    val6: {default: 3, type: SettingNumberType},
                     category: {
-                        val3: {default: true as any, type: "number"},
+                        val3: {default: true as any, type: SettingNumberType},
                     },
                 },
                 settingsMigrators: {

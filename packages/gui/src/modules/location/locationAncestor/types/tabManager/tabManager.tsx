@@ -5,6 +5,8 @@ import {
     UUID,
     ExtendedObject,
     AsyncMutualExcluder,
+    SettingNumberType,
+    SettingJsonType,
 } from "@adjust/core";
 import {DragEvent as ReactDragEvent} from "react";
 import {ModuleLocation} from "../../../../../module/_types/ModuleLocation";
@@ -34,16 +36,16 @@ export const tabManagerConfig = createCoreConfig({
     settings: {
         tabs: {
             default: [] as Tab[],
-            type: "tabs",
+            type: SettingJsonType,
         },
         handles: {
             scrollSpeed: {
                 default: 10,
-                type: "number",
+                type: SettingNumberType,
             },
             wheelScrollSpeed: {
                 default: 20,
-                type: "number",
+                type: SettingNumberType,
             },
         },
     },

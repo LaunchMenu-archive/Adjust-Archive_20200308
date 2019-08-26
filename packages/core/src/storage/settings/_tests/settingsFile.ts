@@ -2,29 +2,32 @@ import {SettingsFile} from "../settingsFile";
 import {FunctionSettingsConditions} from "../settingsConditions/types/functionSettingsConditions";
 import {ConstantSettingsConditions} from "../settingsConditions/types/constantSettingsConditions";
 import {SettingsManager} from "../settingsManager";
+import {SettingNumberType} from "../settingInputTypes/SettingNumber.type";
+import {SettingJsonType} from "../settingInputTypes/SettingJson.type";
+import {SettingStringType} from "../settingInputTypes/SettingString.type";
 
 const config = {
     version: "0.0.0",
     settings: {
         a: {
             default: 3,
-            type: "number",
+            type: SettingNumberType,
         },
         b: {
             c: {
                 default: "test",
-                type: "string",
+                type: SettingStringType,
             },
         },
         d: {
             default: {},
-            type: "object",
+            type: SettingJsonType,
         },
         e: {
             default: {
                 prop: 3,
             },
-            type: "object",
+            type: SettingJsonType,
         },
     },
     migrators: {},
@@ -80,7 +83,7 @@ describe("SettingsFile", () => {
                     f: {
                         g: {
                             default: 3,
-                            type: "number",
+                            type: SettingNumberType,
                             onChange: (newValue, condition, oldValue, settings) => {
                                 args = {newValue, condition, oldValue, settings};
                             },
@@ -111,7 +114,7 @@ describe("SettingsFile", () => {
                     f: {
                         g: {
                             default: 3,
-                            type: "number",
+                            type: SettingNumberType,
                             onChange: async (newValue, condition, oldValue, settings) => {
                                 if (condition.equals(undefined)) return;
                                 await new Promise(resolve => setTimeout(resolve, 20));
@@ -175,12 +178,12 @@ describe("SettingsFile", () => {
             settings: {
                 a: {
                     default: 3,
-                    type: "number",
+                    type: SettingNumberType,
                 },
                 b: {
                     c: {
                         default: "test",
-                        type: "string",
+                        type: SettingStringType,
                     },
                 },
             },
@@ -263,23 +266,23 @@ describe("SettingsFile", () => {
                 settings: {
                     a: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumberType,
                     },
                     b: {
                         c: {
                             default: "test",
-                            type: "string",
+                            type: SettingStringType,
                         },
                     },
                     d: {
                         default: {},
-                        type: "object",
+                        type: SettingJsonType,
                     },
                     e: {
                         default: {
                             prop: 3,
                         },
-                        type: "object",
+                        type: SettingJsonType,
                     },
                 },
                 migrators: {},
@@ -290,24 +293,24 @@ describe("SettingsFile", () => {
                     a: {
                         a: {
                             default: 3,
-                            type: "number",
+                            type: SettingNumberType,
                         },
                         b: {
                             default: {
                                 prop: 3,
                             },
-                            type: "object",
+                            type: SettingJsonType,
                         },
                     },
                     b: {
                         c: {
                             default: "test",
-                            type: "string",
+                            type: SettingStringType,
                         },
                     },
                     new: {
                         default: {},
-                        type: "object",
+                        type: SettingJsonType,
                     },
                 },
                 migrators: {"0.0.1": data => ({a: {a: data.a, b: data.e}})},
@@ -318,17 +321,17 @@ describe("SettingsFile", () => {
                     a: {
                         a: {
                             default: 3,
-                            type: "number",
+                            type: SettingNumberType,
                         },
                         b: {
                             default: {
                                 prop: 3,
                             },
-                            type: "object",
+                            type: SettingJsonType,
                         },
                         new: {
                             default: {},
-                            type: "object",
+                            type: SettingJsonType,
                         },
                     },
                 },
@@ -378,7 +381,7 @@ describe("SettingsFile", () => {
                 settings: {
                     a: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumberType,
                     },
                 },
                 migrators: {},
@@ -388,7 +391,7 @@ describe("SettingsFile", () => {
                 settings: {
                     b: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumberType,
                     },
                 },
                 migrators: {"0.0.1": data => ({b: data.a})},
@@ -398,7 +401,7 @@ describe("SettingsFile", () => {
                 settings: {
                     c: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumberType,
                     },
                 },
                 migrators: {
@@ -413,7 +416,7 @@ describe("SettingsFile", () => {
                 settings: {
                     b: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumberType,
                     },
                     ...superConfig1.settings,
                 },
@@ -424,7 +427,7 @@ describe("SettingsFile", () => {
                 settings: {
                     d: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumberType,
                     },
                     ...superConfig3.settings,
                 },

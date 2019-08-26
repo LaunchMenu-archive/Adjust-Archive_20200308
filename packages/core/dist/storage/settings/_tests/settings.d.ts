@@ -12,17 +12,21 @@ declare const Target_base: import("../../../module/_types/extendedModule").Exten
     settings: {
         a: {
             default: number;
-            type: string;
+            type: import("../../../registry/_types/contractID").ContractID<import("../settingInputTypes/_types/SettingInput").SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         };
         b: {
             c: {
                 default: boolean;
-                type: string;
+                type: import("../../../registry/_types/contractID").ContractID<import("../settingInputTypes/_types/SettingInput").SettingInputContract<boolean, undefined>>;
             };
         };
         d: {
             default: {};
-            type: string;
+            type: import("../../../registry/_types/contractID").ContractID<import("../settingInputTypes/_types/SettingInput").SettingInputContract<import("../../../utils/_types/standardTypes").Json, undefined>>;
         };
     };
     type: import("../../../registry/_types/contractID").ContractID<{

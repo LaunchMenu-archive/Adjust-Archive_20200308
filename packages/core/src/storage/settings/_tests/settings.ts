@@ -6,6 +6,9 @@ import {Module} from "../../../module/module";
 import {ModuleID} from "../../../module/moduleID";
 import {FunctionSettingsConditions} from "../settingsConditions/types/functionSettingsConditions";
 import {ParentModule, ChildModule} from "../../../module/_types/moduleContract";
+import {SettingNumberType} from "../settingInputTypes/SettingNumber.type";
+import {SettingBooleanType} from "../settingInputTypes/SettingBoolean.type";
+import {SettingJsonType} from "../settingInputTypes/SettingJson.type";
 
 // Create a settings config
 const config = {
@@ -13,17 +16,17 @@ const config = {
     settings: {
         a: {
             default: 3,
-            type: "number",
+            type: SettingNumberType,
         },
         b: {
             c: {
                 default: true,
-                type: "boolean",
+                type: SettingBooleanType,
             },
         },
         d: {
             default: {},
-            type: "something",
+            type: SettingJsonType,
         },
     },
     migrators: {},

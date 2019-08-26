@@ -10,10 +10,10 @@ exports.config = gui_1.createConfig({
         smth: 0,
     },
     settings: {
-        stuff: {
+        stuff: gui_1.createSetting({
             default: false,
-            type: "boolean",
-        },
+            type: gui_1.SettingBooleanType,
+        }),
     },
     defineLocation: {
         ID: "onion",

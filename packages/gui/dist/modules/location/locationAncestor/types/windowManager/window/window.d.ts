@@ -5,6 +5,7 @@ import LocationAncestorModule from "../../../locationAncestor";
 import { LocationPath } from "../../../../_types/LocationPath";
 import { ModuleLocation } from "../../../../../../module/_types/ModuleLocation";
 import { Window } from "./window.type";
+import { SettingInputContract } from "@adjust/core/types";
 export declare const windowConfig: {
     state: {
         childLocationAncestor: Promise<import("@adjust/core/types").ChildModule<{
@@ -12,7 +13,7 @@ export declare const windowConfig: {
             closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             createLocation(location: ModuleLocation): Promise<LocationPath>;
-            removeLocation(locationPath: LocationPath): Promise<boolean>; /** @override */
+            removeLocation(locationPath: LocationPath): Promise<boolean>;
             removeAncestor(): Promise<void>;
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;
@@ -21,22 +22,38 @@ export declare const windowConfig: {
     };
     settings: {
         width: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: number;
         };
         height: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: number;
         };
         x: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: number;
         };
         y: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: number;
         };
@@ -51,7 +68,7 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
             closeModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             showModule(module: ModuleReference, locationPath: LocationPath): Promise<boolean>;
             createLocation(location: ModuleLocation): Promise<LocationPath>;
-            removeLocation(locationPath: LocationPath): Promise<boolean>; /** @override */
+            removeLocation(locationPath: LocationPath): Promise<boolean>;
             removeAncestor(): Promise<void>;
             setEditMode(edit: boolean): Promise<void>;
             setDropMode(drop: boolean): Promise<void>;
@@ -60,22 +77,38 @@ declare const WindowModule_base: import("@adjust/core/types").ExtendedModuleClas
     };
     settings: {
         width: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: number;
         };
         height: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: number;
         };
         x: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: number;
         };
         y: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: number;
         };

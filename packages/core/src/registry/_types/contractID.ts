@@ -9,6 +9,9 @@ export type ContractID<T extends ModuleContract> = {
 
     // A way of obtaining the ID from the contract
     toString: () => string;
+
+    // Wont every be present, just a way of retaining the contract data
+    " ": T;
 };
 
 /**

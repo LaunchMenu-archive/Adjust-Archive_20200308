@@ -18,7 +18,7 @@ exports.windowManagerConfig = core_1.createConfig({
         // Keep track of direct child locations
         windows: {
             default: {},
-            type: "windows",
+            type: core_1.SettingJsonType,
         },
     },
     getPriority: () => 3,

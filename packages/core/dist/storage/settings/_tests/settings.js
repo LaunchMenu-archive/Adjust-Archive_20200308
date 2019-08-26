@@ -6,23 +6,26 @@ const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
 const module_1 = require("../../../module/module");
 const moduleID_1 = require("../../../module/moduleID");
 const functionSettingsConditions_1 = require("../settingsConditions/types/functionSettingsConditions");
+const SettingNumber_type_1 = require("../settingInputTypes/SettingNumber.type");
+const SettingBoolean_type_1 = require("../settingInputTypes/SettingBoolean.type");
+const SettingJson_type_1 = require("../settingInputTypes/SettingJson.type");
 // Create a settings config
 const config = {
     version: "0.0.0",
     settings: {
         a: {
             default: 3,
-            type: "number",
+            type: SettingNumber_type_1.SettingNumberType,
         },
         b: {
             c: {
                 default: true,
-                type: "boolean",
+                type: SettingBoolean_type_1.SettingBooleanType,
             },
         },
         d: {
             default: {},
-            type: "something",
+            type: SettingJson_type_1.SettingJsonType,
         },
     },
     migrators: {},

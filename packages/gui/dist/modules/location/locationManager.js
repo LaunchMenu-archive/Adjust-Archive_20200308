@@ -19,7 +19,7 @@ exports.config = core_1.createConfig({
         // Keeps permanent track of all locations and modules that should be opened here
         locations: {
             default: {},
-            type: "locationPaths",
+            type: core_1.SettingJsonType,
         },
     },
     type: locationManager_type_1.LocationManagerType,

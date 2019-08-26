@@ -33,7 +33,7 @@ export declare const config: {
                     modules: SettingsDataID[];
                 };
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
     };
     type: import("@adjust/core/types").ContractID<import("./locationManager.type").LocationManagerContract>;
@@ -65,7 +65,7 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
                     modules: SettingsDataID[];
                 };
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
     };
     type: import("@adjust/core/types").ContractID<import("./locationManager.type").LocationManagerContract>;

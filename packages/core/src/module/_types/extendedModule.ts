@@ -72,7 +72,7 @@ export type ExtendedModule<
     getParents(): GetTypeInterface<MC["type"]>["parent"][];
     getData(): GetTypeInterface<MC["type"]>["data"];
     getSettingsObject(): Settings<
-        SettingsConfig<MC["settings"]> & ExtractModuleSettings<M>
+        SettingsConfig<MC["settings"] & ExtractModuleSettings<M>>
     >;
 } & M &
     // FilterModule<Module<MC["initialState"], MC["settings"], MC["type"]>>;

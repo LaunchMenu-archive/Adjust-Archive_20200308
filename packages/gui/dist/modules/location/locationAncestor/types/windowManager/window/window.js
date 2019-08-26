@@ -23,7 +23,7 @@ exports.windowConfig = moduleClassCreator_1.createConfig({
         height: 500,
         x: 0,
         y: 0,
-    }, { type: "number" }),
+    }, { type: core_1.SettingNumberType }),
     onLoad: (moduleClass) => {
         core_1.WindowManager.createWindowBuffer({
             frame: false,

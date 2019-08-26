@@ -4,6 +4,8 @@ import {
     SettingsFile,
     Registry,
     SettingsDataID,
+    SettingBooleanType,
+    SettingJsonType,
 } from "@adjust/core";
 import {
     LocationManager,
@@ -56,11 +58,11 @@ export const stylingSettings = {
         theme: themeSettingsEmpty,
         resetTheme: {
             default: false,
-            type: "boolean",
+            type: SettingBooleanType,
         },
         css: {
             default: null as Json,
-            type: "css",
+            type: SettingJsonType,
         },
     },
 };
@@ -73,7 +75,7 @@ export const baseConfig = {
     settings: {
         location: {
             default: ["root"] as string[] | string,
-            type: "location",
+            type: SettingJsonType,
             // Make sure that when a location changes, this is synchronized with the location manager
             onChange: synchronizedLocations,
         },

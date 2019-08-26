@@ -22,7 +22,7 @@ exports.tabHandleConfig = moduleClassCreator_1.createConfig({
     settings: {
         name: {
             default: "John",
-            type: "string",
+            type: core_1.SettingStringType,
         },
     },
     type: tabHandle_type_1.TabHandleType,

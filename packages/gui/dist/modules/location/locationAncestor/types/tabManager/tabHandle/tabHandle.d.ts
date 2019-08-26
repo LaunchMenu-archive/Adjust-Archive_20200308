@@ -17,7 +17,7 @@ export declare const tabHandleConfig: {
     settings: {
         name: {
             default: string;
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         };
     };
     type: import("@adjust/core/types").ContractID<import("./tabHandle.type").TabHandleContract>;
@@ -37,7 +37,7 @@ declare const TabHandleModule_base: import("@adjust/core/types").ExtendedModuleC
     settings: {
         name: {
             default: string;
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         };
     };
     type: import("@adjust/core/types").ContractID<import("./tabHandle.type").TabHandleContract>;

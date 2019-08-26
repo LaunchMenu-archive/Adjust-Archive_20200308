@@ -16,16 +16,24 @@ export declare const tabManagerConfig: {
     settings: {
         tabs: {
             default: Tab[];
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         handles: {
             scrollSpeed: {
                 default: number;
-                type: string;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                    min?: number;
+                    max?: number;
+                    rounding?: number;
+                }>>;
             };
             wheelScrollSpeed: {
                 default: number;
-                type: string;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                    min?: number;
+                    max?: number;
+                    rounding?: number;
+                }>>;
             };
         };
     };
@@ -41,16 +49,24 @@ declare const TabManagerModule_base: import("@adjust/core/types").ExtendedModule
     settings: {
         tabs: {
             default: Tab[];
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         handles: {
             scrollSpeed: {
                 default: number;
-                type: string;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                    min?: number;
+                    max?: number;
+                    rounding?: number;
+                }>>;
             };
             wheelScrollSpeed: {
                 default: number;
-                type: string;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                    min?: number;
+                    max?: number;
+                    rounding?: number;
+                }>>;
             };
         };
     };

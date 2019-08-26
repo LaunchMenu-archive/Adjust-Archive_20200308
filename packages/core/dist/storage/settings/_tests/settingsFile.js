@@ -3,28 +3,31 @@ const settingsFile_1 = require("../settingsFile");
 const functionSettingsConditions_1 = require("../settingsConditions/types/functionSettingsConditions");
 const constantSettingsConditions_1 = require("../settingsConditions/types/constantSettingsConditions");
 const settingsManager_1 = require("../settingsManager");
+const SettingNumber_type_1 = require("../settingInputTypes/SettingNumber.type");
+const SettingJson_type_1 = require("../settingInputTypes/SettingJson.type");
+const SettingString_type_1 = require("../settingInputTypes/SettingString.type");
 const config = {
     version: "0.0.0",
     settings: {
         a: {
             default: 3,
-            type: "number",
+            type: SettingNumber_type_1.SettingNumberType,
         },
         b: {
             c: {
                 default: "test",
-                type: "string",
+                type: SettingString_type_1.SettingStringType,
             },
         },
         d: {
             default: {},
-            type: "object",
+            type: SettingJson_type_1.SettingJsonType,
         },
         e: {
             default: {
                 prop: 3,
             },
-            type: "object",
+            type: SettingJson_type_1.SettingJsonType,
         },
     },
     migrators: {},
@@ -67,7 +70,7 @@ describe("SettingsFile", () => {
             const settingsFile = await settingsFile_1.SettingsFile.createInstance("_test/dontSave", Object.assign({}, config, { settings: Object.assign({}, config.settings, { f: {
                         g: {
                             default: 3,
-                            type: "number",
+                            type: SettingNumber_type_1.SettingNumberType,
                             onChange: (newValue, condition, oldValue, settings) => {
                                 args = { newValue, condition, oldValue, settings };
                             },
@@ -89,7 +92,7 @@ describe("SettingsFile", () => {
             const settingsFile = await settingsFile_1.SettingsFile.createInstance("_test/dontSave", Object.assign({}, config, { settings: Object.assign({}, config.settings, { f: {
                         g: {
                             default: 3,
-                            type: "number",
+                            type: SettingNumber_type_1.SettingNumberType,
                             onChange: async (newValue, condition, oldValue, settings) => {
                                 if (condition.equals(undefined))
                                     return;
@@ -147,12 +150,12 @@ describe("SettingsFile", () => {
             settings: {
                 a: {
                     default: 3,
-                    type: "number",
+                    type: SettingNumber_type_1.SettingNumberType,
                 },
                 b: {
                     c: {
                         default: "test",
-                        type: "string",
+                        type: SettingString_type_1.SettingStringType,
                     },
                 },
             },
@@ -225,23 +228,23 @@ describe("SettingsFile", () => {
                 settings: {
                     a: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumber_type_1.SettingNumberType,
                     },
                     b: {
                         c: {
                             default: "test",
-                            type: "string",
+                            type: SettingString_type_1.SettingStringType,
                         },
                     },
                     d: {
                         default: {},
-                        type: "object",
+                        type: SettingJson_type_1.SettingJsonType,
                     },
                     e: {
                         default: {
                             prop: 3,
                         },
-                        type: "object",
+                        type: SettingJson_type_1.SettingJsonType,
                     },
                 },
                 migrators: {},
@@ -252,24 +255,24 @@ describe("SettingsFile", () => {
                     a: {
                         a: {
                             default: 3,
-                            type: "number",
+                            type: SettingNumber_type_1.SettingNumberType,
                         },
                         b: {
                             default: {
                                 prop: 3,
                             },
-                            type: "object",
+                            type: SettingJson_type_1.SettingJsonType,
                         },
                     },
                     b: {
                         c: {
                             default: "test",
-                            type: "string",
+                            type: SettingString_type_1.SettingStringType,
                         },
                     },
                     new: {
                         default: {},
-                        type: "object",
+                        type: SettingJson_type_1.SettingJsonType,
                     },
                 },
                 migrators: { "0.0.1": data => ({ a: { a: data.a, b: data.e } }) },
@@ -280,17 +283,17 @@ describe("SettingsFile", () => {
                     a: {
                         a: {
                             default: 3,
-                            type: "number",
+                            type: SettingNumber_type_1.SettingNumberType,
                         },
                         b: {
                             default: {
                                 prop: 3,
                             },
-                            type: "object",
+                            type: SettingJson_type_1.SettingJsonType,
                         },
                         new: {
                             default: {},
-                            type: "object",
+                            type: SettingJson_type_1.SettingJsonType,
                         },
                     },
                 },
@@ -330,7 +333,7 @@ describe("SettingsFile", () => {
                 settings: {
                     a: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumber_type_1.SettingNumberType,
                     },
                 },
                 migrators: {},
@@ -340,7 +343,7 @@ describe("SettingsFile", () => {
                 settings: {
                     b: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumber_type_1.SettingNumberType,
                     },
                 },
                 migrators: { "0.0.1": data => ({ b: data.a }) },
@@ -350,7 +353,7 @@ describe("SettingsFile", () => {
                 settings: {
                     c: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumber_type_1.SettingNumberType,
                     },
                 },
                 migrators: {
@@ -363,7 +366,7 @@ describe("SettingsFile", () => {
                 version: "0.0.0",
                 settings: Object.assign({ b: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumber_type_1.SettingNumberType,
                     } }, superConfig1.settings),
                 migrators: {},
             };
@@ -371,7 +374,7 @@ describe("SettingsFile", () => {
                 version: "0.0.1",
                 settings: Object.assign({ d: {
                         default: 3,
-                        type: "number",
+                        type: SettingNumber_type_1.SettingNumberType,
                     } }, superConfig3.settings),
                 migrators: {
                     "0.0.1": {

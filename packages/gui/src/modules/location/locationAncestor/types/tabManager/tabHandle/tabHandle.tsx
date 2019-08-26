@@ -1,4 +1,9 @@
-import {SettingsConditions, DataSettingsConditions, UUID} from "@adjust/core";
+import {
+    SettingsConditions,
+    DataSettingsConditions,
+    UUID,
+    SettingStringType,
+} from "@adjust/core";
 import {TabHandleType, TabHandle} from "./tabHandle.type";
 import {createModule, createConfig} from "../../../../../../module/moduleClassCreator";
 import {createModuleView} from "../../../../../../module/moduleViewClassCreator";
@@ -24,7 +29,7 @@ export const tabHandleConfig = createConfig({
     settings: {
         name: {
             default: "John",
-            type: "string",
+            type: SettingStringType,
         },
     },
     type: TabHandleType,

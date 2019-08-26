@@ -43,6 +43,11 @@ __export(require("./storage/settings/utils/settingsFormatters"));
 __export(require("./storage/settings/settingsConditions/types/functionSettingsConditions"));
 __export(require("./storage/settings/settingsConditions/types/dataSettingsConditions"));
 __export(require("./storage/settings/settingsConditions/abstractSettingsConditions"));
+__export(require("./storage/settings/settingInputTypes/SettingJson.type"));
+__export(require("./storage/settings/settingInputTypes/SettingNumber.type"));
+__export(require("./storage/settings/settingInputTypes/SettingBoolean.type"));
+__export(require("./storage/settings/settingInputTypes/SettingString.type"));
+__export(require("./storage/settings/settingInputTypes/SettingColor.type"));
 // Modules
 __export(require("./modules/contextProvider"));
 __export(require("./modules/contextProvider.type"));

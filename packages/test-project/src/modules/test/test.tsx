@@ -1,4 +1,11 @@
-import {createModule, createModuleView, React, createConfig} from "@adjust/gui";
+import {
+    createModule,
+    createModuleView,
+    React,
+    createConfig,
+    SettingBooleanType,
+    createSetting,
+} from "@adjust/gui";
 import {TestType, Test} from "./test.type";
 import {EmbedType, Embed} from "../embed/embed.type";
 
@@ -10,10 +17,10 @@ export const config = createConfig({
         smth: 0 as number,
     },
     settings: {
-        stuff: {
+        stuff: createSetting({
             default: false,
-            type: "boolean",
-        },
+            type: SettingBooleanType,
+        }),
     },
     defineLocation: {
         ID: "onion",

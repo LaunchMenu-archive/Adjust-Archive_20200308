@@ -5,6 +5,7 @@ import {
     ModuleReference,
     SettingsManager,
     ExtendedObject,
+    SettingJsonType,
 } from "@adjust/core";
 import {SettingsDataID} from "@adjust/core";
 import {LocationManagerType, LocationManager} from "./locationManager.type";
@@ -37,7 +38,7 @@ export const config = createCoreConfig({
                     modules: SettingsDataID[]; // Setting IDs of the modules that are opened here
                 };
             },
-            type: "locationPaths",
+            type: SettingJsonType,
         },
     },
     type: LocationManagerType,

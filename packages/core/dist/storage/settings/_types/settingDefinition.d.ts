@@ -1,20 +1,55 @@
+/// <reference types="react" />
 import { ParameterizedSettingsFile } from "../settingsFile";
 import { SettingsConditions } from "../settingsConditions/abstractSettingsConditions";
-import { SettingsConfigType } from "./settingsCoonfigType";
+import { ISettingAttributeEvaluator } from "./ISettingAttributeEvaluator";
+import { SettingInputContract } from "../settingInputTypes/_types/SettingInput";
+import { ContractID } from "../../../registry/_types/contractID";
+/**
+ * Extracts the constraints type from the setting input type
+ */
+export declare type GetSettingInputConstraints<T extends SettingInputContract<any, any>> = T extends SettingInputContract<any, infer C> ? C : undefined;
 /**
  * The data of a single Setting in the config
  */
-export declare type SettingDefinition<V> = {
+export declare type SettingDefinition<V, T extends SettingInputContract<V, any>> = {
+    /** The default value of your setting*/
     default: V;
-    type: SettingsConfigType;
-    validation?: (value: any) => Error | void;
-    onChange?: (value: any, condition: SettingsConditions, oldValue: any, settings: ParameterizedSettingsFile, fromLoad: boolean) => void | Promise<void>;
+    /** The module type used to represent your setting (input) */
+    type: ContractID<T> & ContractID<SettingInputContract<unknown, unknown>>;
+    /** The constraints passed tot he module to dictate whether it is valid */
+    constraints?: ISettingAttributeEvaluator<GetSettingInputConstraints<T>>;
+    /** A hook detect any changes to values */
+    onChange?: (
+    /** The new value of the setting */
+    value: V, 
+    /** The condition for which the value changed*/
+    condition: SettingsConditions, 
+    /** The old value of this setting under the given condition */
+    oldValue: V, 
+    /** The settings file that this setting belongs to */
+    settings: ParameterizedSettingsFile, 
+    /** Whether the call was made because of the initial settings load */
+    fromLoad: boolean) => void | Promise<void>;
+    /** The name of the setting to display to the user */
+    name?: ISettingAttributeEvaluator<string>;
+    /** A short description of setting */
+    description?: ISettingAttributeEvaluator<JSX.Element>;
+    /** A more extensive description if necessary */
+    help?: ISettingAttributeEvaluator<JSX.Element>;
+    /** A link to external help resources */
+    helpLink?: ISettingAttributeEvaluator<string>;
+    /** Whether or not this setting is completely hidden in the GUI */
+    hidden?: ISettingAttributeEvaluator<boolean>;
+    /** Whether this is an advanced setting and shouldn't be visible for standard userss */
+    advanced?: ISettingAttributeEvaluator<boolean>;
+    /** Whether or not the setting is enabled and may be changed */
+    enabled?: ISettingAttributeEvaluator<boolean>;
+    /** Whether or not the current search filter should exclude this setting */
+    searchExcluded?: ISettingAttributeEvaluator<boolean>;
+    /** The tags to use in the search excluded function */
+    tags?: ISettingAttributeEvaluator<(string | RegExp)[]>;
 };
-/**
- * The keys that are part of a settings definition
- */
-export declare type SettingDefinitionKeys = "default" | "type" | "validation" | "onChange";
 /**
  * The data of a single Setting in the config, with default params
  */
-export declare type ParameterizedSettingDefinition<V = any> = SettingDefinition<V>;
+export declare type ParameterizedSettingDefinition<V extends any = any, T extends SettingInputContract<any, any> = any> = SettingDefinition<V, T>;

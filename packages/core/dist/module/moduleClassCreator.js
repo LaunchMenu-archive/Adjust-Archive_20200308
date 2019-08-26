@@ -85,7 +85,7 @@ class ModuleClassCreator {
         // Create the normalized and extended config
         const normalizedConfig = {
             version: config.version,
-            details: Object.assign({ icon: "", name: "", description: "" }, config.details),
+            details: Object.assign({ icon: "", name: "", description: "", section: "" }, config.details),
             package: null,
             settings,
             settingsMigrators,
@@ -105,10 +105,18 @@ class ModuleClassCreator {
     /**
      * Method may be used to perform typechecking on a config
      * @param config The config to type check
-     * @returns A copy of the module
+     * @returns A copy of the config
      */
     static createConfig(config) {
         return config;
+    }
+    /**
+     * Method may be used to perform typechecking on a setting
+     * @param setting The setting to type check
+     * @returns A copy of the setting
+     */
+    static createSetting(setting) {
+        return setting;
     }
 }
 exports.ModuleClassCreator = ModuleClassCreator;
@@ -120,4 +128,8 @@ exports.createModule = ModuleClassCreator.createModule.bind(ModuleClassCreator);
  * A shortcut for the config creation method
  */
 exports.createConfig = ModuleClassCreator.createConfig.bind(ModuleClassCreator);
+/**
+ * A shortcut for the setting creation method
+ */
+exports.createSetting = ModuleClassCreator.createSetting.bind(ModuleClassCreator);
 //# sourceMappingURL=moduleClassCreator.js.map

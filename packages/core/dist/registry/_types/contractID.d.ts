@@ -5,6 +5,7 @@ import { ModuleContract } from "../../module/_types/moduleContract";
 export declare type ContractID<T extends ModuleContract> = {
     ID: string;
     toString: () => string;
+    " ": T;
 };
 /**
  * A type representing a contract ID, whee the generic parameter argumets can be left out

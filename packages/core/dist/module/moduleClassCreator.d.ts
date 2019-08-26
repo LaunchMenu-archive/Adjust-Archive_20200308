@@ -5,6 +5,8 @@ import { ExtendedModuleClass } from "./_types/extendedModule";
 import { SettingsConfig } from "../storage/settings/_types/settingsConfig";
 import { ModuleContract } from "./_types/moduleContract";
 import { Module } from "./module";
+import { SettingDefinition } from "../storage/settings/_types/settingDefinition";
+import { SettingInputContract } from "../storage/settings/settingInputTypes/_types/SettingInput";
 export declare class ModuleClassCreator {
     /**
      * Creates a new class extending the passed class, with a dynamic name
@@ -30,9 +32,15 @@ export declare class ModuleClassCreator {
     /**
      * Method may be used to perform typechecking on a config
      * @param config The config to type check
-     * @returns A copy of the module
+     * @returns A copy of the config
      */
     static createConfig<T extends ParameterizedModuleConfig>(config: T): T;
+    /**
+     * Method may be used to perform typechecking on a setting
+     * @param setting The setting to type check
+     * @returns A copy of the setting
+     */
+    static createSetting<V, T extends SettingInputContract<V, any>>(setting: SettingDefinition<V, T>): SettingDefinition<V, T>;
 }
 /**
  * A shortcut for the module creation method
@@ -42,3 +50,7 @@ export declare const createModule: (typeof ModuleClassCreator)["createModule"];
  * A shortcut for the config creation method
  */
 export declare const createConfig: (typeof ModuleClassCreator)["createConfig"];
+/**
+ * A shortcut for the setting creation method
+ */
+export declare const createSetting: (typeof ModuleClassCreator)["createSetting"];

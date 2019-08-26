@@ -9,6 +9,8 @@ export declare type ModuleDetails = {
     name: string | JSX.Element;
     /** A description of the module */
     description?: string | JSX.Element;
+    /** The section that this module should appear in, in the the index of the settings */
+    section?: string;
 };
 /**
  * The details of te module, in normalized form

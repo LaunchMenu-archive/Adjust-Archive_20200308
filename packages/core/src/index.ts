@@ -43,6 +43,12 @@ export * from "./storage/settings/settingsConditions/types/functionSettingsCondi
 export * from "./storage/settings/settingsConditions/types/dataSettingsConditions";
 export * from "./storage/settings/settingsConditions/abstractSettingsConditions";
 
+export * from "./storage/settings/settingInputTypes/SettingJson.type";
+export * from "./storage/settings/settingInputTypes/SettingNumber.type";
+export * from "./storage/settings/settingInputTypes/SettingBoolean.type";
+export * from "./storage/settings/settingInputTypes/SettingString.type";
+export * from "./storage/settings/settingInputTypes/SettingColor.type";
+
 // Modules
 export * from "./modules/contextProvider";
 export * from "./modules/contextProvider.type";

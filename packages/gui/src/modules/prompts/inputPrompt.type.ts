@@ -9,7 +9,7 @@ export type PromptData = {
 };
 
 /**
- * A type used to request standard use data
+ * A type used to request simple data from the user
  */
 export type InputPrompt = ChildModule<{
     //TODO: add more types, look icon options and the likes

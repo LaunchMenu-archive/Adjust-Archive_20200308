@@ -10,16 +10,15 @@ import {SettingsConfigSetData} from "../storage/settings/_types/settingsConfigSe
 import {ExtendedObject} from "../utils/extendedObject";
 import {SettingsConfigSet} from "../storage/settings/_types/settingsConfigSet";
 import {ModuleReference} from "./moduleID";
-import {deepEqual} from "assert";
 
 /**
  * A class that can visually represent the module
  */
 export abstract class ModuleView<
     S extends ModuleState,
-    C extends SettingsConfigSet,
+    C extends {[field: string]: any},
     M extends ParameterizedModule,
-    D extends any
+    D extends {[field: string]: any}
 > extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
     // Indicates whether this react component has been completely unmounted
     public unmounted: boolean = false;
@@ -31,7 +30,7 @@ export abstract class ModuleView<
     protected readonly module: RemoteModule<M>;
 
     // The settings of the module
-    protected readonly settings: DeepReadonly<SettingsConfigSetData<C>>;
+    protected readonly settings: DeepReadonly<C>;
 
     // The data that the module received when requested
     protected readonly data: DeepReadonly<D>;

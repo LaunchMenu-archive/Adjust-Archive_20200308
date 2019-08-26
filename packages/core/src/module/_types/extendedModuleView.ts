@@ -8,7 +8,7 @@ import {
     Map,
 } from "../../utils/_types/standardTypes";
 import {ModuleView, ParameterizedModuleView} from "../moduleView";
-import {ExtractModuleState} from "./extendedModule";
+import {ExtractModuleState, ExtractModuleSettings} from "./extendedModule";
 import {Settings} from "../../storage/settings/settings";
 import {ModuleViewProps} from "./moduleViewProps";
 import {ModuleViewState} from "./moduleViewState";
@@ -16,13 +16,8 @@ import {ModuleContract, ChildModule} from "./moduleContract";
 import {ModuleRequestData} from "./moduleRequestData";
 import {ModuleState} from "./moduleState";
 import {ModuleReference} from "../moduleID";
-
-/**
- * Extracts the settingsConfig type from a given module
- */
-export type ExtractModuleSettingsConfig<
-    M extends ParameterizedModule
-> = M["getSettingsObject"] extends () => Settings<infer S> ? S : never;
+import {SettingsConfigData} from "../../storage/settings/_types/settingsConfigData";
+import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
 
 /**
  * Extracts the request data type from a given module
@@ -86,7 +81,7 @@ export type ExtendedModuleView<
                           ExtractModuleViewState<V> &
                           ModuleViewState<
                               S & ExtractModuleState<M>,
-                              ExtractModuleSettingsConfig<M>["settings"],
+                              ExtractModuleSettings<M>,
                               ExtractModuleData<M>
                           >
                   >,
@@ -99,7 +94,7 @@ export type ExtendedModuleView<
     // FilterModuleView<ModuleView<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>, M>>
     ModuleView<
         S & TransformModuleViewState<ExtractModuleState<M>>,
-        ExtractModuleSettingsConfig<M>["settings"],
+        ExtractModuleSettings<M>,
         M,
         ExtractModuleData<M>
     >;

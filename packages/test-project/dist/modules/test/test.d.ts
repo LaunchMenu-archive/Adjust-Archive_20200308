@@ -10,10 +10,7 @@ export declare const config: {
         smth: number;
     };
     settings: {
-        stuff: {
-            default: boolean;
-            type: string;
-        };
+        stuff: import("@adjust/core/types").SettingDefinition<boolean, import("@adjust/core/types").SettingInputContract<boolean, undefined>>;
     };
     defineLocation: {
         ID: string;
@@ -39,10 +36,7 @@ declare const TestModule_base: import("@adjust/core/types").ExtendedModuleClass<
         smth: number;
     };
     settings: {
-        stuff: {
-            default: boolean;
-            type: string;
-        };
+        stuff: import("@adjust/core/types").SettingDefinition<boolean, import("@adjust/core/types").SettingInputContract<boolean, undefined>>;
     };
     defineLocation: {
         ID: string;

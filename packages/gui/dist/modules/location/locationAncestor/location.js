@@ -20,7 +20,7 @@ exports.config = core_1.createConfig({
     settings: {
         locations: {
             default: [],
-            type: "locations",
+            type: core_1.SettingJsonType,
         },
     },
     type: locationAncestor_type_1.LocationAncestorType,

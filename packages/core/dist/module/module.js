@@ -14,6 +14,7 @@ exports.baseConfig = {
         icon: "",
         name: "Module",
         description: "The base module",
+        section: "",
     },
     package: null,
     settings: {},

@@ -27,7 +27,7 @@ exports.themeSettings = {
         neutralDark: "#605e5d",
         black: "#494847",
         white: "#ffffff",
-    }, { type: "color" }), core_1.createSettings({
+    }, { type: core_1.SettingColorType }), core_1.createSettings({
         accent: "#0078d4",
         blackTranslucent40: "rgba(0,0,0,.4)",
         whiteTranslucent40: "rgba(255,255,255,.4)",
@@ -55,14 +55,14 @@ exports.themeSettings = {
         greenDark: "#004b1c",
         green: "#107c10",
         greenLight: "#bad80a",
-    }, { type: "color" })),
+    }, { type: core_1.SettingColorType })),
     customPalette: {
         default: {
             primary: "themePrimary",
             primaryDark: "themeDarkAlt",
             primaryLight: "themeLight",
         },
-        type: "customPallete",
+        type: core_1.SettingJsonType,
     },
     icons: core_1.createSettings({
         close: "react-icons/md/MdClose",
@@ -71,7 +71,8 @@ exports.themeSettings = {
         emoji: "react-icons/md/MdMood",
         left: "react-icons/md/MdKeyboardArrowLeft",
         right: "react-icons/md/MdKeyboardArrowRight",
-    }, { type: "icon" }),
+    }, { type: core_1.SettingStringType } // TODO: make an appropriate input
+    ),
     spacing: core_1.createSettings({
         xxs: 2,
         xs: 5,
@@ -80,7 +81,8 @@ exports.themeSettings = {
         l: 20,
         xl: 25,
         xxl: 30,
-    }, { type: "space" }),
+    }, { type: core_1.SettingNumberType } // TODO: make an appropriate input
+    ),
     fontStyles: core_1.createSettings({
         tiny: { fontSize: "10px" },
         xSmall: { fontSize: "10px" },
@@ -115,14 +117,15 @@ exports.themeSettings = {
         },
     }, v => ({
         default: Object.assign({ fontFamily: "'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif", fontWeight: 400, MozOsxFontSmoothing: "grayscale", WebkitFontSmoothing: "antialiased" }, v),
-        type: "font",
+        type: core_1.SettingJsonType,
     })),
     shadows: core_1.createSettings({
         tiny: "0 1.6px 3.6px 0 rgba(0,0,0,.132), 0 0.3px 0.9px 0 rgba(0,0,0,.108)",
         small: "0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108)",
         medium: "0 6.4px 14.4px 0 rgba(0,0,0,.182), 0 1.2px 3.6px 0 rgba(0,0,0,.142)",
         large: "0 25.6px 57.6px 0 rgba(0,0,0,.22), 0 4.8px 14.4px 0 rgba(0,0,0,.18)",
-    }, { type: "shadow" }),
+    }, { type: core_1.SettingStringType } // TODO: make an appropriate input
+    ),
 };
 /**
  * Maps all properties with key default to undefined, recursively

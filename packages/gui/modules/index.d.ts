@@ -19,6 +19,7 @@ export * from "../dist/modules/location/locationManager";
 export * from "../dist/modules/location/locationManager.type";
 export * from "../dist/modules/prompts/inputPrompt";
 export * from "../dist/modules/prompts/inputPrompt.type";
+export * from "../dist/modules/settings/SettingsManager.type";
 export * from "../dist/modules/theming/_types/IBoxComponent";
 export * from "../dist/modules/theming/_types/ITheme";
 export * from "../dist/modules/theming/box/_types/anyProps";

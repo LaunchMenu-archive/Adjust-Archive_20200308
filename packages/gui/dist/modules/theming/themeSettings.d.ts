@@ -5,247 +5,247 @@ import { SettingsConfigSetData } from "@adjust/core/types";
 export declare const themeSettings: {
     palette: {
         accent: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         blackTranslucent40: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         whiteTranslucent40: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         yellowDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         yellow: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         yellowLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         orange: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         orangeLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         orangeLighter: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         redDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         red: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         magentaDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         magenta: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         magentaLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         purpleDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         purple: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         purpleLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         blueDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         blueMid: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         blue: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         blueLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         tealDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         teal: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         tealLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         greenDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         green: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         greenLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themePrimary: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themeLighterAlt: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themeLighter: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themeLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themeTertiary: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themeSecondary: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themeDarkAlt: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themeDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         themeDarker: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralLighterAlt: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralLighter: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralLight: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralQuaternaryAlt: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralQuaternary: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralTertiaryAlt: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralTertiary: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralSecondary: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralPrimaryAlt: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralPrimary: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         neutralDark: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         black: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         white: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
@@ -256,73 +256,101 @@ export declare const themeSettings: {
             primaryDark: string;
             primaryLight: string;
         };
-        type: string;
+        type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
     };
     icons: {
         close: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         maximize: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         minimize: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         emoji: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         left: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         right: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
     };
     spacing: {
         xxs: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: string | number;
         };
         xs: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: string | number;
         };
         s: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: string | number;
         };
         m: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: string | number;
         };
         l: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: string | number;
         };
         xl: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: string | number;
         };
         xxl: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
+                min?: number;
+                max?: number;
+                rounding?: number;
+            }>>;
         } & {
             default: string | number;
         };
@@ -408,7 +436,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         xSmall: {
             default: {
@@ -490,7 +518,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         small: {
             default: {
@@ -572,7 +600,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         smallPlus: {
             default: {
@@ -654,7 +682,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         medium: {
             default: {
@@ -736,7 +764,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         mediumPlus: {
             default: {
@@ -818,7 +846,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         large: {
             default: {
@@ -900,7 +928,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         xLarge: {
             default: {
@@ -982,7 +1010,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         xLargePlus: {
             default: {
@@ -1064,7 +1092,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         xxLarge: {
             default: {
@@ -1146,7 +1174,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         xxLargePlus: {
             default: {
@@ -1228,7 +1256,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         superLarge: {
             default: {
@@ -1310,7 +1338,7 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
         mega: {
             default: {
@@ -1392,27 +1420,27 @@ export declare const themeSettings: {
                 MozOsxFontSmoothing: string;
                 WebkitFontSmoothing: string;
             };
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
     };
     shadows: {
         tiny: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         small: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         medium: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };
         large: {
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
         } & {
             default: string;
         };

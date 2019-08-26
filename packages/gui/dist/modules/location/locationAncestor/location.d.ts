@@ -26,7 +26,7 @@ export declare const config: {
     settings: {
         locations: {
             default: string[];
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
     };
     type: import("@adjust/core/types").ContractID<import("./locationAncestor.type").LocationAncestorContract>;
@@ -53,7 +53,7 @@ declare const LocationModule_base: import("@adjust/core/types").ExtendedModuleCl
     settings: {
         locations: {
             default: string[];
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
     };
     type: import("@adjust/core/types").ContractID<import("./locationAncestor.type").LocationAncestorContract>;

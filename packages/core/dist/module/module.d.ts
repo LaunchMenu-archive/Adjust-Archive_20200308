@@ -26,6 +26,7 @@ export declare const baseConfig: {
         icon: string;
         name: string;
         description: string;
+        section: string;
     };
     package: any;
     settings: {};
@@ -307,6 +308,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
             icon: string;
             name: string;
             description: string;
+            section: string;
         };
         package: any;
         settings: {};

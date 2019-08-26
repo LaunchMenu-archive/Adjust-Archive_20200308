@@ -149,6 +149,7 @@ class RegistrySingleton {
         return {
             ID: location,
             toString: () => location,
+            " ": null,
         };
     }
     // Module loading related methods

@@ -1,6 +1,7 @@
 import {dummyInterfaceID, dummyInterfaceID2} from "./dummyModules.helper";
 import {createModule} from "../moduleClassCreator";
 import {createModuleView} from "../moduleViewClassCreator";
+import {SettingNumberType} from "../../storage/settings/settingInputTypes/SettingNumber.type";
 
 // A config for our module
 const config = {
@@ -8,7 +9,7 @@ const config = {
         val: "hello" as string | number,
     },
     settings: {
-        val: {default: 3, type: "number"},
+        val: {default: 3, type: SettingNumberType},
     },
     type: dummyInterfaceID2,
 };

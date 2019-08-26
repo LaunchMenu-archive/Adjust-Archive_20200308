@@ -38,7 +38,7 @@ export declare type ExtendedModule<MC extends ParameterizedModuleConfig, M exten
     getParent(): GetTypeInterface<MC["type"]>["parent"];
     getParents(): GetTypeInterface<MC["type"]>["parent"][];
     getData(): GetTypeInterface<MC["type"]>["data"];
-    getSettingsObject(): Settings<SettingsConfig<MC["settings"]> & ExtractModuleSettings<M>>;
+    getSettingsObject(): Settings<SettingsConfig<MC["settings"] & ExtractModuleSettings<M>>>;
 } & M & Module<OrEmpty<MC["state"]>, SettingsConfig<MC["settings"]>, GetTypeInterface<MC["type"]>>;
 /**
  * Creates a new module constructor type, based on a module config and a module constructor type

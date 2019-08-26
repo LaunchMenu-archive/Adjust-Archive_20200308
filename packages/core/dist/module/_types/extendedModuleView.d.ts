@@ -2,17 +2,12 @@
 import { ParameterizedModule, Module } from "../module";
 import { DeepPartial, Omit, Constructor, GetConstructed, DeepReadonly, Map } from "../../utils/_types/standardTypes";
 import { ModuleView, ParameterizedModuleView } from "../moduleView";
-import { ExtractModuleState } from "./extendedModule";
-import { Settings } from "../../storage/settings/settings";
+import { ExtractModuleState, ExtractModuleSettings } from "./extendedModule";
 import { ModuleViewProps } from "./moduleViewProps";
 import { ModuleViewState } from "./moduleViewState";
 import { ChildModule } from "./moduleContract";
 import { ModuleState } from "./moduleState";
 import { ModuleReference } from "../moduleID";
-/**
- * Extracts the settingsConfig type from a given module
- */
-export declare type ExtractModuleSettingsConfig<M extends ParameterizedModule> = M["getSettingsObject"] extends () => Settings<infer S> ? S : never;
 /**
  * Extracts the request data type from a given module
  */
@@ -39,8 +34,8 @@ export declare type FilterModuleView<M extends ParameterizedModuleView> = Omit<M
  * Creates a new module type, based on a module config and a module type
  */
 export declare type ExtendedModuleView<M extends ParameterizedModule, S extends Map<any>, V extends ParameterizedModuleView> = {
-    setState(state: ((prevState: DeepReadonly<S & ExtractModuleViewState<V> & ModuleViewState<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>["settings"], ExtractModuleData<M>>>, props: ModuleViewProps<M>) => DeepPartial<S & ExtractModuleViewState<V>>) | DeepPartial<S & ExtractModuleViewState<V>>, callback?: () => any): void;
-} & V & ModuleView<S & TransformModuleViewState<ExtractModuleState<M>>, ExtractModuleSettingsConfig<M>["settings"], M, ExtractModuleData<M>>;
+    setState(state: ((prevState: DeepReadonly<S & ExtractModuleViewState<V> & ModuleViewState<S & ExtractModuleState<M>, ExtractModuleSettings<M>, ExtractModuleData<M>>>, props: ModuleViewProps<M>) => DeepPartial<S & ExtractModuleViewState<V>>) | DeepPartial<S & ExtractModuleViewState<V>>, callback?: () => any): void;
+} & V & ModuleView<S & TransformModuleViewState<ExtractModuleState<M>>, ExtractModuleSettings<M>, M, ExtractModuleData<M>>;
 /**
  * Creates a new module constructor type, based on a module config and a module constructor type
  */

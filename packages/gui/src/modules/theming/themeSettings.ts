@@ -1,4 +1,11 @@
-import {createSettings, ExtendedObject} from "@adjust/core";
+import {
+    createSettings,
+    ExtendedObject,
+    SettingColorType,
+    SettingStringType,
+    SettingNumberType,
+    SettingJsonType,
+} from "@adjust/core";
 import {SettingsConfigSetData} from "@adjust/core/types";
 
 /**
@@ -32,7 +39,7 @@ export const themeSettings = {
                 black: "#494847",
                 white: "#ffffff",
             },
-            {type: "color"}
+            {type: SettingColorType}
         ),
         ...createSettings(
             {
@@ -64,7 +71,7 @@ export const themeSettings = {
                 green: "#107c10",
                 greenLight: "#bad80a",
             },
-            {type: "color"}
+            {type: SettingColorType}
         ),
     },
     customPalette: {
@@ -73,7 +80,7 @@ export const themeSettings = {
             primaryDark: "themeDarkAlt",
             primaryLight: "themeLight",
         },
-        type: "customPallete",
+        type: SettingJsonType, // TODO: make an appropriate input
     },
     icons: createSettings(
         {
@@ -84,7 +91,7 @@ export const themeSettings = {
             left: "react-icons/md/MdKeyboardArrowLeft",
             right: "react-icons/md/MdKeyboardArrowRight",
         },
-        {type: "icon"}
+        {type: SettingStringType} // TODO: make an appropriate input
     ),
     spacing: createSettings(
         {
@@ -96,7 +103,7 @@ export const themeSettings = {
             xl: 25 as number | string,
             xxl: 30 as number | string,
         },
-        {type: "space"}
+        {type: SettingNumberType} // TODO: make an appropriate input
     ),
     fontStyles: createSettings(
         {
@@ -141,7 +148,7 @@ export const themeSettings = {
                 WebkitFontSmoothing: "antialiased",
                 ...v,
             },
-            type: "font",
+            type: SettingJsonType, // TODO: make an appropriate input
         })
     ),
     shadows: createSettings(
@@ -151,7 +158,7 @@ export const themeSettings = {
             medium: "0 6.4px 14.4px 0 rgba(0,0,0,.182), 0 1.2px 3.6px 0 rgba(0,0,0,.142)",
             large: "0 25.6px 57.6px 0 rgba(0,0,0,.22), 0 4.8px 14.4px 0 rgba(0,0,0,.18)",
         },
-        {type: "shadow"}
+        {type: SettingStringType} // TODO: make an appropriate input
     ),
 };
 

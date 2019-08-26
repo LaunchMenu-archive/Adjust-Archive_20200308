@@ -21,7 +21,7 @@ export declare const windowManagerConfig: {
     settings: {
         windows: {
             default: WindowsData;
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
     };
     getPriority: () => number;
@@ -43,7 +43,7 @@ declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedMod
     settings: {
         windows: {
             default: WindowsData;
-            type: string;
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<import("@adjust/core/types").Json, undefined>>;
         };
     };
     getPriority: () => number;

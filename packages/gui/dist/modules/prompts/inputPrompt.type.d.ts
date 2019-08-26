@@ -6,7 +6,7 @@ export declare type PromptData = {
     defaultValue: any;
 };
 /**
- * A type used to request standard use data
+ * A type used to request simple data from the user
  */
 export declare type InputPrompt = ChildModule<{
     /**

@@ -31,11 +31,11 @@ exports.stylingSettings = {
         theme: themeSettings_1.themeSettingsEmpty,
         resetTheme: {
             default: false,
-            type: "boolean",
+            type: core_1.SettingBooleanType,
         },
         css: {
             default: null,
-            type: "css",
+            type: core_1.SettingJsonType,
         },
     },
 };
@@ -46,7 +46,7 @@ exports.baseConfig = {
     state: {},
     settings: Object.assign({ location: {
             default: ["root"],
-            type: "location",
+            type: core_1.SettingJsonType,
             // Make sure that when a location changes, this is synchronized with the location manager
             onChange: exports.synchronizedLocations,
         } }, exports.stylingSettings),

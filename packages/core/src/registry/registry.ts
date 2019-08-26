@@ -201,6 +201,7 @@ export class RegistrySingleton {
         return {
             ID: location,
             toString: () => location,
+            " ": null as M,
         };
     }
 
