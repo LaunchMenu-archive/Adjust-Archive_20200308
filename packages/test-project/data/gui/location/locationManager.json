@@ -24,11 +24,59 @@
                         "modules": [
                             {
                                 "settingsID": 0,
+                                "modulePath": "\\embed\\embed.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\page\\moduleSetting\\SettingsModuleSetting.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\page\\moduleSettings\\SettingsModuleSettings.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\page\\moduleSettingsCategory\\SettingsModuleSettingsCategory.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\page\\SettingsPage.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\page\\typeSettings\\SettingsTypeSettings.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\SettingsSearchBar.js"
+                            },
+                            {
+                                "settingsID": 0,
                                 "modulePath": "\\singletonTest\\singleton\\singleton.js"
                             },
                             {
                                 "settingsID": 0,
-                                "modulePath": "\\embed\\embed.js"
+                                "modulePath": "gui\\settings\\SettingsManager.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\index\\SettingsIndex.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\index\\package\\SettingsIndexPackage.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\index\\category\\SettingsIndexCategories.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\index\\type\\SettingsIndexType.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\index\\module\\SettingsIndexModule.js"
                             },
                             {
                                 "settingsID": 0,
@@ -36,7 +84,10 @@
                             }
                         ],
                         "path": {
-                            "nodes": ["AFsO-IsUD", "poop"],
+                            "nodes": [
+                                "AFsO-IsUD",
+                                "poop"
+                            ],
                             "location": {
                                 "ID": "root"
                             }
@@ -50,7 +101,10 @@
                             }
                         ],
                         "path": {
-                            "nodes": ["63fO-nyeo", "default"],
+                            "nodes": [
+                                "63fO-nyeo",
+                                "default"
+                            ],
                             "location": {
                                 "ID": "prompt",
                                 "hints": {
@@ -72,7 +126,10 @@
                             }
                         ],
                         "path": {
-                            "nodes": ["AFsO-IsUD", "13Y4-NOvD"],
+                            "nodes": [
+                                "AFsO-IsUD",
+                                "13Y4-NOvD"
+                            ],
                             "location": {
                                 "ID": "onion",
                                 "hints": {
@@ -85,18 +142,25 @@
                                         "index": 0,
                                         "name": "John"
                                     },
-                                    "path": ["AFsO-IsUD"]
+                                    "path": [
+                                        "AFsO-IsUD"
+                                    ]
                                 }
                             }
                         }
                     },
                     "F4hs-NK1X-Wczs-TOy3-EbAJ": {
                         "path": {
-                            "nodes": ["AFsO-IsUD", "tpPi-7F93"],
+                            "nodes": [
+                                "AFsO-IsUD",
+                                "tpPi-7F93"
+                            ],
                             "location": {
                                 "ID": "F4hs-NK1X-Wczs-TOy3-EbAJ",
                                 "hints": {
-                                    "path": ["AFsO-IsUD"],
+                                    "path": [
+                                        "AFsO-IsUD"
+                                    ],
                                     "tab": {
                                         "ID": "tpPi-7F93"
                                     }

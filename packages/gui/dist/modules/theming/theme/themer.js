@@ -8,6 +8,7 @@ const emotion_theming_1 = require("emotion-theming");
 const office_ui_fabric_react_1 = require("office-ui-fabric-react");
 const box_1 = require("./box");
 const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
+const core_2 = require("@emotion/core");
 exports.themerConfig = moduleClassCreator_1.createConfig({
     state: {},
     getPriority: () => 1,
@@ -60,9 +61,31 @@ class ThemerView extends core_1.createModuleView(ThemerModule) {
         const fabricTheme = theme.getFabricUItheme();
         const icons = theme.getFabricUIicons();
         office_ui_fabric_react_1.registerIcons(icons);
-        return (React_1.React.createElement(themer_type_1.ThemeContext.Provider, { value: { theme, Box: box_1.Box } },
-            React_1.React.createElement(emotion_theming_1.ThemeProvider, { theme: () => theme },
-                React_1.React.createElement(office_ui_fabric_react_1.Customizer, { settings: { theme: fabricTheme } }, this.props.children))));
+        return (React_1.React.createElement(React_1.React.Fragment, null,
+            React_1.React.createElement(core_2.Global, { styles: {
+                    body: theme.getFontStyle("medium"),
+                    "::-webkit-scrollbar": {
+                        width: theme.getSpacing("s"),
+                    },
+                    "::-webkit-scrollbar-track": {
+                        background: theme.getColor("neutralLight"),
+                        WebkitBoxShadow: "inset 1px 1px 2px rgba(0,0,0,0.1)",
+                    },
+                    "::-webkit-scrollbar-thumb": {
+                        background: theme.getColor("neutralDark"),
+                        WebkitBoxShadow: "inset 1px 1px 2px rgba(0,0,0,0.2)",
+                    },
+                    "::-webkit-scrollbar-thumb:hover": {
+                        background: theme.getColor("themePrimary"),
+                    },
+                    "::-webkit-scrollbar-thumb:active": {
+                        background: theme.getColor("themePrimary"),
+                        WebkitBoxShadow: "inset 1px 1px 2px rgba(0,0,0,0.3)",
+                    },
+                } }),
+            React_1.React.createElement(themer_type_1.ThemeContext.Provider, { value: { theme, Box: box_1.Box } },
+                React_1.React.createElement(emotion_theming_1.ThemeProvider, { theme: () => theme },
+                    React_1.React.createElement(office_ui_fabric_react_1.Customizer, { settings: { theme: fabricTheme } }, this.props.children)))));
     }
 }
 exports.ThemerView = ThemerView;

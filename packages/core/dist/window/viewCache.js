@@ -9,7 +9,7 @@ class ViewCache {
         // The number of cache sets to keep
         this.cacheSetCount = 10;
         // The cache to store data in
-        this.cache = [];
+        this.cache = [{}];
     }
     /**
      * Adds a view's state to the cache

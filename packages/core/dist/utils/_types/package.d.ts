@@ -14,4 +14,8 @@ export declare type Package = {
     peerDependencies: {
         [name: string]: string;
     };
+    repository?: {
+        type: string;
+        url: string;
+    };
 };

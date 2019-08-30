@@ -12,4 +12,10 @@ export type SettingJsonParent = SettingJsonContract["parent"];
 /**
  * A type for simple numeric setting inputs
  */
-export const SettingJsonType = Registry.createContractID<SettingJsonContract>(__filename);
+export const SettingJsonType = Registry.createContractID<SettingJsonContract>(
+    __filename,
+    {
+        name: "json",
+        section: "settings.input",
+    }
+);

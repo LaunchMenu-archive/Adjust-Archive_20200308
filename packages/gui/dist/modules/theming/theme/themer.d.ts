@@ -1,3 +1,4 @@
+/// <reference path="../../../React.d.ts" />
 import { CSSProperties } from "react";
 import { Themer } from "../themer.type";
 import { IThemeData } from "../themeSettings";
@@ -8,137 +9,137 @@ export declare const themerConfig: {
     settings: {
         palette: {
             accent: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blackTranslucent40: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             whiteTranslucent40: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             yellowDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             yellow: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             yellowLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             orange: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             orangeLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             orangeLighter: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             redDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             red: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             magentaDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             magenta: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             magentaLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             purpleDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             purple: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             purpleLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blueDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blueMid: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blue: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blueLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             tealDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             teal: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             tealLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             greenDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             green: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             greenLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
@@ -301,7 +302,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             xs: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -310,7 +311,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             s: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -319,7 +320,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             m: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -328,7 +329,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             l: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -337,7 +338,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             xl: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -346,7 +347,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             xxl: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -355,7 +356,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
         };
         fontStyles: {
@@ -1457,137 +1458,137 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
     settings: {
         palette: {
             accent: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blackTranslucent40: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             whiteTranslucent40: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             yellowDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             yellow: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             yellowLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             orange: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             orangeLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             orangeLighter: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             redDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             red: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             magentaDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             magenta: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             magentaLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             purpleDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             purple: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             purpleLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blueDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blueMid: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blue: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             blueLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             tealDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             teal: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             tealLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             greenDark: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             green: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
             greenLight: {
-                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>; /** @override  */
             } & {
                 default: string;
             };
@@ -1750,7 +1751,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             xs: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1759,7 +1760,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             s: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1768,7 +1769,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             m: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1777,7 +1778,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             l: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1786,7 +1787,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             xl: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1795,7 +1796,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
             xxl: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1804,7 +1805,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: string | number;
+                default: import("react").ReactText;
             };
         };
         fontStyles: {

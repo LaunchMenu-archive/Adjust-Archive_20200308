@@ -25,10 +25,10 @@ export class DummyModule
     >(
         request: ModuleRequestData<I>,
         moduleID: ModuleID,
-        initialState: S,
+        state: S,
         parents: I["parent"][]
     ): Promise<Module<S, C, I>> {
-        return this.construct(request, moduleID, initialState, parents);
+        return this.construct(request, moduleID, state, parents);
     }
 
     public async test(text: string): Promise<string> {

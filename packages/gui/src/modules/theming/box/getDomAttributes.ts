@@ -8,7 +8,14 @@ import {ReactNode, CSSProperties, DOMAttributes} from "react";
  */
 export const domAttributes = {
     children: true,
-    className: true,
+    className: (out: AnyProps, value: string) => {
+        if (out["className"]) out["className"] += " " + value;
+        else out["className"] = value;
+    },
+    class: (out: AnyProps, value: string) => {
+        if (out["className"]) out["className"] += " " + value;
+        else out["className"] = value;
+    },
     elRef: "ref",
     style: true,
     draggable: true,
@@ -20,6 +27,7 @@ export const domAttributes = {
 export type DomAttributes = {
     children?: ReactNode;
     className?: string;
+    class?: string;
     style?: CSSProperties;
     draggable?: boolean;
     elRef?: (element: HTMLElement) => void;

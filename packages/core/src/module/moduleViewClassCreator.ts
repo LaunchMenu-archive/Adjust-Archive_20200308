@@ -26,11 +26,11 @@ export class ModuleViewClassCreator {
     public static createModuleView<
         M extends Constructor<any>,
         S extends object = {},
-        // Can't use ModuleView<{}, {}, ParameterizedModule> instead of {}, due to it expecting private members
-        V extends ExtendsClass<typeof ModuleView, {}> = ExtendsClass<
+        // Can't use ModuleView<{}, {}, ParameterizedModule, {}> instead of {}, due to it expecting private members
+        V extends ExtendsClass<
             typeof ModuleView,
             ModuleView<{}, {}, ParameterizedModule, {}>
-        >
+        > = ExtendsClass<typeof ModuleView, ModuleView<{}, {}, ParameterizedModule, {}>>
     >(module: M, state?: S, moduleView?: V): ExtendedModuleViewClass<M, S, V> {
         // Set the initialState to the default state if not specified
         if (!state) state = {} as any;

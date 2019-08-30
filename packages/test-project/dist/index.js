@@ -34,11 +34,16 @@ const singleton_type_1 = require("./modules/singletonTest/singleton/singleton.ty
             openView: true,
             data: { count: 1 },
         });
-        gui_1.Registry.createRoot({ type: test_type_1.TestType, openView: true }).then(root => {
+        gui_1.Registry.createRoot({ type: modules_1.SettingsManagerType, openView: true }).then(root => {
             setTimeout(() => {
-                root.doSomething("3");
+                root.openView();
             }, 2000);
         });
+        // Registry.createRoot({type: TestType, openView: true}).then(root => {
+        //     setTimeout(() => {
+        //         root.doSomething("3");
+        //     }, 2000);
+        // });
     }
     else if (test == 4) {
         gui_1.Registry.createRoot({

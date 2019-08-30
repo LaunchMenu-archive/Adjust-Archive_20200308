@@ -48,6 +48,8 @@ class InstanceModuleProvider extends abstractModuleProvider_1.AbstractModuleProv
             this.module.notifyParentAdded(parentProxy);
             // Inform the module of a newly made connection
             this.connectionListener(parentProxy);
+            // Call module initialisation now the connection has completed (will wait for init to complete)
+            await this.module.init(false);
             // Also add the reference the other way around
             parentProxy.notifyChildAdded(moduleProxy);
         }

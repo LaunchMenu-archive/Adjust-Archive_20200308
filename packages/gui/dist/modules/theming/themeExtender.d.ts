@@ -1,3 +1,4 @@
+/// <reference path="../../React.d.ts" />
 /// <reference types="react" />
 /**
  * A component to extend the theme from the context, and provide it in the new context
@@ -9,6 +10,15 @@ export declare const ThemeExtender: ({ children, themeChanges, resetTheme, }: {
     children: (ITheme: any) => JSX.Element;
     /** The changes to apply to the theme */
     themeChanges: {
+        spacing?: {
+            xxs?: import("react").ReactText;
+            xs?: import("react").ReactText;
+            s?: import("react").ReactText;
+            m?: import("react").ReactText;
+            l?: import("react").ReactText;
+            xl?: import("react").ReactText;
+            xxl?: import("react").ReactText;
+        };
         palette?: {
             themePrimary?: string;
             themeLighterAlt?: string;
@@ -66,21 +76,12 @@ export declare const ThemeExtender: ({ children, themeChanges, resetTheme, }: {
             primaryLight?: string;
         };
         icons?: {
+            right?: string;
+            left?: string;
             close?: string;
             maximize?: string;
             minimize?: string;
             emoji?: string;
-            left?: string;
-            right?: string;
-        };
-        spacing?: {
-            xxs?: string | number;
-            xs?: string | number;
-            s?: string | number;
-            m?: string | number;
-            l?: string | number;
-            xl?: string | number;
-            xxl?: string | number;
         };
         fontStyles?: {
             tiny?: {

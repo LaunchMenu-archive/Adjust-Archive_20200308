@@ -7,7 +7,7 @@ __export(require("@adjust/core"));
 __export(require("@emotion/core"));
 var React_1 = require("./React");
 exports.React = React_1.React;
-// Reolace some standard adjust classes by our extended versions
+// Replace some standard adjust classes by our extended versions
 var registry_1 = require("./registry/registry");
 exports.Registry = registry_1.Registry;
 var module_1 = require("./module/module");

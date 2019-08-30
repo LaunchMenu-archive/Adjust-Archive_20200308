@@ -1,1 +1,1 @@
-{"version":3,"file":"SettingColor.type.js","sourceRoot":"src/","sources":["storage/settings/settingInputTypes/SettingColor.type.ts"],"names":[],"mappings":";AACA,yDAAoD;AASpD;;GAEG;AACU,QAAA,gBAAgB,GAAG,mBAAQ,CAAC,gBAAgB,CACrD,UAAU,CACb,CAAC"}
+{"version":3,"file":"SettingColor.type.js","sourceRoot":"src/","sources":["storage/settings/settingInputTypes/SettingColor.type.ts"],"names":[],"mappings":";AACA,yDAAoD;AASpD;;GAEG;AACU,QAAA,gBAAgB,GAAG,mBAAQ,CAAC,gBAAgB,CACrD,UAAU,EACV;IACI,IAAI,EAAE,OAAO;IACb,OAAO,EAAE,gBAAgB;CAC5B,CACJ,CAAC"}

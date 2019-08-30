@@ -51,6 +51,22 @@
         },
         {
             "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "path": [
+                        "AFsO-IsUD",
+                        "poop"
+                    ]
+                }
+            },
+            "ID": 7,
+            "data": {
+                "name": "poop"
+            }
+        },
+        {
+            "condition": {
                 "type": "constant",
                 "priority": 0
             },

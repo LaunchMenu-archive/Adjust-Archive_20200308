@@ -75,7 +75,7 @@ declare const LocationManagerModule_base: import("@adjust/core/types").ExtendedM
  */
 export default class LocationManagerModule extends LocationManagerModule_base implements LocationManager {
     /** @override */
-    protected onInit(fromReload: boolean): Promise<void>;
+    protected onPreInit(): Promise<void>;
     /**
      * Retrieves the location ancestor to be used
      * @returns The obtained location ancestor

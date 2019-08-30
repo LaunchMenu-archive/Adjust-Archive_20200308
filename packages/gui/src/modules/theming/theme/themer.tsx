@@ -13,6 +13,7 @@ import {ThemeProvider} from "emotion-theming";
 import {Customizer, registerIcons} from "office-ui-fabric-react";
 import {Box} from "./box";
 import {createModule, createConfig} from "../../../module/moduleClassCreator";
+import {Global, css} from "@emotion/core";
 
 export const themerConfig = createConfig({
     state: {},
@@ -82,13 +83,40 @@ export class ThemerView extends createCoreModuleView(ThemerModule) {
         const icons = theme.getFabricUIicons();
         registerIcons(icons);
         return (
-            <ThemeContext.Provider value={{theme, Box}}>
-                <ThemeProvider theme={() => theme}>
-                    <Customizer settings={{theme: fabricTheme}}>
-                        {this.props.children}
-                    </Customizer>
-                </ThemeProvider>
-            </ThemeContext.Provider>
+            <>
+                <Global
+                    styles={
+                        {
+                            body: theme.getFontStyle("medium"),
+                            "::-webkit-scrollbar": {
+                                width: theme.getSpacing("s"),
+                            },
+                            "::-webkit-scrollbar-track": {
+                                background: theme.getColor("neutralLight"),
+                                WebkitBoxShadow: "inset 1px 1px 2px rgba(0,0,0,0.1)",
+                            },
+                            "::-webkit-scrollbar-thumb": {
+                                background: theme.getColor("neutralDark"),
+                                WebkitBoxShadow: "inset 1px 1px 2px rgba(0,0,0,0.2)",
+                            },
+                            "::-webkit-scrollbar-thumb:hover": {
+                                background: theme.getColor("themePrimary"),
+                            },
+                            "::-webkit-scrollbar-thumb:active": {
+                                background: theme.getColor("themePrimary"),
+                                WebkitBoxShadow: "inset 1px 1px 2px rgba(0,0,0,0.3)",
+                            },
+                        } as any
+                    }
+                />
+                <ThemeContext.Provider value={{theme, Box}}>
+                    <ThemeProvider theme={() => theme}>
+                        <Customizer settings={{theme: fabricTheme}}>
+                            {this.props.children}
+                        </Customizer>
+                    </ThemeProvider>
+                </ThemeContext.Provider>
+            </>
         );
     }
 }

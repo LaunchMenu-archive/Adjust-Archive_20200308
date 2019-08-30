@@ -1,1 +1,1 @@
-{"version":3,"file":"SettingNumber.type.js","sourceRoot":"src/","sources":["storage/settings/settingInputTypes/SettingNumber.type.ts"],"names":[],"mappings":";AACA,yDAAoD;AAYpD;;GAEG;AACU,QAAA,iBAAiB,GAAG,mBAAQ,CAAC,gBAAgB,CACtD,UAAU,CACb,CAAC"}
+{"version":3,"file":"SettingNumber.type.js","sourceRoot":"src/","sources":["storage/settings/settingInputTypes/SettingNumber.type.ts"],"names":[],"mappings":";AACA,yDAAoD;AAYpD;;GAEG;AACU,QAAA,iBAAiB,GAAG,mBAAQ,CAAC,gBAAgB,CACtD,UAAU,EACV;IACI,IAAI,EAAE,QAAQ;IACd,OAAO,EAAE,gBAAgB;CAC5B,CACJ,CAAC"}

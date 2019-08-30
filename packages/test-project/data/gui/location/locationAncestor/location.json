@@ -57,6 +57,24 @@
         },
         {
             "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "path": [
+                        "AFsO-IsUD",
+                        "poop"
+                    ]
+                }
+            },
+            "ID": 7,
+            "data": {
+                "locations": [
+                    "root"
+                ]
+            }
+        },
+        {
+            "condition": {
                 "type": "constant",
                 "priority": 0
             },

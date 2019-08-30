@@ -12,5 +12,9 @@ export type SettingBooleanParent = SettingBooleanContract["parent"];
  * A type for simple numeric setting inputs
  */
 export const SettingBooleanType = Registry.createContractID<SettingBooleanContract>(
-    __filename
+    __filename,
+    {
+        name: "boolean",
+        section: "settings.input",
+    }
 );

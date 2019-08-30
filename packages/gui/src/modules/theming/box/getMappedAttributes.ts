@@ -10,6 +10,7 @@ import {
     CssAlignSelf,
     CssVerticalAlign,
     CssOverflow,
+    CssBorderStyle,
 } from "./_types/cssTypes";
 
 /**
@@ -24,6 +25,11 @@ export const mappedAttributes = {
     overflow: true,
     overflowX: true,
     overflowY: true,
+    borderStyle: true,
+    borderTopStyle: true,
+    borderRightStyle: true,
+    borderBottomStyle: true,
+    borderLeftStyle: true,
     verticalAlign: true,
     flexDirection: true,
     flexWrap: true,
@@ -49,6 +55,11 @@ export type MappedAttributes = {
     overflow?: CssOverflow;
     overflowX?: CssOverflow;
     overflowY?: CssOverflow;
+    borderStyle?: CssBorderStyle;
+    borderTopStyle?: CssBorderStyle;
+    borderRightStyle?: CssBorderStyle;
+    borderBottomStyle?: CssBorderStyle;
+    borderLeftStyle?: CssBorderStyle;
     verticalAlign?: CssVerticalAlign;
     flexDirection?: CssFlexDirection;
     flexWrap?: CssFlexDirection;

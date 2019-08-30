@@ -9,6 +9,7 @@ import { ClassModuleProvider } from "./moduleProviders/classModuleProvider";
 import { ExtendsClass } from "../utils/_types/standardTypes";
 import { Package } from "../utils/_types/package";
 import { AsyncMutualExcluder } from "../utils/async/AsyncMutualExcluder";
+import { ContractIDDetails } from "./_types/contractDetails";
 /**
  * Keeps track of all modules classes and module providers
  */
@@ -19,6 +20,7 @@ export declare class RegistrySingleton {
     protected collectionFolders: {
         [collectionName: string]: string;
     };
+    protected contractIDs: ContractID<any>[];
     protected excluder: AsyncMutualExcluder;
     /**
      * Retrieves modules based on the given request specification
@@ -39,7 +41,14 @@ export declare class RegistrySingleton {
      * @param request The request to retrieve the providers for
      * @returns A list of module providers in sorted order from highest to lowest priority
      */
-    protected getProviders<M extends ModuleContract>(request: NormalizedRequest<M>): Promise<ModuleProvider<M>[]>;
+    getProviders<M extends ModuleContract>(request: NormalizedRequest<M>): Promise<ModuleProvider<M>[]>;
+    /**
+     * Retrieves all the providers
+     * @returns An object with all request types and its providers
+     */
+    getProviders<M extends ModuleContract>(): Promise<{
+        [interfaceID: string]: ModuleProvider<M>[];
+    }>;
     /**
      * Adds the provider to the registry
      * @param provider The provider to add to the registry
@@ -60,9 +69,15 @@ export declare class RegistrySingleton {
     /**
      * Creates a unique ID for the contract
      * @param location The location of the contract in string form (use __filename), should be unique
+     * @param details Any display information to show the user
      * @returns An contract ID for recognizing classes using the contract
      */
-    createContractID<M extends ModuleContract = null>(location: string & (IsContractValid<M, string>)): ContractID<M>;
+    createContractID<M extends ModuleContract = null>(location: string & (IsContractValid<M, string>), details?: ContractIDDetails): ContractID<M>;
+    /**
+     * Retrieves all contract IDs that are registered
+     * @returns The registered contract IDs
+     */
+    getContractIDs(): ContractID<any>[];
     /**
      * Retrieves the module object of which Adjust is a depedency
      * @returns The node module that's not part of adjust (node as in node.js)

@@ -366,7 +366,7 @@ export declare const stylingSettings: {
                 } & {
                     default: string | number;
                 };
-            };
+            }; /** @override */
             fontStyles: {
                 tiny: {
                     default: {
@@ -1827,7 +1827,7 @@ export declare const baseConfig: {
                     } & {
                         default: string | number;
                     };
-                };
+                }; /** @override */
                 fontStyles: {
                     tiny: {
                         default: {
@@ -3292,7 +3292,7 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                     } & {
                         default: string | number;
                     };
-                };
+                }; /** @override */
                 fontStyles: {
                     tiny: {
                         default: {
@@ -4418,7 +4418,7 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
 export declare abstract class Module extends Module_base {
     protected locationManager: LocationManager;
     /** @override */
-    init(fromReload: boolean): Promise<void>;
+    init(fromReload: boolean, extraInit?: (fromReload: boolean) => Promise<void>): Promise<boolean>;
     /** @override */
     stop(): Promise<void>;
     /**

@@ -1,1 +1,1 @@
-{"version":3,"file":"SettingJson.type.js","sourceRoot":"src/","sources":["storage/settings/settingInputTypes/SettingJson.type.ts"],"names":[],"mappings":";AACA,yDAAoD;AAUpD;;GAEG;AACU,QAAA,eAAe,GAAG,mBAAQ,CAAC,gBAAgB,CAAsB,UAAU,CAAC,CAAC"}
+{"version":3,"file":"SettingJson.type.js","sourceRoot":"src/","sources":["storage/settings/settingInputTypes/SettingJson.type.ts"],"names":[],"mappings":";AACA,yDAAoD;AAUpD;;GAEG;AACU,QAAA,eAAe,GAAG,mBAAQ,CAAC,gBAAgB,CACpD,UAAU,EACV;IACI,IAAI,EAAE,MAAM;IACZ,OAAO,EAAE,gBAAgB;CAC5B,CACJ,CAAC"}

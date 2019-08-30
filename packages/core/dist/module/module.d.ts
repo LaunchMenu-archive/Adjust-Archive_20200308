@@ -52,6 +52,7 @@ export declare const baseConfig: {
  *
  */
 export declare class Module<S extends ModuleState, C extends SettingsConfig<any>, I extends ModuleContract> implements ChildModule<{}> {
+    private initPromise;
     private readonly ID;
     private readonly requestData;
     parent: I["parent"];
@@ -102,11 +103,13 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
     protected onPreInit(): Promise<void>;
     /**
      * A method that gets called to perform initialisation,
-     * should be called only once, after having been added to the program state
-     * (will be called by external setup method, such as in classModuleProvider)
+     * Will be called when a new module connects as well, but will ensure that onInit is called only once
+     * (will be called by external setup method, such as from a module provider)
      * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
+     * @param extraInit Additional method to call on init
+     * @returns Whether or not this was the initial reload
      */
-    init(fromReload: boolean): Promise<void>;
+    init(fromReload: boolean, extraInit?: (fromReload: boolean) => Promise<void>): Promise<boolean>;
     /**
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state

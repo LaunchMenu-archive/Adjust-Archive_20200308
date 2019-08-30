@@ -355,7 +355,9 @@ export class LocationView extends createModuleView(LocationModule) {
     protected renderView(): JSX.Element {
         // Only render the top most module
         const content = this.state.modules.map((module, index) => (
-            <ChildBox display={index == 0 ? "block" : "none"}>{module}</ChildBox>
+            <ChildBox display={index == 0 ? "block" : "none"} key={module.props.moduleID}>
+                {module}
+            </ChildBox>
         ));
 
         return (

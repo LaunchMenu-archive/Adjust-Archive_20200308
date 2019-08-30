@@ -18,7 +18,7 @@ export declare class RequestPathPattern {
      * @param pattern - The pattern to compare this pattern to
      * @returns The priority
      */
-    comparePriority(pattern: RequestPathPattern): 1 | -1 | 0;
+    comparePriority(pattern: RequestPathPattern): 0 | 1 | -1;
     /**
      * Returns the ModulePath data spacified
      * @param index The index of the ModulePath to retrieve

@@ -15,5 +15,9 @@ export type SettingNumberParent = SettingNumberContract["parent"];
  * A type for simple numeric setting inputs
  */
 export const SettingNumberType = Registry.createContractID<SettingNumberContract>(
-    __filename
+    __filename,
+    {
+        name: "number",
+        section: "settings.input",
+    }
 );

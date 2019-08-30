@@ -6,7 +6,8 @@ import { ReactNode, CSSProperties, DOMAttributes } from "react";
  */
 export declare const domAttributes: {
     children: boolean;
-    className: boolean;
+    className: (out: AnyProps, value: string) => void;
+    class: (out: AnyProps, value: string) => void;
     elRef: string;
     style: boolean;
     draggable: boolean;
@@ -17,6 +18,7 @@ export declare const domAttributes: {
 export declare type DomAttributes = {
     children?: ReactNode;
     className?: string;
+    class?: string;
     style?: CSSProperties;
     draggable?: boolean;
     elRef?: (element: HTMLElement) => void;

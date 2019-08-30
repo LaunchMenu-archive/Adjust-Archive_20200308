@@ -1,4 +1,5 @@
 import {ModuleContract} from "../../module/_types/moduleContract";
+import {ContractIDDetails} from "./contractDetails";
 
 /**
  * The contract identifier type, which stores the contract type
@@ -6,6 +7,9 @@ import {ModuleContract} from "../../module/_types/moduleContract";
 export type ContractID<T extends ModuleContract> = {
     // The actual identifier for the contract
     ID: string;
+
+    // Details about the contract
+    details: ContractIDDetails;
 
     // A way of obtaining the ID from the contract
     toString: () => string;

@@ -12,7 +12,7 @@ export class ViewCache {
     protected cacheSetCount = 10;
 
     // The cache to store data in
-    protected cache: {[setName: string]: ParameterizedModuleViewState}[] = [];
+    protected cache: {[setName: string]: ParameterizedModuleViewState}[] = [{}];
 
     /**
      * Adds a view's state to the cache

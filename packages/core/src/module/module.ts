@@ -65,6 +65,9 @@ export class Module<
     C extends SettingsConfig<any>,
     I extends ModuleContract
 > implements ChildModule<{}> {
+    // Init
+    private initPromise: Promise<boolean>;
+
     // ID
     private readonly ID: ModuleID;
 
@@ -198,12 +201,30 @@ export class Module<
 
     /**
      * A method that gets called to perform initialisation,
-     * should be called only once, after having been added to the program state
-     * (will be called by external setup method, such as in classModuleProvider)
+     * Will be called when a new module connects as well, but will ensure that onInit is called only once
+     * (will be called by external setup method, such as from a module provider)
      * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
+     * @param extraInit Additional method to call on init
+     * @returns Whether or not this was the initial reload
      */
-    public async init(fromReload: boolean): Promise<void> {
-        await this.onInit(fromReload);
+    public async init(
+        fromReload: boolean,
+        extraInit: (fromReload: boolean) => Promise<void> = () => Promise.resolve()
+    ): Promise<boolean> {
+        // Don't call init again if it already was
+        if (this.initPromise) return this.initPromise.then(() => false);
+
+        // Initialise, and save the promise
+        return (this.initPromise = new Promise(async resolve => {
+            // Call any higher level init methods
+            await extraInit(fromReload);
+
+            // Call the module's on init method
+            await this.onInit(fromReload);
+
+            // Resolve the promise
+            resolve(true);
+        }));
     }
     /**
      * A method that gets called to perform any initialization,

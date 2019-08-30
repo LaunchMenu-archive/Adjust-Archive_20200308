@@ -24,6 +24,8 @@ class RegistrySingleton {
         this.collectionFolders = {
             default: path_1.default.join(process.cwd(), "dist", "modules"),
         };
+        // Stores all contract types
+        this.contractIDs = [];
         // A mutual excluder to make sure the previous set of modules is retrieved before handling the next set
         this.excluder = new AsyncMutualExcluder_1.AsyncMutualExcluder();
         // Today I had sandwiches for breakfast -SpaceWalker 18/6/2019
@@ -52,13 +54,10 @@ class RegistrySingleton {
         // Return the retrieved modules
         return modules;
     }
-    // Module provider methods
-    /**
-     * Retrieves all the providers for the given request
-     * @param request The request to retrieve the providers for
-     * @returns A list of module providers in sorted order from highest to lowest priority
-     */
     async getProviders(request) {
+        // Returns all providers if there is no request
+        if (!request)
+            return this.moduleProviders;
         // Retrieve the interfaceID
         const interfaceID = request.type;
         // Get all providers for this interface
@@ -143,14 +142,25 @@ class RegistrySingleton {
     /**
      * Creates a unique ID for the contract
      * @param location The location of the contract in string form (use __filename), should be unique
+     * @param details Any display information to show the user
      * @returns An contract ID for recognizing classes using the contract
      */
-    createContractID(location) {
-        return {
+    createContractID(location, details) {
+        const contractID = {
             ID: location,
+            details: Object.assign({ name: location.split(path_1.default.sep).pop(), description: "", icon: "", section: "" }, details),
             toString: () => location,
             " ": null,
         };
+        this.contractIDs.push(contractID);
+        return contractID;
+    }
+    /**
+     * Retrieves all contract IDs that are registered
+     * @returns The registered contract IDs
+     */
+    getContractIDs() {
+        return this.contractIDs;
     }
     // Module loading related methods
     /**

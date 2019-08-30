@@ -69,7 +69,7 @@ describe("ModuleClassCreator", () => {
 
             expect(OurImplementation.getConfig()).toEqual({
                 version: "0.0.5",
-                initialState: {
+                state: {
                     val: "hello",
                     isStopping: false,
                     isStopped: false,
@@ -131,7 +131,7 @@ describe("ModuleClassCreator", () => {
 
             expect(ExtendsOurImplementation.getConfig()).toEqual({
                 version: "0.0.2",
-                initialState: {
+                state: {
                     val: "hello",
                     category: {
                         val: 7,

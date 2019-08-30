@@ -5,7 +5,7 @@ export type ModuleDetails = {
     /** An icon to represent the module with */
     icon?: string | JSX.Element;
     /** The display name of the module */
-    name: string | JSX.Element;
+    name: string;
     /** A description of the module */
     description?: string | JSX.Element;
     /** The section that this module should appear in, in the the index of the settings */

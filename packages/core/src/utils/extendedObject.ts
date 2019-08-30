@@ -356,6 +356,48 @@ export class ExtendedObject extends Object {
     }
 
     /**
+     * Sets the value at the given path of the given object
+     * @param obj The object to set the value at
+     * @param path The path at which the value should be stored, E.G. `field`, `some.path.field`
+     * @param value The actual value to set
+     * @returns A reference to the passed object
+     */
+    public static setField<T extends object>(
+        obj: T,
+        path: string | string[],
+        value: any
+    ): T {
+        // Normalize the path
+        if (!(path instanceof Array)) path = path.split(".");
+        else path = path.concat(); // Make a copy
+
+        // Get the final field
+        const field = path.pop();
+        if (!field || field.length == 0) return value;
+
+        // Go through all but the last part to retrieve the parent
+        let parent: object = obj;
+        while (path.length > 0 && typeof parent == "object") {
+            // Get the field to retrieve
+            const field = path.shift();
+
+            // If the field is an empty string skip it
+            if (field.length == 0) continue;
+
+            // Get the field if present and an object
+            if (parent[field] && parent[field] instanceof Object) parent = parent[field];
+            // Or create it
+            else parent = parent[field] = {};
+        }
+
+        // Set the value on the parent
+        if (parent) parent[field] = value;
+
+        // Return the resulting object
+        return obj;
+    }
+
+    /**
      * Gets the value at the given path of the given object
      * @param obj The object to retrieve the path from
      * @param path The path to return the value for in object, E.G. `field`, `some.path.field`

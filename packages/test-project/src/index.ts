@@ -8,7 +8,7 @@ import {
     ProgramState,
 } from "@adjust/gui";
 import {ContractID} from "@adjust/gui/types";
-import {LocationManagerType} from "@adjust/gui/modules";
+import {LocationManagerType, SettingsManagerType} from "@adjust/gui/modules";
 import {TestType} from "./modules/test/test.type";
 import {SingletonParentType} from "./modules/singletonTest/singletonParent/singletonParent.type";
 import {SingletonType} from "./modules/singletonTest/singleton/singleton.type";
@@ -38,11 +38,16 @@ import {SingletonType} from "./modules/singletonTest/singleton/singleton.type";
             openView: true,
             data: {count: 1},
         });
-        Registry.createRoot({type: TestType, openView: true}).then(root => {
+        Registry.createRoot({type: SettingsManagerType, openView: true}).then(root => {
             setTimeout(() => {
-                root.doSomething("3");
+                root.openView();
             }, 2000);
         });
+        // Registry.createRoot({type: TestType, openView: true}).then(root => {
+        //     setTimeout(() => {
+        //         root.doSomething("3");
+        //     }, 2000);
+        // });
     } else if (test == 4) {
         Registry.createRoot({
             type: SingletonParentType,

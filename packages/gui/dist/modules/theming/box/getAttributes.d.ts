@@ -8,4 +8,4 @@ import { AnyProps } from "./_types/anyProps";
  */
 export declare function getAttribute(props: AnyProps, attributes: {
     [attribute: string]: string | boolean | ((props: AnyProps, value: any) => void);
-} | ((attribute: string) => string | boolean | ((props: AnyProps, value: any) => void)), getValue: (value: any) => any): AnyProps;
+} | ((attribute: string) => string | boolean | ((props: AnyProps, value: any) => void)), getValue: (value: any, key: string, outProps: AnyProps) => any): AnyProps;

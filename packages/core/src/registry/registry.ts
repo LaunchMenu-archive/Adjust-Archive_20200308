@@ -17,6 +17,7 @@ import {SettingsManager} from "../storage/settings/settingsManager";
 import {PackageRetriever} from "../utils/packageRetriever";
 import {Package} from "../utils/_types/package";
 import {AsyncMutualExcluder} from "../utils/async/AsyncMutualExcluder";
+import {ContractIDDetails} from "./_types/contractDetails";
 
 /**
  * Keeps track of all modules classes and module providers
@@ -31,6 +32,9 @@ export class RegistrySingleton {
     protected collectionFolders: {[collectionName: string]: string} = {
         default: Path.join(process.cwd(), "dist", "modules"),
     };
+
+    // Stores all contract types
+    protected contractIDs: ContractID<any>[] = [];
 
     // A mutual excluder to make sure the previous set of modules is retrieved before handling the next set
     protected excluder = new AsyncMutualExcluder();
@@ -91,9 +95,29 @@ export class RegistrySingleton {
      * @param request The request to retrieve the providers for
      * @returns A list of module providers in sorted order from highest to lowest priority
      */
-    protected async getProviders<M extends ModuleContract>(
+    public async getProviders<M extends ModuleContract>(
         request: NormalizedRequest<M>
-    ): Promise<ModuleProvider<M>[]> {
+    ): Promise<ModuleProvider<M>[]>;
+
+    /**
+     * Retrieves all the providers
+     * @returns An object with all request types and its providers
+     */
+    public async getProviders<M extends ModuleContract>(): Promise<{
+        [interfaceID: string]: ModuleProvider<M>[];
+    }>;
+
+    public async getProviders<M extends ModuleContract>(
+        request?: NormalizedRequest<M>
+    ): Promise<
+        | ModuleProvider<M>[]
+        | {
+              [interfaceID: string]: ModuleProvider<M>[];
+          }
+    > {
+        // Returns all providers if there is no request
+        if (!request) return this.moduleProviders;
+
         // Retrieve the interfaceID
         const interfaceID = request.type;
 
@@ -193,16 +217,37 @@ export class RegistrySingleton {
     /**
      * Creates a unique ID for the contract
      * @param location The location of the contract in string form (use __filename), should be unique
+     * @param details Any display information to show the user
      * @returns An contract ID for recognizing classes using the contract
      */
     public createContractID<M extends ModuleContract = null>(
-        location: string & (IsContractValid<M, string>)
+        location: string & (IsContractValid<M, string>),
+        details?: ContractIDDetails
     ): ContractID<M> {
-        return {
+        const contractID = {
             ID: location,
+            details: {
+                name: location.split(Path.sep).pop(),
+                description: "",
+                icon: "",
+                section: "",
+                ...details,
+            },
             toString: () => location,
             " ": null as M,
         };
+
+        this.contractIDs.push(contractID);
+
+        return contractID;
+    }
+
+    /**
+     * Retrieves all contract IDs that are registered
+     * @returns The registered contract IDs
+     */
+    public getContractIDs(): ContractID<any>[] {
+        return this.contractIDs;
     }
 
     // Module loading related methods

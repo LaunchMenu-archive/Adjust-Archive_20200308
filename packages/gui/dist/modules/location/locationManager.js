@@ -29,7 +29,7 @@ exports.config = core_1.createConfig({
  */
 class LocationManagerModule extends core_1.createModule(exports.config, locationAncestor_1.default) {
     /** @override */
-    async onInit(fromReload) {
+    async onPreInit() {
         registry_1.Registry.addProvider(new core_1.InstanceModuleProvider(locationManager_type_1.LocationManagerType, this, () => 2));
     }
     /**

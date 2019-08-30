@@ -73,6 +73,9 @@ export class InstanceModuleProvider<
             // Inform the module of a newly made connection
             this.connectionListener(parentProxy as any);
 
+            // Call module initialisation now the connection has completed (will wait for init to complete)
+            await this.module.init(false);
+
             // Also add the reference the other way around
             parentProxy.notifyChildAdded(moduleProxy);
         }

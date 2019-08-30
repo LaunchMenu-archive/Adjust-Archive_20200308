@@ -100,16 +100,22 @@ export abstract class Module extends coreCreateModule(baseConfig) {
     protected locationManager: LocationManager;
 
     /** @override */
-    public async init(fromReload: boolean): Promise<void> {
-        await super.init(fromReload);
+    public async init(
+        fromReload: boolean,
+        extraInit: (fromReload: boolean) => Promise<void> = () => Promise.resolve()
+    ): Promise<boolean> {
+        return super.init(fromReload, async () => {
+            // Open the module if it's requested to do so
+            if (this.getRequest().openView) this.openViews();
 
-        // Open the module if it's requested to do so
-        if (this.getRequest().openView) this.openViews();
+            // Wait for any passed init method
+            await extraInit(fromReload);
+        });
     }
 
     /** @override */
     public async stop(): Promise<void> {
-        super.stop();
+        await super.stop();
 
         // Close the module if it was request to open them
         if (this.getRequest().openView) this.closeViews();

@@ -2,6 +2,7 @@ export declare type CssDisplay = "inline" | "block" | "contents" | "flex" | "gri
 export declare type CssPosition = "static" | "absolute" | "fixed" | "relative" | "sticky" | "initial" | "inherit";
 export declare type CssVerticalAlign = "baseline" | "bottom" | "inherit" | "initial" | "middle" | "sub" | "super" | "text-bottom" | "text-top" | "top" | "unset";
 export declare type CssOverflow = "visible" | "hidden" | "scroll" | "auto" | "initial" | "inherit";
+export declare type CssBorderStyle = "none" | "hidden" | "dotted" | "dashed" | "solid" | "double" | "groove" | "ridge" | "inset" | "outset" | "initial" | "inherit";
 export declare type CssFlexDirection = "row" | "row-reverse" | "column" | "column-reverse";
 export declare type CssFlexWrap = "nowrap" | "wrap" | "wrap-reverse";
 export declare type CssJustifyContent = "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly";

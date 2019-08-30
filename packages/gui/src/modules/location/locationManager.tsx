@@ -51,7 +51,7 @@ export default class LocationManagerModule
     extends createCoreModule(config, LocationAncestorModule)
     implements LocationManager {
     /** @override */
-    protected async onInit(fromReload: boolean): Promise<void> {
+    protected async onPreInit(): Promise<void> {
         Registry.addProvider(
             new InstanceModuleProvider(LocationManagerType, this, () => 2)
         );

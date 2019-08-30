@@ -12,7 +12,7 @@ function getAttribute(props, attributes, getValue) {
         const css = attributes instanceof Function ? attributes(key) : attributes[key];
         if (css) {
             // Obtain the value from the theme
-            const value = getValue(props[key]);
+            const value = getValue(props[key], key, out);
             // Assigns the value to the props
             if (typeof css == "string") {
                 out[css] = value;

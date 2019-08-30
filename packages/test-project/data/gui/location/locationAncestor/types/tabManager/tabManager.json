@@ -6,7 +6,9 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "path": ["63fO-nyeo"]
+                    "path": [
+                        "63fO-nyeo"
+                    ]
                 }
             },
             "ID": 1,
@@ -23,12 +25,17 @@
                 "type": "data",
                 "priority": 1,
                 "data": {
-                    "path": ["AFsO-IsUD"]
+                    "path": [
+                        "AFsO-IsUD"
+                    ]
                 }
             },
             "ID": 3,
             "data": {
                 "tabs": [
+                    {
+                        "ID": "poop"
+                    },
                     {
                         "ID": "13Y4-NOvD"
                     },

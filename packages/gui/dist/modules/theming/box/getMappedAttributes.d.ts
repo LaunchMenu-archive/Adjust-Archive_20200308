@@ -1,5 +1,5 @@
 import { AnyProps } from "./_types/anyProps";
-import { CssDisplay, CssPosition, CssFlexDirection, CssJustifyContent, CssAlignItems, CssAlignContent, CssAlignSelf, CssVerticalAlign, CssOverflow } from "./_types/cssTypes";
+import { CssDisplay, CssPosition, CssFlexDirection, CssJustifyContent, CssAlignItems, CssAlignContent, CssAlignSelf, CssVerticalAlign, CssOverflow, CssBorderStyle } from "./_types/cssTypes";
 /**
  * All the standard attributes, mapped to either true if the css camelcase name is the same,
  * or a string if it's different
@@ -12,6 +12,11 @@ export declare const mappedAttributes: {
     overflow: boolean;
     overflowX: boolean;
     overflowY: boolean;
+    borderStyle: boolean;
+    borderTopStyle: boolean;
+    borderRightStyle: boolean;
+    borderBottomStyle: boolean;
+    borderLeftStyle: boolean;
     verticalAlign: boolean;
     flexDirection: boolean;
     flexWrap: boolean;
@@ -36,6 +41,11 @@ export declare type MappedAttributes = {
     overflow?: CssOverflow;
     overflowX?: CssOverflow;
     overflowY?: CssOverflow;
+    borderStyle?: CssBorderStyle;
+    borderTopStyle?: CssBorderStyle;
+    borderRightStyle?: CssBorderStyle;
+    borderBottomStyle?: CssBorderStyle;
+    borderLeftStyle?: CssBorderStyle;
     verticalAlign?: CssVerticalAlign;
     flexDirection?: CssFlexDirection;
     flexWrap?: CssFlexDirection;

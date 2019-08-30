@@ -103,6 +103,14 @@ export declare class ExtendedObject extends Object {
      */
     static reduce<O extends object, V = any>(obj: O, func: (result: V, value: Valueof<O>, key: string, path: string) => V, initial?: V, recurse?: ((key: string, value: Valueof<O>, path: string) => boolean) | boolean, path?: string): V;
     /**
+     * Sets the value at the given path of the given object
+     * @param obj The object to set the value at
+     * @param path The path at which the value should be stored, E.G. `field`, `some.path.field`
+     * @param value The actual value to set
+     * @returns A reference to the passed object
+     */
+    static setField<T extends object>(obj: T, path: string | string[], value: any): T;
+    /**
      * Gets the value at the given path of the given object
      * @param obj The object to retrieve the path from
      * @param path The path to return the value for in object, E.G. `field`, `some.path.field`

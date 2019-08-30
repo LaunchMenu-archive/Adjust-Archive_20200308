@@ -18,6 +18,7 @@ import {ModuleState} from "./moduleState";
 import {ModuleReference} from "../moduleID";
 import {SettingsConfigData} from "../../storage/settings/_types/settingsConfigData";
 import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
+import {TransformModuleViewState} from "./moduleStateTransformer";
 
 /**
  * Extracts the request data type from a given module
@@ -36,27 +37,6 @@ export type ExtractModuleData<M extends ParameterizedModule> = M extends Module<
 export type ExtractModuleViewState<
     V extends {state: any}
 > = V["state"] extends ModuleViewState<infer S, any, any> ? S : void;
-
-/**
- * Transforms the module state to the format it will be in the view;
- * -Replaces promises by its values
- * -Replaces modules and module references by JSX elements
- */
-export type TransformModuleViewState<S> = S extends ModuleState
-    ? {
-          [P in keyof S]: S[P] extends Promise<infer T>
-              ? TransformModuleViewState<T>
-              : S[P] extends Array<infer T>
-              ? Array<TransformModuleViewState<T>>
-              : TransformModuleViewState<S[P]>;
-      }
-    : S extends ParameterizedModule
-    ? JSX.Element
-    : S extends ChildModule<{}>
-    ? JSX.Element
-    : S extends ModuleReference
-    ? JSX.Element
-    : S;
 
 /**
  * Filters out any methods from a module view that should be overwritten
@@ -79,10 +59,12 @@ export type ExtendedModuleView<
                   prevState: DeepReadonly<
                       S &
                           ExtractModuleViewState<V> &
-                          ModuleViewState<
-                              S & ExtractModuleState<M>,
-                              ExtractModuleSettings<M>,
-                              ExtractModuleData<M>
+                          TransformModuleViewState<
+                              ModuleViewState<
+                                  S & ExtractModuleState<M>,
+                                  ExtractModuleSettings<M>,
+                                  ExtractModuleData<M>
+                              >
                           >
                   >,
                   props: ModuleViewProps<M>
@@ -98,6 +80,8 @@ export type ExtendedModuleView<
         M,
         ExtractModuleData<M>
     >;
+
+// TODO: make sure that V doesn't indicate renderView isn't abstract in ^, it it still is
 
 /**
  * Creates a new module constructor type, based on a module config and a module constructor type

@@ -19,14 +19,14 @@ export function getAttribute(
         | ((
               attribute: string
           ) => string | boolean | ((props: AnyProps, value: any) => void)),
-    getValue: (value: any) => any
+    getValue: (value: any, key: string, outProps: AnyProps) => any
 ): AnyProps {
     const out = {};
     Object.keys(props).forEach(key => {
         const css = attributes instanceof Function ? attributes(key) : attributes[key];
         if (css) {
             // Obtain the value from the theme
-            const value = getValue(props[key]);
+            const value = getValue(props[key], key, out);
 
             // Assigns the value to the props
             if (typeof css == "string") {

@@ -12,5 +12,9 @@ export type SettingColorParent = SettingColorContract["parent"];
  * A type for simple numeric setting inputs
  */
 export const SettingColorType = Registry.createContractID<SettingColorContract>(
-    __filename
+    __filename,
+    {
+        name: "color",
+        section: "settings.input",
+    }
 );

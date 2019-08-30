@@ -4,7 +4,7 @@ export * from "@adjust/core";
 export * from "@emotion/core";
 export {React} from "./React";
 
-// Reolace some standard adjust classes by our extended versions
+// Replace some standard adjust classes by our extended versions
 export {Registry} from "./registry/registry";
 export {Module} from "./module/module";
 export {ModuleClassCreator, createModule} from "./module/moduleClassCreator";

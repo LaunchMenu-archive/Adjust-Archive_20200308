@@ -52,6 +52,20 @@ export type CssOverflow =
     | "initial"
     | "inherit";
 
+export type CssBorderStyle =
+    | "none"
+    | "hidden"
+    | "dotted"
+    | "dashed"
+    | "solid"
+    | "double"
+    | "groove"
+    | "ridge"
+    | "inset"
+    | "outset"
+    | "initial"
+    | "inherit";
+
 export type CssFlexDirection = "row" | "row-reverse" | "column" | "column-reverse";
 export type CssFlexWrap = "nowrap" | "wrap" | "wrap-reverse";
 export type CssJustifyContent =

@@ -1,1 +1,1 @@
-{"version":3,"file":"SettingBoolean.type.js","sourceRoot":"src/","sources":["storage/settings/settingInputTypes/SettingBoolean.type.ts"],"names":[],"mappings":";AACA,yDAAoD;AASpD;;GAEG;AACU,QAAA,kBAAkB,GAAG,mBAAQ,CAAC,gBAAgB,CACvD,UAAU,CACb,CAAC"}
+{"version":3,"file":"SettingBoolean.type.js","sourceRoot":"src/","sources":["storage/settings/settingInputTypes/SettingBoolean.type.ts"],"names":[],"mappings":";AACA,yDAAoD;AASpD;;GAEG;AACU,QAAA,kBAAkB,GAAG,mBAAQ,CAAC,gBAAgB,CACvD,UAAU,EACV;IACI,IAAI,EAAE,SAAS;IACf,OAAO,EAAE,gBAAgB;CAC5B,CACJ,CAAC"}

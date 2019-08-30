@@ -6,7 +6,18 @@ const getAttributes_1 = require("./getAttributes");
  */
 exports.domAttributes = {
     children: true,
-    className: true,
+    className: (out, value) => {
+        if (out["className"])
+            out["className"] += " " + value;
+        else
+            out["className"] = value;
+    },
+    class: (out, value) => {
+        if (out["className"])
+            out["className"] += " " + value;
+        else
+            out["className"] = value;
+    },
     elRef: "ref",
     style: true,
     draggable: true,

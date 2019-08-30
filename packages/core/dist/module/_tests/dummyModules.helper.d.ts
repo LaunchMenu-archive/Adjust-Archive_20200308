@@ -23,7 +23,7 @@ declare const DummyModule_base: import("../_types/extendedModule").ExtendedModul
     isStopped: boolean;
 }, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleContract>>>;
 export declare class DummyModule extends DummyModule_base implements dummyInterface {
-    static customConstruct<S extends ModuleState, C extends SettingsConfig, I extends ModuleContract>(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
+    static customConstruct<S extends ModuleState, C extends SettingsConfig, I extends ModuleContract>(request: ModuleRequestData<I>, moduleID: ModuleID, state: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
     test(text: string): Promise<string>;
 }
 export default DummyModule;
