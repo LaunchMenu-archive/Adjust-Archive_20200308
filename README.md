@@ -20,186 +20,191 @@ Another benefit is that if your application provides multiple ways of doing some
 
 Below is an example of the 3 parts/steps for module communication
 <details>
-    <summary>The contract, written in typescript: MyService.type.ts</summary>
+<summary>The contract, written in typescript: MyService.type.ts</summary>
 
-    ```ts
-    import {Registry} from "@adjust/core";
-    import {ChildModule, ParentModule} from "@adjust/core/types";
+```ts
+import {Registry} from "@adjust/core";
+import {ChildModule, ParentModule} from "@adjust/core/types";
 
-    export type MyService = ChildModule<{
+export type MyService = ChildModule<{
+    /**
+    * This will do something
+    * @param info Info on what to do
+    * @returns A promise with some result, 
+    *      must always be a promise to keep implementations open ended 
+    *      (Implementation might want to use user interaction)
+    */
+    doSomething(info: string): Promise<void>;
+}>;
+export type MyServiceParent = ParentModule<{
+    /**
+    * Some callback that we expect to exist on the module that created an instance of MyService
+    * This alows for returning of data to the parent at any time if required
+    * This is prefered over callback passing as arguments, for future expandability
+    * @param someData The data that we want the parent to receive
+    */
+    someCallback(someData: number): Promise<void>;
+}>;
+export type MyServiceContract = {
+    parent: MyServiceParent;
+    child: MyService;
+    /**
+    * Any data that we want our module to receive upon instanciation
+    */
+    data: {
         /**
-        * This will do something
-        * @param info Info on what to do
-        * @returns A promise with some result, 
-        *      must always be a promise to keep implementations open ended 
-        *      (Implementation might want to use user interaction)
+        * The name of our MyService instance
         */
-        doSomething(info: string): Promise<void>;
-    }>;
-    export type MyServiceParent = ParentModule<{
-        /**
-        * Some callback that we expect to exist on the module that created an instance of MyService
-        * This alows for returning of data to the parent at any time if required
-        * This is prefered over callback passing as arguments, for future expandability
-        * @param someData The data that we want the parent to receive
-        */
-        someCallback(someData: number): Promise<void>;
-    }>;
-    export type MyServiceContract = {
-        parent: MyServiceParent;
-        child: MyService;
-        /**
-        * Any data that we want our module to receive upon instanciation
-        */
-        data: {
-            /**
-            * The name of our MyService instance
-            */
-            name: string;
-        };
+        name: string;
     };
+};
 
-    // Export the contract as a "Type", which is essentially a runtime identifier for the contract 
-    // (Module types shouldn't be confused with typescript types)
-    export const MyServiceType = Registry.createContractID<MyServiceContract>(
-        // The location of the file, serving as a unique identifier
-        __filename, 
-        // Any data about the contract, which can be displayed to the user
-        {
-            name: "MyService",
-            description: "Example contract",
-        }
-    );
-    ```
+// Export the contract as a "Type", which is essentially a runtime identifier for the contract 
+// (Module types shouldn't be confused with typescript types)
+export const MyServiceType = Registry.createContractID<MyServiceContract>(
+    // The location of the file, serving as a unique identifier
+    __filename, 
+    // Any data about the contract, which can be displayed to the user
+    {
+        name: "MyService",
+        description: "Example contract",
+    }
+);
+```
+
 </details>
+
 <details>
-    <summary>An implementation of the contract: MyService.ts</summary>
+<summary>An implementation of the contract: MyService.ts</summary>
 
-    ```ts
-    import {createConfig, createModule} from "@adjust/core";
-    import {MyServiceType, MyService} from "./MyService.type";
+```ts
+import {createConfig, createModule} from "@adjust/core";
+import {MyServiceType, MyService} from "./MyService.type";
 
-    // Declare a configuration for your module (Any possibly export it for extendability purposes)
-    export const myServiceConfig = createConfig({
-        // Some data about the module, which can be displayed to the user
-        details: {
-            name: "MyService",
-            description: "Example module",
-        },
-        // Declares a state and its initial values, very similar to a react state
-        state: {
-            info: ""
-        },
-        // Declares settings, which will be described in detail in another section
-        settings: {},
-        // Declares what interface this module implements, such that the Registry can read it
-        type: MyServiceType,
-    });
+// Declare a configuration for your module (Any possibly export it for extendability purposes)
+export const myServiceConfig = createConfig({
+    // Some data about the module, which can be displayed to the user
+    details: {
+        name: "MyService",
+        description: "Example module",
+    },
+    // Declares a state and its initial values, very similar to a react state
+    state: {
+        info: ""
+    },
+    // Declares settings, which will be described in detail in another section
+    settings: {},
+    // Declares what interface this module implements, such that the Registry can read it
+    type: MyServiceType,
+});
 
-    // Create the actual implementation itself
-    export class MyServiceModule extends createModule(myServiceConfig) implements MyService {
-        /** @override */
-        public async onInit(fromReload: false): Promise<void> {
-            // This method is called on new instances when they are created
-            // Here we can do any processing that has to happen
-            //     before the parent calls methods on this instance
-            // fromReload is present for have future quick module reloads during development,
-            //     in which case a module's previous state is retained
+// Create the actual implementation itself
+export class MyServiceModule extends createModule(myServiceConfig) implements MyService {
+    /** @override */
+    public async onInit(fromReload: false): Promise<void> {
+        // This method is called on new instances when they are created
+        // Here we can do any processing that has to happen
+        //     before the parent calls methods on this instance
+        // fromReload is present for have future quick module reloads during development,
+        //     in which case a module's previous state is retained
 
-            if (!fromReload)
-                // Essentially react's setState, except that it performs a deep merge
-                //     and changes are made synchronously
-                this.changeState({
-                    // We can use getData to retrieve the data passed with the request
-                    info: this.getData().name + " is my name"
-                });
-        }
-
-        /** @override */
-        public async doSomething(info: string): Promise<void> {
+        if (!fromReload)
+            // Essentially react's setState, except that it performs a deep merge
+            //     and changes are made synchronously
             this.changeState({
-                info
+                // We can use getData to retrieve the data passed with the request
+                info: this.getData().name + " is my name"
+            });
+    }
+
+    /** @override */
+    public async doSomething(info: string): Promise<void> {
+        this.changeState({
+            info
+        });
+
+        // Invoke some method on the parent, using the current state
+        this.getParent().someCallback(this.state.info.length);
+    }
+}
+
+// Export the module as a default, so the registry can read it 
+//     (named exports are better for bundling though, which is why this example includes both)
+export default MyServiceModule;
+```
+
+<details>
+<summary>We may omit some TS declarations, but it's prefered to keep them</summary>
+
+```ts
+export class MyServiceModule extends createModule(myServiceConfig) {
+    async onInit() {
+        // etc
+    }
+
+    async doSomething(info) {
+        // etc
+    }
+}
+```
+
+</details>
+</details>
+
+<details>
+<summary>Another module using our contract: SomeModule.ts</summary>
+
+```ts
+import {createConfig, createModule} from "@adjust/core";
+import {MyServiceType, MyService} from "./MyService.type";
+// Just pretend this type exists
+import {SomeModuleType, SomeModule} from "./SomeModule.type";
+
+export const someModuleConfig = createConfig({
+    // Use typescript's 'as' to specify what type of variables we are dealing with
+    state: {
+        dependency: null as MyService
+        number: 0,
+    },
+    settings: {},
+    type: SomeModuleType,
+});
+
+export class SomeModuleModule extends createModule(someModuleConfig) implements SomeModule {
+    /** @override */
+    public async onInit(fromReload: false): Promise<void> {
+        if (!fromReload) {
+            // Indirectly use the registry to get a module that implements the contract
+            // This request can also prompt the user to choose a specific module if there are options
+            const dependency = await this.request({
+                type: MyServiceType,
+                data: {
+                    name: "John",
+                }
             });
 
-            // Invoke some method on the parent, using the current state
-            this.getParent().someCallback(this.state.info.length);
+            // Store the instance for later usage
+            this.changeState({
+                dependency: dependency
+            });
+
+            // Use the dependency
+            await dependency.doSomething("some info");
         }
     }
 
-    // Export the module as a default, so the registry can read it 
-    //     (named exports are better for bundling though, which is why this example includes both)
-    export default MyServiceModule;
-    ```
-
-    <details>
-        <summary>We may omit some TS declarations, but it's prefered to keep them</summary>
-
-        ```ts
-        export class MyServiceModule extends createModule(myServiceConfig) {
-            async onInit() {
-                // etc
-            }
-
-            async doSomething(info) {
-                //etc
-            }
-        }
-        ```
-    </details>
-</details>
-<details>
-    <summary>Another module using our contract: SomeModule.ts</summary>
-
-    ```ts
-    import {createConfig, createModule} from "@adjust/core";
-    import {MyServiceType, MyService} from "./MyService.type";
-    // Just pretend this type exists
-    import {SomeModuleType, SomeModule} from "./SomeModule.type";
-
-    export const someModuleConfig = createConfig({
-        // Use typescript's 'as' to specify what type of variables we are dealing with
-        state: {
-            dependency: null as MyService
-            number: 0,
-        },
-        settings: {},
-        type: SomeModuleType,
-    });
-
-    export class SomeModuleModule extends createModule(someModuleConfig) implements SomeModule {
-        /** @override */
-        public async onInit(fromReload: false): Promise<void> {
-            if (!fromReload) {
-                // Indirectly use the registry to get a module that implements the contract
-                // This request can also prompt the user to choose a specific module if there are options
-                const dependency = await this.request({
-                    type: MyServiceType,
-                    data: {
-                        name: "John",
-                    }
-                });
-
-                // Store the instance for later usage
-                this.changeState({
-                    dependency: dependency
-                });
-
-                // Use the dependency
-                await dependency.doSomething("some info");
-            }
-        }
-
-        // Implement our half of the contract
-        /** @override */
-        public async someCallback(someData: number): Promise<void> {
-            // Now we can do whatever we want with this data
-            this.changeState({
-                number: someData
-            });
-        }
+    // Implement our half of the contract
+    /** @override */
+    public async someCallback(someData: number): Promise<void> {
+        // Now we can do whatever we want with this data
+        this.changeState({
+            number: someData
+        });
     }
-    export default SomeModuleModule;
-    ```
+}
+export default SomeModuleModule;
+```
+
 </details>
 
 A realistic example of what such a module could be, is for instance a color picker. But essentially anything that could be seen as providing it's own service, can be a module. Even something as small as just a field displaying a date, since people might want to format dates differently.
@@ -210,61 +215,62 @@ Modules come equipt with a simple, yet extremely powerful system to manage setti
 The Adjust GUI package will come with components to display all the settings in your app, and allow users to change them, such that you don't have to worry about it. Users will be able to change settings for all instances of your module, but also create settings groups that only apply to certain instances. These groups will contain conditions, that can for instance be based on the module's request data, or current state. 
 
 <details>
-    <summary>A simple example of some settings: MyService.ts</summary>
+<summary>A simple example of some settings: MyService.ts</summary>
 
-    ```ts
-    import {
-        createConfig, 
-        createSetting, 
-        createModule, 
-        SettingStringType, 
-        SettingNumberType
-    } from "@adjust/core";
-    import {MyServiceType, MyService} from "./MyService.type";
+```ts
+import {
+    createConfig, 
+    createSetting, 
+    createModule, 
+    SettingStringType, 
+    SettingNumberType
+} from "@adjust/core";
+import {MyServiceType, MyService} from "./MyService.type";
 
-    export const myServiceConfig = createConfig({
-        state: {
-            info: ""
-        },
-        settings: {
-            defaultInfo: createSetting({
-                default: " is my name",
-                type: SettingStringType
-            }),
-            someCategory: {
-                someSetting: createSetting({
-                    default: 3,
-                    type: SettingNumberType
-                })
-            }
-        },
-        type: MyServiceType,
-    });
-
-    // Create the actual implementation itself
-    export class MyServiceModule extends createModule(myServiceConfig) implements MyService {
-        /** @override */
-        public async onInit(fromReload: false): Promise<void> {
-            if (!fromReload)
-                this.changeState({
-                    // Read our setting data
-                    info: this.getData().name + this.settings.defaultInfo
-                });
+export const myServiceConfig = createConfig({
+    state: {
+        info: ""
+    },
+    settings: {
+        defaultInfo: createSetting({
+            default: " is my name",
+            type: SettingStringType
+        }),
+        someCategory: {
+            someSetting: createSetting({
+                default: 3,
+                type: SettingNumberType
+            })
         }
+    },
+    type: MyServiceType,
+});
 
-        /** @override */
-        public async doSomething(info: string): Promise<void> {
+// Create the actual implementation itself
+export class MyServiceModule extends createModule(myServiceConfig) implements MyService {
+    /** @override */
+    public async onInit(fromReload: false): Promise<void> {
+        if (!fromReload)
             this.changeState({
-                info
+                // Read our setting data
+                info: this.getData().name + this.settings.defaultInfo
             });
-
-            // Use our setting data (for whatever reason)
-            this.getParent().someCallback(this.state.info.length + this.settings.someCategory.someSetting);
-        }
     }
 
-    export default MyServiceModule;
-    ```
+    /** @override */
+    public async doSomething(info: string): Promise<void> {
+        this.changeState({
+            info
+        });
+
+        // Use our setting data (for whatever reason)
+        this.getParent().someCallback(this.state.info.length + this.settings.someCategory.someSetting);
+    }
+}
+
+export default MyServiceModule;
+```
+
 </details>
 
 ### MVC
@@ -276,98 +282,100 @@ Within these views, we can make use of any of the request, state or settings dat
 Any references to other modules within the state, will be translated to views of these modules in our view class. Such that we can directly render our dependencies as a part of our GUI.
 
 <details>
-    <summary>A simple example of a module with a view: SomeModule.tsx</summary>
+<summary>A simple example of a module with a view: SomeModule.tsx</summary>
 
-    ```tsx
-    import {createConfig, createModule, createModuleView, WindowManager} from "@adjust/core";
-    import {MyServiceType, MyService} from "./MyService.type";
-    // Just pretend this type exists
-    import {SomeModuleType, SomeModule} from "./SomeModule.type";
+```tsx
+import {createConfig, createModule, createModuleView, WindowManager} from "@adjust/core";
+import {MyServiceType, MyService} from "./MyService.type";
+// Just pretend this type exists
+import {SomeModuleType, SomeModule} from "./SomeModule.type";
 
-    export const someModuleConfig = createConfig({
-        // Use typescript's 'as' to specify what type of variables we are dealing with
-        state: {
-            dependency: null as MyService
-            number: 0,
-            // Add some data for our view's input
-            info: "",
-        },
-        settings: {},
-        type: SomeModuleType,
-    });
+export const someModuleConfig = createConfig({
+    // Use typescript's 'as' to specify what type of variables we are dealing with
+    state: {
+        dependency: null as MyService
+        number: 0,
+        // Add some data for our view's input
+        info: "",
+    },
+    settings: {},
+    type: SomeModuleType,
+});
 
-    export class SomeModuleModule extends createModule(someModuleConfig) implements SomeModule {
-        // The window to show this module in
-        protected window: {ID: string, window: Promise<Electron.BrowserWindow>};
+export class SomeModuleModule extends createModule(someModuleConfig) implements SomeModule {
+    // The window to show this module in
+    protected window: {ID: string, window: Promise<Electron.BrowserWindow>};
 
-        /** @override */
-        public async onInit(fromReload: false): Promise<void> {
-            if (!fromReload) {
-                const dependency = await this.request({
-                    type: MyServiceType,
-                    data: { name: "John" }
-                });
-                this.changeState({ dependency });
-            }
-
-            // Now in order to actually show a view for this module, 
-            //     we will have to create a window to show it in
-            const windowID = Math.round(Math.random()*Math.pow(10, 10)) + ""; // Make sure this is unique
-            const window = await WindowManager.openWindow(windowID, this.getID());
-            window.on("close", ()=>{
-                WindowManager.closeWindow(windowID);
+    /** @override */
+    public async onInit(fromReload: false): Promise<void> {
+        if (!fromReload) {
+            const dependency = await this.request({
+                type: MyServiceType,
+                data: { name: "John" }
             });
-
-            // Possibly store the window for later usage
-            this.window = {
-                ID: windowID, 
-                window,
-            });
+            this.changeState({ dependency });
         }
 
-        /** @override */
-        public async someCallback(someData: number): Promise<void> {
-            this.changeState({
-                number: someData
-            });
-        }
+        // Now in order to actually show a view for this module, 
+        //     we will have to create a window to show it in
+        const windowID = Math.round(Math.random()*Math.pow(10, 10)) + ""; // Make sure this is unique
+        const window = await WindowManager.openWindow(windowID, this.getID());
+        window.on("close", ()=>{
+            WindowManager.closeWindow(windowID);
+        });
 
-        // Add some methods for our view to call
-        /**
-         * Changes the info of our dependency
-         * @param info The new info
-         */
-        public async changeInfo(info: string): Promise<void> {
-            this.changeState({
-                info
-            });
-            this.state.dependency.doSomething(info);
-        }
-    }
-    export default SomeModuleModule;
-
-    // Create a view for our class
-    export class SomeModuleView extends createModuleView(SomeModuleModule) {
-        /** @override */    
-        protected renderView(): JSX.Element {
-            return (<div>
-                <input 
-                    value={this.state.info} 
-                    onChange={(e)=>this.module.changeInfo(e.target.value)}/>
-                
-                Let's render "number", because why not?
-                {this.state.number}
-
-                And render our dependency, assuming it has a view itself:
-                {this.state.dependency}
-            </div>);
-        }
+        // Possibly store the window for later usage
+        this.window = {
+            ID: windowID, 
+            window,
+        });
     }
 
-    // Simply exporting the view is enough, it will be attached by the registry.
-    // But we may also attach it ourselves using SomeModuleModule.setViewClass(SomeModuleView)
-    ```
+    /** @override */
+    public async someCallback(someData: number): Promise<void> {
+        this.changeState({
+            number: someData
+        });
+    }
+
+    // Add some methods for our view to call
+    /**
+     * Changes the info of our dependency
+     * @param info The new info
+     */
+    public async changeInfo(info: string): Promise<void> {
+        this.changeState({
+            info
+        });
+        this.state.dependency.doSomething(info);
+    }
+}
+export default SomeModuleModule;
+
+// Create a view for our class
+export class SomeModuleView extends createModuleView(SomeModuleModule) {
+    /** @override */    
+    protected renderView(): JSX.Element {
+        return (<div>
+            <input 
+                value={this.state.info} 
+                onChange={(e)=>this.module.changeInfo(e.target.value)}/>
+            
+            Let's render "number", because why not?
+            {this.state.number}
+
+            And render our dependency, assuming it has a view itself:
+            {this.state.dependency}
+        </div>);
+    }
+}
+
+// Simply exporting the view is enough, it will be attached by the registry.
+// But we may also attach it ourselves using SomeModuleModule.setViewClass(SomeModuleView)
+```
+
 </details>
+
 Allowing for using functional components and react hooks is also on the todolist, but this might be challenging without compromissing extendability. 
 
 ## GUI package
@@ -386,53 +394,55 @@ Adjust GUI will also come with a "LocationsManager" which will add am elaborate 
 This means that modules will not have to fiddle with managing windows themselves. It will also allow users to customize their GUI themselves, since locations will be stored in the settings.
 
 <details>
-    <summary>A simple example of how a module would declare its location</summary>
+<summary>A simple example of how a module would declare its location</summary>
 
-    ```ts
-    export const someModuleConfig = createConfig({
-        state: {},
-        settings: {},
-        // Define a location with an ID, 
-        //  and give hints on how it should initially appear
-        defineLocation: {
-            ID: "myLocation",
-            hints: {
-                window: {
-                    new: true,
-                    name: "MyWindow"
-                },
-                tab: {
-                    new: true,
-                    ID: "MyTab",
-                },
+```ts
+export const someModuleConfig = createConfig({
+    state: {},
+    settings: {},
+    // Define a location with an ID, 
+    //  and give hints on how it should initially appear
+    defineLocation: {
+        ID: "myLocation",
+        hints: {
+            window: {
+                new: true,
+                name: "MyWindow"
+            },
+            tab: {
+                new: true,
+                ID: "MyTab",
             },
         },
-        type: SomeModuleType,
-    });
-    ```
+    },
+    type: SomeModuleType,
+});
+```
 
-    When we want another module to appear in an already existing location, we can simply pass that location ID as well. If multiple modules share one location, it will simply show the module that last requested focus in this module.
-    
-    ```ts
-    export const someModuleConfig = createConfig({
-        state: {},
-        settings: {},
-        location: "myLocation",
-        type: SomeModuleType,
-    });
-    ```
+When we want another module to appear in an already existing location, we can simply pass that location ID as well. If multiple modules share one location, it will simply show the module that last requested focus in this module.
+
+```ts
+export const someModuleConfig = createConfig({
+    state: {},
+    settings: {},
+    location: "myLocation",
+    type: SomeModuleType,
+});
+```
+
 </details>
+
 <details>
-    <summary>A simple example of how to indicate that you want a requested module's GUI to be rendered in its specified view</summary>
+<summary>A simple example of how to indicate that you want a requested module's GUI to be rendered in its specified view</summary>
 
-    ```ts
-    await this.request({
-        type: SomeModuleType,
-        openView: true,
-    }),
-    ```
+```ts
+await this.request({
+    type: SomeModuleType,
+    openView: true,
+}),
+```
 
-    We would not want to pass `openView: true` if we are planning on embedding the module's GUI in our own GUI.
+We would not want to pass `openView: true` if we are planning on embedding the module's GUI in our own GUI.
 </details>
 
 The default locations will be build up of 3 levels (but additional modules can be added to add levels):
@@ -452,75 +462,78 @@ Modules will be able to use the theme in several ways:
 <details>
     <summary>A Box element</summary>
 
-    ```tsx
-    import {createModuleView} from "@adjust/GUI";
+```tsx
+import {createModuleView} from "@adjust/GUI";
 
-    //...
+//...
 
-    export class SomeModuleView extends createModuleView(SomeModuleModule) {
-        /** @override */    
-        protected renderView(): JSX.Element {
-            return <Box background="primary" margin="l">
-                Some content
-            </Box>;
-        }
+export class SomeModuleView extends createModuleView(SomeModuleModule) {
+    /** @override */    
+    protected renderView(): JSX.Element {
+        return <Box background="primary" margin="l">
+            Some content
+        </Box>;
     }
-    ```
+}
+```
 
-    The box element can take a large number of standard attributes, to apply the theme to. 
-    It will simply render as a div, with the attributes obtained from the theme and applied as css.
+The box element can take a large number of standard attributes, to apply the theme to. 
+It will simply render as a div, with the attributes obtained from the theme and applied as css.
 </details>
+
 <details>
-    <summary>A theme hook</summary>
+<summary>A theme hook</summary>
 
-    ```tsx
-    import {createModuleView, useTheme} from "@adjust/GUI";
-    
-    //...
+```tsx
+import {createModuleView, useTheme} from "@adjust/GUI";
 
-    const SomeReusableComponent:FunctionComponent = ({children}) => {
-        const theme = useTheme();
-        return <div style={{
-            backgroundColor: theme.getColor("primary"), 
-            margin: theme.getSpacing("l")}}>
-            {children}
-        </div>;
+//...
+
+const SomeReusableComponent:FunctionComponent = ({children}) => {
+    const theme = useTheme();
+    return <div style={{
+        backgroundColor: theme.getColor("primary"), 
+        margin: theme.getSpacing("l")}}>
+        {children}
+    </div>;
+}
+
+export class SomeModuleView extends createModuleView(SomeModuleModule) {
+    /** @override */    
+    protected renderView(): JSX.Element {
+        return <SomeReusableComponent>
+            Some content
+        </SomeReusableComponent>;
     }
-
-    export class SomeModuleView extends createModuleView(SomeModuleModule) {
-        /** @override */    
-        protected renderView(): JSX.Element {
-            return <SomeReusableComponent>
-                Some content
-            </SomeReusableComponent>;
-        }
-    }
-    ```
+}
+```
 </details>
+
 <details>
-    <summary>Emotion's callback</summary>
+<summary>Emotion's callback</summary>
 
-    ```tsx
-    import {createModuleView} from "@adjust/GUI";
+```tsx
+import {createModuleView} from "@adjust/GUI";
 
-    //...
+//...
 
-    export class SomeModuleView extends createModuleView(SomeModuleModule) {
-        /** @override */
-        protected renderView(): JSX.Element {
-            return (
-                <div
-                    css={theme => ({
-                        backgroundColor: theme.getColor("primary"),
-                        margin: theme.getSpacing("l"),
-                    })}>
-                    Some content
-                </div>
-            );
-        }
+export class SomeModuleView extends createModuleView(SomeModuleModule) {
+    /** @override */
+    protected renderView(): JSX.Element {
+        return (
+            <div
+                css={theme => ({
+                    backgroundColor: theme.getColor("primary"),
+                    margin: theme.getSpacing("l"),
+                })}>
+                Some content
+            </div>
+        );
     }
-    ```
+}
+```
 </details>
+
 
 ## Typescript
 Adjust heavily makes use of typescript. It uses advanced typescript features in order to give powerful intellisense. 
@@ -535,24 +548,27 @@ Adjust tried (and in my opinion succeeded) to provide this powerfull intellisens
 
 Here are a couple of examples of typescript detecting errors:
 <details>
-    <summary>incorrect setting type</summary>
+<summary>incorrect setting type</summary>
 
-    ![incorrect setting type](/resources/readme/incorrectSettingType.png)
+![incorrect setting type](/resources/readme/incorrectSettingType.png)
 </details>
-<details>
-    <summary>incorrect state type</summary>
 
-    ![incorrect state type](/resources/readme/incorrectStateType.png)
+<details>
+<summary>incorrect state type</summary>
+
+![incorrect state type](/resources/readme/incorrectStateType.png)
 </details>
-<details>
-    <summary>module state in view</summary>
 
-    ![module state in view](/resources/readme/moduleState.png)
+<details>
+<summary>module state in view</summary>
+
+![module state in view](/resources/readme/moduleState.png)
 </details>
-<details>
-    <summary>incorrect module method</summary>
 
-    ![incorrect module method](/resources/readme/incorrectModuleMethod.png)
+<details>
+<summary>incorrect module method</summary>
+
+![incorrect module method](/resources/readme/incorrectModuleMethod.png)
 </details>
 
 ## Current state
