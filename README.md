@@ -1,12 +1,12 @@
-# Adjust
-This is a mono repository for the Adjust Framework. No official version of this framework has been released yet due missing core features which are currently being added.
+# Adjust <!-- omit in toc -->
+This is a mono repository for the Adjust Application Framework. No official version of this framework has been released yet due to missing core features which are currently being added.
 
 ## Index <!-- omit in toc -->
 
 - [Core functionality/principles](#core-functionalityprinciples)
   - [Dependency Inversion Principle](#dependency-inversion-principle)
   - [Settings](#settings)
-  - [Model View Controller (MVC)](#model-view-controller-mvc)
+  - [Model-View-Controller (MVC)](#model-view-controller-mvc)
 - [GUI package](#gui-package)
   - [Settings Manager](#settings-manager)
   - [Location Manager](#location-manager)
@@ -14,6 +14,8 @@ This is a mono repository for the Adjust Framework. No official version of this 
 - [Code example overview](#code-example-overview)
 - [Typescript](#typescript)
 - [Current state](#current-state)
+  - [Contributing](#contributing)
+- [Recommended IDE](#recommended-ide)
 
 
 
@@ -225,7 +227,7 @@ export default SomeModuleModule;
 A simple compiletime dependency graph of these modules can look like this:
 ![myServiceDependencies](resources/readme/myServiceDependency.png)
 
-A module can be anything that could be seen as providing a service. Some examples: a colour picker; a field displaying a date (since people might want to format dates differently). You don't have to use modules if you don't want to, and if you need more performance we would advise you avoid them, but you will lose the core benefits of Adjust. Otherwise it is generally recommended to use modules as much as possible, especially if it involves GUI.
+A module can be anything that could be seen as providing a service. Some examples: a colour picker; a field displaying a date (since people might want to format dates differently). You don't always have to use modules if you don't want to, and if you need more performance we would advise you avoid them, but you will lose the core benefits of Adjust. Otherwise it is generally recommended to use modules as much as possible, especially if it involves GUI.
 
 ### Settings
 All modules come equipped with a simple, but extremely powerful system to manage settings. In order to use this system, you only have to declare the settings object in your config, after which you will be able to directly use them in your module.
@@ -291,7 +293,7 @@ export default MyServiceModule;
 </details>
 
 ### Model-View-Controller (MVC)
-Adjust makes heavy use of the MVC paradigm, or more specifically MV paradigm since the model and controller are embedded in our 'Module' class. To create a GUI element, you create a 'view class' which extends the `React Component` class, and attach it to our module. 
+Adjust makes heavy use of the MVC paradigm, or more accurately MV\* paradigm since the model and controller are embedded in our 'Module' class. To create a GUI element, you create a 'view class' which extends the `React Component` class, and attach it to our module. 
 
 Modules are only instantiated in the main node process of our application, but their view classes can be instantiated in any window of the application. You can even create multiple view instances for the same module. 
 
@@ -484,7 +486,7 @@ Modules will be able to use the theme in several ways:
     <summary>A Box element</summary>
 
 ```tsx
-import {createModuleView} from "@adjust/GUI";
+import {createModuleView} from "@adjust/gui";
 
 //...
 
@@ -506,7 +508,7 @@ It will simply render as a div, with the attributes obtained from the theme and 
 <summary>A theme hook</summary>
 
 ```tsx
-import {createModuleView, useTheme} from "@adjust/GUI";
+import {createModuleView, useTheme} from "@adjust/gui";
 
 //...
 
@@ -534,7 +536,7 @@ export class SomeModuleView extends createModuleView(SomeModuleModule) {
 <summary>Using Emotion's CSS callback</summary>
 
 ```tsx
-import {createModuleView} from "@adjust/GUI";
+import {createModuleView} from "@adjust/gui";
 
 //...
 
@@ -558,9 +560,9 @@ export class SomeModuleView extends createModuleView(SomeModuleModule) {
 
 ## Code example overview
 
-Comments on all components have been left out to reduce the size in order to provide a better overview
+Comments on all components have been left out to reduce the size in order to provide a better overview. You can go through the code examples in the spoilers above for the details.
 
-<details>
+<details open>
 <summary>A contract, written in typescript: Type2.type.ts</summary>
 
 ```ts
@@ -589,18 +591,12 @@ export const Type2Type = Registry.createContractID<Type2Contract>(__filename, {
 
 </details>
 
-<details>
+<details open>
 <summary>An implementation of the contract: Module2.ts</summary>
 
 ```tsx
-import {
-    createConfig,
-    createSetting,
-    createModule,
-    createModuleView,
-    Box
-} from "@adjust/core";
-import { Type2Type, Type2 } from "./Type2.type";
+import {createConfig, createSetting, createModule, createModuleView, Box} from "@adjust/gui";
+import {Type2Type, Type2} from "./Type2.type";
 
 export const module2Config = createConfig({
     details: { name: "Module2", description: "Example module" },
@@ -644,11 +640,11 @@ export class Module2View extends createModuleView(Module2) {
 
 </details>
 
-<details>
+<details open>
 <summary>Another module using our contract: Module1.ts</summary>
 
 ```tsx
-import {createConfig, createModule, createModule, createModuleView, Box} from "@adjust/core";
+import {createConfig, createModule, createModule, createModuleView, Box} from "@adjust/gui";
 import {Type2Type, Type2} from "./Type2.type";
 // Just pretend this type exists
 import {Type1Type, Type1} from "./Type1.type";
@@ -754,8 +750,18 @@ Adjust demo project         - Not Started, requires Settings menu
 Adjust installer            - Not Started, requires Settings menu
 ```
 
-We also have a Kanban
+We also have a [Kanban board](https://github.com/orgs/LaunchMenu/projects/1) tracking these tasks (albeit a bit messy)
+
+### Contributing
+If you would like to contribute in any way, E.G:
+- Create modules for Adjust GUI
+- Add core capabilities to Adjust Core or improve performance
+- Help with refactoring of current code
+- Help with UI design of Adjust GUI
+- Create a logo for Adjust
+
+Don't hesitate to contact us. The easiest way would be to [create an issue](https://github.com/LaunchMenu/Adjust/issues) on this project to start the conversation.
 
 ## Recommended IDE
 
-Adjust developers recommend using [Visual Studio Code](https://code.visualstudio.com/). VSC is multi-platform and has in-built TypeScript support. Currently Adjust devs are keen to create plugins for VSC e.g. type and module template generators. When implemented, these plugins will be recommended automatically by VSC when entering the template and demo applications.
+We recommend using [Visual Studio Code](https://code.visualstudio.com/). VSC is multi-platform and has in-built TypeScript support. Currently we are keen to create plugins for VSC e.g. type and module template generators. When implemented, these plugins will be recommended automatically by VSC when entering the template and demo applications.
