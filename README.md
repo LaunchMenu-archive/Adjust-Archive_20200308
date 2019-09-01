@@ -6,7 +6,7 @@ This is a mono repository for the Adjust Framework. No official version of this 
 - [Core functionality/principles](#core-functionalityprinciples)
   - [Dependency Inversion Principle](#dependency-inversion-principle)
   - [Settings](#settings)
-  - [MVC](#Model-View-Controller-(MVC))
+  - [Model View Controller (MVC)](#model-view-controller-mvc)
 - [GUI package](#gui-package)
   - [Settings Manager](#settings-manager)
   - [Location Manager](#location-manager)
