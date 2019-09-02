@@ -1,4 +1,3 @@
-/// <reference path="../../../React.d.ts" />
 import { CSSProperties } from "react";
 import { Themer } from "../themer.type";
 import { IThemeData } from "../themeSettings";
@@ -302,7 +301,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             xs: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -311,7 +310,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             s: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -320,7 +319,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             m: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -329,7 +328,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             l: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -338,7 +337,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             xl: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -347,7 +346,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             xxl: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -356,7 +355,7 @@ export declare const themerConfig: {
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
         };
         fontStyles: {
@@ -1751,7 +1750,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             xs: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1760,7 +1759,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             s: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1769,7 +1768,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             m: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1778,7 +1777,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             l: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1787,7 +1786,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             xl: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1796,7 +1795,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
             xxl: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<number, {
@@ -1805,7 +1804,7 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                     rounding?: number;
                 }>>;
             } & {
-                default: import("react").ReactText;
+                default: string | number;
             };
         };
         fontStyles: {

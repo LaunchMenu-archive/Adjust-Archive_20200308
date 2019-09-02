@@ -115,10 +115,11 @@ export abstract class Module extends coreCreateModule(baseConfig) {
 
     /** @override */
     public async stop(): Promise<void> {
-        await super.stop();
-
         // Close the module if it was request to open them
         if (this.getRequest().openView) this.closeViews();
+
+        
+        await super.stop();
     }
 
     /**

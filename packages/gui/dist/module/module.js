@@ -76,10 +76,10 @@ class Module extends core_1.createModule(exports.baseConfig) {
     }
     /** @override */
     async stop() {
-        await super.stop();
         // Close the module if it was request to open them
         if (this.getRequest().openView)
             this.closeViews();
+        await super.stop();
     }
     /**
      * Opens the module view(s) using the location manager, according to the module's settings
