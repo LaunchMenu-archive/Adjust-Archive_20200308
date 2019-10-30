@@ -35,7 +35,6 @@ export default class EmbedModule extends EmbedModule_base implements Embed {
 }
 declare const EmbedView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof EmbedModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/gui").Module, {}>>>;
 export declare class EmbedView extends EmbedView_base {
-    updateState(state: any): void;
     protected renderView(): JSX.Element;
 }
 export {};

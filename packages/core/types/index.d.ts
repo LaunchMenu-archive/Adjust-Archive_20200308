@@ -34,6 +34,7 @@ export * from "../dist/storage/settings/_types/settingsConfigPriorityList";
 export * from "../dist/storage/settings/_types/settingsConfigSetData";
 export * from "../dist/storage/settings/_types/settingsConfigSetPriorityList";
 export * from "../dist/storage/settings/_types/settingsCoonfigType";
+export * from "../dist/storage/settings/_types/settingsListenerRegistrarObject";
 export * from "../dist/storage/settings/_types/settingsMigrator";
 export * from "../dist/storage/settings/_types/shape";
 export * from "../dist/storage/settings/_types/storedSettings";

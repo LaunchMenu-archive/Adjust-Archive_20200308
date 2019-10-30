@@ -1,9 +1,10 @@
-/// <reference types="react" />
 import { ParameterizedSettingsFile } from "../settingsFile";
 import { SettingsConditions } from "../settingsConditions/abstractSettingsConditions";
 import { ISettingAttributeEvaluator } from "./ISettingAttributeEvaluator";
 import { SettingInputContract } from "../settingInputTypes/_types/SettingInput";
 import { ContractID } from "../../../registry/_types/contractID";
+import { SettingProperty } from "../settingsMetaData/settingProperty";
+import { JSXchild } from "../../../utils/_types/standardTypes";
 /**
  * Extracts the constraints type from the setting input type
  */
@@ -18,7 +19,7 @@ export declare type SettingDefinition<V, T extends SettingInputContract<V, any>>
     type: ContractID<T> & ContractID<SettingInputContract<unknown, unknown>>;
     /** The constraints passed tot he module to dictate whether it is valid */
     constraints?: ISettingAttributeEvaluator<GetSettingInputConstraints<T>>;
-    /** A hook detect any changes to values */
+    /** A hook detecting any changes to values */
     onChange?: (
     /** The new value of the setting */
     value: V, 
@@ -31,11 +32,11 @@ export declare type SettingDefinition<V, T extends SettingInputContract<V, any>>
     /** Whether the call was made because of the initial settings load */
     fromLoad: boolean) => void | Promise<void>;
     /** The name of the setting to display to the user */
-    name?: ISettingAttributeEvaluator<string>;
+    name?: ISettingAttributeEvaluator<JSXchild>;
     /** A short description of setting */
-    description?: ISettingAttributeEvaluator<JSX.Element>;
+    description?: ISettingAttributeEvaluator<JSXchild>;
     /** A more extensive description if necessary */
-    help?: ISettingAttributeEvaluator<JSX.Element>;
+    help?: ISettingAttributeEvaluator<JSXchild>;
     /** A link to external help resources */
     helpLink?: ISettingAttributeEvaluator<string>;
     /** Whether or not this setting is completely hidden in the GUI */
@@ -52,4 +53,28 @@ export declare type SettingDefinition<V, T extends SettingInputContract<V, any>>
 /**
  * The data of a single Setting in the config, with default params
  */
-export declare type ParameterizedSettingDefinition<V extends any = any, T extends SettingInputContract<any, any> = any> = SettingDefinition<V, T>;
+export declare type ParameterizedSettingDefinition<V extends any = any, T extends SettingInputContract<V, any> = any> = SettingDefinition<V, T>;
+/**
+ * The data of a single Setting in the config, with all properties guaranteed being present
+ */
+export declare type NormalizedSettingDefinition<V, T extends SettingInputContract<V, any>> = {
+    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P];
+};
+/**
+ * The data of a single Setting in the config, with all properties guaranteed being present and with default params
+ */
+export declare type ParameterizedNormalizedSettingDefinition<V extends any = any, T extends SettingInputContract<V, any> = any> = {
+    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P];
+};
+/**
+ * The data of a single Setting in the config, with all properties in the form of `SettingProperty` instances
+ */
+export declare type PropertySettingDefinition<V, T extends SettingInputContract<V, any>> = {
+    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P] extends ISettingAttributeEvaluator<infer V> ? SettingProperty<V> : SettingDefinition<V, T>[P];
+};
+/**
+ * The data of a single Setting in the config,  with all properties in the form of `SettingProperty` instances and with default params
+ */
+export declare type ParameterizedPropertySettingDefinition<V extends any = any, T extends SettingInputContract<V, any> = any> = {
+    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P] extends ISettingAttributeEvaluator<infer V> ? SettingProperty<V> : SettingDefinition<V, T>[P];
+};

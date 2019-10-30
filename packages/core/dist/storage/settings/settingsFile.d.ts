@@ -10,8 +10,11 @@ import { SettingsDataID } from "./SettingsDataID";
 import { Module } from "../../module/module";
 import { SettingsConditions } from "./settingsConditions/abstractSettingsConditions";
 import { SettingsConfigData } from "./_types/settingsConfigData";
-import { SettingsConfigSet } from "./_types/settingsConfigSet";
+import { SettingsConfigSet, NormalizedSettingsConfigSet, PropertySettingsConfigSet } from "./_types/settingsConfigSet";
 import { SettingsMigrators } from "./_types/settingsMigrator";
+import { SettingDefinition, NormalizedSettingDefinition, PropertySettingDefinition } from "./_types/settingDefinition";
+import { SettingInputContract } from "./settingInputTypes/_types/SettingInput";
+import { SettingsListenerRegistrarObject } from "./_types/settingsListenerRegistrarObject";
 export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsConfigData<S>>;
     protected config: S;
@@ -93,6 +96,38 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      */
     getConfig(): S;
     /**
+     * Retrieves a normalized version of all definitions of settings in the config
+     * @returns The set of normalized setting definitions
+     */
+    getNormalizedSettingsConfig(): NormalizedSettingsConfigSet<S["settings"]>;
+    /**
+     * Retrieves a setting property version of all definitions of settings in the config
+     * @param conditions The settings conditions to get the data for
+     * @returns The set of setting definitions with property instances for all props
+     */
+    getPropertySettingsConfig(conditions?: SettingsConditions): PropertySettingsConfigSet<S["settings"]>;
+    /**
+     * Destroys all instances of setting properties within the given object, obtained from getPropertySerttingsConfig
+     * @param propertySettingsConfig The object with properties to destroy
+     */
+    destroyPropertySettingsConfig(propertySettingsConfig: PropertySettingsConfigSet<S["settings"]>): void;
+    /**
+     * Retrieves a normalized version of the passed setting definition
+     * @param path The path to the setting
+     * @param settingDefiniton A setting definition
+     * @returns The normalized version of a setting definition
+     */
+    static getNormalizedSettingConfig<V, T extends SettingInputContract<V, any>>(path: string, settingDefiniton: SettingDefinition<V, T>): NormalizedSettingDefinition<V, T>;
+    /**
+     * Retrieves a normalized version of the passed setting definition with all evaluators replaced with `SettingProperty` instances
+     * @param path The path to the setting
+     * @param settingDefiniton A setting definition
+     * @param settingsFile The setting file this definition is an instance of
+     * @param conditions The condition to get the properties for
+     * @returns The normalized version of a setting definition using `SettingProperty` instances
+     */
+    static getPropertySettingConfig<V, T extends SettingInputContract<V, any>>(path: string, settingDefiniton: SettingDefinition<V, T>, settingsFile: SettingsFile<any>, conditions: SettingsConditions): PropertySettingDefinition<V, T>;
+    /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance
      * @param create Whether or not to create the conditional data if absent
@@ -146,6 +181,12 @@ export declare class SettingsFile<S extends SettingsConfig> extends EventEmitter
      * @param dirty Whether or not this file is dirty
      */
     setDirty(dirty: boolean): void;
+    /**
+     * Retrieves an object of functions that can be used to register a value listener for a specific setting.
+     * Registering an listener will return a function that can be called to unregister the listener.
+     * @returns The listener registrar object
+     */
+    getListenerObj(): SettingsListenerRegistrarObject<S["settings"]>;
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change

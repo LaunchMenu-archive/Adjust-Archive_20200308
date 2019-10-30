@@ -48,10 +48,6 @@ class EmbedModule extends gui_1.createModule(exports.config) {
 }
 exports.default = EmbedModule;
 class EmbedView extends gui_1.createModuleView(EmbedModule) {
-    updateState(state) {
-        super.updateState(state);
-        // console.log("detect");
-    }
     renderView() {
         // console.log("Render");
         return (gui_1.React.createElement("div", { style: { color: "white", backgroundColor: this.state.color }, onClick: e => {

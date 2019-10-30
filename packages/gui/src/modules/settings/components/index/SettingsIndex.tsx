@@ -46,7 +46,7 @@ export class SettingsIndexModule extends createModule(SettingsIndexConfig)
     }
 
     /** @override */
-    public async setSearch(search: string): Promise<void> {}
+    public async setSearch(search: RegExp | string): Promise<void> {}
 }
 export default SettingsIndexModule;
 

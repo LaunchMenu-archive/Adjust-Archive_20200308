@@ -12,7 +12,7 @@ import {AsyncSerializeableData} from "../utils/_types/serializeableData";
 import {isMain} from "../utils/isMain";
 import {ContextProvider, ContextProviderType} from "../modules/contextProvider.type";
 
-export type windowOptions = Electron.BrowserWindowConstructorOptions & {
+export type WindowOptions = Electron.BrowserWindowConstructorOptions & {
     preloadModules?: string[];
 };
 
@@ -25,7 +25,7 @@ export type windowOptions = Electron.BrowserWindowConstructorOptions & {
  */
 const windowPropertyFunctionMap: {
     [property: string]: {
-        method?: string | ((data: windowOptions) => string);
+        method?: string | ((data: WindowOptions) => string);
         args?: string[];
         default: any;
     };
@@ -105,7 +105,7 @@ export class WindowManagerSingleton {
 
     // A list of unclaimed window, used to improve opening times
     protected readonly windowsBuffer: {
-        options: windowOptions;
+        options: WindowOptions;
         window: Promise<BrowserWindow>;
     }[] = [];
 
@@ -197,7 +197,7 @@ export class WindowManagerSingleton {
      * @param count The number of windows to add to the buffer
      */
     public async createWindowBuffer(
-        options: windowOptions,
+        options: WindowOptions,
         count: number = 1
     ): Promise<void> {
         if (!isMain) return;
@@ -222,7 +222,7 @@ export class WindowManagerSingleton {
      * @param options The options that the retrieved window should have
      * @returns A browser window with the options if available, or undefiend otherwise
      */
-    protected async getBufferdWindow(options: windowOptions): Promise<BrowserWindow> {
+    protected async getBufferdWindow(options: WindowOptions): Promise<BrowserWindow> {
         const bufferedWindowIndex = this.windowsBuffer.findIndex(
             ({options: windowOptions, window}) =>
                 ExtendedObject.reduce(
@@ -311,7 +311,7 @@ export class WindowManagerSingleton {
      * @returns A browser window
      */
     protected async createWindow(
-        options: windowOptions,
+        options: WindowOptions,
         useBuffer: boolean = true
     ): Promise<BrowserWindow> {
         // Make sure the electron app is ready first
@@ -377,7 +377,7 @@ export class WindowManagerSingleton {
     public async openWindow(
         windowID: string,
         moduleID: ModuleID | string,
-        options: windowOptions = {}
+        options: WindowOptions = {}
     ): Promise<BrowserWindow> {
         // Make sure the window is present
         if (!this.windows[windowID]) {

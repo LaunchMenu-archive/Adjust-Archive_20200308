@@ -54,11 +54,6 @@ export default class EmbedModule extends createModule(config) implements Embed {
 }
 
 export class EmbedView extends createModuleView(EmbedModule) {
-    public updateState(state: any): void {
-        super.updateState(state);
-        // console.log("detect");
-    }
-
     protected renderView(): JSX.Element {
         // console.log("Render");
         return (

@@ -20,6 +20,10 @@ import {
 export const mappedAttributes = {
     width: true,
     height: true,
+    minWidth: true,
+    minHeight: true,
+    maxWidth: true,
+    maxHeight: true,
     display: true,
     position: true,
     overflow: true,
@@ -75,6 +79,10 @@ export type MappedAttributes = {
     flex?: string;
     width?: string | number;
     height?: string | number;
+    minWidth?: string | number;
+    minHeight?: string | number;
+    maxWidth?: string | number;
+    maxHeight?: string | number;
 
     // TODO: add grid attributes
 };

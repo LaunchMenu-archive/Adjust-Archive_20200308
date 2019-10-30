@@ -10,7 +10,7 @@ export declare type SettingsIndex = ChildModule<{
      * Sets the search term to filter on
      * @param search The search term
      */
-    setSearch(search: string): Promise<void>;
+    setSearch(search: RegExp | string): Promise<void>;
 }>;
 export declare type SettingsIndexParent = ParentModule<{
     /**

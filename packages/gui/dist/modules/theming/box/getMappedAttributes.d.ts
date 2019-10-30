@@ -7,6 +7,10 @@ import { CssDisplay, CssPosition, CssFlexDirection, CssJustifyContent, CssAlignI
 export declare const mappedAttributes: {
     width: boolean;
     height: boolean;
+    minWidth: boolean;
+    minHeight: boolean;
+    maxWidth: boolean;
+    maxHeight: boolean;
     display: boolean;
     position: boolean;
     overflow: boolean;
@@ -61,6 +65,10 @@ export declare type MappedAttributes = {
     flex?: string;
     width?: string | number;
     height?: string | number;
+    minWidth?: string | number;
+    minHeight?: string | number;
+    maxWidth?: string | number;
+    maxHeight?: string | number;
 };
 /**
  * Retrieves all attributes their css equivalent

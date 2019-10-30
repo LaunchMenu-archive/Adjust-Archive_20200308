@@ -218,4 +218,12 @@ export declare class ExtendedObject extends Object {
      * @returns Whether or not the contents of object 1 are contained in object 2
      */
     static deepContains(obj1: object, obj2: object): boolean;
+    /**
+     * Retrieves the class of an instance
+     * @param instance The instance to get the class for
+     * @returns The class of the instance
+     */
+    static getClass<V, T = any>(instance: V): {
+        new (...args: any[]): V;
+    } & T;
 }

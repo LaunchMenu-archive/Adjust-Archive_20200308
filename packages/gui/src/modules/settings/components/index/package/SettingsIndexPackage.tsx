@@ -10,6 +10,7 @@ import {
     SettingsIndexCategories,
     SettingsIndexCategoriesType,
 } from "../category/SettingsIndexCategories.type";
+import {Collapsible} from "../../../../../components/Collapsible";
 
 const SettingsIndexPackageConfig = createConfig({
     state: {
@@ -36,22 +37,32 @@ export default SettingsIndexPackageModule;
 export class SettingsIndexPackageView extends createModuleView(
     SettingsIndexPackageModule
 ) {
+    /**
+     * Renders the package header itself
+     */
+    protected renderPackageHeader = () => (
+        <Box display="flex" flexGrow={1} flexDirection="row" background="neutralLight">
+            <Box
+                width={40}
+                minWidth={40}
+                height={40}
+                background="themeSecondary"
+                marginRight="xs"></Box>
+            <Box flexGrow={1}>
+                <Box className="name">{this.data.name}</Box>
+                <Box className="description">{this.data.description}</Box>
+            </Box>
+        </Box>
+    );
+
     /** @override */
     public renderView(): JSX.Element {
         return (
             <Box margin="xs" className="package">
-                <Box display="flex" flexDirection="row" background="neutralLight">
-                    <Box
-                        width={40}
-                        height={40}
-                        background="themeSecondary"
-                        marginRight="xs"></Box>
-                    <Box flexGrow={1}>
-                        <Box className="name">{this.data.name}</Box>
-                        <Box className="description">{this.data.description}</Box>
-                    </Box>
-                </Box>
-                {this.state.categories}
+                <Collapsible
+                    header={this.renderPackageHeader}
+                    contents={this.state.categories}
+                />
             </Box>
         );
     }

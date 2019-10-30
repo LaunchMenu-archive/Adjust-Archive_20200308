@@ -74,8 +74,25 @@ describe("SettingsFile", () => {
                 expect(changes).toContainEqual(value);
             });
         });
+        it("Should invoke change events registered with object registrar", async () => {
+            const condition = new ConstantSettingsConditions(2);
+
+            const changes = [];
+            const unregister = settingsFile
+                .getListenerObj()
+                .b.c((value, cCondition, oldValue) => {
+                    expect(cCondition).toBe(condition);
+                    changes.push({value: value, oldValue: oldValue});
+                });
+
+            settingsFile.getConditionData(condition).changeData({b: {c: "test"}});
+            unregister();
+            settingsFile.getConditionData(condition).changeData({b: {c: "crap"}});
+
+            expect(changes).toEqual([{value: "test", oldValue: undefined}]);
+        });
         it("Should invoke config change events", async () => {
-            let args;
+            let args: any = {};
             const settingsFile = await SettingsFile.createInstance("_test/dontSave", {
                 ...config,
                 settings: {
@@ -143,7 +160,7 @@ describe("SettingsFile", () => {
             settingsFile.getConditionData(condition).changeData({b: {c: "test"}});
             expect(settingsFile.get(condition).b.c).toBe("test");
             settingsFile.getConditionData(condition).changeData({b: {c: undefined}});
-            expect(settingsFile.get(condition).b).toEqual({});
+            expect(settingsFile.get(condition).b).toEqual(undefined);
         });
     });
     describe("Get", () => {

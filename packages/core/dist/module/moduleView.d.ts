@@ -15,6 +15,7 @@ export declare abstract class ModuleView<S extends ModuleState, C extends {
     [field: string]: any;
 }> extends React.Component<ModuleViewProps<M>, ModuleViewState<S, C, D>> {
     unmounted: boolean;
+    protected initialized: boolean;
     protected self: Promise<this>;
     protected readonly module: RemoteModule<M>;
     protected readonly settings: DeepReadonly<C>;
@@ -43,7 +44,7 @@ export declare abstract class ModuleView<S extends ModuleState, C extends {
      * Updates the state of the view
      * @param state The parts of the state to update
      */
-    updateState(state: ModuleViewState<S, C, D>): void;
+    changeState(state: ModuleViewState<S, C, D>): void;
     /**
      * Augments the state changes to full state fields
      * ({something:{stuff:3}} to {something:{stuff:3, otherCurVal:5}})

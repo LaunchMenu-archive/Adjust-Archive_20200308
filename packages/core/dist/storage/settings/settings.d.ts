@@ -10,6 +10,7 @@ import { SettingsConditions } from "./settingsConditions/abstractSettingsConditi
 import { SettingsConfigData } from "./_types/settingsConfigData";
 import { SettingsConfigPriorityList } from "./_types/settingsConfigPriorityList";
 import { SettingsDataID } from "./SettingsDataID";
+import { SettingsListenerRegistrarObject } from "./_types/settingsListenerRegistrarObject";
 /**
  * A setting class that filters the appropriate settings from a [settingsFile]
  */
@@ -92,6 +93,12 @@ export declare class Settings<C extends SettingsConfig> extends EventEmitter {
      * @returns The settings condition data
      */
     getData(condition?: SettingsConditions, create?: boolean): Data<SettingsConfigData<C>>;
+    /**
+     * Retrieves an object of functions that can be used to register a value listener for a specific setting.
+     * Registering an listener will return a function that can be called to unregister the listener.
+     * @returns The listener registrar object
+     */
+    getListenerObj(): SettingsListenerRegistrarObject<C["settings"]>;
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change

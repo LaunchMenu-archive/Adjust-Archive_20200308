@@ -14,10 +14,24 @@ import {Module} from "../../module/module";
 import {SettingsConditionSerializer} from "./settingsConditions/settingsConditionsSerializer";
 import {SettingsConditions} from "./settingsConditions/abstractSettingsConditions";
 import {SettingsConfigData} from "./_types/settingsConfigData";
-import {SettingsConfigSet} from "./_types/settingsConfigSet";
+import {
+    SettingsConfigSet,
+    NormalizedSettingsConfigSet,
+    PropertySettingsConfigSet,
+} from "./_types/settingsConfigSet";
 import {StoredSettings} from "./_types/storedSettings";
 import {Semver} from "../../utils/semver";
 import {SettingsMigrators} from "./_types/settingsMigrator";
+import {
+    SettingDefinition,
+    NormalizedSettingDefinition,
+    GetSettingInputConstraints,
+    PropertySettingDefinition,
+} from "./_types/settingDefinition";
+import {SettingInputContract} from "./settingInputTypes/_types/SettingInput";
+import {SettingsListenerRegistrarObject} from "./_types/settingsListenerRegistrarObject";
+import {filterSettingFromSearch} from "./settingsMetaData/filterSettingFromSearch";
+import {SettingProperty} from "./settingsMetaData/settingProperty";
 
 export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsConfigData<S>>;
@@ -219,6 +233,153 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     }
 
     /**
+     * Retrieves a normalized version of all definitions of settings in the config
+     * @returns The set of normalized setting definitions
+     */
+    public getNormalizedSettingsConfig(): NormalizedSettingsConfigSet<S["settings"]> {
+        const map = <P extends SettingsConfigSet>(
+            settings: P,
+            path: string
+        ): NormalizedSettingsConfigSet<P> => {
+            if (settings.default !== undefined) {
+                return ExtendedObject.getClass(this).getNormalizedSettingConfig(
+                    path,
+                    settings
+                );
+            } else {
+                return ExtendedObject.map(settings, (value, key) => {
+                    if (key == "sectionConfig" || key == "default") return value;
+
+                    return map(value as any, path ? path + "." + key : key);
+                }) as any;
+            }
+        };
+
+        return map(this.config.settings, "");
+    }
+
+    /**
+     * Retrieves a setting property version of all definitions of settings in the config
+     * @param conditions The settings conditions to get the data for
+     * @returns The set of setting definitions with property instances for all props
+     */
+    public getPropertySettingsConfig(
+        conditions?: SettingsConditions
+    ): PropertySettingsConfigSet<S["settings"]> {
+        const map = <P extends SettingsConfigSet>(
+            settings: P,
+            path: string
+        ): PropertySettingsConfigSet<P> => {
+            if (settings.default !== undefined) {
+                return ExtendedObject.getClass(this).getPropertySettingConfig(
+                    path,
+                    settings,
+                    this,
+                    conditions
+                );
+            } else {
+                return ExtendedObject.map(settings, (value, key) => {
+                    if (key == "sectionConfig" || key == "default") return value;
+
+                    return map(value as any, path ? path + "." + key : key);
+                }) as any;
+            }
+        };
+
+        return map(this.config.settings, "");
+    }
+
+    /**
+     * Destroys all instances of setting properties within the given object, obtained from getPropertySerttingsConfig
+     * @param propertySettingsConfig The object with properties to destroy
+     */
+    public destroyPropertySettingsConfig(
+        propertySettingsConfig: PropertySettingsConfigSet<S["settings"]>
+    ): void {
+        // Go through all settings
+        ExtendedObject.forEach(
+            propertySettingsConfig,
+            (key, setting) => {
+                // Go through all values in the setting definition, and destroy any setting properties
+                ExtendedObject.forEach(setting, (key, value) => {
+                    if (value instanceof SettingProperty) value.destroy();
+                });
+            },
+            // Recurse if we haven't reached a setting yet (every setting contains 'default')
+            (key, value) => value["default"] === undefined
+        );
+    }
+
+    /**
+     * Retrieves a normalized version of the passed setting definition
+     * @param path The path to the setting
+     * @param settingDefiniton A setting definition
+     * @returns The normalized version of a setting definition
+     */
+    public static getNormalizedSettingConfig<V, T extends SettingInputContract<V, any>>(
+        path: string,
+        settingDefiniton: SettingDefinition<V, T>
+    ): NormalizedSettingDefinition<V, T> {
+        return {
+            constraints: {} as GetSettingInputConstraints<T>,
+            onChange: () => {},
+            name: path.split(".").pop(),
+            description: null,
+            help: null,
+            helpLink: null,
+            hidden: false,
+            advanced: false,
+            enabled: true,
+            searchExcluded: {
+                dependencies: {
+                    tags: path + ".tags",
+                    name: path + ".name",
+                    description: path + ".description",
+                },
+                searchDependent: true,
+                evaluator: filterSettingFromSearch,
+            },
+            tags: [],
+            ...settingDefiniton,
+        };
+    }
+
+    /**
+     * Retrieves a normalized version of the passed setting definition with all evaluators replaced with `SettingProperty` instances
+     * @param path The path to the setting
+     * @param settingDefiniton A setting definition
+     * @param settingsFile The setting file this definition is an instance of
+     * @param conditions The condition to get the properties for
+     * @returns The normalized version of a setting definition using `SettingProperty` instances
+     */
+    public static getPropertySettingConfig<V, T extends SettingInputContract<V, any>>(
+        path: string,
+        settingDefiniton: SettingDefinition<V, T>,
+        settingsFile: SettingsFile<any>,
+        conditions: SettingsConditions
+    ): PropertySettingDefinition<V, T> {
+        const normalized = this.getNormalizedSettingConfig(path, settingDefiniton);
+        const getProperty = value =>
+            new SettingProperty(path, settingsFile, conditions, value);
+
+        return {
+            default: normalized.default as any,
+            type: normalized.type as any,
+            constraints: getProperty(normalized.constraints) as any,
+            onChange: normalized.onChange,
+            name: getProperty(normalized.name),
+            description: getProperty(normalized.description),
+            help: getProperty(normalized.help),
+            helpLink: getProperty(normalized.helpLink),
+            hidden: getProperty(normalized.hidden),
+            advanced: getProperty(normalized.advanced),
+            enabled: getProperty(normalized.enabled),
+            searchExcluded: getProperty(normalized.searchExcluded),
+            tags: getProperty(normalized.tags),
+        };
+    }
+
+    /**
      * Gets a Data instance for the given condition
      * @param condition The condition for which to get (or create) a Data instance
      * @param create Whether or not to create the conditional data if absent
@@ -336,6 +497,11 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
                 // Emit the change event, and add it to promises to wait for
                 promises.push(
                     this.emitAsync("change", path, newValue, condition, oldValue)
+                );
+
+                // Also emit the path specific change event
+                promises.push(
+                    this.emitAsync("change." + path, newValue, condition, oldValue)
                 );
             },
             // Only recurse when we haven't hit a setting value yet
@@ -583,6 +749,31 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     }
 
     // Events
+    /**
+     * Retrieves an object of functions that can be used to register a value listener for a specific setting.
+     * Registering an listener will return a function that can be called to unregister the listener.
+     * @returns The listener registrar object
+     */
+    public getListenerObj(): SettingsListenerRegistrarObject<S["settings"]> {
+        const map = (value: object, path: string[]) => {
+            // If we haven't reached a setting yet, recurse
+            if (value) return ExtendedObject.map(value, (v, k) => map(v, [...path, k]));
+
+            // If we reached a setting, define the registrar method
+            const p = path.join(".");
+            return listener => {
+                // Register the listener
+                this.on("change." + p, listener);
+
+                // Create a function to unregister the listener
+                return () => this.off("change." + p, listener);
+            };
+        };
+
+        // Make the initial map call with on the root settings structure object
+        return map(this.getStucture(), []);
+    }
+
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change

@@ -328,7 +328,7 @@ class ViewManagerSingleton {
 
         // Update the state
         moduleViews.forEach(async moduleView =>
-            (await moduleView).updateState(updatedData)
+            (await moduleView).changeState(updatedData)
         );
     }
 

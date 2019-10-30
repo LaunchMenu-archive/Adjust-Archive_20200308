@@ -12,7 +12,6 @@ const config = {
         val6: moduleClassCreator_1.createSetting({
             default: 3,
             type: SettingNumber_type_1.SettingNumberType,
-            constraints: { dependencies: ["test"], evaluator: () => ({ min: 3 }) },
         }),
     },
     settingsMigrators: {
@@ -70,6 +69,13 @@ describe("ModuleClassCreator", () => {
                     isStopping: false,
                     isStopped: false,
                 },
+                details: {
+                    icon: "",
+                    name: "",
+                    description: "",
+                    section: "",
+                },
+                package: null,
                 settings: {
                     val6: { default: 3, type: SettingNumber_type_1.SettingNumberType },
                 },
@@ -78,7 +84,7 @@ describe("ModuleClassCreator", () => {
                 onLoad: expect.any(Function),
                 abstract: undefined,
                 type: dummyModules_helper_1.dummyInterfaceID,
-                viewClass: undefined,
+                viewClass: null,
                 getPriority: expect.any(Function),
             });
             const instance = Object.create(OurImplementation.prototype);
@@ -125,6 +131,13 @@ describe("ModuleClassCreator", () => {
                     isStopping: false,
                     isStopped: false,
                 },
+                details: {
+                    icon: "",
+                    name: "",
+                    description: "",
+                    section: "",
+                },
+                package: null,
                 settings: {
                     val6: { default: 3, type: SettingNumber_type_1.SettingNumberType },
                     category: {
@@ -152,7 +165,7 @@ describe("ModuleClassCreator", () => {
                 onLoad: expect.any(Function),
                 abstract: undefined,
                 type: dummyModules_helper_1.dummyInterfaceID,
-                viewClass: undefined,
+                viewClass: null,
                 getPriority: expect.any(Function),
             });
             const instance = Object.create(ExtendsOurImplementation.prototype);

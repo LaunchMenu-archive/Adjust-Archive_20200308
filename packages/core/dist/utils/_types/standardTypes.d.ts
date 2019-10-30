@@ -1,3 +1,4 @@
+/// <reference types="react" />
 export declare type DeepReadonly<T> = T extends Function ? T : T extends Array<any> ? T : T extends Promise<any> ? T : T extends object ? {
     readonly [P in keyof T]: DeepReadonly<T[P]>;
 } : T;
@@ -44,3 +45,8 @@ export declare type Empty = {
 export declare type RareObject = {
     SomeSuperRarePropertyName: symbol;
 };
+declare type JSXSingleChild = JSX.Element | number | string | boolean | null | undefined;
+interface NestedJSXChild extends Array<NestedJSXChild | JSXSingleChild> {
+}
+export declare type JSXchild = JSXSingleChild | NestedJSXChild;
+export {};

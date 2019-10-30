@@ -36,7 +36,6 @@ export const config = createConfig({
     },
     type: TestType,
 });
-
 export default class TestModule extends createModule(config) implements Test {
     intervalID: number;
     /** @override */

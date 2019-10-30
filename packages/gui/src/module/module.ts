@@ -88,7 +88,7 @@ export const baseConfig = {
  * The base class to build your app using adjust gui
  *
  * Takes care of the following tasks:
- * -    Tracking modue file location for importing it
+ * -    Tracking module file location for importing it
  * -    Storing a serializable state
  * -    Storing settings that can be altered by the user
  * -    Allow for theming by the user
@@ -118,7 +118,6 @@ export abstract class Module extends coreCreateModule(baseConfig) {
         // Close the module if it was request to open them
         if (this.getRequest().openView) this.closeViews();
 
-        
         await super.stop();
     }
 

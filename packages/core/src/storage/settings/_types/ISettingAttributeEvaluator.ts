@@ -1,4 +1,9 @@
-import {Json} from "../../../utils/_types/standardTypes";
+export type ISettingAttributeEvaluatorDependency =
+    | string
+    | ((
+          /** The listener to be registered, should return an unregister method */
+          listener: (newValue: any) => void
+      ) => () => void);
 
 /**
  * A type fpr evaluators of attributes
@@ -6,22 +11,22 @@ import {Json} from "../../../utils/_types/standardTypes";
 export type ISettingAttributeEvaluator<T> =
     | {
           /**
-           * The paths that this value is dependant on
+           * The paths of settings that this value is dependent on
            */
-          dependencies: string[];
+          dependencies: {[key: string]: ISettingAttributeEvaluatorDependency};
           /**
-           * Whether or not this attribute id dependant on the search value
+           * Whether or not this attribute is dependent on the search value
            */
-          searchDependency?: boolean;
+          searchDependent?: boolean;
           /**
            * The evaluator function itself
            */
-          evaluator: (settings: Json, searchValue: string, settingPath: string) => T;
+          evaluator: (settings: {[key: string]: any}, searchValue: string) => T;
       }
     /**
      * A shorthand evaluator, where the dependency will be the setting
      */
-    | ((settings: Json) => T)
+    | ((settings: {[key: string]: any}) => T)
     /**
      * Just a plain literal value
      */

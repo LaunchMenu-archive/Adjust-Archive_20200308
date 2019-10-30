@@ -150,7 +150,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param moduleID The ID that the new instance should have
      * @returns A new instance of this class
      */
-    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig<any>, ModuleContract>>;
+    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig<import("../storage/settings/_types/settingsConfigSet").SettingsConfigSet>, ModuleContract>>;
     /**
      * Deserializes the data that defines the module's own state
      * @param data The data to be deserialized
@@ -379,4 +379,4 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
 /**
  * A type representing a module, where the generic parameter arguments can be left out
  */
-export declare type ParameterizedModule = Module<ModuleState, SettingsConfig, ModuleContract>;
+export declare type ParameterizedModule = Module<ModuleState, SettingsConfig<any>, ModuleContract>;

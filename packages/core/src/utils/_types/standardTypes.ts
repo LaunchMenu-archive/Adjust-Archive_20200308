@@ -18,11 +18,11 @@ export type DeepPartial<T> = T extends object
 
 // From: https://stackoverflow.com/a/49579497/8521718
 export type RequiredKeys<T> = {
-    [K in keyof T]: ({} extends {[P in K]: T[K]} ? never : K)
+    [K in keyof T]: ({} extends {[P in K]: T[K]} ? never : K);
 }[keyof T];
 
 export type OptionalKeys<T> = {
-    [K in keyof T]: ({} extends {[P in K]: T[K]} ? K : never)
+    [K in keyof T]: ({} extends {[P in K]: T[K]} ? K : never);
 }[keyof T];
 
 // Only includes a field in an object if required
@@ -84,3 +84,8 @@ export type Empty = {"　": never};
 
 // An object to check whether something is a complexyl empy object, usage: RareObject extends MyType ? :
 export type RareObject = {SomeSuperRarePropertyName: symbol};
+
+// A type to represent any jsx child
+type JSXSingleChild = JSX.Element | number | string | boolean | null | undefined;
+interface NestedJSXChild extends Array<NestedJSXChild | JSXSingleChild> {}
+export type JSXchild = JSXSingleChild | NestedJSXChild;

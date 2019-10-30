@@ -131,6 +131,7 @@ class Settings extends eventEmitter_1.EventEmitter {
                     this.settings.changeData(extendedObject_1.ExtendedObject.translatePathToObject(path, value));
                     // Send a change event
                     this.emit("change", path, value, oldValue);
+                    this.emit("change." + path, value, condition, oldValue);
                 }
             }
         };
@@ -210,6 +211,29 @@ class Settings extends eventEmitter_1.EventEmitter {
             throw new Error("The target of these settings doesn't satisfy the given condition");
         // Retrieve the data on the condition of the settings file
         return this.settingsFile.getConditionData(condition, create);
+    }
+    // Events
+    /**
+     * Retrieves an object of functions that can be used to register a value listener for a specific setting.
+     * Registering an listener will return a function that can be called to unregister the listener.
+     * @returns The listener registrar object
+     */
+    getListenerObj() {
+        const map = (value, path) => {
+            // If we haven't reached a setting yet, recurse
+            if (value)
+                return extendedObject_1.ExtendedObject.map(value, (v, k) => map(v, [...path, k]));
+            // If we reached a setting, define the registrar method
+            const p = path.join(".");
+            return listener => {
+                // Register the listener
+                this.on("change." + p, listener);
+                // Create a function to unregister the listener
+                return () => this.off("change." + p, listener);
+            };
+        };
+        // Make the initial map call with on the root settings structure object
+        return map(this.getSettingsFile().getStucture(), []);
     }
     on(type, listener, name) {
         return super.on(type, listener, name);

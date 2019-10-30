@@ -4408,7 +4408,7 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
  * The base class to build your app using adjust gui
  *
  * Takes care of the following tasks:
- * -    Tracking modue file location for importing it
+ * -    Tracking module file location for importing it
  * -    Storing a serializable state
  * -    Storing settings that can be altered by the user
  * -    Allow for theming by the user

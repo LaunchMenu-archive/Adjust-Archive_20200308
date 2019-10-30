@@ -12,7 +12,6 @@ const config = {
         val6: createSetting({
             default: 3,
             type: SettingNumberType,
-            constraints: {dependencies: ["test"], evaluator: () => ({min: 3})},
         }),
     },
     settingsMigrators: {
@@ -74,6 +73,13 @@ describe("ModuleClassCreator", () => {
                     isStopping: false,
                     isStopped: false,
                 },
+                details: {
+                    icon: "",
+                    name: "",
+                    description: "",
+                    section: "",
+                },
+                package: null,
                 settings: {
                     val6: {default: 3, type: SettingNumberType},
                 },
@@ -82,7 +88,7 @@ describe("ModuleClassCreator", () => {
                 onLoad: expect.any(Function),
                 abstract: undefined,
                 type: dummyInterfaceID,
-                viewClass: undefined,
+                viewClass: null,
                 getPriority: expect.any(Function),
             });
 
@@ -139,6 +145,13 @@ describe("ModuleClassCreator", () => {
                     isStopping: false,
                     isStopped: false,
                 },
+                details: {
+                    icon: "",
+                    name: "",
+                    description: "",
+                    section: "",
+                },
+                package: null,
                 settings: {
                     val6: {default: 3, type: SettingNumberType},
                     category: {
@@ -166,7 +179,7 @@ describe("ModuleClassCreator", () => {
                 onLoad: expect.any(Function),
                 abstract: undefined,
                 type: dummyInterfaceID,
-                viewClass: undefined,
+                viewClass: null,
                 getPriority: expect.any(Function),
             });
 

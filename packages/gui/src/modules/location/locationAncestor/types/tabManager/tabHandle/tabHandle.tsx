@@ -16,9 +16,8 @@ import {TabHandleData} from "../_types/TabHandleData";
 
 export const tabHandleConfig = createConfig({
     details: {
-        name: "John",
-        description: "Cool kid",
-        icon: "someURL",
+        name: "Tab Handle",
+        description: "The handle of a tab",
     },
     state: {
         inEditMode: false as boolean,

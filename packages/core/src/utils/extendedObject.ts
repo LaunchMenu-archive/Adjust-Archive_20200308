@@ -595,6 +595,7 @@ export class ExtendedObject extends Object {
     // A symbol to indicate  to override the data in this object
     public static readonly overwrite: unique symbol = Symbol("overwrite");
 
+    // TODO: split this function into smaller specialized functions:
     /**
      * Copies the data from a source object to a destination object, according to the copyModel
      * @param src The object to get the data from
@@ -691,7 +692,14 @@ export class ExtendedObject extends Object {
                 if (
                     !destValue ||
                     (!this.isPlainObject(destValue) &&
-                        !(destValue instanceof Array && key in destValue))
+                        !(
+                            destValue instanceof Array &&
+                            // All keys of the src value, are in range of the dest value
+                            Object.keys(srcValue).reduce(
+                                (cur, key) => key in destValue && cur,
+                                true
+                            )
+                        ))
                 ) {
                     destValue = dest[key] = {};
                 }
@@ -829,5 +837,15 @@ export class ExtendedObject extends Object {
         }
 
         return true;
+    }
+
+    // Instance methods
+    /**
+     * Retrieves the class of an instance
+     * @param instance The instance to get the class for
+     * @returns The class of the instance
+     */
+    public static getClass<V, T = any>(instance: V): {new (...args): V} & T {
+        return (instance as any).__proto__.constructor;
     }
 }

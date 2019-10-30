@@ -72,6 +72,7 @@ export type ExtendedModuleView<
             | DeepPartial<S & ExtractModuleViewState<V>>,
         callback?: () => any
     ): void;
+    changeState(state: DeepPartial<S & ExtractModuleViewState<V>>): void;
 } & V &
     // FilterModuleView<ModuleView<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>, M>>
     ModuleView<

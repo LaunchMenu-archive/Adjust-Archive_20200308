@@ -18,7 +18,7 @@ class SettingsIndexModuleView extends moduleViewClassCreator_1.createModuleView(
     renderView() {
         return (React_1.React.createElement(Box_1.Box, { margin: "xs", className: "package" },
             React_1.React.createElement(Box_1.Box, { display: "flex", flexDirection: "row", background: "neutralLight" },
-                React_1.React.createElement(Box_1.Box, { width: 40, height: 40, background: "themeSecondary", marginRight: "xs" }),
+                React_1.React.createElement(Box_1.Box, { width: 40, minWidth: 40, height: 40, background: "themeSecondary", marginRight: "xs" }),
                 React_1.React.createElement(Box_1.Box, { flexGrow: 1 },
                     React_1.React.createElement(Box_1.Box, { className: "name" }, this.data.name),
                     React_1.React.createElement(Box_1.Box, { className: "description" }, this.data.description)))));

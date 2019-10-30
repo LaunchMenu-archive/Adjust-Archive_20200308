@@ -757,4 +757,8 @@ export class Module<
 /**
  * A type representing a module, where the generic parameter arguments can be left out
  */
-export type ParameterizedModule = Module<ModuleState, SettingsConfig, ModuleContract>;
+export type ParameterizedModule = Module<
+    ModuleState,
+    SettingsConfig<any>,
+    ModuleContract
+>;

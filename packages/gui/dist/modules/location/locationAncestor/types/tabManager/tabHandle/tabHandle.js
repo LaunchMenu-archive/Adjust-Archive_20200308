@@ -9,9 +9,8 @@ const locationAncestor_type_1 = require("../../../locationAncestor.type");
 const Box_1 = require("../../../../../../components/Box");
 exports.tabHandleConfig = moduleClassCreator_1.createConfig({
     details: {
-        name: "John",
-        description: "Cool kid",
-        icon: "someURL",
+        name: "Tab Handle",
+        description: "The handle of a tab",
     },
     state: {
         inEditMode: false,

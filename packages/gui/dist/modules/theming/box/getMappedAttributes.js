@@ -7,6 +7,10 @@ const getAttributes_1 = require("./getAttributes");
 exports.mappedAttributes = {
     width: true,
     height: true,
+    minWidth: true,
+    minHeight: true,
+    maxWidth: true,
+    maxHeight: true,
     display: true,
     position: true,
     overflow: true,

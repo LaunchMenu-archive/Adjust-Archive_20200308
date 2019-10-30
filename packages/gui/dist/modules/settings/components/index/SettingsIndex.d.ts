@@ -17,7 +17,7 @@ export declare class SettingsIndexModule extends SettingsIndexModule_base implem
     /** @override */
     setData(index: ISettingsIndex): Promise<void>;
     /** @override */
-    setSearch(search: string): Promise<void>;
+    setSearch(search: RegExp | string): Promise<void>;
 }
 export default SettingsIndexModule;
 declare const SettingsIndexView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsIndexModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../..").ModuleView, import("../../../..").ModuleView<{}, {}, import("../../../..").Module, {}>>>;

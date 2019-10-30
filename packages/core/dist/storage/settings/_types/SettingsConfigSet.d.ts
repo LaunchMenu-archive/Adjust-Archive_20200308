@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { ParameterizedSettingDefinition } from "./settingDefinition";
+import { ParameterizedSettingDefinition, NormalizedSettingDefinition, PropertySettingDefinition } from "./settingDefinition";
 import { ISettingAttributeEvaluator } from "./ISettingAttributeEvaluator";
 declare type SettingsConfigSetMetaData = {
     /** The name of the setting section to display to the user */
@@ -21,5 +21,17 @@ export declare type SettingsConfigSet = {
     default?: undefined;
     /** Any metadata about this section */
     sectionConfig?: SettingsConfigSetMetaData;
+};
+/**
+ * The config for a set of settings, with all settings properties being present
+ */
+export declare type NormalizedSettingsConfigSet<S extends SettingsConfigSet = SettingsConfigSet> = {
+    [P in keyof S]: S[P] extends ParameterizedSettingDefinition<infer V, infer T> ? NormalizedSettingDefinition<V, T> : S[P] extends SettingsConfigSet ? NormalizedSettingsConfigSet<S[P]> : S[P];
+};
+/**
+ * The config for a set of settings, with all settings properties being present in the form of `SettingProperty` instances
+ */
+export declare type PropertySettingsConfigSet<S extends SettingsConfigSet = SettingsConfigSet> = {
+    [P in keyof S]: S[P] extends ParameterizedSettingDefinition<infer V, infer T> ? PropertySettingDefinition<V, T> : S[P] extends SettingsConfigSet ? PropertySettingsConfigSet<S[P]> : S[P];
 };
 export {};

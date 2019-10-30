@@ -14,6 +14,7 @@ import {SettingsConditions} from "./settingsConditions/abstractSettingsCondition
 import {SettingsConfigData} from "./_types/settingsConfigData";
 import {SettingsConfigPriorityList} from "./_types/settingsConfigPriorityList";
 import {SettingsDataID} from "./SettingsDataID";
+import {SettingsListenerRegistrarObject} from "./_types/settingsListenerRegistrarObject";
 
 /**
  * A setting class that filters the appropriate settings from a [settingsFile]
@@ -200,6 +201,7 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
 
                     // Send a change event
                     this.emit("change", path, value, oldValue);
+                    this.emit("change." + path, value, condition, oldValue);
                 }
             }
         };
@@ -310,6 +312,31 @@ export class Settings<C extends SettingsConfig> extends EventEmitter {
     }
 
     // Events
+    /**
+     * Retrieves an object of functions that can be used to register a value listener for a specific setting.
+     * Registering an listener will return a function that can be called to unregister the listener.
+     * @returns The listener registrar object
+     */
+    public getListenerObj(): SettingsListenerRegistrarObject<C["settings"]> {
+        const map = (value: object, path: string[]) => {
+            // If we haven't reached a setting yet, recurse
+            if (value) return ExtendedObject.map(value, (v, k) => map(v, [...path, k]));
+
+            // If we reached a setting, define the registrar method
+            const p = path.join(".");
+            return listener => {
+                // Register the listener
+                this.on("change." + p, listener);
+
+                // Create a function to unregister the listener
+                return () => this.off("change." + p, listener);
+            };
+        };
+
+        // Make the initial map call with on the root settings structure object
+        return map(this.getSettingsFile().getStucture(), []);
+    }
+
     /**
      * Adds a listener for the alteration of settings data
      * @param type The type of listener, I.e. settings change

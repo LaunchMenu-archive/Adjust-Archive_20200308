@@ -12,7 +12,7 @@ declare const SettingsManagerModule_base: import("@adjust/core/types").ExtendedM
         components: {
             index: import("@adjust/core/types").ChildModule<{
                 setData(index: ISettingsIndex): Promise<void>;
-                setSearch(search: string): Promise<void>;
+                setSearch(search: string | RegExp): Promise<void>;
             }>;
         };
     };

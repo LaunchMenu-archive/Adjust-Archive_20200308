@@ -1,4 +1,9 @@
-import {ParameterizedSettingDefinition} from "./settingDefinition";
+import {
+    ParameterizedSettingDefinition,
+    NormalizedSettingDefinition,
+    SettingDefinition,
+    PropertySettingDefinition,
+} from "./settingDefinition";
 import {ISettingAttributeEvaluator} from "./ISettingAttributeEvaluator";
 
 type SettingsConfigSetMetaData = {
@@ -25,4 +30,28 @@ export type SettingsConfigSet = {
     default?: undefined;
     /** Any metadata about this section */
     sectionConfig?: SettingsConfigSetMetaData;
+};
+
+/**
+ * The config for a set of settings, with all settings properties being present
+ */
+export type NormalizedSettingsConfigSet<
+    S extends SettingsConfigSet = SettingsConfigSet
+> = {
+    [P in keyof S]: S[P] extends ParameterizedSettingDefinition<infer V, infer T>
+        ? NormalizedSettingDefinition<V, T>
+        : S[P] extends SettingsConfigSet
+        ? NormalizedSettingsConfigSet<S[P]>
+        : S[P];
+};
+
+/**
+ * The config for a set of settings, with all settings properties being present in the form of `SettingProperty` instances
+ */
+export type PropertySettingsConfigSet<S extends SettingsConfigSet = SettingsConfigSet> = {
+    [P in keyof S]: S[P] extends ParameterizedSettingDefinition<infer V, infer T>
+        ? PropertySettingDefinition<V, T>
+        : S[P] extends SettingsConfigSet
+        ? PropertySettingsConfigSet<S[P]>
+        : S[P];
 };

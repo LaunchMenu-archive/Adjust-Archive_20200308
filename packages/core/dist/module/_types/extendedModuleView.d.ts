@@ -24,6 +24,7 @@ export declare type FilterModuleView<M extends ParameterizedModuleView> = Omit<M
  */
 export declare type ExtendedModuleView<M extends ParameterizedModule, S extends Map<any>, V extends ParameterizedModuleView> = {
     setState(state: ((prevState: DeepReadonly<S & ExtractModuleViewState<V> & TransformModuleViewState<ModuleViewState<S & ExtractModuleState<M>, ExtractModuleSettings<M>, ExtractModuleData<M>>>>, props: ModuleViewProps<M>) => DeepPartial<S & ExtractModuleViewState<V>>) | DeepPartial<S & ExtractModuleViewState<V>>, callback?: () => any): void;
+    changeState(state: DeepPartial<S & ExtractModuleViewState<V>>): void;
 } & V & ModuleView<S & TransformModuleViewState<ExtractModuleState<M>>, ExtractModuleSettings<M>, M, ExtractModuleData<M>>;
 /**
  * Creates a new module constructor type, based on a module config and a module constructor type

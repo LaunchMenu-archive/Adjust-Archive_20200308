@@ -23,6 +23,9 @@ export abstract class ModuleView<
     // Indicates whether this react component has been completely unmounted
     public unmounted: boolean = false;
 
+    // Whether or not the data for this view has been initialized
+    protected initialized: boolean = false;
+
     // A promise that resolves in this instance once it finished loading
     protected self: Promise<this>;
 
@@ -89,14 +92,17 @@ export abstract class ModuleView<
         // @ts-ignore
         this.data = state["~data"];
 
-        this.setState(curState => this.getNewState(curState, state));
+        this.setState(curState => {
+            this.initialized = true;
+            return this.getNewState(curState, state);
+        });
     }
 
     /**
      * Updates the state of the view
      * @param state The parts of the state to update
      */
-    public updateState(state: ModuleViewState<S, C, D>): void {
+    public changeState(state: ModuleViewState<S, C, D>): void {
         this.setState(
             curState => this.getNewState(curState, state),
             // @ts-ignore
@@ -121,7 +127,7 @@ export abstract class ModuleView<
             if (
                 ExtendedObject.isPlainObject(value) &&
                 (ExtendedObject.isPlainObject(curValue) || curValue instanceof Array)
-            )
+            ) {
                 return ExtendedObject.copyData(
                     value,
                     curValue instanceof Array
@@ -130,6 +136,7 @@ export abstract class ModuleView<
                     undefined,
                     false
                 );
+            }
 
             // If either the new or old value is not a plain object, return it
             return value;
@@ -165,7 +172,7 @@ export abstract class ModuleView<
      */
     protected notReadyRender(): JSX.Element {
         // Render the loader while the state is not loaded
-        if (Object.keys(this.state).length == 0) return this.renderLoader();
+        if (!this.initialized) return this.renderLoader();
 
         // If the module has stopped, render it stopped
         if (this.state.isStopped) return this.renderStopped();

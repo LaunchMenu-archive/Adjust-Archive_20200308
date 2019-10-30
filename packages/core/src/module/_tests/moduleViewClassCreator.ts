@@ -100,6 +100,7 @@ describe("ModuleViewClassCreator", () => {
                     /* May only change aditional state */
                     this.setState({something: "te", stuff: 2});
                     this.setState(state => ({something: "te", stuff: 9}));
+                    this.changeState({something: "te", stuff: 2});
 
                     /* Can't make up stuff */
                     // this.changeState({something: "te", crap: 2}); // Errors since crap doesn't exist

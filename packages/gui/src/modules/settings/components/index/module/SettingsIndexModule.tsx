@@ -22,6 +22,7 @@ export class SettingsIndexModuleView extends createModuleView(SettingsIndexModul
                 <Box display="flex" flexDirection="row" background="neutralLight">
                     <Box
                         width={40}
+                        minWidth={40}
                         height={40}
                         background="themeSecondary"
                         marginRight="xs"></Box>

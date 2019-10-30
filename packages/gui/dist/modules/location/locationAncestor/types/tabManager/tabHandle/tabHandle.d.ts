@@ -6,7 +6,6 @@ export declare const tabHandleConfig: {
     details: {
         name: string;
         description: string;
-        icon: string;
     };
     state: {
         inEditMode: boolean;
@@ -26,7 +25,6 @@ declare const TabHandleModule_base: import("@adjust/core/types").ExtendedModuleC
     details: {
         name: string;
         description: string;
-        icon: string;
     };
     state: {
         inEditMode: boolean;

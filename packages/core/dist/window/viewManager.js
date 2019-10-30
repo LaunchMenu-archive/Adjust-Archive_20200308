@@ -237,7 +237,7 @@ class ViewManagerSingleton {
         if (!moduleViews)
             return;
         // Update the state
-        moduleViews.forEach(async (moduleView) => (await moduleView).updateState(updatedData));
+        moduleViews.forEach(async (moduleView) => (await moduleView).changeState(updatedData));
     }
     /**
      * Deserializes json data (Adding jsx elements)

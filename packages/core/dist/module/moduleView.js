@@ -18,6 +18,8 @@ class ModuleView extends react_1.default.Component {
         super(props);
         // Indicates whether this react component has been completely unmounted
         this.unmounted = false;
+        // Whether or not the data for this view has been initialized
+        this.initialized = false;
         // @ts-ignore
         this.state = this.getClass().state;
         // Make a shortcut to the module
@@ -53,13 +55,16 @@ class ModuleView extends react_1.default.Component {
         this.settings = state["~settings"];
         // @ts-ignore
         this.data = state["~data"];
-        this.setState(curState => this.getNewState(curState, state));
+        this.setState(curState => {
+            this.initialized = true;
+            return this.getNewState(curState, state);
+        });
     }
     /**
      * Updates the state of the view
      * @param state The parts of the state to update
      */
-    updateState(state) {
+    changeState(state) {
         this.setState(curState => this.getNewState(curState, state), 
         // @ts-ignore
         () => (this.settings = this.state["~settings"]));
@@ -76,10 +81,11 @@ class ModuleView extends react_1.default.Component {
             const curValue = oldState[key];
             // Copy the missing values from current into the changes
             if (extendedObject_1.ExtendedObject.isPlainObject(value) &&
-                (extendedObject_1.ExtendedObject.isPlainObject(curValue) || curValue instanceof Array))
+                (extendedObject_1.ExtendedObject.isPlainObject(curValue) || curValue instanceof Array)) {
                 return extendedObject_1.ExtendedObject.copyData(value, curValue instanceof Array
                     ? curValue
                     : extendedObject_1.ExtendedObject.copyData(curValue, {}), undefined, false);
+            }
             // If either the new or old value is not a plain object, return it
             return value;
         }));
@@ -110,7 +116,7 @@ class ModuleView extends react_1.default.Component {
      */
     notReadyRender() {
         // Render the loader while the state is not loaded
-        if (Object.keys(this.state).length == 0)
+        if (!this.initialized)
             return this.renderLoader();
         // If the module has stopped, render it stopped
         if (this.state.isStopped)

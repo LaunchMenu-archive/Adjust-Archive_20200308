@@ -2,7 +2,7 @@ import { ParentModule, ChildModule } from "../../../../module/_types/moduleContr
 /**
  * The base setting input type
  */
-export declare type SettingInput<V, C> = ChildModule<{
+export declare type SettingInput<V, C extends {}> = ChildModule<{
     /**
      * Sets the current value
      * @param value The value of the setting

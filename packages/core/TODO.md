@@ -40,7 +40,7 @@
             -   Add text data as settings such that they can even be changed per module instance
             -   Make language data ship with modules in a seperate file;
                 -   But have multiple module's text overwrittable using a single 'language pack'
-        -   Provide a dedicated react element that can be optained from E.G. react's props:
+        -   Provide a dedicated react element that can be obtained from E.G. react's props:
             -   Allow for putting text/patterns as the children as a default 'translation'
             -   Allow for element children to be interleaved with the translation for dynamic 'texts'
 
