@@ -7,8 +7,7 @@ const sortedList_1 = require("../../utils/sortedList");
 const settingsConditionsSerializer_1 = require("./settingsConditions/settingsConditionsSerializer");
 const abstractSettingsConditions_1 = require("./settingsConditions/abstractSettingsConditions");
 const semver_1 = require("../../utils/semver");
-const filterSettingFromSearch_1 = require("./settingsMetaData/filterSettingFromSearch");
-const settingProperty_1 = require("./settingsMetaData/settingProperty");
+const settingsSetProperties_1 = require("./settingsMetaData/settingsSetProperties");
 class SettingsFile extends eventEmitter_1.EventEmitter {
     /**
      * Creates a settingsFile to store settings for a certain module class
@@ -160,103 +159,12 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         return this.config;
     }
     /**
-     * Retrieves a normalized version of all definitions of settings in the config
-     * @returns The set of normalized setting definitions
-     */
-    getNormalizedSettingsConfig() {
-        const map = (settings, path) => {
-            if (settings.default !== undefined) {
-                return extendedObject_1.ExtendedObject.getClass(this).getNormalizedSettingConfig(path, settings);
-            }
-            else {
-                return extendedObject_1.ExtendedObject.map(settings, (value, key) => {
-                    if (key == "sectionConfig" || key == "default")
-                        return value;
-                    return map(value, path ? path + "." + key : key);
-                });
-            }
-        };
-        return map(this.config.settings, "");
-    }
-    /**
-     * Retrieves a setting property version of all definitions of settings in the config
-     * @param conditions The settings conditions to get the data for
-     * @returns The set of setting definitions with property instances for all props
-     */
-    getPropertySettingsConfig(conditions) {
-        const map = (settings, path) => {
-            if (settings.default !== undefined) {
-                return extendedObject_1.ExtendedObject.getClass(this).getPropertySettingConfig(path, settings, this, conditions);
-            }
-            else {
-                return extendedObject_1.ExtendedObject.map(settings, (value, key) => {
-                    if (key == "sectionConfig" || key == "default")
-                        return value;
-                    return map(value, path ? path + "." + key : key);
-                });
-            }
-        };
-        return map(this.config.settings, "");
-    }
-    /**
-     * Destroys all instances of setting properties within the given object, obtained from getPropertySerttingsConfig
-     * @param propertySettingsConfig The object with properties to destroy
-     */
-    destroyPropertySettingsConfig(propertySettingsConfig) {
-        // Go through all settings
-        extendedObject_1.ExtendedObject.forEach(propertySettingsConfig, (key, setting) => {
-            // Go through all values in the setting definition, and destroy any setting properties
-            extendedObject_1.ExtendedObject.forEach(setting, (key, value) => {
-                if (value instanceof settingProperty_1.SettingProperty)
-                    value.destroy();
-            });
-        }, 
-        // Recurse if we haven't reached a setting yet (every setting contains 'default')
-        (key, value) => value["default"] === undefined);
-    }
-    /**
-     * Retrieves a normalized version of the passed setting definition
-     * @param path The path to the setting
-     * @param settingDefiniton A setting definition
-     * @returns The normalized version of a setting definition
-     */
-    static getNormalizedSettingConfig(path, settingDefiniton) {
-        return Object.assign({ constraints: {}, onChange: () => { }, name: path.split(".").pop(), description: null, help: null, helpLink: null, hidden: false, advanced: false, enabled: true, searchExcluded: {
-                dependencies: {
-                    tags: path + ".tags",
-                    name: path + ".name",
-                    description: path + ".description",
-                },
-                searchDependent: true,
-                evaluator: filterSettingFromSearch_1.filterSettingFromSearch,
-            }, tags: [] }, settingDefiniton);
-    }
-    /**
-     * Retrieves a normalized version of the passed setting definition with all evaluators replaced with `SettingProperty` instances
-     * @param path The path to the setting
-     * @param settingDefiniton A setting definition
-     * @param settingsFile The setting file this definition is an instance of
+     * Retrieves a `SettingsSetProperties` instance for the settings in this file with the given condition
      * @param conditions The condition to get the properties for
-     * @returns The normalized version of a setting definition using `SettingProperty` instances
+     * @returns A new instance of the properties
      */
-    static getPropertySettingConfig(path, settingDefiniton, settingsFile, conditions) {
-        const normalized = this.getNormalizedSettingConfig(path, settingDefiniton);
-        const getProperty = value => new settingProperty_1.SettingProperty(path, settingsFile, conditions, value);
-        return {
-            default: normalized.default,
-            type: normalized.type,
-            constraints: getProperty(normalized.constraints),
-            onChange: normalized.onChange,
-            name: getProperty(normalized.name),
-            description: getProperty(normalized.description),
-            help: getProperty(normalized.help),
-            helpLink: getProperty(normalized.helpLink),
-            hidden: getProperty(normalized.hidden),
-            advanced: getProperty(normalized.advanced),
-            enabled: getProperty(normalized.enabled),
-            searchExcluded: getProperty(normalized.searchExcluded),
-            tags: getProperty(normalized.tags),
-        };
+    createSettingsProperties(conditions) {
+        return new settingsSetProperties_1.SettingsSetProperties(this, conditions);
     }
     /**
      * Gets a Data instance for the given condition

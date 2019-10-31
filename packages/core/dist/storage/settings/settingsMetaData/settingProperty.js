@@ -1,6 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const eventEmitter_1 = require("../../../utils/eventEmitter");
 const extendedObject_1 = require("../../../utils/extendedObject");
+const settingsSetProperties_1 = require("./settingsSetProperties");
 /**
  * A class to define a single property of a setting, used in shown GUI for the setting
  */
@@ -144,12 +145,14 @@ class SettingProperty extends eventEmitter_1.EventEmitter {
      * @param key The keyt to save the depepndency under
      */
     setupLocalPropertyDependency(dependency, key) {
+        const parts = dependency.split(".");
+        const prop = parts.pop();
+        const dependencySettingPath = parts.join(".");
         // Get the evaluator data for the property
-        const settings = this.settingsFile.getNormalizedSettingsConfig();
-        const propertyEvaluator = extendedObject_1.ExtendedObject.getField(settings, dependency);
+        const settingDefinition = extendedObject_1.ExtendedObject.getField(this.settingsFile.getConfig().settings, dependencySettingPath);
+        const propertyEvaluator = settingsSetProperties_1.SettingsSetProperties.getNormalizedSettingDefinition(dependencySettingPath, settingDefinition)[prop];
         // Create a property
-        const property = new SettingProperty(dependency.replace(/\.[^\.]*$/, ""), // Remove the property name
-        this.settingsFile, this.settingsCondition, propertyEvaluator);
+        const property = new SettingProperty(dependencySettingPath, this.settingsFile, this.settingsCondition, propertyEvaluator);
         this.propertyDependencies.push(property);
         // Get initial value
         this.settings[key] = property.getValue();

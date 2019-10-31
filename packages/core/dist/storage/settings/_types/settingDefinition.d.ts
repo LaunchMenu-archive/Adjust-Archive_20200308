@@ -70,11 +70,11 @@ export declare type ParameterizedNormalizedSettingDefinition<V extends any = any
  * The data of a single Setting in the config, with all properties in the form of `SettingProperty` instances
  */
 export declare type PropertySettingDefinition<V, T extends SettingInputContract<V, any>> = {
-    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P] extends ISettingAttributeEvaluator<infer V> ? SettingProperty<V> : SettingDefinition<V, T>[P];
+    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P] extends ISettingAttributeEvaluator<infer V> ? (createNew?: boolean) => SettingProperty<V> : SettingDefinition<V, T>[P];
 };
 /**
  * The data of a single Setting in the config,  with all properties in the form of `SettingProperty` instances and with default params
  */
 export declare type ParameterizedPropertySettingDefinition<V extends any = any, T extends SettingInputContract<V, any> = any> = {
-    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P] extends ISettingAttributeEvaluator<infer V> ? SettingProperty<V> : SettingDefinition<V, T>[P];
+    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P] extends ISettingAttributeEvaluator<infer V> ? (createNew?: boolean) => SettingProperty<V> : SettingDefinition<V, T>[P];
 };

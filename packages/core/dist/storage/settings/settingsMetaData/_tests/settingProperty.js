@@ -70,6 +70,7 @@ describe("SettingProperty", () => {
     let callListeners;
     let setupListener;
     let settingsFile;
+    let settingsSetProps;
     let props;
     beforeEach(async () => {
         listeners = [];
@@ -84,46 +85,46 @@ describe("SettingProperty", () => {
             };
         };
         settingsFile = await getSettingsFile(setupListener);
-        props = settingsFile.getPropertySettingsConfig();
+        settingsSetProps = settingsFile.createSettingsProperties();
+        props = settingsSetProps.getProperties();
     });
     afterEach(() => {
-        if (props)
-            settingsFile.destroyPropertySettingsConfig(props);
+        settingsSetProps.destroy();
     });
     describe("Dependencies object", () => {
         it("Successfully updates on setting dependency change", async () => {
-            expect(props.f.name.getValue()).toBe(1);
+            expect(props.f.name().getValue()).toBe(1);
             settingsFile.getConditionData().changeData({ b: { c: false } });
-            expect(props.f.name.getValue()).toBe(2);
+            expect(props.f.name().getValue()).toBe(2);
         });
         it("Successfully updates on an arbitrary listener dependency update", async () => {
-            expect(props.d.e.name.getValue()).toBe("(hoi)");
+            expect(props.d.e.name().getValue()).toBe("(hoi)");
             callListeners("pet");
-            expect(props.d.e.name.getValue()).toBe("(pet)");
+            expect(props.d.e.name().getValue()).toBe("(pet)");
         });
         it("Successfully updates on a setting property dependency change", async () => {
-            expect(props.a.name.getValue()).toBe("hoi");
+            expect(props.a.name().getValue()).toBe("hoi");
             settingsFile.getConditionData().changeData({ b: { c: false } });
-            expect(props.a.name.getValue()).toBe("-(hoi)");
+            expect(props.a.name().getValue()).toBe("-(hoi)");
             callListeners("pet");
-            expect(props.a.name.getValue()).toBe("-(pet)");
+            expect(props.a.name().getValue()).toBe("-(pet)");
         });
     });
     describe("Search", () => {
         it("Successfully updates on the search dependency change", async () => {
-            expect(props.g.name.getValue()).toBe("");
-            props.g.name.setSearchValue("hoi");
-            expect(props.g.name.getValue()).toBe("hoi");
+            expect(props.g.name().getValue()).toBe("");
+            props.g.name().setSearchValue("hoi");
+            expect(props.g.name().getValue()).toBe("hoi");
         });
         it("Successfully updates on search change when child property dependency is dependent on it", async () => {
-            expect(props.h.name.getValue()).toBe("");
-            props.h.name.setSearchValue("hoi");
-            expect(props.h.name.getValue()).toBe("hoi");
+            expect(props.h.name().getValue()).toBe("");
+            props.h.name().setSearchValue("hoi");
+            expect(props.h.name().getValue()).toBe("hoi");
         });
     });
     it("Triggers listeners on value changes", async () => {
         const mockCallback = jest.fn(value => { });
-        props.a.name.on("change", mockCallback);
+        props.a.name().on("change", mockCallback);
         settingsFile.getConditionData().changeData({ b: { c: false } });
         expect(mockCallback.mock.calls.length).toBe(1);
         expect(mockCallback.mock.calls[0][0]).toBe("-(hoi)");

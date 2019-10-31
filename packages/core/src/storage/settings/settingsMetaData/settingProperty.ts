@@ -3,6 +3,7 @@ import {ISettingAttributeEvaluator} from "../_types/ISettingAttributeEvaluator";
 import {ExtendedObject} from "../../../utils/extendedObject";
 import {SettingsFile} from "../settingsFile";
 import {SettingsConditions} from "../settingsConditions/abstractSettingsConditions";
+import {SettingsSetProperties} from "./settingsSetProperties";
 
 /**
  * A class to define a single property of a setting, used in shown GUI for the setting
@@ -204,13 +205,23 @@ export class SettingProperty<T> extends EventEmitter {
      * @param key The keyt to save the depepndency under
      */
     protected setupLocalPropertyDependency(dependency: string, key: string): () => void {
+        const parts = dependency.split(".");
+        const prop = parts.pop();
+        const dependencySettingPath = parts.join(".");
+
         // Get the evaluator data for the property
-        const settings = this.settingsFile.getNormalizedSettingsConfig();
-        const propertyEvaluator = ExtendedObject.getField(settings, dependency);
+        const settingDefinition = ExtendedObject.getField(
+            this.settingsFile.getConfig().settings,
+            dependencySettingPath
+        );
+        const propertyEvaluator = SettingsSetProperties.getNormalizedSettingDefinition(
+            dependencySettingPath,
+            settingDefinition
+        )[prop];
 
         // Create a property
         const property = new SettingProperty(
-            dependency.replace(/\.[^\.]*$/, ""), // Remove the property name
+            dependencySettingPath,
             this.settingsFile,
             this.settingsCondition,
             propertyEvaluator

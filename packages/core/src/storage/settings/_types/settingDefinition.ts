@@ -93,7 +93,7 @@ export type PropertySettingDefinition<V, T extends SettingInputContract<V, any>>
         V,
         T
     >[P] extends ISettingAttributeEvaluator<infer V>
-        ? SettingProperty<V>
+        ? (createNew?: boolean) => SettingProperty<V>
         : SettingDefinition<V, T>[P];
 };
 
@@ -108,6 +108,6 @@ export type ParameterizedPropertySettingDefinition<
         V,
         T
     >[P] extends ISettingAttributeEvaluator<infer V>
-        ? SettingProperty<V>
+        ? (createNew?: boolean) => SettingProperty<V>
         : SettingDefinition<V, T>[P];
 };

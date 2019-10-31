@@ -32,6 +32,7 @@ import {SettingInputContract} from "./settingInputTypes/_types/SettingInput";
 import {SettingsListenerRegistrarObject} from "./_types/settingsListenerRegistrarObject";
 import {filterSettingFromSearch} from "./settingsMetaData/filterSettingFromSearch";
 import {SettingProperty} from "./settingsMetaData/settingProperty";
+import {SettingsSetProperties} from "./settingsMetaData/settingsSetProperties";
 
 export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     protected settings: ConditionalSettingsDataList<SettingsConfigData<S>>;
@@ -233,150 +234,14 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
     }
 
     /**
-     * Retrieves a normalized version of all definitions of settings in the config
-     * @returns The set of normalized setting definitions
-     */
-    public getNormalizedSettingsConfig(): NormalizedSettingsConfigSet<S["settings"]> {
-        const map = <P extends SettingsConfigSet>(
-            settings: P,
-            path: string
-        ): NormalizedSettingsConfigSet<P> => {
-            if (settings.default !== undefined) {
-                return ExtendedObject.getClass(this).getNormalizedSettingConfig(
-                    path,
-                    settings
-                );
-            } else {
-                return ExtendedObject.map(settings, (value, key) => {
-                    if (key == "sectionConfig" || key == "default") return value;
-
-                    return map(value as any, path ? path + "." + key : key);
-                }) as any;
-            }
-        };
-
-        return map(this.config.settings, "");
-    }
-
-    /**
-     * Retrieves a setting property version of all definitions of settings in the config
-     * @param conditions The settings conditions to get the data for
-     * @returns The set of setting definitions with property instances for all props
-     */
-    public getPropertySettingsConfig(
-        conditions?: SettingsConditions
-    ): PropertySettingsConfigSet<S["settings"]> {
-        const map = <P extends SettingsConfigSet>(
-            settings: P,
-            path: string
-        ): PropertySettingsConfigSet<P> => {
-            if (settings.default !== undefined) {
-                return ExtendedObject.getClass(this).getPropertySettingConfig(
-                    path,
-                    settings,
-                    this,
-                    conditions
-                );
-            } else {
-                return ExtendedObject.map(settings, (value, key) => {
-                    if (key == "sectionConfig" || key == "default") return value;
-
-                    return map(value as any, path ? path + "." + key : key);
-                }) as any;
-            }
-        };
-
-        return map(this.config.settings, "");
-    }
-
-    /**
-     * Destroys all instances of setting properties within the given object, obtained from getPropertySerttingsConfig
-     * @param propertySettingsConfig The object with properties to destroy
-     */
-    public destroyPropertySettingsConfig(
-        propertySettingsConfig: PropertySettingsConfigSet<S["settings"]>
-    ): void {
-        // Go through all settings
-        ExtendedObject.forEach(
-            propertySettingsConfig,
-            (key, setting) => {
-                // Go through all values in the setting definition, and destroy any setting properties
-                ExtendedObject.forEach(setting, (key, value) => {
-                    if (value instanceof SettingProperty) value.destroy();
-                });
-            },
-            // Recurse if we haven't reached a setting yet (every setting contains 'default')
-            (key, value) => value["default"] === undefined
-        );
-    }
-
-    /**
-     * Retrieves a normalized version of the passed setting definition
-     * @param path The path to the setting
-     * @param settingDefiniton A setting definition
-     * @returns The normalized version of a setting definition
-     */
-    public static getNormalizedSettingConfig<V, T extends SettingInputContract<V, any>>(
-        path: string,
-        settingDefiniton: SettingDefinition<V, T>
-    ): NormalizedSettingDefinition<V, T> {
-        return {
-            constraints: {} as GetSettingInputConstraints<T>,
-            onChange: () => {},
-            name: path.split(".").pop(),
-            description: null,
-            help: null,
-            helpLink: null,
-            hidden: false,
-            advanced: false,
-            enabled: true,
-            searchExcluded: {
-                dependencies: {
-                    tags: path + ".tags",
-                    name: path + ".name",
-                    description: path + ".description",
-                },
-                searchDependent: true,
-                evaluator: filterSettingFromSearch,
-            },
-            tags: [],
-            ...settingDefiniton,
-        };
-    }
-
-    /**
-     * Retrieves a normalized version of the passed setting definition with all evaluators replaced with `SettingProperty` instances
-     * @param path The path to the setting
-     * @param settingDefiniton A setting definition
-     * @param settingsFile The setting file this definition is an instance of
+     * Retrieves a `SettingsSetProperties` instance for the settings in this file with the given condition
      * @param conditions The condition to get the properties for
-     * @returns The normalized version of a setting definition using `SettingProperty` instances
+     * @returns A new instance of the properties
      */
-    public static getPropertySettingConfig<V, T extends SettingInputContract<V, any>>(
-        path: string,
-        settingDefiniton: SettingDefinition<V, T>,
-        settingsFile: SettingsFile<any>,
-        conditions: SettingsConditions
-    ): PropertySettingDefinition<V, T> {
-        const normalized = this.getNormalizedSettingConfig(path, settingDefiniton);
-        const getProperty = value =>
-            new SettingProperty(path, settingsFile, conditions, value);
-
-        return {
-            default: normalized.default as any,
-            type: normalized.type as any,
-            constraints: getProperty(normalized.constraints) as any,
-            onChange: normalized.onChange,
-            name: getProperty(normalized.name),
-            description: getProperty(normalized.description),
-            help: getProperty(normalized.help),
-            helpLink: getProperty(normalized.helpLink),
-            hidden: getProperty(normalized.hidden),
-            advanced: getProperty(normalized.advanced),
-            enabled: getProperty(normalized.enabled),
-            searchExcluded: getProperty(normalized.searchExcluded),
-            tags: getProperty(normalized.tags),
-        };
+    public createSettingsProperties(
+        conditions?: SettingsConditions
+    ): SettingsSetProperties<S["settings"]> {
+        return new SettingsSetProperties(this, conditions);
     }
 
     /**
