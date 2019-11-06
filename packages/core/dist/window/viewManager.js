@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const ipcRenderer_1 = require("../communication/ipcRenderer");
-const serialize_1 = require("../utils/serialize");
+const serialize_1 = require("../utils/serialization/serialize");
 const moduleID_1 = require("../module/moduleID");
 const viewCache_1 = require("./viewCache");
 /**

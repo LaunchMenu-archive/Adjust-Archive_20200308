@@ -7,5 +7,7 @@ import {RareObject} from "../../utils/_types/standardTypes";
 export type DataChange<T> = RareObject extends T
     ? {}
     : T extends object
-    ? {[P in keyof T]?: DataChange<T[P]>} & {[ExtendedObject.overwrite]?: boolean}
+    ? T extends Promise<any>
+        ? T
+        : {[P in keyof T]?: DataChange<T[P]>} & {[ExtendedObject.overwrite]?: boolean}
     : T;

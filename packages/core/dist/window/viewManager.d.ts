@@ -2,7 +2,7 @@
 import { Json } from "../utils/_types/standardTypes";
 import { ParameterizedModuleView } from "../module/moduleView";
 import { ParameterizedModuleViewState } from "../module/_types/moduleViewState";
-import { SerializeableData } from "../utils/_types/serializeableData";
+import { SerializeableData } from "../utils/serialization/_types/serializeableData";
 import { ModuleID, ModuleReference } from "../module/moduleID";
 import { ViewCache } from "./viewCache";
 /**

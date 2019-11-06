@@ -1,7 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const programState_1 = require("./programState");
 const data_1 = require("../storage/data");
-const serialize_1 = require("../utils/serialize");
+const serialize_1 = require("../utils/serialization/serialize");
 class StateData extends data_1.Data {
     /**
      * A class that stores state data and emit events on changes of the data

@@ -1,15 +1,25 @@
-import {Json} from "./_types/standardTypes";
+import {Json} from "../_types/standardTypes";
 import {SerializeableData, AsyncSerializeableData} from "./_types/serializeableData";
-import {Module, ParameterizedModule} from "../module/module";
-import {ExtendedObject} from "./extendedObject";
-import {ModuleProxy} from "../module/moduleProxy";
-import {ModuleReference} from "../module/moduleID";
-import {ChildModule} from "../module/_types/moduleContract";
+import {Module, ParameterizedModule} from "../../module/module";
+import {ExtendedObject} from "../extendedObject";
+import {ModuleProxy} from "../../module/moduleProxy";
+import {ModuleReference} from "../../module/moduleID";
+import {ChildModule} from "../../module/_types/moduleContract";
+import {ITraceable, ITraceableData} from "./_types/ITracable";
+import {ITraceableTransformer} from "./_types/ITracableTransformer";
 
 function isModule(data): data is ParameterizedModule | ModuleProxy | ChildModule<{}> {
     return data instanceof Module || data instanceof ModuleProxy;
 }
+function isTraceable(data): data is ITraceable | ITraceableTransformer<any> {
+    return "serialize" in data && data.serialize instanceof Function;
+}
 
+// TODO: Make a way to differentiate between lossless and lossy Deserialization
+
+/**
+ * A class to perform any serialization and deserialization of data in order to transfer it
+ */
 export class Serialize {
     /**
      * Serializes a passed value
@@ -76,7 +86,7 @@ export class Serialize {
                     (data as any).result = value; //TODO: fix TS
                     asyncCallback(path, value, data);
                 });
-                return undefined;
+                return null;
             }
 
             // If the data is an array, map it
@@ -88,6 +98,13 @@ export class Serialize {
                         path ? path + "." + index : index + ""
                     )
                 );
+
+            // If the data is an arbtitrary traceable value
+            if (isTraceable(data))
+                return {
+                    $type: "Traceable",
+                    data: this.serialize(data.serialize()),
+                };
 
             // If it is an arbitrary object, map its values
             const out = ExtendedObject.mapPairs(data, (key, value) => [
@@ -120,7 +137,7 @@ export class Serialize {
         if (data === null) {
             return null;
         } else if (typeof data == "object") {
-            // Cjecl of the data is some custom type
+            // Check of the data is some custom type
             if ("$type" in data) {
                 // Check if the data is constant 'undefined'
                 if (data.$type == "undefined") return undefined;
@@ -128,6 +145,18 @@ export class Serialize {
                 // Check if the data is a module
                 if (data.$type == "ModuleReference" && "data" in data)
                     return getModule(data.data as string);
+
+                // Check if the data is a tracable value
+                if (data.$type == "Traceable") {
+                    const s: ITraceableData = data.data as any;
+                    const exports = require(s.deserializeFilePath);
+                    const func = ExtendedObject.getField(
+                        exports || {},
+                        s.deserializePropertyPath
+                    );
+                    if (func instanceof Function) return func(s.data);
+                    else return null;
+                }
             }
 
             // If it is an array, map it

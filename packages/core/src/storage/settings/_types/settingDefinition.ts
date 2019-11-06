@@ -4,7 +4,6 @@ import {ISettingAttributeEvaluator} from "./ISettingAttributeEvaluator";
 import {SettingInputContract} from "../settingInputTypes/_types/SettingInput";
 import {ContractID} from "../../../registry/_types/contractID";
 import {SettingProperty} from "../settingsMetaData/settingProperty";
-import {ReactNode} from "react";
 import {JSXchild} from "../../../utils/_types/standardTypes";
 
 /**

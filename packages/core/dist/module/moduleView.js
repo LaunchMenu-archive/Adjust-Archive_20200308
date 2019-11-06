@@ -65,9 +65,7 @@ class ModuleView extends react_1.default.Component {
      * @param state The parts of the state to update
      */
     changeState(state) {
-        this.setState(curState => this.getNewState(curState, state), 
-        // @ts-ignore
-        () => (this.settings = this.state["~settings"]));
+        this.setState(curState => this.getNewState(curState, state));
     }
     /**
      * Augments the state changes to full state fields
@@ -107,6 +105,8 @@ class ModuleView extends react_1.default.Component {
      * @override The normal react render method
      */
     render() {
+        // @ts-ignore Update the settings
+        this.settings = this.state["~settings"];
         // Renders replacement data if needed, or the actual view otherwise
         return this.notReadyRender() || this.renderView();
     }

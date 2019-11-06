@@ -1,3 +1,5 @@
+import {ReactElement} from "react";
+
 // You may thank prettier for these beautiful linebreaks and indentations
 
 export type DeepReadonly<T> = T extends Function
@@ -82,7 +84,7 @@ export type GetPConstructed<T extends PConstructor<any>> = T extends PConstructo
 // An object to represent the 'empty' object which may not have any properties like the default empty object may have for some reason
 export type Empty = {"　": never};
 
-// An object to check whether something is a complexyl empy object, usage: RareObject extends MyType ? :
+// An object to check whether something is a completely empy object, usage: RareObject extends MyType ? :
 export type RareObject = {SomeSuperRarePropertyName: symbol};
 
 // A type to represent any jsx child

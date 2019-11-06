@@ -1,9 +1,9 @@
 import { Json } from "../utils/_types/standardTypes";
-import { AsyncSerializeableData } from "../utils/_types/serializeableData";
+import { AsyncSerializeableData, LossyAsyncSerializeableData } from "../utils/serialization/_types/serializeableData";
 import { Data } from "../storage/data";
 import { ParameterizedModule } from "../module/module";
 export declare class StateData<S extends {
-    [key: string]: AsyncSerializeableData | Promise<AsyncSerializeableData>;
+    [key: string]: LossyAsyncSerializeableData | Promise<LossyAsyncSerializeableData>;
 }> extends Data<S> {
     /**
      * A class that stores state data and emit events on changes of the data

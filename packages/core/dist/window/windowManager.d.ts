@@ -3,7 +3,7 @@ import { ModuleViewData } from "../module/_types/moduleViewData";
 import { ParameterizedModule } from "../module/module";
 import { ModuleID } from "../module/moduleID";
 import { ViewNotFound } from "../modules/viewNotFound.type";
-import { AsyncSerializeableData } from "../utils/_types/serializeableData";
+import { AsyncSerializeableData } from "../utils/serialization/_types/serializeableData";
 import { ContextProvider } from "../modules/contextProvider.type";
 export declare type WindowOptions = Electron.BrowserWindowConstructorOptions & {
     preloadModules?: string[];

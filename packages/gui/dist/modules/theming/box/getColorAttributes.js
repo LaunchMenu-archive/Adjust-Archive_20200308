@@ -6,7 +6,7 @@ const getAttributes_1 = require("./getAttributes");
  * or a string if it's different
  */
 exports.colorsAttributesCustom = {
-    backgrounddCustom: "background",
+    backgroundCustom: "background",
     borderColorCustom: "borderColor",
     borderTopColorCustom: "borderTopColor",
     borderRightColorCustom: "borderRightColor",

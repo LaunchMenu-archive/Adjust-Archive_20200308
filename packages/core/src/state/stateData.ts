@@ -3,15 +3,15 @@ import {ProgramState} from "./programState";
 import {
     SerializeableData,
     AsyncSerializeableData,
-} from "../utils/_types/serializeableData";
+    LossyAsyncSerializeableData,
+} from "../utils/serialization/_types/serializeableData";
 import {Data} from "../storage/data";
-import {Serialize} from "../utils/serialize";
-import {ModuleProxy} from "../module/moduleProxy";
+import {Serialize} from "../utils/serialization/serialize";
 import {ParameterizedModule} from "../module/module";
 
 export class StateData<
     S extends {
-        [key: string]: AsyncSerializeableData | Promise<AsyncSerializeableData>;
+        [key: string]: LossyAsyncSerializeableData | Promise<LossyAsyncSerializeableData>;
     }
 > extends Data<S> {
     /**

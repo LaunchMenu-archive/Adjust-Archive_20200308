@@ -4,7 +4,7 @@ import { ModuleView, ParameterizedModuleView } from "../moduleView";
 import { ExtractModuleState, ExtractModuleSettings } from "./extendedModule";
 import { ModuleViewProps } from "./moduleViewProps";
 import { ModuleViewState } from "./moduleViewState";
-import { TransformModuleViewState } from "./moduleStateTransformer";
+import { TransformSerializeableData } from "../../utils/serialization/_types/TransformSerializeableData";
 /**
  * Extracts the request data type from a given module
  */
@@ -23,9 +23,9 @@ export declare type FilterModuleView<M extends ParameterizedModuleView> = Omit<M
  * Creates a new module type, based on a module config and a module type
  */
 export declare type ExtendedModuleView<M extends ParameterizedModule, S extends Map<any>, V extends ParameterizedModuleView> = {
-    setState(state: ((prevState: DeepReadonly<S & ExtractModuleViewState<V> & TransformModuleViewState<ModuleViewState<S & ExtractModuleState<M>, ExtractModuleSettings<M>, ExtractModuleData<M>>>>, props: ModuleViewProps<M>) => DeepPartial<S & ExtractModuleViewState<V>>) | DeepPartial<S & ExtractModuleViewState<V>>, callback?: () => any): void;
+    setState(state: ((prevState: DeepReadonly<S & ExtractModuleViewState<V> & TransformSerializeableData<ModuleViewState<S & ExtractModuleState<M>, ExtractModuleSettings<M>, ExtractModuleData<M>>>>, props: ModuleViewProps<M>) => DeepPartial<S & ExtractModuleViewState<V>>) | DeepPartial<S & ExtractModuleViewState<V>>, callback?: () => any): void;
     changeState(state: DeepPartial<S & ExtractModuleViewState<V>>): void;
-} & V & ModuleView<S & TransformModuleViewState<ExtractModuleState<M>>, ExtractModuleSettings<M>, M, ExtractModuleData<M>>;
+} & V & ModuleView<S & TransformSerializeableData<ExtractModuleState<M>>, ExtractModuleSettings<M>, M, ExtractModuleData<M>>;
 /**
  * Creates a new module constructor type, based on a module config and a module constructor type
  */

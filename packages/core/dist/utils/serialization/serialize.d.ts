@@ -1,5 +1,8 @@
-import { Json } from "./_types/standardTypes";
+import { Json } from "../_types/standardTypes";
 import { SerializeableData, AsyncSerializeableData } from "./_types/serializeableData";
+/**
+ * A class to perform any serialization and deserialization of data in order to transfer it
+ */
 export declare class Serialize {
     /**
      * Serializes a passed value

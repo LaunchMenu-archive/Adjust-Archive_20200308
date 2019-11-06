@@ -1,48 +1,41 @@
-import {Serialize} from "../serialize";
-import DummyModule, {dummyInterfaceID} from "../../module/_tests/dummyModules.helper";
-import {createModule} from "../../module/moduleClassCreator";
-import {ProgramState} from "../../state/programState";
-import {Module} from "../../module/module";
-import {SerializeableData} from "../_types/serializeableData";
-
-class P extends createModule({
-    type: dummyInterfaceID,
+Object.defineProperty(exports, "__esModule", { value: true });
+const serialize_1 = require("../serialize");
+const dummyModules_helper_1 = require("../../../module/_tests/dummyModules.helper");
+const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
+const programState_1 = require("../../../state/programState");
+const module_1 = require("../../../module/module");
+class P extends moduleClassCreator_1.createModule({
+    type: dummyModules_helper_1.dummyInterfaceID,
     state: {},
     settings: {},
 }) {
     static async createCustomInstance() {
-        const moduleID = ProgramState.getNextModuleID(P.getPath());
-        const instance = await super.construct(
-            {requestPath: Module.createRequestPath(moduleID, null, {}), data: null},
-            moduleID,
-            {},
-            []
-        );
-        ProgramState.addModule(instance);
+        const moduleID = programState_1.ProgramState.getNextModuleID(P.getPath());
+        const instance = await super.construct({ requestPath: module_1.Module.createRequestPath(moduleID, null, {}), data: null }, moduleID, {}, []);
+        programState_1.ProgramState.addModule(instance);
         return instance;
     }
-    async someMethod() {}
+    async someMethod() { }
 }
-
 describe("Serialize", () => {
     describe("Serialize", () => {
         it("Should keep json data", () => {
             const data = {
                 stuff: 3,
                 something: true,
-                object: {crap: "stuff", ar: ["poop"]},
+                object: { crap: "stuff", ar: ["poop"] },
             };
-            const serialized = Serialize.serialize(data);
+            const serialized = serialize_1.Serialize.serialize(data);
             expect(serialized).toEqual(data);
         });
         it("Should serialize modules to a reference", async () => {
             const data = {
-                someModule: {module: await P.createCustomInstance()},
+                someModule: { module: await P.createCustomInstance() },
             };
             const ID = data.someModule.module.getID();
-            const serialized = Serialize.serialize(data);
+            const serialized = serialize_1.Serialize.serialize(data);
             expect(serialized).toEqual({
-                someModule: {module: {$type: "ModuleReference", data: ID.toString()}},
+                someModule: { module: { $type: "ModuleReference", data: ID.toString() } },
             });
         });
         it("Should 'escape' dollar signs of `type`", async () => {
@@ -50,7 +43,7 @@ describe("Serialize", () => {
                 $type: "stuff",
                 $$type: "stuff2",
             };
-            const serialized = Serialize.serialize(data);
+            const serialized = serialize_1.Serialize.serialize(data);
             expect(serialized).toEqual({
                 $$type: "stuff",
                 $$$type: "stuff2",
@@ -64,30 +57,33 @@ describe("Serialize", () => {
                 },
                 spoop: {
                     smth: new Promise(resolve => {
-                        setTimeout(() => resolve({test: 4}), 10);
-                    }) as Promise<{test: number}>,
+                        setTimeout(() => resolve({ test: 4 }), 10);
+                    }),
                 },
             };
             const serialized = await new Promise(res => {
                 let left = 2;
-                const serialized = Serialize.serialize(data, (key, value) => {
+                const serialized = serialize_1.Serialize.serialize(data, (key, value) => {
                     if (key == "spoop.smth") {
-                        expect(value).toEqual({test: 4});
-                    } else if (key == "something.prom") {
+                        expect(value).toEqual({ test: 4 });
+                    }
+                    else if (key == "something.prom") {
                         expect(value).toEqual("stuff");
-                    } else {
+                    }
+                    else {
                         expect(false).toBeTruthy();
                     }
-                    if (--left == 0) res(serialized);
+                    if (--left == 0)
+                        res(serialized);
                 });
             });
             expect(serialized).toEqual({
                 something: {
                     test: true,
-                    prom: undefined,
+                    prom: null,
                 },
                 spoop: {
-                    smth: undefined,
+                    smth: null,
                 },
             });
         });
@@ -97,18 +93,18 @@ describe("Serialize", () => {
             const data = {
                 stuff: 3,
                 something: true,
-                object: {crap: "stuff", ar: ["poop"]},
+                object: { crap: "stuff", ar: ["poop"] },
             };
-            const serialized = Serialize.deserialize(data, () => undefined);
+            const serialized = serialize_1.Serialize.deserialize(data, () => undefined);
             expect(serialized).toEqual(data);
         });
         it("Should deserialize a reference to a module", async () => {
             const data = {
-                someModule: {module: {$type: "ModuleReference", data: "stuff"}},
+                someModule: { module: { $type: "ModuleReference", data: "stuff" } },
             };
-            const deserialized = Serialize.deserialize(data, path => path);
+            const deserialized = serialize_1.Serialize.deserialize(data, path => path);
             expect(deserialized).toEqual({
-                someModule: {module: "stuff"},
+                someModule: { module: "stuff" },
             });
         });
         it("Should 'unescape' dollar signs of `type`", async () => {
@@ -116,7 +112,7 @@ describe("Serialize", () => {
                 $$type: "stuff",
                 $$$type: "stuff2",
             };
-            const serialized = Serialize.deserialize(data, () => undefined);
+            const serialized = serialize_1.Serialize.deserialize(data, () => undefined);
             expect(serialized).toEqual({
                 $type: "stuff",
                 $$type: "stuff2",
@@ -124,3 +120,4 @@ describe("Serialize", () => {
         });
     });
 });
+//# sourceMappingURL=serialize.js.map

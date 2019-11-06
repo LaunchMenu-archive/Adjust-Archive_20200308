@@ -4,11 +4,11 @@ import {ProgramState} from "../state/programState";
 import {ExtendedObject} from "../utils/extendedObject";
 import {ModuleViewData} from "../module/_types/moduleViewData";
 import {ParameterizedModule} from "../module/module";
-import {Serialize} from "../utils/serialize";
+import {Serialize} from "../utils/serialization/serialize";
 import {ModuleID} from "../module/moduleID";
 import {ViewNotFound, ViewNotFoundType} from "../modules/viewNotFound.type";
 import {Registry} from "../registry/registry";
-import {AsyncSerializeableData} from "../utils/_types/serializeableData";
+import {AsyncSerializeableData} from "../utils/serialization/_types/serializeableData";
 import {isMain} from "../utils/isMain";
 import {ContextProvider, ContextProviderType} from "../modules/contextProvider.type";
 

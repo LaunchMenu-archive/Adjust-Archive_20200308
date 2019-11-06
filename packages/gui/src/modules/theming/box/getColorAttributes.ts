@@ -9,7 +9,7 @@ import {IThemeData} from "../themeSettings";
  * or a string if it's different
  */
 export const colorsAttributesCustom = {
-    backgrounddCustom: "background",
+    backgroundCustom: "background",
     borderColorCustom: "borderColor",
     borderTopColorCustom: "borderTopColor",
     borderRightColorCustom: "borderRightColor",

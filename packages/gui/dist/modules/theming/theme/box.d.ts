@@ -75,7 +75,7 @@ export declare const Box: (props: {
     columnWidth?: "xxs" | "xs" | "s" | "m" | "l" | "xl" | "xxl";
     lineHeight?: "xxs" | "xs" | "s" | "m" | "l" | "xl" | "xxl";
 } & {
-    backgrounddCustom?: string;
+    backgroundCustom?: string;
     borderColorCustom?: string;
     borderTopColorCustom?: string;
     borderRightColorCustom?: string;

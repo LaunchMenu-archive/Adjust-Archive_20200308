@@ -7,7 +7,7 @@ import { IThemeData } from "../themeSettings";
  * or a string if it's different
  */
 export declare const colorsAttributesCustom: {
-    backgrounddCustom: string;
+    backgroundCustom: string;
     borderColorCustom: string;
     borderTopColorCustom: string;
     borderRightColorCustom: string;
@@ -54,7 +54,7 @@ export declare const colorsAttributes: {
     columnRuleColor: boolean;
     outlineColor: boolean;
     textDecorationColor: boolean;
-    backgrounddCustom: string;
+    backgroundCustom: string;
     borderColorCustom: string;
     borderTopColorCustom: string;
     borderRightColorCustom: string;

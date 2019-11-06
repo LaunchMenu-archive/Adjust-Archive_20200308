@@ -104,9 +104,7 @@ export abstract class ModuleView<
      */
     public changeState(state: ModuleViewState<S, C, D>): void {
         this.setState(
-            curState => this.getNewState(curState, state),
-            // @ts-ignore
-            () => (this.settings = this.state["~settings"])
+            curState => this.getNewState(curState, state)
         );
     }
 
@@ -162,6 +160,9 @@ export abstract class ModuleView<
      * @override The normal react render method
      */
     public render(): JSX.Element {
+        // @ts-ignore Update the settings
+        this.settings = this.state["~settings"];
+        
         // Renders replacement data if needed, or the actual view otherwise
         return this.notReadyRender() || this.renderView();
     }

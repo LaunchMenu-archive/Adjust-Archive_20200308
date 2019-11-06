@@ -19,6 +19,7 @@ import {ModuleReference} from "../moduleID";
 import {SettingsConfigData} from "../../storage/settings/_types/settingsConfigData";
 import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
 import {TransformModuleViewState} from "./moduleStateTransformer";
+import {TransformSerializeableData} from "../../utils/serialization/_types/TransformSerializeableData";
 
 /**
  * Extracts the request data type from a given module
@@ -59,7 +60,7 @@ export type ExtendedModuleView<
                   prevState: DeepReadonly<
                       S &
                           ExtractModuleViewState<V> &
-                          TransformModuleViewState<
+                          TransformSerializeableData<
                               ModuleViewState<
                                   S & ExtractModuleState<M>,
                                   ExtractModuleSettings<M>,
@@ -76,7 +77,7 @@ export type ExtendedModuleView<
 } & V &
     // FilterModuleView<ModuleView<S & ExtractModuleState<M>, ExtractModuleSettingsConfig<M>, M>>
     ModuleView<
-        S & TransformModuleViewState<ExtractModuleState<M>>,
+        S & TransformSerializeableData<ExtractModuleState<M>>,
         ExtractModuleSettings<M>,
         M,
         ExtractModuleData<M>

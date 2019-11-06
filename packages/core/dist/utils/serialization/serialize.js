@@ -1,11 +1,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
-const module_1 = require("../module/module");
-const extendedObject_1 = require("./extendedObject");
-const moduleProxy_1 = require("../module/moduleProxy");
-const moduleID_1 = require("../module/moduleID");
+const module_1 = require("../../module/module");
+const extendedObject_1 = require("../extendedObject");
+const moduleProxy_1 = require("../../module/moduleProxy");
+const moduleID_1 = require("../../module/moduleID");
 function isModule(data) {
     return data instanceof module_1.Module || data instanceof moduleProxy_1.ModuleProxy;
 }
+function isTraceable(data) {
+    return "serialize" in data && data.serialize instanceof Function;
+}
+// TODO: Make a way to differentiate between lossless and lossy Deserialization
+/**
+ * A class to perform any serialization and deserialization of data in order to transfer it
+ */
 class Serialize {
     static serialize(data, asyncCallback = () => { }, path) {
         // Check if the data has to be serialized
@@ -40,11 +47,17 @@ class Serialize {
                     data.result = value; //TODO: fix TS
                     asyncCallback(path, value, data);
                 });
-                return undefined;
+                return null;
             }
             // If the data is an array, map it
             if (data instanceof Array)
                 return data.map((value, index) => this.serialize(value, asyncCallback, path ? path + "." + index : index + ""));
+            // If the data is an arbtitrary traceable value
+            if (isTraceable(data))
+                return {
+                    $type: "Traceable",
+                    data: this.serialize(data.serialize()),
+                };
             // If it is an arbitrary object, map its values
             const out = extendedObject_1.ExtendedObject.mapPairs(data, (key, value) => [
                 key.replace(/^(\$*(type|flags))/g, "$$$1"),
@@ -72,7 +85,7 @@ class Serialize {
             return null;
         }
         else if (typeof data == "object") {
-            // Cjecl of the data is some custom type
+            // Check of the data is some custom type
             if ("$type" in data) {
                 // Check if the data is constant 'undefined'
                 if (data.$type == "undefined")
@@ -80,6 +93,16 @@ class Serialize {
                 // Check if the data is a module
                 if (data.$type == "ModuleReference" && "data" in data)
                     return getModule(data.data);
+                // Check if the data is a tracable value
+                if (data.$type == "Traceable") {
+                    const s = data.data;
+                    const exports = require(s.deserializeFilePath);
+                    const func = extendedObject_1.ExtendedObject.getField(exports || {}, s.deserializePropertyPath);
+                    if (func instanceof Function)
+                        return func(s.data);
+                    else
+                        return null;
+                }
             }
             // If it is an array, map it
             if (data instanceof Array)

@@ -3,11 +3,10 @@ import {Json} from "../utils/_types/standardTypes";
 import {ParameterizedModuleView, ModuleView} from "../module/moduleView";
 import {IpcRenderer} from "../communication/ipcRenderer";
 import {ParameterizedModuleViewState} from "../module/_types/moduleViewState";
-import {Serialize} from "../utils/serialize";
-import {SerializeableData} from "../utils/_types/serializeableData";
+import {Serialize} from "../utils/serialization/serialize";
+import {SerializeableData} from "../utils/serialization/_types/serializeableData";
 import {ModuleID, ModuleReference} from "../module/moduleID";
 import {ViewCache} from "./viewCache";
-import {isMain} from "../utils/isMain";
 
 // Any window will have a global windowID
 declare const windowID: string;
