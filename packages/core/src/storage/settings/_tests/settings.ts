@@ -49,11 +49,9 @@ export class Target
     implements dummyInterface {
     static async createCustomInstance(identifier: number) {
         const moduleID = new ModuleID("test", 3);
-        const instance = (await super.construct(
-            {requestPath: Module.createRequestPath(moduleID, null, {}), data: identifier},
-            moduleID,
-            {},
-            []
+        const instance = (await super.createInstance(
+            {parent: null, data: identifier as any, type: null},
+            moduleID
         )) as Target;
 
         return instance;

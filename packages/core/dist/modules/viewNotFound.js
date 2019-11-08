@@ -19,7 +19,7 @@ exports.viewNotFoundConfig = {
  */
 class ViewNotFoundModule extends moduleClassCreator_1.createModule(exports.viewNotFoundConfig) {
     /** @override */
-    async onInit(fromReload) {
+    async onInit() {
         registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(viewNotFound_type_1.ViewNotFoundType, this, () => 2));
     }
 }

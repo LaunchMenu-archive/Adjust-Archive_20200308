@@ -3,7 +3,6 @@ const settingsManager_1 = require("../settingsManager");
 const settings_1 = require("../settings");
 const registry_1 = require("../../../registry/registry");
 const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
-const module_1 = require("../../../module/module");
 const moduleID_1 = require("../../../module/moduleID");
 const functionSettingsConditions_1 = require("../settingsConditions/types/functionSettingsConditions");
 const SettingNumber_type_1 = require("../settingInputTypes/SettingNumber.type");
@@ -38,7 +37,7 @@ class Target extends moduleClassCreator_1.createModule({
 }) {
     static async createCustomInstance(identifier) {
         const moduleID = new moduleID_1.ModuleID("test", 3);
-        const instance = (await super.construct({ requestPath: module_1.Module.createRequestPath(moduleID, null, {}), data: identifier }, moduleID, {}, []));
+        const instance = (await super.createInstance({ parent: null, data: identifier, type: null }, moduleID));
         return instance;
     }
     async test(text) {

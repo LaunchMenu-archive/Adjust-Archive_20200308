@@ -22,19 +22,18 @@ export const contextProviderConfig = {
 export class ContextProviderModule extends createModule(contextProviderConfig)
     implements ContextProvider {
     /** @override */
-    protected async onInit(fromReload: boolean): Promise<void> {
+    protected async onInit(): Promise<void> {
         Registry.addProvider(
             new InstanceModuleProvider(ContextProviderType, this, () => 2)
         );
 
         // If this is the creation of the module, create a child
-        if (!fromReload)
-            this.changeState({
-                childProvider: (await this.request({
-                    type: ContextProviderType,
-                    use: createRecursiveRequestFilter(this),
-                }))[0],
-            });
+        this.changeState({
+            childProvider: (await this.request({
+                type: ContextProviderType,
+                use: createRecursiveRequestFilter(this),
+            }))[0],
+        });
     }
 }
 export default ContextProviderModule;

@@ -28,7 +28,7 @@ declare const ContextProviderModule_base: import("../module/_types/extendedModul
  */
 export declare class ContextProviderModule extends ContextProviderModule_base implements ContextProvider {
     /** @override */
-    protected onInit(fromReload: boolean): Promise<void>;
+    protected onInit(): Promise<void>;
 }
 export default ContextProviderModule;
 declare const ContextProviderView_base: import("../module/_types/extendedModuleView").ExtendedModuleViewClass<typeof ContextProviderModule, {}, import("../utils/_types/standardTypes").ExtendsClass<typeof import("..").ModuleView, import("..").ModuleView<{}, {}, import("..").Module<import("../module/_types/moduleState").ModuleState, import("../storage/settings/_types/settingsConfig").SettingsConfig<any>, import("../module/_types/moduleContract").ModuleContract>, {}>>>;

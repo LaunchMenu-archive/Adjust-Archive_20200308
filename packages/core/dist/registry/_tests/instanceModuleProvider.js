@@ -3,8 +3,6 @@ const registry_1 = require("../registry");
 const classModuleProvider_1 = require("../moduleProviders/classModuleProvider");
 const instanceModuleProvider_1 = require("../moduleProviders/instanceModuleProvider");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
-const programState_1 = require("../../state/programState");
-const requestPath_1 = require("../../module/requestPath/requestPath");
 const moduleID_1 = require("../../module/moduleID");
 exports.dummyInterfaceID = registry_1.Registry.createContractID(__filename + "1");
 class DummyModule extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID }) {
@@ -22,7 +20,7 @@ DummyModule.path = "../module/_tests/dummyModules.helper.js"; // A path that can
 class DummyParent extends moduleClassCreator_1.createModule({ type: exports.dummyInterfaceID, state: {}, settings: {} }) {
     static async createCustomInstance(someMethod = () => { }) {
         const moduleID = new moduleID_1.ModuleID("test", 3);
-        const instance = (await super.construct({ data: {}, requestPath: new requestPath_1.RequestPath(new moduleID_1.ModuleID("test", 0), {}) }, programState_1.ProgramState.getNextModuleID(DummyParent), {}, []));
+        const instance = (await super.createInstance({ parent: null, data: null, type: null }, moduleID));
         instance.someMethod = someMethod;
         return instance;
     }

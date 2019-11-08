@@ -18,7 +18,7 @@ export const viewNotFoundConfig = {
 export class ViewNotFoundModule extends createModule(viewNotFoundConfig)
     implements ViewNotFound {
     /** @override */
-    protected async onInit(fromReload: boolean) {
+    protected async onInit() {
         Registry.addProvider(new InstanceModuleProvider(ViewNotFoundType, this, () => 2));
     }
 }

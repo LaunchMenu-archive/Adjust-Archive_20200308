@@ -36,11 +36,9 @@ class DummyParent extends createModule({type: dummyInterfaceID, state: {}, setti
 
     static async createCustomInstance(someMethod: () => void = () => {}) {
         const moduleID = new ModuleID("test", 3);
-        const instance = (await super.construct(
-            {data: {}, requestPath: new RequestPath(new ModuleID("test", 0), {})},
-            ProgramState.getNextModuleID(DummyParent),
-            {},
-            []
+        const instance = (await super.createInstance(
+            {parent: null, data: null, type: null},
+            moduleID
         )) as DummyParent;
         instance.someMethod = someMethod;
 

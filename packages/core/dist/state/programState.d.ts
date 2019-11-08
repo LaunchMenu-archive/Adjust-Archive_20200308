@@ -1,5 +1,4 @@
 import { ParameterizedModule, Module } from "../module/module";
-import { SerializedProgramState } from "./_types/SerializedProgramState";
 import { ModuleID } from "../module/moduleID";
 import { ExtendsClass } from "../utils/_types/standardTypes";
 /**
@@ -35,16 +34,6 @@ declare class ProgramStateSingleton {
      * @returns The module instance if available
      */
     getModule(moduleID: ModuleID | string): ParameterizedModule;
-    /**
-     * Serializes all modules into a single object
-     * @returns The overall object containing all serialized modules
-     */
-    serialize(): SerializedProgramState;
-    /**
-     * Loads the passed data into the program state
-     * @param modules The actual data to create the modules from
-     */
-    deserialize(data: SerializedProgramState): Promise<void>;
 }
 export declare const ProgramState: ProgramStateSingleton;
 export {};

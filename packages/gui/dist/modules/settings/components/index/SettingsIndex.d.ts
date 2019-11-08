@@ -20,7 +20,7 @@ export declare class SettingsIndexModule extends SettingsIndexModule_base implem
     setSearch(search: RegExp | string): Promise<void>;
 }
 export default SettingsIndexModule;
-declare const SettingsIndexView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsIndexModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../..").ModuleView, import("../../../..").ModuleView<{}, {}, import("../../../..").Module, {}>>>;
+declare const SettingsIndexView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsIndexModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../..").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class SettingsIndexView extends SettingsIndexView_base {
     /** @override */
     renderView(): JSX.Element;

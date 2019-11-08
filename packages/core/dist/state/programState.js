@@ -1,6 +1,4 @@
 Object.defineProperty(exports, "__esModule", { value: true });
-const registry_1 = require("../registry/registry");
-const extendedObject_1 = require("../utils/extendedObject");
 const moduleID_1 = require("../module/moduleID");
 /**
  * Keeps references to all of the module instances that essentially make up the entire program
@@ -61,53 +59,6 @@ class ProgramStateSingleton {
         const module = this.modules[moduleID.toString()];
         // Return the result
         return module;
-    }
-    // Serilization
-    /**
-     * Serializes all modules into a single object
-     * @returns The overall object containing all serialized modules
-     */
-    serialize() {
-        // TODO: call stop on modules first
-        return {
-            maxModuleIDS: Object.assign({}, this.maxModuleIDs),
-            modules: extendedObject_1.ExtendedObject.map(this.modules, module => module.serialize()),
-        };
-    }
-    /**
-     * Loads the passed data into the program state
-     * @param modules The actual data to create the modules from
-     */
-    async deserialize(data) {
-        // Make sure the programState is currently empty
-        if (Object.keys(this.modules).length != 0)
-            throw new Error("A previous state can only be loaded into an empty program state");
-        // Load the current maximum IDs
-        this.maxModuleIDs = Object.assign({}, data.maxModuleIDS);
-        // Create the modules
-        const instanciatePromises = Object.keys(data.modules).map(async (moduleID) => {
-            const moduleData = data.modules[moduleID];
-            // Get the class of the module
-            const moduleClass = registry_1.Registry.getModuleClass(moduleData.$type);
-            // TODO: add error handling if no moduleClass could be found
-            // Create a new instance of this class, deserializing the setup related data
-            const module = await moduleClass.recreateInstance(moduleData, new moduleID_1.ModuleID(moduleID));
-            // Return the instance
-            return { moduleID, module };
-        });
-        // Reconstruct the modules object from the key value pairs
-        const modules = await Promise.all(instanciatePromises);
-        this.modules = {};
-        modules.forEach(({ moduleID, module }) => (this.modules[moduleID] = module));
-        // Perform deserialization of the state
-        const deserializePromises = [];
-        extendedObject_1.ExtendedObject.forEach(data.modules, (key, moduleData) => {
-            // Get the actual module
-            const module = this.modules[key];
-            // Deserialize the data
-            deserializePromises.push(module.deserialize(moduleData.data));
-        });
-        await Promise.all(deserializePromises);
     }
 }
 exports.ProgramState = new ProgramStateSingleton();

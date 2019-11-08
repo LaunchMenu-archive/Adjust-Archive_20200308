@@ -23,16 +23,15 @@ exports.contextProviderConfig = {
  */
 class ContextProviderModule extends moduleClassCreator_1.createModule(exports.contextProviderConfig) {
     /** @override */
-    async onInit(fromReload) {
+    async onInit() {
         registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(contextProvider_type_1.ContextProviderType, this, () => 2));
         // If this is the creation of the module, create a child
-        if (!fromReload)
-            this.changeState({
-                childProvider: (await this.request({
-                    type: contextProvider_type_1.ContextProviderType,
-                    use: requestFilters_1.createRecursiveRequestFilter(this),
-                }))[0],
-            });
+        this.changeState({
+            childProvider: (await this.request({
+                type: contextProvider_type_1.ContextProviderType,
+                use: requestFilters_1.createRecursiveRequestFilter(this),
+            }))[0],
+        });
     }
 }
 exports.ContextProviderModule = ContextProviderModule;

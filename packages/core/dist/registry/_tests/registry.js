@@ -4,7 +4,6 @@ const classModuleProvider_1 = require("../moduleProviders/classModuleProvider");
 const dummyModules_helper_1 = require("../../module/_tests/dummyModules.helper");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
 const programState_1 = require("../../state/programState");
-const module_1 = require("../../module/module");
 class P extends moduleClassCreator_1.createModule({
     type: dummyModules_helper_1.dummyInterfaceID,
     state: {},
@@ -12,7 +11,7 @@ class P extends moduleClassCreator_1.createModule({
 }) {
     static async createCustomInstance() {
         const moduleID = programState_1.ProgramState.getNextModuleID(P.getPath());
-        const instance = await super.construct({ requestPath: module_1.Module.createRequestPath(moduleID, null, {}), data: null }, moduleID, {}, []);
+        const instance = await super.createInstance({ parent: null, data: null, type: null }, moduleID);
         programState_1.ProgramState.addModule(instance);
         return instance;
     }

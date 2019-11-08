@@ -42,16 +42,12 @@ class InstanceModuleProvider extends abstractModuleProvider_1.AbstractModuleProv
         // Only connect and inform the module of a connection if a parent was specified
         if (parentProxy) {
             // Connect the proxies and add this as a parent
-            moduleProxy._connect(parentProxy, () => {
-                parentProxy.notifyChildRemoved(moduleProxy);
-            });
+            moduleProxy._connect(parentProxy);
             this.module.notifyParentAdded(parentProxy);
-            // Inform the module of a newly made connection
-            this.connectionListener(parentProxy);
-            // Call module initialisation now the connection has completed (will wait for init to complete)
-            await this.module.init(false);
             // Also add the reference the other way around
             parentProxy.notifyChildAdded(moduleProxy);
+            // Inform the listener of a newly made connection
+            this.connectionListener(parentProxy);
         }
         // Return the module
         return moduleProxy;

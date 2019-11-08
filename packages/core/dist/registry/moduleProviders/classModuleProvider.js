@@ -29,23 +29,7 @@ class ClassModuleProvider extends abstractModuleProvider_1.AbstractModuleProvide
         }
         // Retrieve the Module type and instanciate it
         const moduleID = programState_1.ProgramState.getNextModuleID(this.moduleClass.getPath());
-        const module = await this.moduleClass.createInstance(request, moduleID);
-        // Register the module
-        programState_1.ProgramState.addModule(module);
-        // Create the proxy for the module and connect to the parent proxy
-        const moduleProxy = module.createProxy();
-        if (parentProxy) {
-            moduleProxy._connect(parentProxy, () => {
-                parentProxy.notifyChildRemoved(moduleProxy);
-            });
-        }
-        // Call module initialisation now the connection has completed
-        await module.init(false);
-        // Indicate that the child have been created
-        if (parentProxy)
-            parentProxy.notifyChildAdded(moduleProxy);
-        // Return the module
-        return moduleProxy;
+        return await this.moduleClass.createInstance(request, moduleID);
     }
 }
 exports.ClassModuleProvider = ClassModuleProvider;

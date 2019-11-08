@@ -19,15 +19,13 @@ class ModuleProxy {
     /**
      * Connects two proxies with one and another
      * @param proxy The proxy to connect with
-     * @param onClose An option callback for when close is called
      * @throws {IllegalStateException} If called when already connected
      */
-    _connect(proxy, onClose) {
+    _connect(proxy) {
         if (this._source)
             throw Error("Connect may only be called once");
         proxy._source = this;
         this._source = proxy;
-        this._onClose = onClose;
     }
     // Instance checking methods
     /**
@@ -159,12 +157,10 @@ class ModuleProxy {
             await this._processing.finished;
             // Perform regular closing
             if (this._target) {
-                await close.apply(this, arguments);
-                // Call a possible on close handler
-                if (this._onClose)
-                    this._onClose();
                 // Renove the target reference
                 this._target = null;
+                // Call the close method
+                await close.apply(this, arguments);
             }
         };
         // Make a method to return the module ID, even if the module was closed

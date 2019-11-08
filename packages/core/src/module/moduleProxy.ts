@@ -13,9 +13,6 @@ export class ModuleProxy {
     // The source that calls methods on this proxy
     protected _source: ModuleProxy;
 
-    // A method to optionally ovewrite the class' close method
-    protected _onClose: () => void;
-
     // Stores the ID of the module instance
     protected _moduleID: ModuleID;
 
@@ -39,15 +36,13 @@ export class ModuleProxy {
     /**
      * Connects two proxies with one and another
      * @param proxy The proxy to connect with
-     * @param onClose An option callback for when close is called
      * @throws {IllegalStateException} If called when already connected
      */
-    public _connect(proxy: ModuleProxy, onClose?: () => void): void {
+    public _connect(proxy: ModuleProxy): void {
         if (this._source) throw Error("Connect may only be called once");
 
         proxy._source = this;
         this._source = proxy;
-        this._onClose = onClose;
     }
 
     // Instance checking methods
@@ -212,13 +207,11 @@ export class ModuleProxy {
 
             // Perform regular closing
             if (this._target) {
-                await close.apply(this, arguments);
-
-                // Call a possible on close handler
-                if (this._onClose) this._onClose();
-
                 // Renove the target reference
                 this._target = null;
+
+                // Call the close method
+                await close.apply(this, arguments);
             }
         };
 

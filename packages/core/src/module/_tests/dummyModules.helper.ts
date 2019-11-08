@@ -18,19 +18,6 @@ export const dummyInterfaceID = Registry.createContractID<{
 export class DummyModule
     extends createModule({state: {}, settings: {}, type: dummyInterfaceID})
     implements dummyInterface {
-    public static async customConstruct<
-        S extends ModuleState,
-        C extends SettingsConfig,
-        I extends ModuleContract
-    >(
-        request: ModuleRequestData<I>,
-        moduleID: ModuleID,
-        state: S,
-        parents: I["parent"][]
-    ): Promise<Module<S, C, I>> {
-        return this.construct(request, moduleID, state, parents);
-    }
-
     public async test(text: string): Promise<string> {
         return text;
     }

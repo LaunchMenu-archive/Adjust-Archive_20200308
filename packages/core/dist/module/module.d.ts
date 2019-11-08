@@ -1,7 +1,6 @@
 import { DeepReadonly, ExtendsClass, Json } from "../utils/_types/standardTypes";
 import { RemoteModuleProxy } from "./remoteModuleProxy";
 import { ModuleState } from "./_types/moduleState";
-import { SerializedModule } from "./_types/serializedModule";
 import { ParameterizedNormalizedModuleConfig, NormalizedModuleConfig } from "./_types/moduleConfig";
 import { ModuleRequestData } from "./_types/moduleRequestData";
 import { SettingsConfig } from "../storage/settings/_types/settingsConfig";
@@ -52,7 +51,6 @@ export declare const baseConfig: {
  *
  */
 export declare class Module<S extends ModuleState, C extends SettingsConfig<any>, I extends ModuleContract> implements ChildModule<{}> {
-    private initPromise;
     private readonly ID;
     private readonly requestData;
     parent: I["parent"];
@@ -68,15 +66,6 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      */
     protected constructor();
     /**
-     * The core building block for Adjust applications
-     * @param request The relevant data of the request that created this instance
-     * @param moduleID The ID of this module
-     * @param initialState The intial state that the module should have
-     * @param parents The list of parents of the module
-     * @returns An unregistered instance of this module
-     */
-    protected static construct<S extends ModuleState, C extends SettingsConfig, I extends ModuleContract>(request: ModuleRequestData<I>, moduleID: ModuleID, initialState: S, parents: I["parent"][]): Promise<Module<S, C, I>>;
-    /**
      * Get the request path for this module based on its parent and the ID
      * @param moduleID The ID of this module
      * @param parent The parent of this module
@@ -88,12 +77,12 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * Creates an instance of this module, given an ID for the instance and a request
      * @param request The request that started the creation of the module
      * @param moduleID The ID that the new instance should have
-     * @returns A new instance of this class
+     * @returns A new instance of this class, returns a proxy for the module
      */
     static createInstance(request: ParameterizedRequest, moduleID: ModuleID): Promise<any>;
     /**
      * A method that gets called to perform initialisation, immediately when the module was created
-     * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been pbtained (and thus can't used them)
+     * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been obtained (and thus can't used them)
      */
     preInit(): Promise<void>;
     /**
@@ -105,17 +94,13 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * A method that gets called to perform initialisation,
      * Will be called when a new module connects as well, but will ensure that onInit is called only once
      * (will be called by external setup method, such as from a module provider)
-     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
-     * @param extraInit Additional method to call on init
-     * @returns Whether or not this was the initial reload
      */
-    init(fromReload: boolean, extraInit?: (fromReload: boolean) => Promise<void>): Promise<boolean>;
+    init(): Promise<void>;
     /**
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state
-     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
-    protected onInit(fromReload: boolean): Promise<void>;
+    protected onInit(): Promise<void>;
     /**
      * Retrieves the entire state object of the module
      * @returns The entire state object on which listeners could be registered
@@ -139,23 +124,6 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @returns A promise that resolves once all listeners have resolved
      */
     changeSettings(changedProps: DataChange<SettingsConfigData<C>>, condition?: SettingsConditions): Promise<void>;
-    /**
-     * Serializes the entire module, based on the state
-     * @returns An object containing all the module's relevant data
-     */
-    serialize(): SerializedModule;
-    /**
-     * Creates an instance of this module, given an ID for the instance and serialized data representing an instance
-     * @param serializedData The serialized data, obtained by serializing a previous instance
-     * @param moduleID The ID that the new instance should have
-     * @returns A new instance of this class
-     */
-    static recreateInstance(serializedData: SerializedModule, moduleID: ModuleID): Promise<Module<{}, SettingsConfig<import("../storage/settings/_types/settingsConfigSet").SettingsConfigSet>, ModuleContract>>;
-    /**
-     * Deserializes the data that defines the module's own state
-     * @param data The data to be deserialized
-     */
-    deserialize(data: SerializedModule["data"]): Promise<void>;
     /**
      * Returns the ID of this module
      * @returns The ID
@@ -191,6 +159,20 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      */
     getParents(): I["parent"][];
     /**
+     * Retrieves modules based on the given request specification
+     * @param request The request to base the modules to retrieve on
+     * @returns The modules that were either created or obtained
+     */
+    request<M extends ModuleContract>(this: M["parent"], request: ParentlessRequest<M> & {
+        use: "all" | RequestFilter<M>;
+    }): Promise<(M["child"])[]>;
+    /**
+     * Retrieves a module based on the given request specification
+     * @param request The request to base the module to retrieve on
+     * @returns The module that was either created or obtained
+     */
+    request<M extends ModuleContract>(this: M["parent"], request: ParentlessRequest<M>): Promise<M["child"]>;
+    /**
      * Adds an additonal parent to the module (for when obtained with instance module provider)
      * @param parent The new parent to add
      */
@@ -208,6 +190,11 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      */
     protected isLastParent(parent: I["parent"]): boolean;
     /**
+     * Called when a parent is added
+     * @param parent The parent that was added
+     */
+    onAddParent(parent: I["parent"]): void;
+    /**
      * Called when any parent is removed (Either the main or additional parent)
      * @param parent The parent that was removed
      */
@@ -217,21 +204,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @param newParent The additional parent that is taking over
      * @param oldParent The previously main parent that got removed
      */
-    onChangeParent(newParent: I["parent"], oldParent: I["parent"]): void;
-    /**
-     * Retrieves modules based on the given request specification
-     * @param request The request to base the modules to retrieve on
-     * @returns The modules that were either created or obtained
-     */
-    request<M extends ModuleContract>(this: M["parent"], request: ParentlessRequest<M> & {
-        use: "all" | RequestFilter<M>;
-    }): Promise<(M["child"])[]>;
-    /**
-     * Retrieves a module based on the given request specification
-     * @param request The request to base the module to retrieve on
-     * @returns The module that was either created or obtained
-     */
-    request<M extends ModuleContract>(this: M["parent"], request: ParentlessRequest<M>): Promise<M["child"]>;
+    onChangeMainParent(newParent: I["parent"], oldParent: I["parent"]): void;
     private callContext;
     /**
      * Retrieves the context that this method was called from, should be called before any awaits
@@ -246,14 +219,29 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
     setCallContext(callContext: ModuleProxy): void;
     /**
      * Indicates that this module is now the parent of the given module
-     * @param module The module that is now a child of this module
+     * @param module The module that is now a child of this module, but not necessarily initialized yet
      */
     notifyChildAdded(module: ModuleProxy): void;
+    /**
+     * Indicates that this module is now the parent of the given module that was just initialized
+     * @param module The module that is now a child of this module and just initialized
+     */
+    notifyChildInitialized(module: ModuleProxy): void;
     /**
      * Indicates that this module is no longer the parent of the given module
      * @param module The module that is no longer a child of this module (due to being closed)
      */
     notifyChildRemoved(module: ModuleProxy): void;
+    /**
+     * Called when a child is added
+     * @param child The child that was added
+     */
+    onAddChild(child: ModuleProxy): void;
+    /**
+     * Called when a child is removed
+     * @param child The child that was removed
+     */
+    onRemoveChild(child: ModuleProxy): void;
     /**
      * Stop and close the module
      */

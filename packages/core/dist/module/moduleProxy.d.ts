@@ -7,7 +7,6 @@ import { AsyncSequencer } from "../utils/async/AsyncSequencer";
 export declare class ModuleProxy {
     protected _target: ParameterizedModule;
     protected _source: ModuleProxy;
-    protected _onClose: () => void;
     protected _moduleID: ModuleID;
     protected _processing: AsyncSequencer;
     /**
@@ -20,10 +19,9 @@ export declare class ModuleProxy {
     /**
      * Connects two proxies with one and another
      * @param proxy The proxy to connect with
-     * @param onClose An option callback for when close is called
      * @throws {IllegalStateException} If called when already connected
      */
-    _connect(proxy: ModuleProxy, onClose?: () => void): void;
+    _connect(proxy: ModuleProxy): void;
     /**
      * Checks whether this is a proxy for a node of the given interface
      * @param interfaceID The interface to check

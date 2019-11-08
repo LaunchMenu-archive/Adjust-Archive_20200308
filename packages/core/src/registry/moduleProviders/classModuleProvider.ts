@@ -44,29 +44,6 @@ export class ClassModuleProvider<M extends ModuleContract> extends AbstractModul
 
         // Retrieve the Module type and instanciate it
         const moduleID = ProgramState.getNextModuleID(this.moduleClass.getPath());
-        const module: ParameterizedModule = await this.moduleClass.createInstance(
-            request,
-            moduleID
-        );
-
-        // Register the module
-        ProgramState.addModule(module);
-
-        // Create the proxy for the module and connect to the parent proxy
-        const moduleProxy = module.createProxy();
-        if (parentProxy) {
-            moduleProxy._connect(parentProxy, () => {
-                parentProxy.notifyChildRemoved(moduleProxy);
-            });
-        }
-
-        // Call module initialisation now the connection has completed
-        await module.init(false);
-
-        // Indicate that the child have been created
-        if (parentProxy) parentProxy.notifyChildAdded(moduleProxy);
-
-        // Return the module
-        return moduleProxy as any;
+        return await this.moduleClass.createInstance(request, moduleID);
     }
 }

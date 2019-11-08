@@ -11,11 +11,9 @@ class P extends createModule({
 }) {
     static async createCustomInstance() {
         const moduleID = ProgramState.getNextModuleID(P.getPath());
-        const instance = await super.construct(
-            {requestPath: Module.createRequestPath(moduleID, null, {}), data: null},
-            moduleID,
-            {},
-            []
+        const instance = await super.createInstance(
+            {parent: null, data: null, type: null},
+            moduleID
         );
         ProgramState.addModule(instance);
         return instance;

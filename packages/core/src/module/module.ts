@@ -65,9 +65,6 @@ export class Module<
     C extends SettingsConfig<any>,
     I extends ModuleContract
 > implements ChildModule<{}> {
-    // Init
-    private initPromise: Promise<boolean>;
-
     // ID
     private readonly ID: ModuleID;
 
@@ -92,53 +89,6 @@ export class Module<
      * @returns An unregistered instance of this module
      */
     protected constructor() {}
-
-    /**
-     * The core building block for Adjust applications
-     * @param request The relevant data of the request that created this instance
-     * @param moduleID The ID of this module
-     * @param initialState The intial state that the module should have
-     * @param parents The list of parents of the module
-     * @returns An unregistered instance of this module
-     */
-    protected static async construct<
-        S extends ModuleState,
-        C extends SettingsConfig,
-        I extends ModuleContract
-    >(
-        request: ModuleRequestData<I>,
-        moduleID: ModuleID,
-        initialState: S,
-        parents: I["parent"][]
-    ): Promise<Module<S, C, I>> {
-        const module = new this();
-
-        // Setup request related data
-        // @ts-ignore
-        module.requestData = request;
-        // @ts-ignore
-        module.ID = moduleID;
-        // @ts-ignore
-        module.parents = parents;
-        module.parent = module.parents[0];
-
-        // State initialization
-        // @ts-ignore
-        module.stateObject = new StateData(initialState);
-        // @ts-ignore
-        module.state = module.stateObject.get;
-
-        // Call the preinit hook
-        await module.preInit();
-
-        // Settings initialization
-        // @ts-ignore
-        module.settingsObject = await Settings.createInstance(module);
-        // @ts-ignore
-        module.settings = module.settingsObject.get;
-
-        return module as any;
-    }
 
     /**
      * Get the request path for this module based on its parent and the ID
@@ -166,7 +116,7 @@ export class Module<
      * Creates an instance of this module, given an ID for the instance and a request
      * @param request The request that started the creation of the module
      * @param moduleID The ID that the new instance should have
-     * @returns A new instance of this class
+     * @returns A new instance of this class, returns a proxy for the module
      */
     public static async createInstance(
         request: ParameterizedRequest,
@@ -182,13 +132,54 @@ export class Module<
         const parents = request.parent ? [request.parent] : [];
 
         // Create the instance
-        return this.construct(request as any, moduleID, initialState, parents);
+        const module = new this();
+
+        // Setup request related data
+        // @ts-ignore
+        module.requestData = request;
+        // @ts-ignore
+        module.ID = moduleID;
+        // @ts-ignore
+        module.parents = parents;
+        module.parent = module.parents[0];
+
+        // State initialization
+        // @ts-ignore
+        module.stateObject = new StateData(initialState);
+        // @ts-ignore
+        module.state = module.stateObject.get;
+
+        // Call the preinit hook
+        await module.preInit();
+
+        // Settings initialization
+        // @ts-ignore
+        module.settingsObject = await Settings.createInstance(module);
+        // @ts-ignore
+        module.settings = module.settingsObject.get;
+
+        // Register the module
+        ProgramState.addModule(module);
+
+        // Create the proxy for the module and connect to the parent proxy
+        const moduleProxy = module.createProxy();
+        if (request.parent) {
+            moduleProxy._connect(request.parent);
+            request.parent.notifyChildAdded(moduleProxy);
+        }
+
+        // Initialize the module
+        await module.init();
+        if (request.parent) request.parent.notifyChildInitialized(moduleProxy);
+
+        // Return the module proxy
+        return moduleProxy;
     }
 
     // Initialisation
     /**
      * A method that gets called to perform initialisation, immediately when the module was created
-     * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been pbtained (and thus can't used them)
+     * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been obtained (and thus can't used them)
      */
     public async preInit(): Promise<void> {
         await this.onPreInit();
@@ -203,35 +194,16 @@ export class Module<
      * A method that gets called to perform initialisation,
      * Will be called when a new module connects as well, but will ensure that onInit is called only once
      * (will be called by external setup method, such as from a module provider)
-     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
-     * @param extraInit Additional method to call on init
-     * @returns Whether or not this was the initial reload
      */
-    public async init(
-        fromReload: boolean,
-        extraInit: (fromReload: boolean) => Promise<void> = () => Promise.resolve()
-    ): Promise<boolean> {
-        // Don't call init again if it already was
-        if (this.initPromise) return this.initPromise.then(() => false);
-
-        // Initialise, and save the promise
-        return (this.initPromise = new Promise(async resolve => {
-            // Call any higher level init methods
-            await extraInit(fromReload);
-
-            // Call the module's on init method
-            await this.onInit(fromReload);
-
-            // Resolve the promise
-            resolve(true);
-        }));
+    public async init(): Promise<void> {
+        // Call the module's on init method
+        await this.onInit();
     }
     /**
      * A method that gets called to perform any initialization,
      * will be called only once, after having been added to the state
-     * @param fromReload Whether or not this module is initialised with a state already present (reloading a previous state)
      */
-    protected async onInit(fromReload: boolean): Promise<void> {}
+    protected async onInit(): Promise<void> {}
 
     // State related methods
     /**
@@ -271,72 +243,6 @@ export class Module<
         condition?: SettingsConditions
     ): Promise<void> {
         return this.settingsObject.changeData(changedProps as any, condition);
-    }
-
-    // Serialization related methods
-    /**
-     * Serializes the entire module, based on the state
-     * @returns An object containing all the module's relevant data
-     */
-    public serialize(): SerializedModule {
-        const requestData = this.getRequest();
-        return {
-            $type: this.getClass().getPath(),
-            data: {
-                request: {
-                    ...(ExtendedObject.filter(
-                        requestData,
-                        (v, k) => ["use", "type"].indexOf(k) == -1
-                    ) as any),
-                    requestPath: requestData.requestPath.toString(),
-                    parent: requestData.parent && requestData.parent.getID().toString(),
-                },
-                parents: this.parents.map(parent => parent.getID().toString()),
-                state: this.stateObject.serialize(),
-            },
-        };
-    }
-
-    /**
-     * Creates an instance of this module, given an ID for the instance and serialized data representing an instance
-     * @param serializedData The serialized data, obtained by serializing a previous instance
-     * @param moduleID The ID that the new instance should have
-     * @returns A new instance of this class
-     */
-    public static async recreateInstance(
-        serializedData: SerializedModule,
-        moduleID: ModuleID
-    ) {
-        // The data is a serialized module
-        const data = serializedData.data;
-
-        // Obtain the required data to instanciate the module
-        const request = {
-            ...data.request,
-            requestPath: new RequestPath(data.request.requestPath),
-        };
-
-        // Create the instance
-        return await this.construct(request, moduleID, {}, []);
-    }
-
-    /**
-     * Deserializes the data that defines the module's own state
-     * @param data The data to be deserialized
-     */
-    public async deserialize(data: SerializedModule["data"]): Promise<void> {
-        // Update the parents
-        const parents = data.parents.map(parent =>
-            ProgramState.getModule(parent).createProxy()
-        );
-        this.parents.push.apply(this.parents, parents);
-        this.parent = this.parents[0];
-
-        // Deserialize the state
-        this.stateObject.deserialize(data.state, this);
-
-        // Finish by calling the init hook
-        await this.init(true);
     }
 
     // Request related methods
@@ -394,62 +300,6 @@ export class Module<
     }
 
     /**
-     * Adds an additonal parent to the module (for when obtained with instance module provider)
-     * @param parent The new parent to add
-     */
-    public notifyParentAdded(parent: I["parent"]): void {
-        this.parents.push(parent as any);
-    }
-
-    /**
-     * Removes an additional parent from the module (for when an additional parent closes the child)
-     * @param parent The parent to remove
-     * @returns Whether this was the last parent
-     */
-    protected notifyParentRemoved(parent: I["parent"]): boolean {
-        // Remove the parent
-        const index = this.parents.indexOf(parent);
-        if (index >= 0) {
-            this.parents.splice(index, 1);
-
-            // Notify about the parent disconnect
-            this.onRemoveParent(parent);
-
-            // Check if this is the main parent, and if so, replace it
-            if (parent == this.parent) {
-                this.parent = this.parents[0];
-
-                // Check if there is a replacement
-                if (this.parent) this.onChangeParent(this.parent, parent);
-                else return true;
-            }
-        }
-    }
-
-    /**
-     * Checks whether the given parent is this module's last parent
-     * @param parent The parent to check
-     * @returns Whether or not this parent is the module's last parent
-     */
-    protected isLastParent(parent: I["parent"]): boolean {
-        const index = this.parents.indexOf(parent);
-        return index >= 0 && this.parents.length == 1;
-    }
-
-    /**
-     * Called when any parent is removed (Either the main or additional parent)
-     * @param parent The parent that was removed
-     */
-    public onRemoveParent(parent: I["parent"]): void {}
-
-    /**
-     * Called when the main parent is removed, but an additional parent may take over
-     * @param newParent The additional parent that is taking over
-     * @param oldParent The previously main parent that got removed
-     */
-    public onChangeParent(newParent: I["parent"], oldParent: I["parent"]): void {}
-
-    /**
      * Retrieves modules based on the given request specification
      * @param request The request to base the modules to retrieve on
      * @returns The modules that were either created or obtained
@@ -491,6 +341,70 @@ export class Module<
         return result;
     }
 
+    // Parent management
+    /**
+     * Adds an additonal parent to the module (for when obtained with instance module provider)
+     * @param parent The new parent to add
+     */
+    public notifyParentAdded(parent: I["parent"]): void {
+        this.parents.push(parent as any);
+        this.onAddParent(parent);
+    }
+
+    /**
+     * Removes an additional parent from the module (for when an additional parent closes the child)
+     * @param parent The parent to remove
+     * @returns Whether this was the last parent
+     */
+    protected notifyParentRemoved(parent: I["parent"]): boolean {
+        // Remove the parent
+        const index = this.parents.indexOf(parent);
+        if (index >= 0) {
+            this.parents.splice(index, 1);
+
+            // Notify about the parent disconnect
+            this.onRemoveParent(parent);
+
+            // Check if this is the main parent, and if so, replace it
+            if (parent == this.parent) {
+                this.parent = this.parents[0];
+
+                // Check if there is a replacement
+                if (this.parent) this.onChangeMainParent(this.parent, parent);
+                else return true;
+            }
+        }
+    }
+
+    /**
+     * Checks whether the given parent is this module's last parent
+     * @param parent The parent to check
+     * @returns Whether or not this parent is the module's last parent
+     */
+    protected isLastParent(parent: I["parent"]): boolean {
+        const index = this.parents.indexOf(parent);
+        return index >= 0 && this.parents.length == 1;
+    }
+
+    /**
+     * Called when a parent is added
+     * @param parent The parent that was added
+     */
+    public onAddParent(parent: I["parent"]): void {}
+
+    /**
+     * Called when any parent is removed (Either the main or additional parent)
+     * @param parent The parent that was removed
+     */
+    public onRemoveParent(parent: I["parent"]): void {}
+
+    /**
+     * Called when the main parent is removed, but an additional parent may take over
+     * @param newParent The additional parent that is taking over
+     * @param oldParent The previously main parent that got removed
+     */
+    public onChangeMainParent(newParent: I["parent"], oldParent: I["parent"]): void {}
+
     // Channel related methods
     private callContext: ModuleProxy;
 
@@ -515,10 +429,18 @@ export class Module<
 
     /**
      * Indicates that this module is now the parent of the given module
-     * @param module The module that is now a child of this module
+     * @param module The module that is now a child of this module, but not necessarily initialized yet
      */
     public notifyChildAdded(module: ModuleProxy): void {
         this.children.push(module);
+    }
+
+    /**
+     * Indicates that this module is now the parent of the given module that was just initialized
+     * @param module The module that is now a child of this module and just initialized
+     */
+    public notifyChildInitialized(module: ModuleProxy): void {
+        this.onAddChild(module);
     }
 
     /**
@@ -528,7 +450,20 @@ export class Module<
     public notifyChildRemoved(module: ModuleProxy): void {
         const index = this.children.indexOf(module);
         if (index != -1) this.children.splice(index, 1);
+        this.onRemoveChild(module);
     }
+
+    /**
+     * Called when a child is added
+     * @param child The child that was added
+     */
+    public onAddChild(child: ModuleProxy): void {}
+
+    /**
+     * Called when a child is removed
+     * @param child The child that was removed
+     */
+    public onRemoveChild(child: ModuleProxy): void {}
 
     // Closing related methods
     /**
@@ -538,6 +473,10 @@ export class Module<
         // Get the caller of the method, and make sure it's a parent
         const context = this.getCallContext();
         if (context && context.isParentof(this)) {
+            // Close the parent
+            this.notifyParentRemoved(context);
+            ((context as any) as ParameterizedModule).notifyChildRemoved(this as any);
+
             // Only close the module if it was the last parent
             if (this.isLastParent(context)) {
                 // Stop and destroy this module
@@ -545,9 +484,6 @@ export class Module<
                 await this.destroy();
                 await this.onClose();
             }
-
-            // Close the parent
-            this.notifyParentRemoved(context);
         } else throw Error("Module may only be closed by its parent");
     }
 
@@ -603,7 +539,6 @@ export class Module<
      */
     protected async destroy(): Promise<void> {
         ProgramState.removeModule(this);
-
         this.settingsObject.destroy();
     }
 

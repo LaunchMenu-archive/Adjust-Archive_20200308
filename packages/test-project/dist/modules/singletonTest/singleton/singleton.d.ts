@@ -24,7 +24,7 @@ export default class SingletonModule extends SingletonModule_base implements Sin
     /** @override */
     setText(text: string): Promise<void>;
 }
-declare const SingletonView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SingletonModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/gui").ModuleView<{}, {}, import("@adjust/gui").Module, {}>>>;
+declare const SingletonView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SingletonModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("@adjust/gui").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class SingletonView extends SingletonView_base {
     protected renderView(): JSX.Element;
 }

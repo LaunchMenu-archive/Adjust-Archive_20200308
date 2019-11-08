@@ -7,6 +7,6 @@ declare const SettingsModuleSettingsModule_base: import("@adjust/core/types").Ex
 export declare class SettingsModuleSettingsModule extends SettingsModuleSettingsModule_base implements SettingsModuleSettings {
 }
 export default SettingsModuleSettingsModule;
-declare const SettingsModuleSettingsView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsModuleSettingsModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../..").ModuleView, import("../../../../..").ModuleView<{}, {}, import("../../../../..").Module, {}>>>;
+declare const SettingsModuleSettingsView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsModuleSettingsModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../..").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
 export declare class SettingsModuleSettingsView extends SettingsModuleSettingsView_base {
 }
