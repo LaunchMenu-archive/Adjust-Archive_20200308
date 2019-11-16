@@ -56,7 +56,7 @@ class Serialize {
             if (isTraceable(data))
                 return {
                     $type: "Traceable",
-                    data: this.serialize(data.serialize()),
+                    data: this.serialize(data.serialize(), asyncCallback),
                 };
             // If it is an arbitrary object, map its values
             const out = extendedObject_1.ExtendedObject.mapPairs(data, (key, value) => [
@@ -96,10 +96,14 @@ class Serialize {
                 // Check if the data is a tracable value
                 if (data.$type == "Traceable") {
                     const s = data.data;
+                    // Retrieve the function to deserialize with
                     const exports = require(s.deserializeFilePath);
                     const func = extendedObject_1.ExtendedObject.getField(exports || {}, s.deserializePropertyPath);
+                    // Obtain the arguments
+                    const args = this.deserialize(s.data, getModule);
+                    // Perform deserialization if possible
                     if (func instanceof Function)
-                        return func(s.data);
+                        return func(args);
                     else
                         return null;
                 }

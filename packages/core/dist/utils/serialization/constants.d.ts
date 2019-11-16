@@ -2,6 +2,9 @@ import { LossyAsyncSerializeableData } from "./_types/serializeableData";
 import { ITraceableTransformer } from "./_types/ITracableTransformer";
 import { RevertTransformedSerializedData } from "./_types/RevertTransformedSerializableData";
 import { ITraceable } from "./_types/ITracable";
+/**
+ * Constants defined using this class will only become usuable one event cycle after declaration
+ */
 export declare class Constants {
     protected path: string;
     protected locked: boolean;
@@ -20,6 +23,7 @@ export declare class Constants {
      * And to make sure these constants are properly exported and accessible for deserialization
      */
     protected startTimer(): void;
+    protected lock(): void;
     /**
      * The deserialization methjod of the provided constants
      */

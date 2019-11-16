@@ -6,6 +6,6 @@ import { ITraceableTransformer } from "./ITracableTransformer";
 /**
  * Obtains a type for possible arguments that a transformed serializable data object could have been created from
  */
-export declare type RevertTransformedSerializedData<S> = (S extends object ? {
+export declare type RevertTransformedSerializedData<S> = (S extends object ? S extends JSX.Element ? ChildModule<{}> | ModuleReference | ParameterizedModule : {
     [P in keyof S]: RevertTransformedSerializedData<S[P]>;
-} : S extends JSX.Element ? ChildModule<{}> | ModuleReference | ParameterizedModule : S) | ITraceableTransformer<S>;
+} : S) | ITraceableTransformer<S>;

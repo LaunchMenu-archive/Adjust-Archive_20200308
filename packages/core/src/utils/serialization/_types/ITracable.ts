@@ -1,5 +1,4 @@
 import {Json} from "../../_types/standardTypes";
-import {SerializeableData} from "./serializeableData";
 
 /**
  * A object type that allows for serialization, by defining the location to call deserialize at
@@ -21,5 +20,5 @@ export type ITraceableData = {
     /** The path in the exported contents to the deserialization function */
     deserializePropertyPath: string;
     /** The data to pass to the deserializer */
-    data: SerializeableData;
+    data: Json;
 };

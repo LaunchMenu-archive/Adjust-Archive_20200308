@@ -1,5 +1,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const extendedObject_1 = require("../extendedObject");
+/**
+ * Constants defined using this class will only become usuable one event cycle after declaration
+ */
 class Constants {
     /**
      * Creates a constants object that should be obtainable from the given path
@@ -47,6 +50,7 @@ class Constants {
                 throw Error(`Constants were not exported properly by file ${this.path}, please export the created constants`);
         });
     }
+    lock() { }
     // Constant definition methdos
     /**
      * Creates a function that can be called with data, such that the real function will be called elsewhere with the given params upon deserialization
@@ -54,6 +58,8 @@ class Constants {
      * @returns A function to create the serializable function call
      */
     defineFunction(func) {
+        if (this.locked)
+            throw Error("Constants may only be defined during file initialization");
         const ID = this.funcs.length;
         this.funcs.push(func);
         // Return a function that define an object with a proper serialization method
@@ -74,6 +80,8 @@ class Constants {
      * @returns The value with a serialization method
      */
     define(value) {
+        if (this.locked)
+            throw Error("Constants may only be defined during file initialization");
         const ID = this.constants.length;
         this.constants.push(value);
         // If the value is an object, add the serializer to the method, otherwise just export the serializer

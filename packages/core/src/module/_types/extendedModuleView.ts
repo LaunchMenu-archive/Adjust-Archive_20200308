@@ -9,16 +9,8 @@ import {
 } from "../../utils/_types/standardTypes";
 import {ModuleView, ParameterizedModuleView} from "../moduleView";
 import {ExtractModuleState, ExtractModuleSettings} from "./extendedModule";
-import {Settings} from "../../storage/settings/settings";
 import {ModuleViewProps} from "./moduleViewProps";
 import {ModuleViewState} from "./moduleViewState";
-import {ModuleContract, ChildModule} from "./moduleContract";
-import {ModuleRequestData} from "./moduleRequestData";
-import {ModuleState} from "./moduleState";
-import {ModuleReference} from "../moduleID";
-import {SettingsConfigData} from "../../storage/settings/_types/settingsConfigData";
-import {SettingsConfig} from "../../storage/settings/_types/settingsConfig";
-import {TransformModuleViewState} from "./moduleStateTransformer";
 import {TransformSerializeableData} from "../../utils/serialization/_types/TransformSerializeableData";
 
 /**

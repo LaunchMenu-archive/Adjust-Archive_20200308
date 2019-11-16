@@ -1,5 +1,9 @@
 import {Json} from "../_types/standardTypes";
-import {SerializeableData, AsyncSerializeableData} from "./_types/serializeableData";
+import {
+    SerializeableData,
+    AsyncSerializeableData,
+    LossyAsyncSerializeableData,
+} from "./_types/serializeableData";
 import {Module, ParameterizedModule} from "../../module/module";
 import {ExtendedObject} from "../extendedObject";
 import {ModuleProxy} from "../../module/moduleProxy";
@@ -36,20 +40,20 @@ export class Serialize {
      * @returns The serialized data
      */
     public static serialize(
-        data: AsyncSerializeableData,
+        data: LossyAsyncSerializeableData,
         asyncCallback: (
             path: string,
-            value: AsyncSerializeableData,
+            value: LossyAsyncSerializeableData,
             promise: Promise<any>
         ) => void,
         path?: string
     ): Json;
 
     public static serialize(
-        data: SerializeableData,
+        data: LossyAsyncSerializeableData,
         asyncCallback: (
             path: string,
-            value: AsyncSerializeableData,
+            value: LossyAsyncSerializeableData,
             promise: Promise<any>
         ) => void = () => {},
         path?: string
@@ -103,13 +107,17 @@ export class Serialize {
             if (isTraceable(data))
                 return {
                     $type: "Traceable",
-                    data: this.serialize(data.serialize()),
+                    data: this.serialize(data.serialize(), asyncCallback),
                 };
 
             // If it is an arbitrary object, map its values
             const out = ExtendedObject.mapPairs(data, (key, value) => [
                 key.replace(/^(\$*(type|flags))/g, "$$$1"),
-                this.serialize(value, asyncCallback, path ? path + "." + key : key + ""),
+                this.serialize(
+                    value as any,
+                    asyncCallback,
+                    path ? path + "." + key : key + ""
+                ),
             ]) as Json;
 
             // Check if the object contains special key overwrite
@@ -149,12 +157,19 @@ export class Serialize {
                 // Check if the data is a tracable value
                 if (data.$type == "Traceable") {
                     const s: ITraceableData = data.data as any;
+
+                    // Retrieve the function to deserialize with
                     const exports = require(s.deserializeFilePath);
                     const func = ExtendedObject.getField(
                         exports || {},
                         s.deserializePropertyPath
                     );
-                    if (func instanceof Function) return func(s.data);
+
+                    // Obtain the arguments
+                    const args = this.deserialize(s.data, getModule);
+
+                    // Perform deserialization if possible
+                    if (func instanceof Function) return func(args);
                     else return null;
                 }
             }

@@ -4,6 +4,9 @@ import {ITraceableTransformer} from "./_types/ITracableTransformer";
 import {RevertTransformedSerializedData} from "./_types/RevertTransformedSerializableData";
 import {ITraceable} from "./_types/ITracable";
 
+/**
+ * Constants defined using this class will only become usuable one event cycle after declaration
+ */
 export class Constants {
     // The path the constants are obtainable from
     protected path: string;
@@ -54,6 +57,8 @@ export class Constants {
         });
     }
 
+    protected lock(): void {}
+
     // Deserialization methods
     /**
      * The deserialization methjod of the provided constants
@@ -78,6 +83,9 @@ export class Constants {
     ): (
         ...args: {[P in keyof A]: RevertTransformedSerializedData<A[P]>}
     ) => ITraceableTransformer<V> {
+        if (this.locked)
+            throw Error("Constants may only be defined during file initialization");
+
         const ID = this.funcs.length;
         this.funcs.push(func);
 
@@ -102,6 +110,9 @@ export class Constants {
     public define<V>(
         value: V
     ): V extends object ? V & ITraceable : ITraceableTransformer<V> {
+        if (this.locked)
+            throw Error("Constants may only be defined during file initialization");
+
         const ID = this.constants.length;
         this.constants.push(value);
 
