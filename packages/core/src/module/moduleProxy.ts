@@ -207,11 +207,11 @@ export class ModuleProxy {
 
             // Perform regular closing
             if (this._target) {
-                // Renove the target reference
-                this._target = null;
-
                 // Call the close method
                 await close.apply(this, arguments);
+
+                // Renove the target reference
+                this._target = null;
             }
         };
 

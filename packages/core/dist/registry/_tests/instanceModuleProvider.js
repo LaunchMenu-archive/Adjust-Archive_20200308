@@ -3,9 +3,10 @@ const registry_1 = require("../registry");
 const classModuleProvider_1 = require("../moduleProviders/classModuleProvider");
 const instanceModuleProvider_1 = require("../moduleProviders/instanceModuleProvider");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
+const dummyModules_helper_1 = require("../../module/_tests/dummyModules.helper");
 const moduleID_1 = require("../../module/moduleID");
 exports.dummyInterfaceID = registry_1.Registry.createContractID(__filename + "1");
-class DummyModule extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID }) {
+class DummyModule extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID }, dummyModules_helper_1.DummyModule) {
     constructor() {
         super(...arguments);
         this.instanceVal = 0;
@@ -17,10 +18,10 @@ class DummyModule extends moduleClassCreator_1.createModule({ state: {}, setting
 exports.DummyModule = DummyModule;
 // @ts-ignore
 DummyModule.path = "../module/_tests/dummyModules.helper.js"; // A path that can be imported (doesn't matter that it doesn't import this)
-class DummyParent extends moduleClassCreator_1.createModule({ type: exports.dummyInterfaceID, state: {}, settings: {} }) {
+class DummyParent extends moduleClassCreator_1.createModule({ type: exports.dummyInterfaceID, state: {}, settings: {} }, dummyModules_helper_1.DummyModule) {
     static async createCustomInstance(someMethod = () => { }) {
         const moduleID = new moduleID_1.ModuleID("test", 3);
-        const instance = (await super.createInstance({ parent: null, data: null, type: null }, moduleID));
+        const instance = await this.createDummy();
         instance.someMethod = someMethod;
         return instance;
     }
@@ -68,8 +69,8 @@ describe("InstanceModuleProvider", () => {
         const m = module;
         // Add a instance provider
         registry_1.Registry.addProvider(new instanceModuleProvider_1.InstanceModuleProvider(m.getConfig().type, m, () => 2, (parent) => {
-            parent.something();
             notifyCalled = true;
+            parent.something();
         }));
         // Retrieve this module hopefulyl same module
         const module2 = await registry_1.Registry.request({

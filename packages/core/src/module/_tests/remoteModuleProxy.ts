@@ -12,7 +12,7 @@ describe("RemoteNodeProxy", () => {
         });
         it("Should contain the methods of the programNode", () => {
             const ModuleProxy = RemoteModuleProxy.createClass(DummyModule);
-            expect("test" in ModuleProxy.prototype).toBeTruthy();
+            expect("smth" in ModuleProxy.prototype).toBeTruthy();
         });
     });
     describe("CreateInstance", () => {

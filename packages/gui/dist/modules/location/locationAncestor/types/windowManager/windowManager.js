@@ -43,15 +43,14 @@ class WindowManagerModule extends core_1.createModule(exports.windowManagerConfi
         this.ancestorName = "window";
     }
     /** @override */
-    async onInit(fromReload) {
-        await super.onInit(fromReload);
-        if (!fromReload)
-            this.changeState({
-                windowSelector: await this.request({
-                    type: windowSelector_type_1.WindowSelectorType,
-                    data: { path: this.getData().path },
-                }),
-            });
+    async onInit() {
+        await super.onInit();
+        this.changeState({
+            windowSelector: await this.request({
+                type: windowSelector_type_1.WindowSelectorType,
+                data: { path: this.getData().path },
+            }),
+        });
     }
     // Window module managment
     /**

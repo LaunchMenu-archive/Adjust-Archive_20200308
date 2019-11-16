@@ -1,3 +1,6 @@
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const settingsManager_1 = require("../settingsManager");
 const settings_1 = require("../settings");
@@ -8,6 +11,7 @@ const functionSettingsConditions_1 = require("../settingsConditions/types/functi
 const SettingNumber_type_1 = require("../settingInputTypes/SettingNumber.type");
 const SettingBoolean_type_1 = require("../settingInputTypes/SettingBoolean.type");
 const SettingJson_type_1 = require("../settingInputTypes/SettingJson.type");
+const dummyModules_helper_1 = __importDefault(require("../../../module/_tests/dummyModules.helper"));
 // Create a settings config
 const config = {
     version: "0.0.0",
@@ -34,10 +38,13 @@ class Target extends moduleClassCreator_1.createModule({
     state: {},
     settings: config.settings,
     type: exports.dummyInterfaceID,
-}) {
+}, dummyModules_helper_1.default) {
     static async createCustomInstance(identifier) {
         const moduleID = new moduleID_1.ModuleID("test", 3);
-        const instance = (await super.createInstance({ parent: null, data: identifier, type: null }, moduleID));
+        const instance = (await this.createDummy({
+            moduleID,
+            data: identifier,
+        }));
         return instance;
     }
     async test(text) {

@@ -1,8 +1,9 @@
 import { SettingsConfig } from "../../storage/settings/_types/settingsConfig";
 import { ModuleContract, ChildModule } from "../_types/moduleContract";
+import { ModuleID } from "../moduleID";
 import { Module } from "../module";
 export declare type dummyInterface = {
-    test: (text: string) => Promise<string>;
+    smth: (text: string) => Promise<string>;
 };
 export declare const dummyInterfaceID: import("../../registry/_types/contractID").ContractID<{
     parent: {};
@@ -20,7 +21,18 @@ declare const DummyModule_base: import("../_types/extendedModule").ExtendedModul
     isStopped: boolean;
 }, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleContract>>>;
 export declare class DummyModule extends DummyModule_base implements dummyInterface {
-    test(text: string): Promise<string>;
+    /**
+     * Creates a dummy instance of this module, which wont be registered to the program state
+     * @param data The optional data to create a module
+     * @returns A dummy module
+     */
+    static createDummy(data?: {
+        parent?: any;
+        data?: any;
+        type?: any;
+        moduleID?: ModuleID;
+    }): Promise<DummyModule>;
+    smth(text: string): Promise<string>;
 }
 export default DummyModule;
 export declare type dummyInterface2 = {
@@ -73,6 +85,6 @@ declare const DummyModule4_base: import("../_types/extendedModule").ExtendedModu
     isStopped: boolean;
 }, SettingsConfig<import("../../utils/_types/standardTypes").Empty>, ModuleContract>>>;
 export declare class DummyModule4 extends DummyModule4_base implements dummyInterface {
-    test(text: string): Promise<string>;
+    smth(text: string): Promise<string>;
     static something(): boolean;
 }

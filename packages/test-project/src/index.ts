@@ -49,30 +49,6 @@ import {SingletonType} from "./modules/singletonTest/singleton/singleton.type";
         //     }, 2000);
         // });
     } else if (test == 4) {
-        Registry.createRoot({
-            type: SingletonParentType,
-            openView: true,
-            data: {count: 4},
-        });
-
-        // Export the state to a file
-        setTimeout(() => {
-            const state = ProgramState.serialize();
-            FS.writeFileSync(
-                Path.join(process.cwd(), "data", "stateTest4.json"),
-                JSON.stringify(state, null, 4),
-                "utf8"
-            );
-        }, 15e3);
-    } else if (test == 5) {
-        // Obtain the state
-        const state = JSON.parse(
-            FS.readFileSync(Path.join(process.cwd(), "data", "stateTest4.json"), "utf8")
-        );
-
-        // Load the state
-        ProgramState.deserialize(state);
-    } else if (test == 6) {
         const promises = [];
         promises.push(
             Registry.createRoot({

@@ -60,6 +60,7 @@ export default class SingletonParentModule extends createModule(config)
     }
     public async closeSingleton() {
         if (this.state.singleton) {
+            console.log("close parent");
             await this.state.singleton.close();
             this.changeState({singleton: null});
         }

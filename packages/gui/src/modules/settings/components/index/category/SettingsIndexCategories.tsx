@@ -25,7 +25,7 @@ export class SettingsIndexCategoriesModule
     extends createModule(SettingsIndexCategoriesConfig)
     implements SettingsIndexCategories {
     /** @override*/
-    protected async onInit(fromReload: boolean): Promise<void> {
+    protected async onInit(): Promise<void> {
         this.changeState({
             data: await this.mapTree(this.getData()),
         });

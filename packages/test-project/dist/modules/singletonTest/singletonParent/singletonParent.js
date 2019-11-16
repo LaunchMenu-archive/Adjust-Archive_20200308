@@ -58,6 +58,7 @@ class SingletonParentModule extends gui_1.createModule(exports.config) {
     }
     async closeSingleton() {
         if (this.state.singleton) {
+            console.log("close parent");
             await this.state.singleton.close();
             this.changeState({ singleton: null });
         }

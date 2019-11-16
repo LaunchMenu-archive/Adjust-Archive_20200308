@@ -41,8 +41,8 @@ export default class LocationAncestorModule extends createCoreModule(config)
     protected settingsConditions: SettingsConditions;
 
     /** @override */
-    protected async onInit(fromReload: boolean): Promise<void> {
-        await super.onInit(fromReload);
+    protected async onInit(): Promise<void> {
+        await super.onInit();
 
         // Save data under the ID of this ancestor
         this.settingsConditions = new DataSettingsConditions(
@@ -137,21 +137,23 @@ export default class LocationAncestorModule extends createCoreModule(config)
         const childPath = isNewID ? [...path, ID] : path;
 
         // Request the location
-        const locationAncestor = (await this.request({
-            type: LocationAncestorType,
-            use: providers => {
-                // Get the index of this module class
-                const nextIndex = childPath.length;
+        const locationAncestor = (
+            await this.request({
+                type: LocationAncestorType,
+                use: providers => {
+                    // Get the index of this module class
+                    const nextIndex = childPath.length;
 
-                // Get the module with the next (lower priority) index
-                const provider = providers[nextIndex].provider;
-                return [provider];
-            },
-            data: {
-                ID: ID,
-                path: childPath,
-            },
-        }))[0];
+                    // Get the module with the next (lower priority) index
+                    const provider = providers[nextIndex].provider;
+                    return [provider];
+                },
+                data: {
+                    ID: ID,
+                    path: childPath,
+                },
+            })
+        )[0];
 
         // Make sure to initialise the correct state
         if (this.state.inEditMode) locationAncestor.setEditMode(true);

@@ -157,10 +157,10 @@ class ModuleProxy {
             await this._processing.finished;
             // Perform regular closing
             if (this._target) {
-                // Renove the target reference
-                this._target = null;
                 // Call the close method
                 await close.apply(this, arguments);
+                // Renove the target reference
+                this._target = null;
             }
         };
         // Make a method to return the module ID, even if the module was closed

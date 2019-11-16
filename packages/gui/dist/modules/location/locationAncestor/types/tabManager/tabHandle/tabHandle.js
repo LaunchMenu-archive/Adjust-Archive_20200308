@@ -28,8 +28,8 @@ exports.tabHandleConfig = moduleClassCreator_1.createConfig({
 });
 class TabHandleModule extends moduleClassCreator_1.createModule(exports.tabHandleConfig) {
     /** @override */
-    async onInit(fromReload) {
-        await super.onInit(fromReload);
+    async onInit() {
+        await super.onInit();
         // Save data under the ID of this ancestor
         this.settingsConditions = new core_1.DataSettingsConditions({ path: this.getData().path }, 1);
     }

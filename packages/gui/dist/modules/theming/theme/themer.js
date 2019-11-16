@@ -24,7 +24,7 @@ class ThemerModule extends moduleClassCreator_1.createModule(exports.themerConfi
         core_1.Registry.addProvider(new core_1.InstanceModuleProvider(themer_type_1.ThemerType, this, () => 2));
     }
     /** @override */
-    async onInit(fromReload) {
+    async onInit() {
         this.getSettingsObject().on("change", field => this.updateTheme(field));
     }
     /**

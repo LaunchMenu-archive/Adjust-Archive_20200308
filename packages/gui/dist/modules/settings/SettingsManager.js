@@ -30,11 +30,9 @@ class SettingsManagerModule extends moduleClassCreator_1.createModule(settingsMa
         registry_1.Registry.addProvider(new core_1.InstanceModuleProvider(SettingsManager_type_1.SettingsManagerType, this, () => 2));
     }
     /** @override */
-    async onInit(fromReload) {
-        if (!fromReload) {
-            await this.retrieveContractTypes();
-            await this.retrieveModules();
-        }
+    async onInit() {
+        await this.retrieveContractTypes();
+        await this.retrieveModules();
         const index = await this.request({ type: SettingsIndex_type_1.SettingsIndexType });
         await index.setData(this.state.index);
         this.changeState({

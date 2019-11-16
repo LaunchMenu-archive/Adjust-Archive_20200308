@@ -13,17 +13,17 @@ import {createModule} from "../../module/moduleClassCreator";
 import {ProgramState} from "../../state/programState";
 import {Module} from "../../module/module";
 
-class P extends createModule({
-    type: dummyInterfaceID,
-    state: {},
-    settings: {},
-}) {
+class P extends createModule(
+    {
+        type: dummyInterfaceID,
+        state: {},
+        settings: {},
+    },
+    DummyModule
+) {
     static async createCustomInstance() {
         const moduleID = ProgramState.getNextModuleID(P.getPath());
-        const instance = await super.createInstance(
-            {parent: null, data: null, type: null},
-            moduleID
-        );
+        const instance = await (this as any).createDummy({moduleID: moduleID});
         ProgramState.addModule(instance);
         return instance;
     }
@@ -116,7 +116,7 @@ describe("Registry + ClassModuleProvider", () => {
                 use: "one",
                 parent: p,
             });
-            expect(await module.test("something")).toBe("something");
+            expect(await module.smth("something")).toBe("something");
 
             const module2 = await Registry.request({
                 type: dummyInterfaceID2,
@@ -144,7 +144,7 @@ describe("Registry + ClassModuleProvider", () => {
             expect(modules.length).toBe(2);
             await Promise.all(
                 modules.map(async module =>
-                    expect(await module.test("something")).toMatch(/something.*/)
+                    expect(await module.smth("something")).toMatch(/something.*/)
                 )
             );
 
@@ -164,7 +164,7 @@ describe("Registry + ClassModuleProvider", () => {
             expect(modules2.length).toBe(1);
             await Promise.all(
                 modules2.map(async module =>
-                    expect(await module.test("something")).toBe("something4")
+                    expect(await module.smth("something")).toBe("something4")
                 )
             );
         });

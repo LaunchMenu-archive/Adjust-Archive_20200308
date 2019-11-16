@@ -1,7 +1,6 @@
 import {DeepReadonly, ExtendsClass, Json} from "../utils/_types/standardTypes";
 import {RemoteModuleProxy} from "./remoteModuleProxy";
 import {ModuleState} from "./_types/moduleState";
-import {SerializedModule} from "./_types/serializedModule";
 import {
     ParameterizedNormalizedModuleConfig,
     NormalizedModuleConfig,
@@ -18,14 +17,13 @@ import {ModuleContract, ChildModule} from "./_types/moduleContract";
 import {Registry} from "../registry/registry";
 import {ModuleProxy} from "./moduleProxy";
 import {ParentlessRequest, ParameterizedRequest} from "../registry/_types/request";
-import {ExtendedObject} from "../utils/extendedObject";
 import {RequestFilter} from "../registry/_types/requestFilter";
 import {ModuleID} from "./moduleID";
 import {SettingsManager} from "../storage/settings/settingsManager";
 import {SettingsFile} from "../storage/settings/settingsFile";
 import {SettingsConditions} from "../storage/settings/settingsConditions/abstractSettingsConditions";
 import {SettingsConfigData} from "../storage/settings/_types/settingsConfigData";
-import {ModuleDetails, NormalizedModuleDetails} from "./_types/moduleDetails";
+import {NormalizedModuleDetails} from "./_types/moduleDetails";
 import {Package} from "../utils/_types/package";
 
 export const baseConfig = {
@@ -82,7 +80,8 @@ export class Module<
     private readonly stateObject: StateData<S>; // The full state object, to which listeners can be added
     private readonly children: (
         | ModuleProxy
-        | Promise<ModuleProxy | ModuleProxy[]>)[] = []; // A list of all the modules that have been requested and not closed yet
+        | Promise<ModuleProxy | ModuleProxy[]>
+    )[] = []; // A list of all the modules that have been requested and not closed yet
 
     /**
      * The core building block for Adjust applications
@@ -91,37 +90,14 @@ export class Module<
     protected constructor() {}
 
     /**
-     * Get the request path for this module based on its parent and the ID
-     * @param moduleID The ID of this module
-     * @param parent The parent of this module
-     * @param data The json data that was send with this request
-     * @returns The request path obtained
+     * Creates an instancce of this module, without registring it in the program state
+     * @param request
+     * @param moduleID
      */
-    public static createRequestPath(
-        moduleID: ModuleID,
-        parent: ModuleProxy,
-        data: Json
-    ): RequestPath {
-        if (parent) {
-            // Extend the parent's path
-            const parentRequestPath = ((parent as any) as ParameterizedModule).getRequestPath();
-            return parentRequestPath.extend(moduleID, data);
-        } else {
-            // If the module is a root, create a path from scratch
-            return new RequestPath(moduleID, data);
-        }
-    }
-
-    /**
-     * Creates an instance of this module, given an ID for the instance and a request
-     * @param request The request that started the creation of the module
-     * @param moduleID The ID that the new instance should have
-     * @returns A new instance of this class, returns a proxy for the module
-     */
-    public static async createInstance(
+    protected static async createUnregisteredInstance(
         request: ParameterizedRequest,
         moduleID: ModuleID
-    ): Promise<any> {
+    ): Promise<ParameterizedModule> {
         // Obtain the required data to instanciate the module
         const initialState = this.getConfig().state;
         (request as any).requestPath = this.createRequestPath(
@@ -157,6 +133,21 @@ export class Module<
         module.settingsObject = await Settings.createInstance(module);
         // @ts-ignore
         module.settings = module.settingsObject.get;
+        return module;
+    }
+
+    /**
+     * Creates an instance of this module, given an ID for the instance and a request
+     * @param request The request that started the creation of the module
+     * @param moduleID The ID that the new instance should have
+     * @returns A new instance of this class, returns a proxy for the module
+     */
+    public static async createInstance(
+        request: ParameterizedRequest,
+        moduleID: ModuleID
+    ): Promise<ModuleProxy> {
+        // Creates an instance
+        const module = await this.createUnregisteredInstance(request, moduleID);
 
         // Register the module
         ProgramState.addModule(module);
@@ -174,6 +165,28 @@ export class Module<
 
         // Return the module proxy
         return moduleProxy;
+    }
+
+    /**
+     * Get the request path for this module based on its parent and the ID
+     * @param moduleID The ID of this module
+     * @param parent The parent of this module
+     * @param data The json data that was send with this request
+     * @returns The request path obtained
+     */
+    public static createRequestPath(
+        moduleID: ModuleID,
+        parent: ModuleProxy,
+        data: Json
+    ): RequestPath {
+        if (parent) {
+            // Extend the parent's path
+            const parentRequestPath = ((parent as any) as ParameterizedModule).getRequestPath();
+            return parentRequestPath.extend(moduleID, data);
+        } else {
+            // If the module is a root, create a path from scratch
+            return new RequestPath(moduleID, data);
+        }
     }
 
     // Initialisation
@@ -309,7 +322,7 @@ export class Module<
         request: ParentlessRequest<M> & {
             use: "all" | RequestFilter<M>;
         }
-    ): Promise<(M["child"])[]>;
+    ): Promise<M["child"][]>;
 
     /**
      * Retrieves a module based on the given request specification
@@ -324,7 +337,7 @@ export class Module<
     public async request<M extends ModuleContract>(
         this: M["parent"] & this,
         request: ParentlessRequest<M>
-    ): Promise<M["child"] | (M["child"])[]> {
+    ): Promise<M["child"] | M["child"][]> {
         // Get the reponse(s) from the registry
         const response = Registry.request({parent: this, ...request} as any);
 
@@ -473,12 +486,14 @@ export class Module<
         // Get the caller of the method, and make sure it's a parent
         const context = this.getCallContext();
         if (context && context.isParentof(this)) {
+            const isLast = this.isLastParent(context);
+
             // Close the parent
             this.notifyParentRemoved(context);
             ((context as any) as ParameterizedModule).notifyChildRemoved(this as any);
 
             // Only close the module if it was the last parent
-            if (this.isLastParent(context)) {
+            if (isLast) {
                 // Stop and destroy this module
                 await this.stop();
                 await this.destroy();

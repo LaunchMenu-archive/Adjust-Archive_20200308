@@ -57,16 +57,15 @@ export class WindowManagerModule
     protected ancestorName: string = "window";
 
     /** @override */
-    protected async onInit(fromReload: boolean): Promise<void> {
-        await super.onInit(fromReload);
+    protected async onInit(): Promise<void> {
+        await super.onInit();
 
-        if (!fromReload)
-            this.changeState({
-                windowSelector: await this.request({
-                    type: WindowSelectorType,
-                    data: {path: this.getData().path},
-                }),
-            });
+        this.changeState({
+            windowSelector: await this.request({
+                type: WindowSelectorType,
+                data: {path: this.getData().path},
+            }),
+        });
     }
 
     // Window module managment

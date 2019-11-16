@@ -47,30 +47,11 @@ class Module {
         this.children = []; // A list of all the modules that have been requested and not closed yet
     }
     /**
-     * Get the request path for this module based on its parent and the ID
-     * @param moduleID The ID of this module
-     * @param parent The parent of this module
-     * @param data The json data that was send with this request
-     * @returns The request path obtained
+     * Creates an instancce of this module, without registring it in the program state
+     * @param request
+     * @param moduleID
      */
-    static createRequestPath(moduleID, parent, data) {
-        if (parent) {
-            // Extend the parent's path
-            const parentRequestPath = parent.getRequestPath();
-            return parentRequestPath.extend(moduleID, data);
-        }
-        else {
-            // If the module is a root, create a path from scratch
-            return new requestPath_1.RequestPath(moduleID, data);
-        }
-    }
-    /**
-     * Creates an instance of this module, given an ID for the instance and a request
-     * @param request The request that started the creation of the module
-     * @param moduleID The ID that the new instance should have
-     * @returns A new instance of this class, returns a proxy for the module
-     */
-    static async createInstance(request, moduleID) {
+    static async createUnregisteredInstance(request, moduleID) {
         // Obtain the required data to instanciate the module
         const initialState = this.getConfig().state;
         request.requestPath = this.createRequestPath(moduleID, request.parent, request.data);
@@ -97,6 +78,17 @@ class Module {
         module.settingsObject = await settings_1.Settings.createInstance(module);
         // @ts-ignore
         module.settings = module.settingsObject.get;
+        return module;
+    }
+    /**
+     * Creates an instance of this module, given an ID for the instance and a request
+     * @param request The request that started the creation of the module
+     * @param moduleID The ID that the new instance should have
+     * @returns A new instance of this class, returns a proxy for the module
+     */
+    static async createInstance(request, moduleID) {
+        // Creates an instance
+        const module = await this.createUnregisteredInstance(request, moduleID);
         // Register the module
         programState_1.ProgramState.addModule(module);
         // Create the proxy for the module and connect to the parent proxy
@@ -111,6 +103,24 @@ class Module {
             request.parent.notifyChildInitialized(moduleProxy);
         // Return the module proxy
         return moduleProxy;
+    }
+    /**
+     * Get the request path for this module based on its parent and the ID
+     * @param moduleID The ID of this module
+     * @param parent The parent of this module
+     * @param data The json data that was send with this request
+     * @returns The request path obtained
+     */
+    static createRequestPath(moduleID, parent, data) {
+        if (parent) {
+            // Extend the parent's path
+            const parentRequestPath = parent.getRequestPath();
+            return parentRequestPath.extend(moduleID, data);
+        }
+        else {
+            // If the module is a root, create a path from scratch
+            return new requestPath_1.RequestPath(moduleID, data);
+        }
     }
     // Initialisation
     /**
@@ -347,11 +357,12 @@ class Module {
         // Get the caller of the method, and make sure it's a parent
         const context = this.getCallContext();
         if (context && context.isParentof(this)) {
+            const isLast = this.isLastParent(context);
             // Close the parent
             this.notifyParentRemoved(context);
             context.notifyChildRemoved(this);
             // Only close the module if it was the last parent
-            if (this.isLastParent(context)) {
+            if (isLast) {
                 // Stop and destroy this module
                 await this.stop();
                 await this.destroy();

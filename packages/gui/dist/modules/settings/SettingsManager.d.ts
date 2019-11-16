@@ -1,6 +1,5 @@
 /// <reference types="react" />
 import { SettingsManager } from "./SettingsManager.type";
-import { ModuleContract } from "@adjust/core/types";
 import { ISettingsIndex } from "./_types/ISettingsIndex";
 import { ISettingsIndexModuleTree } from "./_types/ISettingsIndexModuleTree";
 import { ISettingsIndexTypeTree } from "./_types/ISettingsIndexTypeTree";
@@ -24,7 +23,7 @@ export declare class SettingsManagerModule extends SettingsManagerModule_base im
     /** @override */
     protected onPreInit(): Promise<void>;
     /** @override */
-    onInit(fromReload: boolean): Promise<void>;
+    onInit(): Promise<void>;
     /**
      * Loads the contract types data into the state
      */
@@ -59,7 +58,7 @@ export declare class SettingsManagerModule extends SettingsManagerModule_base im
     selectSetting(modulePath: string, settingPath?: string): Promise<void>;
 }
 export default SettingsManagerModule;
-declare const SettingsManagerView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsManagerModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../..").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, ModuleContract>, {}>>>;
+declare const SettingsManagerView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsManagerModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../..").ModuleView, import("../..").ModuleView<{}, {}, Module, {}>>>;
 export declare class SettingsManagerView extends SettingsManagerView_base {
     /** @override */
     renderView(): JSX.Element;

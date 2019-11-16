@@ -10,10 +10,10 @@ declare const SettingsIndexPackageModule_base: import("@adjust/core/types").Exte
     type: import("@adjust/core/types").ContractID<import("./SettingsIndexPackage.type").SettingsIndexPackageContract>;
 }, import("@adjust/core/types").ExtendsClass<typeof import("../../../../..").Module, import("../../../../..").Module>>;
 export declare class SettingsIndexPackageModule extends SettingsIndexPackageModule_base implements SettingsIndexPackage {
-    onInit(fromReload: boolean): Promise<void>;
+    onInit(): Promise<void>;
 }
 export default SettingsIndexPackageModule;
-declare const SettingsIndexPackageView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsIndexPackageModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../..").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
+declare const SettingsIndexPackageView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof SettingsIndexPackageModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../..").ModuleView, import("../../../../..").ModuleView<{}, {}, import("../../../../..").Module, {}>>>;
 export declare class SettingsIndexPackageView extends SettingsIndexPackageView_base {
     /**
      * Renders the package header itself

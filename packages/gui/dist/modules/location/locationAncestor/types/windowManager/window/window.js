@@ -46,8 +46,8 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
         this.ancestorName = "window";
     }
     /** @override */
-    async onInit(fromReload) {
-        await super.onInit(fromReload);
+    async onInit() {
+        await super.onInit();
         // Make sure the window's data is always visible when in preview mode
         if (this.getData().previewMode)
             await this.getChild();

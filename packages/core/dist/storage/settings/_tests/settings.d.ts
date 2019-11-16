@@ -1,5 +1,5 @@
-import { Module } from "../../../module/module";
 import { ChildModule } from "../../../module/_types/moduleContract";
+import DummyModule from "../../../module/_tests/dummyModules.helper";
 export declare type dummyInterface = {
     test: (text: string) => Promise<string>;
 };
@@ -33,10 +33,7 @@ declare const Target_base: import("../../../module/_types/extendedModule").Exten
         parent: {};
         child: ChildModule<dummyInterface>;
     }>;
-}, import("../../../utils/_types/standardTypes").ExtendsClass<typeof Module, Module<{
-    isStopping: boolean;
-    isStopped: boolean;
-}, import("../_types/settingsConfig").SettingsConfig<import("../../../utils/_types/standardTypes").Empty>, import("../../../module/_types/moduleContract").ModuleContract>>>;
+}, typeof DummyModule>;
 export declare class Target extends Target_base implements dummyInterface {
     static createCustomInstance(identifier: number): Promise<Target>;
     test(text: string): Promise<string>;

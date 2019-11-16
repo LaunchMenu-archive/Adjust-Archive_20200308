@@ -64,7 +64,7 @@ declare const WindowManagerModule_base: import("@adjust/core/types").ExtendedMod
 export declare class WindowManagerModule extends WindowManagerModule_base implements LocationAncestor, WindowParent {
     protected ancestorName: string;
     /** @override */
-    protected onInit(fromReload: boolean): Promise<void>;
+    protected onInit(): Promise<void>;
     /**
      * Retrieves the window with a given ID, or creates it if absent and open is true
      * @param windowID The ID of the window to retrieve

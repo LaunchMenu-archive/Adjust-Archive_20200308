@@ -1,9 +1,4 @@
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
 const gui_1 = require("@adjust/gui");
 const modules_1 = require("@adjust/gui/modules");
 const test_type_1 = require("./modules/test/test.type");
@@ -46,24 +41,6 @@ const singleton_type_1 = require("./modules/singletonTest/singleton/singleton.ty
         // });
     }
     else if (test == 4) {
-        gui_1.Registry.createRoot({
-            type: singletonParent_type_1.SingletonParentType,
-            openView: true,
-            data: { count: 4 },
-        });
-        // Export the state to a file
-        setTimeout(() => {
-            const state = gui_1.ProgramState.serialize();
-            fs_1.default.writeFileSync(path_1.default.join(process.cwd(), "data", "stateTest4.json"), JSON.stringify(state, null, 4), "utf8");
-        }, 15e3);
-    }
-    else if (test == 5) {
-        // Obtain the state
-        const state = JSON.parse(fs_1.default.readFileSync(path_1.default.join(process.cwd(), "data", "stateTest4.json"), "utf8"));
-        // Load the state
-        gui_1.ProgramState.deserialize(state);
-    }
-    else if (test == 6) {
         const promises = [];
         promises.push(gui_1.Registry.createRoot({
             type: singleton_type_1.SingletonType,

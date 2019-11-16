@@ -67,8 +67,8 @@ export default class WindowModule
     protected window: Promise<Electron.BrowserWindow>;
 
     /** @override */
-    public async onInit(fromReload: boolean): Promise<void> {
-        await super.onInit(fromReload);
+    public async onInit(): Promise<void> {
+        await super.onInit();
 
         // Make sure the window's data is always visible when in preview mode
         if (this.getData().previewMode) await this.getChild();

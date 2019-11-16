@@ -21,14 +21,13 @@ export default class SingletonModule extends createModule(config) implements Sin
     }
 
     /** @override */
-    public async onInit(fromReload: boolean) {
+    public async onInit() {
         console.log("singleton created");
-        if (!fromReload) {
-            const data = this.getData();
-            this.changeState({
-                text: data.text,
-            });
-        }
+
+        const data = this.getData();
+        this.changeState({
+            text: data.text,
+        });
     }
 
     /** @override */

@@ -5,9 +5,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const registry_1 = require("../../registry/registry");
 const moduleClassCreator_1 = require("../moduleClassCreator");
+const moduleID_1 = require("../moduleID");
 exports.dummyInterfaceID = registry_1.Registry.createContractID(__filename + "1");
 class DummyModule extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID }) {
-    async test(text) {
+    /**
+     * Creates a dummy instance of this module, which wont be registered to the program state
+     * @param data The optional data to create a module
+     * @returns A dummy module
+     */
+    static createDummy(data = {}) {
+        return this.createUnregisteredInstance({
+            parent: data.parent || null,
+            data: data.data || null,
+            type: data.type || null,
+        }, data.moduleID || new moduleID_1.ModuleID("path", 0));
+    }
+    async smth(text) {
         return text;
     }
 }
@@ -33,7 +46,7 @@ exports.DummyModule2 = DummyModule2;
 DummyModule2.path = "test2";
 exports.dummyInterfaceID3 = registry_1.Registry.createContractID(__filename + "3");
 class DummyModule4 extends moduleClassCreator_1.createModule({ state: {}, settings: {}, type: exports.dummyInterfaceID }) {
-    async test(text) {
+    async smth(text) {
         return text + "4";
     }
     // Just something to identify this class by

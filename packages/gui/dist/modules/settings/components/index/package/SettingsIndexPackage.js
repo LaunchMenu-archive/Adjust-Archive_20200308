@@ -14,7 +14,7 @@ const SettingsIndexPackageConfig = moduleClassCreator_1.createConfig({
     type: SettingsIndexPackage_type_1.SettingsIndexPackageType,
 });
 class SettingsIndexPackageModule extends moduleClassCreator_1.createModule(SettingsIndexPackageConfig) {
-    async onInit(fromReload) {
+    async onInit() {
         this.changeState({
             categories: await Promise.all(Object.values(this.getData().children).map(child => this.request({ type: SettingsIndexCategories_type_1.SettingsIndexCategoriesType, data: child }))),
         });

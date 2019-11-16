@@ -9,6 +9,7 @@ import {ParentModule, ChildModule} from "../../../module/_types/moduleContract";
 import {SettingNumberType} from "../settingInputTypes/SettingNumber.type";
 import {SettingBooleanType} from "../settingInputTypes/SettingBoolean.type";
 import {SettingJsonType} from "../settingInputTypes/SettingJson.type";
+import DummyModule from "../../../module/_tests/dummyModules.helper";
 
 // Create a settings config
 const config = {
@@ -41,18 +42,21 @@ export const dummyInterfaceID = Registry.createContractID<{
     child: ChildModule<dummyInterface>;
 }>(__filename + "1");
 export class Target
-    extends createModule({
-        state: {},
-        settings: config.settings,
-        type: dummyInterfaceID,
-    })
+    extends createModule(
+        {
+            state: {},
+            settings: config.settings,
+            type: dummyInterfaceID,
+        },
+        DummyModule
+    )
     implements dummyInterface {
     static async createCustomInstance(identifier: number) {
         const moduleID = new ModuleID("test", 3);
-        const instance = (await super.createInstance(
-            {parent: null, data: identifier as any, type: null},
-            moduleID
-        )) as Target;
+        const instance = (await (this as any).createDummy({
+            moduleID,
+            data: identifier as any,
+        })) as Target;
 
         return instance;
     }
@@ -161,7 +165,7 @@ describe("Settings", () => {
         it("Should invoke change events", async () => {
             const settings = await Settings.createInstance(target1);
 
-            const changed: ({prop: string; value: any; oldValue: any})[] = [];
+            const changed: {prop: string; value: any; oldValue: any}[] = [];
             settings.on("change", (prop, value, oldValue) => {
                 changed.push({prop: prop, value: value, oldValue: oldValue});
             });

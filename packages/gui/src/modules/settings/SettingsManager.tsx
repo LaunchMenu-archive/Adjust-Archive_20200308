@@ -43,11 +43,9 @@ export class SettingsManagerModule extends createModule(settingsManagerConfig)
     }
 
     /** @override */
-    public async onInit(fromReload: boolean): Promise<void> {
-        if (!fromReload) {
-            await this.retrieveContractTypes();
-            await this.retrieveModules();
-        }
+    public async onInit(): Promise<void> {
+        await this.retrieveContractTypes();
+        await this.retrieveModules();
 
         const index = await this.request({type: SettingsIndexType});
         await index.setData(this.state.index);

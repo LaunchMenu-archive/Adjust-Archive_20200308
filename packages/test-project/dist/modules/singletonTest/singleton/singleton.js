@@ -12,14 +12,12 @@ class SingletonModule extends gui_1.createModule(exports.config) {
         gui_1.Registry.addProvider(new gui_1.InstanceModuleProvider(singleton_type_1.SingletonType, this, () => 2));
     }
     /** @override */
-    async onInit(fromReload) {
+    async onInit() {
         console.log("singleton created");
-        if (!fromReload) {
-            const data = this.getData();
-            this.changeState({
-                text: data.text,
-            });
-        }
+        const data = this.getData();
+        this.changeState({
+            text: data.text,
+        });
     }
     /** @override */
     async onStop() {

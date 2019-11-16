@@ -1,20 +1,20 @@
 import {Serialize} from "../serialize";
-import {dummyInterfaceID} from "../../../module/_tests/dummyModules.helper";
+import DummyModule, {dummyInterfaceID} from "../../../module/_tests/dummyModules.helper";
 import {createModule} from "../../../module/moduleClassCreator";
 import {ProgramState} from "../../../state/programState";
 import {Module} from "../../../module/module";
 
-class P extends createModule({
-    type: dummyInterfaceID,
-    state: {},
-    settings: {},
-}) {
+class P extends createModule(
+    {
+        type: dummyInterfaceID,
+        state: {},
+        settings: {},
+    },
+    DummyModule
+) {
     static async createCustomInstance() {
         const moduleID = ProgramState.getNextModuleID(P.getPath());
-        const instance = await super.createInstance(
-            {parent: null, data: null, type: null},
-            moduleID
-        );
+        const instance = await (this as any).createDummy({moduleID});
         ProgramState.addModule(instance);
         return instance;
     }

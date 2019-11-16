@@ -66,6 +66,19 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      */
     protected constructor();
     /**
+     * Creates an instancce of this module, without registring it in the program state
+     * @param request
+     * @param moduleID
+     */
+    protected static createUnregisteredInstance(request: ParameterizedRequest, moduleID: ModuleID): Promise<ParameterizedModule>;
+    /**
+     * Creates an instance of this module, given an ID for the instance and a request
+     * @param request The request that started the creation of the module
+     * @param moduleID The ID that the new instance should have
+     * @returns A new instance of this class, returns a proxy for the module
+     */
+    static createInstance(request: ParameterizedRequest, moduleID: ModuleID): Promise<ModuleProxy>;
+    /**
      * Get the request path for this module based on its parent and the ID
      * @param moduleID The ID of this module
      * @param parent The parent of this module
@@ -73,13 +86,6 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      * @returns The request path obtained
      */
     static createRequestPath(moduleID: ModuleID, parent: ModuleProxy, data: Json): RequestPath;
-    /**
-     * Creates an instance of this module, given an ID for the instance and a request
-     * @param request The request that started the creation of the module
-     * @param moduleID The ID that the new instance should have
-     * @returns A new instance of this class, returns a proxy for the module
-     */
-    static createInstance(request: ParameterizedRequest, moduleID: ModuleID): Promise<any>;
     /**
      * A method that gets called to perform initialisation, immediately when the module was created
      * Will automaticcally be called once, upon creation. This method will run before init, and even before the module's settings have been obtained (and thus can't used them)
@@ -165,7 +171,7 @@ export declare class Module<S extends ModuleState, C extends SettingsConfig<any>
      */
     request<M extends ModuleContract>(this: M["parent"], request: ParentlessRequest<M> & {
         use: "all" | RequestFilter<M>;
-    }): Promise<(M["child"])[]>;
+    }): Promise<M["child"][]>;
     /**
      * Retrieves a module based on the given request specification
      * @param request The request to base the module to retrieve on

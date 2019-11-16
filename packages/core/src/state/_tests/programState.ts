@@ -6,10 +6,7 @@ describe("ProgramState", () => {
         it("Should be able to retrieve a module by path", async () => {
             // Add a module
             const moduleID = ProgramState.getNextModuleID(DummyModule.getPath());
-            const module = await DummyModule.createInstance(
-                {parent: null, data: {}, type: null},
-                moduleID
-            );
+            const module = await DummyModule.createDummy({moduleID});
             ProgramState.addModule(module);
             const ID = module.getID();
 

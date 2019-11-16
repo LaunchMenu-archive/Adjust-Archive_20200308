@@ -9,7 +9,7 @@ import {ModuleID} from "../moduleID";
 import {Module} from "../module";
 
 export type dummyInterface = {
-    test: (text: string) => Promise<string>;
+    smth: (text: string) => Promise<string>;
 };
 export const dummyInterfaceID = Registry.createContractID<{
     parent: ParentModule<{}>;
@@ -18,7 +18,30 @@ export const dummyInterfaceID = Registry.createContractID<{
 export class DummyModule
     extends createModule({state: {}, settings: {}, type: dummyInterfaceID})
     implements dummyInterface {
-    public async test(text: string): Promise<string> {
+    /**
+     * Creates a dummy instance of this module, which wont be registered to the program state
+     * @param data The optional data to create a module
+     * @returns A dummy module
+     */
+    public static createDummy(
+        data: {
+            parent?: any;
+            data?: any;
+            type?: any;
+            moduleID?: ModuleID;
+        } = {}
+    ): Promise<DummyModule> {
+        return this.createUnregisteredInstance(
+            {
+                parent: data.parent || null,
+                data: data.data || null,
+                type: data.type || null,
+            },
+            data.moduleID || new ModuleID("path", 0)
+        ) as any;
+    }
+
+    public async smth(text: string): Promise<string> {
         return text;
     }
 }
@@ -64,7 +87,7 @@ export const dummyInterfaceID3 = Registry.createContractID<{
 export class DummyModule4
     extends createModule({state: {}, settings: {}, type: dummyInterfaceID})
     implements dummyInterface {
-    public async test(text: string): Promise<string> {
+    public async smth(text: string): Promise<string> {
         return text + "4";
     }
 

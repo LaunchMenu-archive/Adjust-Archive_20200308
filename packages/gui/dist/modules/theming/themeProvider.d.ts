@@ -33,7 +33,7 @@ declare const ThemeProviderModule_base: import("@adjust/core/types").ExtendedMod
  */
 export declare class ThemeProviderModule extends ThemeProviderModule_base implements ContextProvider, ThemerParent {
     /** @override */
-    protected onInit(fromReload: boolean): Promise<void>;
+    protected onInit(): Promise<void>;
     /** @override */
     onThemeUpdate(field: string): Promise<void>;
 }

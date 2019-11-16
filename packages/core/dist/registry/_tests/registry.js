@@ -8,10 +8,10 @@ class P extends moduleClassCreator_1.createModule({
     type: dummyModules_helper_1.dummyInterfaceID,
     state: {},
     settings: {},
-}) {
+}, dummyModules_helper_1.DummyModule) {
     static async createCustomInstance() {
         const moduleID = programState_1.ProgramState.getNextModuleID(P.getPath());
-        const instance = await super.createInstance({ parent: null, data: null, type: null }, moduleID);
+        const instance = await this.createDummy({ moduleID: moduleID });
         programState_1.ProgramState.addModule(instance);
         return instance;
     }
@@ -78,7 +78,7 @@ describe("Registry + ClassModuleProvider", () => {
                 use: "one",
                 parent: p,
             });
-            expect(await module.test("something")).toBe("something");
+            expect(await module.smth("something")).toBe("something");
             const module2 = await registry_1.Registry.request({
                 type: dummyModules_helper_1.dummyInterfaceID2,
                 use: "one",
@@ -103,7 +103,7 @@ describe("Registry + ClassModuleProvider", () => {
                 parent: p,
             });
             expect(modules.length).toBe(2);
-            await Promise.all(modules.map(async (module) => expect(await module.test("something")).toMatch(/something.*/)));
+            await Promise.all(modules.map(async (module) => expect(await module.smth("something")).toMatch(/something.*/)));
             // Request usage of s custom subset of providers
             const modules2 = await registry_1.Registry.request({
                 type: dummyModules_helper_1.dummyInterfaceID,
@@ -114,7 +114,7 @@ describe("Registry + ClassModuleProvider", () => {
                 parent: p,
             });
             expect(modules2.length).toBe(1);
-            await Promise.all(modules2.map(async (module) => expect(await module.test("something")).toBe("something4")));
+            await Promise.all(modules2.map(async (module) => expect(await module.smth("something")).toBe("something4")));
         });
     });
     // TODO: add tests for module loading

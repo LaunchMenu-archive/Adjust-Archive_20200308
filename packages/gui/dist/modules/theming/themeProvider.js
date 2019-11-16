@@ -16,10 +16,9 @@ exports.themeProviderConfig = moduleClassCreator_1.createConfig({
  */
 class ThemeProviderModule extends moduleClassCreator_1.createModule(exports.themeProviderConfig, core_1.ContextProviderModule) {
     /** @override */
-    async onInit(fromReload) {
-        await super.onInit(fromReload);
-        if (!fromReload)
-            this.changeState({ themer: await this.request({ type: themer_type_1.ThemerType }) });
+    async onInit() {
+        await super.onInit();
+        this.changeState({ themer: await this.request({ type: themer_type_1.ThemerType }) });
     }
     /** @override */
     async onThemeUpdate(field) {

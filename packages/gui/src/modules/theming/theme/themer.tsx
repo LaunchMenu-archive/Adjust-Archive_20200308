@@ -34,7 +34,7 @@ export class ThemerModule extends createModule(themerConfig) implements Themer {
     }
 
     /** @override */
-    protected async onInit(fromReload: boolean): Promise<void> {
+    protected async onInit(): Promise<void> {
         this.getSettingsObject().on("change", field => this.updateTheme(field));
     }
 

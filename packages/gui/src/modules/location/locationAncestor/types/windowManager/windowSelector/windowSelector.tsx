@@ -59,7 +59,7 @@ export default class WindowSelectorModule
     }
 
     /** @override */
-    public async onInit(fromReload: boolean): Promise<void> {
+    public async onInit(): Promise<void> {
         const window = await this.getWindow();
         window.hide();
     }

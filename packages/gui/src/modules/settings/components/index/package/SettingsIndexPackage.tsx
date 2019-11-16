@@ -22,7 +22,7 @@ const SettingsIndexPackageConfig = createConfig({
 
 export class SettingsIndexPackageModule extends createModule(SettingsIndexPackageConfig)
     implements SettingsIndexPackage {
-    public async onInit(fromReload: boolean): Promise<void> {
+    public async onInit(): Promise<void> {
         this.changeState({
             categories: await Promise.all(
                 Object.values(this.getData().children).map(child =>

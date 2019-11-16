@@ -65,14 +65,11 @@ exports.baseConfig = {
  */
 class Module extends core_1.createModule(exports.baseConfig) {
     /** @override */
-    async init(fromReload, extraInit = () => Promise.resolve()) {
-        return super.init(fromReload, async () => {
-            // Open the module if it's requested to do so
-            if (this.getRequest().openView)
-                this.openViews();
-            // Wait for any passed init method
-            await extraInit(fromReload);
-        });
+    async init() {
+        await super.init();
+        // Open the module if it's requested to do so
+        if (this.getRequest().openView)
+            this.openViews();
     }
     /** @override */
     async stop() {

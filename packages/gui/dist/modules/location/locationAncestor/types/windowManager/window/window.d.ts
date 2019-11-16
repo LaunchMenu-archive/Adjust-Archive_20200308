@@ -127,7 +127,7 @@ export default class WindowModule extends WindowModule_base implements Window {
     protected ancestorName: string;
     protected window: Promise<Electron.BrowserWindow>;
     /** @override */
-    onInit(fromReload: boolean): Promise<void>;
+    onInit(): Promise<void>;
     /**
      * Opens the window that this module instance represents
      * @returns The opened or retrieved window, or undefined
@@ -182,7 +182,7 @@ export default class WindowModule extends WindowModule_base implements Window {
     setEdit(edit: boolean): Promise<void>;
     saveSettings(): Promise<void>;
 }
-declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../../..").ModuleView, import("@adjust/core").ModuleView<{}, {}, Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
+declare const WindowView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof WindowModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../../..").ModuleView, import("../../../../../..").ModuleView<{}, {}, import("../../../../../..").Module, {}>>>;
 export declare class WindowView extends WindowView_base {
     /**@override */
     componentWillMount(): void;

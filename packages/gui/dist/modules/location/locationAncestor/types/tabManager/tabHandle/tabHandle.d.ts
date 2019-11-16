@@ -43,7 +43,7 @@ declare const TabHandleModule_base: import("@adjust/core/types").ExtendedModuleC
 export declare class TabHandleModule extends TabHandleModule_base implements TabHandle {
     protected settingsConditions: SettingsConditions;
     /** @override */
-    protected onInit(fromReload: boolean): Promise<void>;
+    protected onInit(): Promise<void>;
     /** @override*/
     setIndex(index: number): Promise<void>;
     /** @override*/
@@ -70,7 +70,7 @@ export declare class TabHandleModule extends TabHandleModule_base implements Tab
     onDragEnd(): Promise<void>;
 }
 export default TabHandleModule;
-declare const TabHandleView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof TabHandleModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../../..").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
+declare const TabHandleView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof TabHandleModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../../..").ModuleView, import("../../../../../..").ModuleView<{}, {}, import("../../../../../..").Module, {}>>>;
 export declare class TabHandleView extends TabHandleView_base {
     /**
      * Starts the dragging of a location

@@ -1,16 +1,23 @@
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const serialize_1 = require("../serialize");
-const dummyModules_helper_1 = require("../../../module/_tests/dummyModules.helper");
+const dummyModules_helper_1 = __importStar(require("../../../module/_tests/dummyModules.helper"));
 const moduleClassCreator_1 = require("../../../module/moduleClassCreator");
 const programState_1 = require("../../../state/programState");
 class P extends moduleClassCreator_1.createModule({
     type: dummyModules_helper_1.dummyInterfaceID,
     state: {},
     settings: {},
-}) {
+}, dummyModules_helper_1.default) {
     static async createCustomInstance() {
         const moduleID = programState_1.ProgramState.getNextModuleID(P.getPath());
-        const instance = await super.createInstance({ parent: null, data: null, type: null }, moduleID);
+        const instance = await this.createDummy({ moduleID });
         programState_1.ProgramState.addModule(instance);
         return instance;
     }

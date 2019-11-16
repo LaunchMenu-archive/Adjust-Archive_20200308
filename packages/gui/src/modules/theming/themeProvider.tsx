@@ -26,11 +26,10 @@ export class ThemeProviderModule
     extends createModule(themeProviderConfig, ContextProviderModule)
     implements ContextProvider, ThemerParent {
     /** @override */
-    protected async onInit(fromReload: boolean): Promise<void> {
-        await super.onInit(fromReload);
+    protected async onInit(): Promise<void> {
+        await super.onInit();
 
-        if (!fromReload)
-            this.changeState({themer: await this.request({type: ThemerType})});
+        this.changeState({themer: await this.request({type: ThemerType})});
     }
 
     /** @override */

@@ -3,8 +3,7 @@ import {ClassModuleProvider} from "../moduleProviders/classModuleProvider";
 import {InstanceModuleProvider} from "../moduleProviders/instanceModuleProvider";
 import {ParameterizedModule} from "../../module/module";
 import {createModule} from "../../module/moduleClassCreator";
-import {ProgramState} from "../../state/programState";
-import {RequestPath} from "../../module/requestPath/requestPath";
+import {DummyModule as DM} from "../../module/_tests/dummyModules.helper";
 import {ModuleID} from "../../module/moduleID";
 import {ChildModule} from "../../module/_types/moduleContract";
 
@@ -19,7 +18,7 @@ export const dummyInterfaceID = Registry.createContractID<{
     child: dummyInterface;
 }>(__filename + "1");
 export class DummyModule
-    extends createModule({state: {}, settings: {}, type: dummyInterfaceID})
+    extends createModule({state: {}, settings: {}, type: dummyInterfaceID}, DM)
     implements dummyInterface {
     protected instanceVal: number = 0;
 
@@ -30,16 +29,14 @@ export class DummyModule
 // @ts-ignore
 DummyModule.path = "../module/_tests/dummyModules.helper.js"; // A path that can be imported (doesn't matter that it doesn't import this)
 
-class DummyParent extends createModule({type: dummyInterfaceID, state: {}, settings: {}})
+class DummyParent
+    extends createModule({type: dummyInterfaceID, state: {}, settings: {}}, DM)
     implements dummyParentInterface {
     protected someMethod: () => void;
 
     static async createCustomInstance(someMethod: () => void = () => {}) {
         const moduleID = new ModuleID("test", 3);
-        const instance = (await super.createInstance(
-            {parent: null, data: null, type: null},
-            moduleID
-        )) as DummyParent;
+        const instance = await (this as any).createDummy();
         instance.someMethod = someMethod;
 
         return instance;
@@ -102,8 +99,8 @@ describe("InstanceModuleProvider", () => {
                 m,
                 () => 2,
                 (parent: ParameterizedModule & dummyParentInterface) => {
-                    parent.something();
                     notifyCalled = true;
+                    parent.something();
                 }
             )
         );

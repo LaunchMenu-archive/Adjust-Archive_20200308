@@ -153,7 +153,7 @@ export declare class TabManagerModule extends TabManagerModule_base implements L
     onDrop(): Promise<void>;
 }
 export default TabManagerModule;
-declare const TabManagerView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof TabManagerModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../..").ModuleView, import("@adjust/core").ModuleView<{}, {}, import("@adjust/core").Module<import("@adjust/core/types").ModuleState, import("@adjust/core/types").SettingsConfig<any>, import("@adjust/core/types").ModuleContract>, {}>>>;
+declare const TabManagerView_base: import("@adjust/core/types").ExtendedModuleViewClass<typeof TabManagerModule, {}, import("@adjust/core/types").ExtendsClass<typeof import("../../../../..").ModuleView, import("../../../../..").ModuleView<{}, {}, import("../../../../..").Module, {}>>>;
 export declare class TabManagerView extends TabManagerView_base {
     /**
      * Checks whether this is valid data for a drop

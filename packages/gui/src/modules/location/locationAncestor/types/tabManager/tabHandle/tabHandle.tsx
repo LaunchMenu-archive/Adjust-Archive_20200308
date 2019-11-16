@@ -39,8 +39,8 @@ export class TabHandleModule extends createModule(tabHandleConfig) implements Ta
     protected settingsConditions: SettingsConditions;
 
     /** @override */
-    protected async onInit(fromReload: boolean): Promise<void> {
-        await super.onInit(fromReload);
+    protected async onInit(): Promise<void> {
+        await super.onInit();
 
         // Save data under the ID of this ancestor
         this.settingsConditions = new DataSettingsConditions(

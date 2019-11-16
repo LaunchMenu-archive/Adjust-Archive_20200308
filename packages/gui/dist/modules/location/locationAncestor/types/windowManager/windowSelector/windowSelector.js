@@ -55,7 +55,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.win
         }
     }
     /** @override */
-    async onInit(fromReload) {
+    async onInit() {
         const window = await this.getWindow();
         window.hide();
     }

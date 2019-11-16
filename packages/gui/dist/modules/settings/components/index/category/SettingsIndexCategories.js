@@ -16,7 +16,7 @@ const SettingsIndexCategoriesConfig = moduleClassCreator_1.createConfig({
 });
 class SettingsIndexCategoriesModule extends moduleClassCreator_1.createModule(SettingsIndexCategoriesConfig) {
     /** @override*/
-    async onInit(fromReload) {
+    async onInit() {
         this.changeState({
             data: await this.mapTree(this.getData()),
         });

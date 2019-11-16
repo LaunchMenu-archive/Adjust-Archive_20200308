@@ -2943,7 +2943,7 @@ export default class LocationAncestorModule extends LocationAncestorModule_base 
     protected readonly ancestorName: string;
     protected settingsConditions: SettingsConditions;
     /** @override */
-    protected onInit(fromReload: boolean): Promise<void>;
+    protected onInit(): Promise<void>;
     /**
      * Either gets the next ID from the path, or generates it and stores it in the path
      * @param path The location path to get the ID from
