@@ -1,7 +1,8 @@
-**Historical archive of Adjust due to 20200308 re-write**
+## Historical archive of Adjust due to 20200308 re-write
 
-Action: Re-write adjust into a set of distinct unique packages, which can be used in an application.
-Decision: Currently the architecture of adjust is too interconnected. This makes it daunting to new collaborators as well as makes the code spagehtti. When an error occurs your not sure whether it's this package or that one, as they are all interconnected. Adjust needs to be more modular at its core, to allow easier usage by developers.
+**Action:** Re-write adjust into a set of distinct unique packages, which can be used in an application.
+
+**Decision:** Currently the architecture of adjust is too interconnected. This makes it daunting to new collaborators as well as makes the code spagehtti. When an error occurs your not sure whether it's this package or that one, as they are all interconnected. Adjust needs to be more modular at its core, to allow easier usage by developers.
 
 ----
 
