@@ -48,12 +48,15 @@ __export(require("../dist/modules/settings/components/index/type/SettingsIndexTy
 __export(require("../dist/modules/settings/components/index/type/SettingsIndexType.type"));
 __export(require("../dist/modules/settings/components/page/SettingsPage"));
 __export(require("../dist/modules/settings/components/page/SettingsPage.type"));
+__export(require("../dist/modules/settings/components/page/_moduleSetting/SettingsModuleSetting"));
+__export(require("../dist/modules/settings/components/page/_moduleSetting/SettingsModuleSetting.type"));
 __export(require("../dist/modules/settings/components/page/moduleSetting/SettingsModuleSetting"));
-__export(require("../dist/modules/settings/components/page/moduleSetting/SettingsModuleSetting.type"));
 __export(require("../dist/modules/settings/components/page/moduleSettingsCategory/SettingsModuleSettingsCategory"));
 __export(require("../dist/modules/settings/components/page/moduleSettingsCategory/SettingsModuleSettingsCategory.type"));
 __export(require("../dist/modules/settings/components/page/moduleSettings/SettingsModuleSettings"));
 __export(require("../dist/modules/settings/components/page/moduleSettings/SettingsModuleSettings.type"));
+__export(require("../dist/modules/settings/components/page/moduleSettings/_types/IModuleSettingsState"));
+__export(require("../dist/modules/settings/components/page/settingInputs/SettingStringInput"));
 __export(require("../dist/modules/settings/components/page/typeSettings/SettingsTypeSettings"));
 __export(require("../dist/modules/settings/components/page/typeSettings/SettingsTypeSettings.type"));
 __export(require("../dist/modules/theming/_types/IBoxComponent"));

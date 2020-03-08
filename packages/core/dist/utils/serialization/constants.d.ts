@@ -23,7 +23,6 @@ export declare class Constants {
      * And to make sure these constants are properly exported and accessible for deserialization
      */
     protected startTimer(): void;
-    protected lock(): void;
     /**
      * The deserialization methjod of the provided constants
      */

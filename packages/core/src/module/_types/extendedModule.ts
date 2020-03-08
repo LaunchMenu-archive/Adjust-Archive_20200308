@@ -68,8 +68,8 @@ export type ExtendedModule<
         conditions?: SettingsConditions
     ): Promise<void>;
     getRequest(): ModuleRequestData<GetTypeInterface<MC["type"]>>;
-    // getParent(): GetTypeInterface<MC["type"]>["parent"];
-    // getParents(): GetTypeInterface<MC["type"]>["parent"][];
+    getParent(): GetTypeInterface<MC["type"]>["parent"];
+    getParents(): GetTypeInterface<MC["type"]>["parent"][];
     getData(): GetTypeInterface<MC["type"]>["data"];
     getSettingsObject(): Settings<
         SettingsConfig<MC["settings"] & ExtractModuleSettings<M>>

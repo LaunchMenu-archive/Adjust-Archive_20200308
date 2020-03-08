@@ -66,7 +66,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         extendedObject_1.ExtendedObject.forEach(configSettings, (key, value) => {
             if ("default" in value)
                 data[key] = value.default;
-            else
+            else if (key != "sectionConfig")
                 data[key] = this.extractDefault(value);
         });
         return data;
@@ -81,7 +81,7 @@ class SettingsFile extends eventEmitter_1.EventEmitter {
         extendedObject_1.ExtendedObject.forEach(config, (key, value) => {
             if ("default" in value)
                 data[key] = undefined;
-            else
+            else if (key != "sectionConfig")
                 data[key] = this.extractConfigShape(value);
         });
         return data;

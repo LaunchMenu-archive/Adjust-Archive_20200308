@@ -12,4 +12,8 @@ export type ISettingsIndex = {
     modules: ISettingsIndexModule[];
     typesTree: {[packag: string]: ISettingsIndexPackage<ISettingsIndexTypeTree>};
     modulesTree: {[packag: string]: ISettingsIndexPackage<ISettingsIndexModuleTree>};
+    filteredTypesTree: {[packag: string]: ISettingsIndexPackage<ISettingsIndexTypeTree>};
+    filteredModulesTree: {
+        [packag: string]: ISettingsIndexPackage<ISettingsIndexModuleTree>;
+    };
 };

@@ -289,6 +289,11 @@ export declare const themeSettings: {
         } & {
             default: string;
         };
+        search: {
+            type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+        } & {
+            default: string;
+        };
     };
     spacing: {
         xxs: {

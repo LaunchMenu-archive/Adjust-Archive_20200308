@@ -8,6 +8,20 @@
             },
             "ID": 0,
             "data": {
+                "location": [
+                    "root"
+                ],
+                "styleOverride": {
+                    "theme": {
+                        "palette": {},
+                        "icons": {},
+                        "spacing": {},
+                        "fontStyles": {},
+                        "shadows": {}
+                    },
+                    "resetTheme": false,
+                    "css": null
+                },
                 "palette": {
                     "themePrimary": "#0078d4",
                     "themeLighterAlt": "#f3f9fd",
@@ -70,7 +84,8 @@
                     "minimize": "react-icons/md/MdRemove",
                     "emoji": "react-icons/md/MdMood",
                     "left": "react-icons/md/MdKeyboardArrowLeft",
-                    "right": "react-icons/md/MdKeyboardArrowRight"
+                    "right": "react-icons/md/MdKeyboardArrowRight",
+                    "search": "react-icons/md/MdSearch"
                 },
                 "spacing": {
                     "xxs": 2,

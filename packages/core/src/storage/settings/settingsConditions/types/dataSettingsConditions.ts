@@ -18,13 +18,15 @@ export class DataSettingsConditions extends SettingsConditions {
      * @param data The data to check for
      * @param priority The priority of the settings set
      * @param disabled Whether or not these settings are disabled
+     * @param name The name of the conditions
      */
     constructor(
         data: {[key: string]: Json} | string,
         priority: number,
-        disabled: boolean = false
+        disabled: boolean = false,
+        name: string = ""
     ) {
-        super(priority, disabled);
+        super(priority, disabled, name);
 
         this.data = typeof data == "string" ? JSON.parse(data) : data;
 
@@ -37,12 +39,14 @@ export class DataSettingsConditions extends SettingsConditions {
     public static deserialize(
         data: Json,
         priority: number,
-        disabled: boolean
+        disabled: boolean,
+        name: string
     ): SettingsConditions {
         return new DataSettingsConditions(
             (data as {[key: string]: Json}) || {},
             priority,
-            disabled
+            disabled,
+            name
         );
     }
 

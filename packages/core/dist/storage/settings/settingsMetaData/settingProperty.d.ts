@@ -1,5 +1,5 @@
 import { EventEmitter } from "../../../utils/eventEmitter";
-import { ISettingAttributeEvaluator } from "../_types/ISettingAttributeEvaluator";
+import { ISettingAttributeEvaluator, ISettingAttributeEvaluatorDependency } from "../_types/ISettingAttributeEvaluator";
 import { SettingsFile } from "../settingsFile";
 import { SettingsConditions } from "../settingsConditions/abstractSettingsConditions";
 /**
@@ -38,6 +38,19 @@ export declare class SettingProperty<T> extends EventEmitter {
      * Reevaluates the current value of the property
      */
     protected evaluate(): void;
+    /**
+     * Retrieves whether or not this is a evaluator function
+     * @returns Whether this is an evaluator function
+     */
+    protected isDynamicEvaluator(evaluator: ISettingAttributeEvaluator<T>): evaluator is {
+        dependencies: {
+            [key: string]: ISettingAttributeEvaluatorDependency;
+        };
+        searchDependent?: boolean;
+        evaluator: (settings: {
+            [key: string]: any;
+        }, searchValue: string) => T;
+    };
     /**
      * Sets the new search value being used
      * @param searchValue The search value

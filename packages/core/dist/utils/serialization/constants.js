@@ -42,15 +42,13 @@ class Constants {
             // Check whether the constants were properly exported, and obtain the name
             const hostFile = require(this.path);
             extendedObject_1.ExtendedObject.forEach(hostFile, (exportName, exported) => {
-                if (exported == this) {
+                if (exported == this)
                     this.exportPropertyName = exportName;
-                }
             });
             if (!this.exportPropertyName)
                 throw Error(`Constants were not exported properly by file ${this.path}, please export the created constants`);
         });
     }
-    lock() { }
     // Constant definition methdos
     /**
      * Creates a function that can be called with data, such that the real function will be called elsewhere with the given params upon deserialization

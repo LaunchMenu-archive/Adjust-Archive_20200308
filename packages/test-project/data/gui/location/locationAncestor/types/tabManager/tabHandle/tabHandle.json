@@ -67,6 +67,22 @@
         },
         {
             "condition": {
+                "type": "data",
+                "priority": 1,
+                "data": {
+                    "path": [
+                        "AFsO-IsUD",
+                        "poopy but"
+                    ]
+                }
+            },
+            "ID": 8,
+            "data": {
+                "name": "poopy but"
+            }
+        },
+        {
+            "condition": {
                 "type": "constant",
                 "priority": 0
             },

@@ -15,6 +15,7 @@ export * from "../dist/modules/settings/_types/ISettingsIndexType";
 export * from "../dist/modules/settings/_types/ISettingsIndexTypeTree";
 export * from "../dist/modules/settings/components/index/category/_types/ISettingsIndexTreeElements";
 export * from "../dist/modules/settings/components/index/category/_types/ISettingsIndexTreeModules";
+export * from "../dist/modules/settings/components/page/moduleSettings/_types/IModuleSettingsState";
 export * from "../dist/modules/theming/_types/IBoxComponent";
 export * from "../dist/modules/theming/_types/ITheme";
 export * from "../dist/modules/theming/box/_types/anyProps";

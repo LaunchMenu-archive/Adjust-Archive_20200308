@@ -14,24 +14,11 @@ import {Module} from "../../module/module";
 import {SettingsConditionSerializer} from "./settingsConditions/settingsConditionsSerializer";
 import {SettingsConditions} from "./settingsConditions/abstractSettingsConditions";
 import {SettingsConfigData} from "./_types/settingsConfigData";
-import {
-    SettingsConfigSet,
-    NormalizedSettingsConfigSet,
-    PropertySettingsConfigSet,
-} from "./_types/settingsConfigSet";
+import {SettingsConfigSet} from "./_types/settingsConfigSet";
 import {StoredSettings} from "./_types/storedSettings";
 import {Semver} from "../../utils/semver";
 import {SettingsMigrators} from "./_types/settingsMigrator";
-import {
-    SettingDefinition,
-    NormalizedSettingDefinition,
-    GetSettingInputConstraints,
-    PropertySettingDefinition,
-} from "./_types/settingDefinition";
-import {SettingInputContract} from "./settingInputTypes/_types/SettingInput";
 import {SettingsListenerRegistrarObject} from "./_types/settingsListenerRegistrarObject";
-import {filterSettingFromSearch} from "./settingsMetaData/filterSettingFromSearch";
-import {SettingProperty} from "./settingsMetaData/settingProperty";
 import {SettingsSetProperties} from "./settingsMetaData/settingsSetProperties";
 
 export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
@@ -135,7 +122,8 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         const data = {};
         ExtendedObject.forEach(configSettings, (key, value) => {
             if ("default" in value) data[key] = value.default;
-            else data[key] = this.extractDefault(value as SettingsConfigSet);
+            else if (key != "sectionConfig")
+                data[key] = this.extractDefault(value as SettingsConfigSet);
         });
         return data as SettingsConfigSetData<C>;
     }
@@ -151,7 +139,8 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
         const data = {};
         ExtendedObject.forEach(config, (key, value) => {
             if ("default" in value) data[key] = undefined;
-            else data[key] = this.extractConfigShape(value as SettingsConfigSet);
+            else if (key != "sectionConfig")
+                data[key] = this.extractConfigShape(value as SettingsConfigSet);
         });
         return data as Shape<SettingsConfigSetData<C>>;
     }
@@ -562,9 +551,9 @@ export class SettingsFile<S extends SettingsConfig> extends EventEmitter {
             const getPriority = (condition: SettingsConditions) =>
                 condition == null ? 0 : condition.getPriority();
 
-            const settings: ConditionalSettingsDataList<
-                SettingsConfigData<S>
-            > = new SortedList(
+            const settings: ConditionalSettingsDataList<SettingsConfigData<
+                S
+            >> = new SortedList(
                 (a, b) => getPriority(b.condition) - getPriority(a.condition)
             );
             settings.push.apply(settings, settingsData);

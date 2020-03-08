@@ -30,14 +30,16 @@ export class FunctionSettingsConditions extends SettingsConditions {
      * @param priority The priority of the settings set
      * @param data Any data to forward to the condition function as a third argument
      * @param disabled Whether or not these settings are disabled
+     * @param name The name of the conditions
      */
     constructor(
         condition: Condition | string,
         priority: number,
         data: Json[] = [],
-        disabled: boolean = false
+        disabled: boolean = false,
+        name: string = ""
     ) {
-        super(priority, disabled);
+        super(priority, disabled, name);
 
         // Get the string format of the conditon
         this.conditionString =
@@ -57,14 +59,16 @@ export class FunctionSettingsConditions extends SettingsConditions {
     public static deserialize(
         data: Json,
         priority: number,
-        disabled: boolean
+        disabled: boolean,
+        name: string
     ): SettingsConditions {
         const fData: any = data || {condition: undefined, data: undefined};
         return new FunctionSettingsConditions(
             fData.condition,
             priority,
             fData.data,
-            disabled
+            disabled,
+            name
         );
     }
 

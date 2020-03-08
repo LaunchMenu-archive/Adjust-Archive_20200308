@@ -15,4 +15,10 @@ export declare type ISettingsIndex = {
     modulesTree: {
         [packag: string]: ISettingsIndexPackage<ISettingsIndexModuleTree>;
     };
+    filteredTypesTree: {
+        [packag: string]: ISettingsIndexPackage<ISettingsIndexTypeTree>;
+    };
+    filteredModulesTree: {
+        [packag: string]: ISettingsIndexPackage<ISettingsIndexModuleTree>;
+    };
 };

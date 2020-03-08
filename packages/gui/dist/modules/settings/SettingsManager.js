@@ -2,6 +2,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const React_1 = require("../../React");
 const moduleClassCreator_1 = require("../../module/moduleClassCreator");
 const SettingsManager_type_1 = require("./SettingsManager.type");
 const moduleViewClassCreator_1 = require("../../module/moduleViewClassCreator");
@@ -9,16 +10,27 @@ const registry_1 = require("../../registry/registry");
 const path_1 = __importDefault(require("path"));
 const core_1 = require("@adjust/core");
 const SettingsIndex_type_1 = require("./components/index/SettingsIndex.type");
+const SettingsSearchBar_type_1 = require("./components/SettingsSearchBar.type");
+const ChildBox_1 = require("../../components/ChildBox");
+const Box_1 = require("../../components/Box");
+const ParentBox_1 = require("../../components/ParentBox");
+const SettingsModuleSettings_type_1 = require("./components/page/moduleSettings/SettingsModuleSettings.type");
 const settingsManagerConfig = moduleClassCreator_1.createConfig({
     state: {
         index: {
+            // The source types and modules lists
             types: [],
             modules: [],
+            // THe types and modules as a tree
             typesTree: {},
             modulesTree: {},
+            // The types and modules as a tree filtered
+            filteredTypesTree: {},
+            filteredModulesTree: {},
         },
         components: {
             index: null,
+            searchbar: null,
         },
     },
     settings: {},
@@ -35,10 +47,16 @@ class SettingsManagerModule extends moduleClassCreator_1.createModule(settingsMa
         await this.retrieveModules();
         const index = await this.request({ type: SettingsIndex_type_1.SettingsIndexType });
         await index.setData(this.state.index);
+        const searchbar = await this.request({ type: SettingsSearchBar_type_1.SettingsSearchBarType });
         this.changeState({
             components: {
-                index: index,
+                index,
+                searchbar,
             },
+        });
+        this.request({
+            type: SettingsModuleSettings_type_1.SettingsModuleSettingsType,
+            data: { path: this.getClass().getPath() },
         });
     }
     // Index retrieval methods
@@ -162,6 +180,40 @@ class SettingsManagerModule extends moduleClassCreator_1.createModule(settingsMa
             Object.assign(tree, type);
         }
     }
+    // Searchbar methods
+    /**
+     * Filters the modules tree based on the search
+     * @param filter The text to filter based on
+     */
+    filterModuleTree(filter) {
+        const filteredModulesTree = {};
+        core_1.ExtendedObject.forEach(this.state.index.modulesTree, (key, packag) => {
+            packag.children;
+        });
+    }
+    filterModule(filter, node) {
+        // Check if this node is a category or a node
+        if ("children" in node) {
+            const filteredNode = { name: node.name, children: {} };
+            // Add all children that matcch the filter to the filtered node
+            core_1.ExtendedObject.forEach(node.children, (key, node) => {
+                const filtered = this.filterModule(filter, node);
+                if (filtered)
+                    filteredNode.children[key] = filtered;
+            });
+            // Return the filtered node if there are any children
+            if (Object.keys(filteredNode.children).length == 0)
+                return null;
+            return filteredNode;
+        }
+        else {
+            // if(node.path)
+        }
+    }
+    /** @override */
+    async updateSearch(search) {
+        console.log(search);
+    }
     // Child interaction methods
     /** @override */
     async selectModule(path) {
@@ -186,7 +238,10 @@ exports.default = SettingsManagerModule;
 class SettingsManagerView extends moduleViewClassCreator_1.createModuleView(SettingsManagerModule) {
     /** @override */
     renderView() {
-        return this.state.components.index;
+        return (React_1.React.createElement(ChildBox_1.ChildBox, null,
+            React_1.React.createElement(Box_1.Box, { display: "flex", flexDirection: "column" },
+                React_1.React.createElement(ParentBox_1.ParentBox, null, this.state.components.searchbar),
+                React_1.React.createElement(ParentBox_1.ParentBox, { flexGrow: 1 }, this.state.components.index))));
     }
 }
 exports.SettingsManagerView = SettingsManagerView;

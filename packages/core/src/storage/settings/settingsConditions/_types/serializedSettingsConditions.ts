@@ -8,4 +8,5 @@ export type SerializedSettingsConditions = {
     data?: Json;
     priority: number;
     disabled?: boolean;
+    name?: string;
 };

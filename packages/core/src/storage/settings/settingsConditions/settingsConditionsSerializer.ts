@@ -33,10 +33,12 @@ class SettingsConditionSerializerSingleton {
     ): SerializedSettingsConditions {
         const cls = (settingsConditions as any).__proto__.constructor;
         const data = settingsConditions.serialize();
+        const name = settingsConditions.getName();
         return {
             type: cls.typeName,
             priority: settingsConditions.getPriority(),
             ...(data && {data}),
+            ...(name && {name}),
             ...(settingsConditions.isDisabled() && {disabled: true}),
         };
     }
@@ -62,13 +64,15 @@ class SettingsConditionSerializerSingleton {
             throw Error(`No conditions type by the name '${data.type}' could be found`);
 
         // Deserialize the data as this type
-        return cls.deserialize(data.data, data.priority, data.disabled);
+        return cls.deserialize(data.data, data.priority, data.disabled, data.name);
     }
 }
 
 export const SettingsConditionSerializer = new SettingsConditionSerializerSingleton();
 
 // Add all types
-[FunctionSettingsConditions, DataSettingsConditions, ConstantSettingsConditions].forEach(
-    type => SettingsConditionSerializer.registerSettingsConditionType(type)
-);
+[
+    FunctionSettingsConditions,
+    DataSettingsConditions,
+    ConstantSettingsConditions,
+].forEach(type => SettingsConditionSerializer.registerSettingsConditionType(type));

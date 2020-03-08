@@ -14,10 +14,11 @@ export declare class FunctionSettingsConditions extends SettingsConditions {
      * @param priority The priority of the settings set
      * @param data Any data to forward to the condition function as a third argument
      * @param disabled Whether or not these settings are disabled
+     * @param name The name of the conditions
      */
-    constructor(condition: Condition | string, priority: number, data?: Json[], disabled?: boolean);
+    constructor(condition: Condition | string, priority: number, data?: Json[], disabled?: boolean, name?: string);
     /** @override */
-    static deserialize(data: Json, priority: number, disabled: boolean): SettingsConditions;
+    static deserialize(data: Json, priority: number, disabled: boolean, name: string): SettingsConditions;
     /** @override */
     serialize(): Json;
     /** @override */

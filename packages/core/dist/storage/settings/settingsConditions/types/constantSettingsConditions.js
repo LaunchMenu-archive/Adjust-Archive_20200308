@@ -5,14 +5,15 @@ class ConstantSettingsConditions extends abstractSettingsConditions_1.SettingsCo
      * Creates a new instance of these settings conditions
      * @param priority The priority of the settings set
      * @param disabled Whether or not these settings are disabled
+     * @param name The name of the conditions
      */
-    constructor(priority, disabled = false) {
-        super(priority, disabled);
+    constructor(priority, disabled = false, name = "") {
+        super(priority, disabled, name);
     }
     // Serialization
     /** @override */
-    static deserialize(data, priority, disabled) {
-        return new ConstantSettingsConditions(priority, disabled);
+    static deserialize(data, priority, disabled, name) {
+        return new ConstantSettingsConditions(priority, disabled, name);
     }
     /** @override */
     serialize() {

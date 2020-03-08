@@ -12,12 +12,13 @@ export declare class DataSettingsConditions extends SettingsConditions {
      * @param data The data to check for
      * @param priority The priority of the settings set
      * @param disabled Whether or not these settings are disabled
+     * @param name The name of the conditions
      */
     constructor(data: {
         [key: string]: Json;
-    } | string, priority: number, disabled?: boolean);
+    } | string, priority: number, disabled?: boolean, name?: string);
     /** @override */
-    static deserialize(data: Json, priority: number, disabled: boolean): SettingsConditions;
+    static deserialize(data: Json, priority: number, disabled: boolean, name: string): SettingsConditions;
     /** @override */
     serialize(): Json;
     /** @override */

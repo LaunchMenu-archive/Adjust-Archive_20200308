@@ -53,7 +53,7 @@ export declare const baseConfig: {
 export declare class Module<S extends ModuleState, C extends SettingsConfig<any>, I extends ModuleContract> implements ChildModule<{}> {
     private readonly ID;
     private readonly requestData;
-    parent: I["parent"];
+    private parent;
     private readonly parents;
     readonly settings: DeepReadonly<SettingsConfigData<C>>;
     private readonly settingsObject;

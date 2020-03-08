@@ -11,9 +11,10 @@ export class ConstantSettingsConditions extends SettingsConditions {
      * Creates a new instance of these settings conditions
      * @param priority The priority of the settings set
      * @param disabled Whether or not these settings are disabled
+     * @param name The name of the conditions
      */
-    constructor(priority: number, disabled: boolean = false) {
-        super(priority, disabled);
+    constructor(priority: number, disabled: boolean = false, name: string = "") {
+        super(priority, disabled, name);
     }
 
     // Serialization
@@ -21,9 +22,10 @@ export class ConstantSettingsConditions extends SettingsConditions {
     public static deserialize(
         data: Json,
         priority: number,
-        disabled: boolean
+        disabled: boolean,
+        name: string
     ): SettingsConditions {
-        return new ConstantSettingsConditions(priority, disabled);
+        return new ConstantSettingsConditions(priority, disabled, name);
     }
 
     /** @override */

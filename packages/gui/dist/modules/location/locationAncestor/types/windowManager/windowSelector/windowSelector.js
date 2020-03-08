@@ -65,11 +65,11 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.win
     }
     /** @override fowards the data to the selector's parent */
     async changeWindowName(name, windowID) {
-        await this.parent.changeWindowName(name, windowID);
+        await this.getParent().changeWindowName(name, windowID);
     }
     /** @override fowards the data to the selector's parent */
     async setWindowVisibility(visible, windowID) {
-        await this.parent.setWindowVisibility(visible, windowID);
+        await this.getParent().setWindowVisibility(visible, windowID);
     }
     // Interface methods
     /** @override */
@@ -122,7 +122,7 @@ class WindowSelectorModule extends moduleClassCreator_1.createModule(exports.win
             });
             // If a name was passed, set it
             if (name)
-                await this.parent.changeWindowName(name, ID);
+                await this.getParent().changeWindowName(name, ID);
             // Close the prompt
             await namePrompt.close();
         });

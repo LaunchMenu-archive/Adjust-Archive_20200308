@@ -12,9 +12,10 @@ class FunctionSettingsConditions extends abstractSettingsConditions_1.SettingsCo
      * @param priority The priority of the settings set
      * @param data Any data to forward to the condition function as a third argument
      * @param disabled Whether or not these settings are disabled
+     * @param name The name of the conditions
      */
-    constructor(condition, priority, data = [], disabled = false) {
-        super(priority, disabled);
+    constructor(condition, priority, data = [], disabled = false, name = "") {
+        super(priority, disabled, name);
         // Get the string format of the conditon
         this.conditionString =
             condition &&
@@ -27,9 +28,9 @@ class FunctionSettingsConditions extends abstractSettingsConditions_1.SettingsCo
     }
     // Serialization
     /** @override */
-    static deserialize(data, priority, disabled) {
+    static deserialize(data, priority, disabled, name) {
         const fData = data || { condition: undefined, data: undefined };
-        return new FunctionSettingsConditions(fData.condition, priority, fData.data, disabled);
+        return new FunctionSettingsConditions(fData.condition, priority, fData.data, disabled, name);
     }
     /** @override */
     serialize() {

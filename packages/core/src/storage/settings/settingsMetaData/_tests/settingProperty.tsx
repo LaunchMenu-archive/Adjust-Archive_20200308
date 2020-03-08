@@ -38,6 +38,13 @@ const getSettingsFile = async setupListener =>
                         evaluator: ({something}) => `(${something})`,
                     },
                 }),
+                sectionConfig: {
+                    name: "5",
+                    description: {
+                        dependencies: {bc: "b.c"},
+                        evaluator: ({bc}) => (bc ? "a" : "b"),
+                    },
+                },
             },
             f: createSetting({
                 default: 3,
@@ -46,7 +53,7 @@ const getSettingsFile = async setupListener =>
                     dependencies: {
                         bc: "b.c",
                     },
-                    evaluator: ({bc}) => (bc ? 1 : 2),
+                    evaluator: ({bc}) => (bc ? "1" : "2"),
                 },
             }),
             g: createSetting({
@@ -104,9 +111,9 @@ describe("SettingProperty", () => {
 
     describe("Dependencies object", () => {
         it("Successfully updates on setting dependency change", async () => {
-            expect(props.f.name().getValue()).toBe(1);
+            expect(props.f.name().getValue()).toBe("1");
             settingsFile.getConditionData().changeData({b: {c: false}});
-            expect(props.f.name().getValue()).toBe(2);
+            expect(props.f.name().getValue()).toBe("2");
         });
         it("Successfully updates on an arbitrary listener dependency update", async () => {
             expect(props.d.e.name().getValue()).toBe("(hoi)");
@@ -114,10 +121,16 @@ describe("SettingProperty", () => {
             expect(props.d.e.name().getValue()).toBe("(pet)");
         });
         it("Successfully updates on a setting property dependency change", async () => {
+            expect(props.d.sectionConfig.description().getValue()).toBe("a");
             expect(props.a.name().getValue()).toBe("hoi");
+
             settingsFile.getConditionData().changeData({b: {c: false}});
+
+            expect(props.d.sectionConfig.description().getValue()).toBe("b");
             expect(props.a.name().getValue()).toBe("-(hoi)");
+
             callListeners("pet");
+
             expect(props.a.name().getValue()).toBe("-(pet)");
         });
     });

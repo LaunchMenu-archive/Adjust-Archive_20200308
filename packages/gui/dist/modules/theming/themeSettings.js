@@ -71,6 +71,7 @@ exports.themeSettings = {
         emoji: "react-icons/md/MdMood",
         left: "react-icons/md/MdKeyboardArrowLeft",
         right: "react-icons/md/MdKeyboardArrowRight",
+        search: "react-icons/md/MdSearch",
     }, { type: core_1.SettingStringType } // TODO: make an appropriate input
     ),
     spacing: core_1.createSettings({
@@ -133,7 +134,7 @@ exports.themeSettings = {
  * @returns The mapping
  */
 const mapUndefined = (data) => core_1.ExtendedObject.map(data, (value, key) => key == "default"
-    ? undefined
+    ? null
     : core_1.ExtendedObject.isPlainObject(value)
         ? mapUndefined(value)
         : value);

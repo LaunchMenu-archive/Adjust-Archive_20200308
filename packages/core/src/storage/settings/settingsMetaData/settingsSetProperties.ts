@@ -1,4 +1,9 @@
-import {SettingsConfigSet, PropertySettingsConfigSet} from "../_types/settingsConfigSet";
+import {
+    SettingsConfigSet,
+    PropertySettingsConfigSet,
+    SettingsSectionConfig,
+    PropertySettingsSectionConfig,
+} from "../_types/settingsConfigSet";
 import {SettingsFile} from "../settingsFile";
 import {ExtendedObject} from "../../../utils/extendedObject";
 import {SettingsConditions} from "../settingsConditions/abstractSettingsConditions";
@@ -50,7 +55,7 @@ export class SettingsSetProperties<S extends SettingsConfigSet> {
             settings: P,
             path: string
         ): PropertySettingsConfigSet<P> => {
-            if (settings.default !== undefined) {
+            if ("default" in settings) {
                 return this.getPropertySettingDefinition(
                     path,
                     settings as any,
@@ -58,11 +63,23 @@ export class SettingsSetProperties<S extends SettingsConfigSet> {
                     this.conditions
                 ) as any;
             } else {
-                return ExtendedObject.map(settings, (value, key) => {
-                    if (key == "sectionConfig" || key == "default") return value;
+                // Map all settings
+                const section = ExtendedObject.map(settings, (value, key) => {
+                    if (key == "default") return value; // should be undefined
+                    if (key == "sectionConfig") return undefined;
 
+                    // console.log(value);
                     return map(value as any, path ? path + "." + key : key);
                 }) as any;
+
+                // Add the section config
+                section.sectionConfig = this.getPropertySectionConfig(
+                    path,
+                    settings.sectionConfig,
+                    this.settingsFile,
+                    this.conditions
+                );
+                return section;
             }
         };
         this.propertyObject = map(this.settingsFile.getConfig().settings, "");
@@ -137,9 +154,9 @@ export class SettingsSetProperties<S extends SettingsConfigSet> {
                     return prop;
                 }
                 return func.cached;
-            }) as (((createNew: boolean) => SettingProperty<typeof value>) & {
+            }) as ((createNew: boolean) => SettingProperty<typeof value>) & {
                 cached: SettingProperty<typeof value>;
-            });
+            };
             return func;
         };
 
@@ -160,6 +177,71 @@ export class SettingsSetProperties<S extends SettingsConfigSet> {
         };
     }
 
+    /**
+     * Retrieves a normalized version of the passed section config
+     * @param path The path to the setting
+     * @param sectionConfig A section config
+     * @returns The normalized version of a section config
+     */
+    public static getNormalizedSectionConfig(
+        path: string,
+        sectionConfig: SettingsSectionConfig
+    ): SettingsSectionConfig {
+        return {
+            name: path.split(".").pop(),
+            description: null,
+            help: null,
+            helpLink: null,
+            ...sectionConfig,
+        };
+    }
+
+    /**
+     * Retrieves a normalized version of the config data of a settings set with all evaluators replaced with `SettingProperty` instances
+     * @param path The path to the setting set
+     * @param sectionConfig A setting config
+     * @param settingsFile The setting file this definition is an instance of
+     * @param conditions The condition to get the properties for
+     * @returns The normalized version of a setting definition using `SettingProperty` instances
+     */
+    protected getPropertySectionConfig(
+        path: string,
+        sectionConfig: SettingsSectionConfig,
+        settingsFile: SettingsFile<any>,
+        conditions: SettingsConditions
+    ): PropertySettingsSectionConfig {
+        const normalized = ExtendedObject.getClass(this).getNormalizedSectionConfig(
+            path,
+            sectionConfig
+        );
+        const getProperty = value => {
+            let func = ((createNew = false) => {
+                if (createNew || !func.cached) {
+                    const prop = new SettingProperty(
+                        path,
+                        settingsFile,
+                        conditions,
+                        value
+                    );
+                    this.createdProperties.push(prop);
+                    if (!createNew) func.cached = prop;
+                    return prop;
+                }
+                return func.cached;
+            }) as ((createNew: boolean) => SettingProperty<typeof value>) & {
+                cached: SettingProperty<typeof value>;
+            };
+            return func;
+        };
+
+        return {
+            name: getProperty(normalized.name),
+            description: getProperty(normalized.description),
+            help: getProperty(normalized.help),
+            helpLink: getProperty(normalized.helpLink),
+        };
+    }
+
     // Getter methods
     /**
      * Retrieves the property getter functions.
@@ -169,6 +251,15 @@ export class SettingsSetProperties<S extends SettingsConfigSet> {
      */
     public getProperties(): PropertySettingsConfigSet<S> {
         return this.propertyObject;
+    }
+
+    // Setter methods
+    /**
+     * Sets the search value for all of the properties
+     * @param search The new search value
+     */
+    public setSearch(search: string): void {
+        this.createdProperties.forEach(property => property.setSearchValue(search));
     }
 
     // Maintencance methods

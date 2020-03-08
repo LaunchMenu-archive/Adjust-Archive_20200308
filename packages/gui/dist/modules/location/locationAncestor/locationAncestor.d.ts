@@ -297,6 +297,11 @@ export declare const config: {
                     } & {
                         default: string;
                     };
+                    search: {
+                        type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                    } & {
+                        default: string;
+                    };
                 };
                 spacing: {
                     xxs: {
@@ -1757,6 +1762,11 @@ declare const LocationAncestorModule_base: import("@adjust/core/types").Extended
                         default: string;
                     };
                     right: {
+                        type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                    } & {
+                        default: string;
+                    };
+                    search: {
                         type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
                     } & {
                         default: string;

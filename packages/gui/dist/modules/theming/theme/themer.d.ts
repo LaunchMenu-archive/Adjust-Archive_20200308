@@ -319,6 +319,11 @@ export declare const themerConfig: {
             } & {
                 default: string;
             };
+            search: {
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+            } & {
+                default: string;
+            };
         };
         spacing: {
             xxs: {
@@ -1791,6 +1796,11 @@ declare const ThemerModule_base: import("@adjust/core/types").ExtendedModuleClas
                 default: string;
             };
             right: {
+                type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+            } & {
+                default: string;
+            };
+            search: {
                 type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
             } & {
                 default: string;

@@ -27,14 +27,20 @@ class SettingProperty extends eventEmitter_1.EventEmitter {
         this.settingsFile = settingsFile;
         this.settingsCondition = settingsCondition;
         // Normalize the evaluator a bit
-        this.evaluator =
-            evaluator instanceof Function
-                ? {
-                    dependencies: { setting: settingPath },
-                    searchDependent: false,
-                    evaluator,
-                }
-                : Object.assign({ searchDependent: false }, evaluator);
+        if (evaluator instanceof Function ||
+            (evaluator instanceof Object && "evaluator" in evaluator))
+            this.evaluator =
+                evaluator instanceof Function
+                    ? {
+                        dependencies: { setting: settingPath },
+                        searchDependent: false,
+                        evaluator,
+                    }
+                    : Object.assign({ searchDependent: false }, evaluator);
+        else {
+            this.value = evaluator;
+            this.evaluator = evaluator;
+        }
         // Set up the initial setting values and the setting listeners
         this.setupSettings();
     }
@@ -50,7 +56,7 @@ class SettingProperty extends eventEmitter_1.EventEmitter {
      * Reevaluates the current value of the property
      */
     evaluate() {
-        if (!("evaluator" in this.evaluator) ||
+        if (!this.isDynamicEvaluator(this.evaluator) ||
             (this.searchValue === undefined && this.isDependentOnSearch()))
             return;
         // Obtain the new value
@@ -61,6 +67,13 @@ class SettingProperty extends eventEmitter_1.EventEmitter {
             this.value = newValue;
             this.emit("change", newValue, oldValue);
         }
+    }
+    /**
+     * Retrieves whether or not this is a evaluator function
+     * @returns Whether this is an evaluator function
+     */
+    isDynamicEvaluator(evaluator) {
+        return this.evaluator instanceof Object && "evaluator" in this.evaluator;
     }
     // Search related methods
     /**
@@ -88,7 +101,7 @@ class SettingProperty extends eventEmitter_1.EventEmitter {
      * @returns Whether the value depends on the search term
      */
     isDependentOnSearch() {
-        return (("evaluator" in this.evaluator && this.evaluator.searchDependent) ||
+        return ((this.isDynamicEvaluator(this.evaluator) && this.evaluator.searchDependent) ||
             this.propertyDependencies.reduce((prev, cur) => cur.isDependentOnSearch() || prev, false));
     }
     // Maintenance methods
@@ -169,7 +182,7 @@ class SettingProperty extends eventEmitter_1.EventEmitter {
      * Sets up the initial setting values and the listeners
      */
     setupSettings() {
-        if (!("evaluator" in this.evaluator))
+        if (!this.isDynamicEvaluator(this.evaluator))
             return;
         this.settingPath.split(".").shift();
         // Group the dependencies
@@ -202,7 +215,7 @@ class SettingProperty extends eventEmitter_1.EventEmitter {
      * Destrpys this property instance, cleaning up all listeners
      */
     destroy() {
-        if (!("evaluator" in this.evaluator))
+        if (!this.isDynamicEvaluator(this.evaluator))
             return;
         // Unregister all listeners
         this.listenerUnregistrars.forEach(f => f());

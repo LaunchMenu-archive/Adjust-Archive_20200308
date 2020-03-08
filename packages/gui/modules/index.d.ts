@@ -44,12 +44,15 @@ export * from "../dist/modules/settings/components/index/type/SettingsIndexType"
 export * from "../dist/modules/settings/components/index/type/SettingsIndexType.type";
 export * from "../dist/modules/settings/components/page/SettingsPage";
 export * from "../dist/modules/settings/components/page/SettingsPage.type";
+export * from "../dist/modules/settings/components/page/_moduleSetting/SettingsModuleSetting";
+export * from "../dist/modules/settings/components/page/_moduleSetting/SettingsModuleSetting.type";
 export * from "../dist/modules/settings/components/page/moduleSetting/SettingsModuleSetting";
-export * from "../dist/modules/settings/components/page/moduleSetting/SettingsModuleSetting.type";
 export * from "../dist/modules/settings/components/page/moduleSettingsCategory/SettingsModuleSettingsCategory";
 export * from "../dist/modules/settings/components/page/moduleSettingsCategory/SettingsModuleSettingsCategory.type";
 export * from "../dist/modules/settings/components/page/moduleSettings/SettingsModuleSettings";
 export * from "../dist/modules/settings/components/page/moduleSettings/SettingsModuleSettings.type";
+export * from "../dist/modules/settings/components/page/moduleSettings/_types/IModuleSettingsState";
+export * from "../dist/modules/settings/components/page/settingInputs/SettingStringInput";
 export * from "../dist/modules/settings/components/page/typeSettings/SettingsTypeSettings";
 export * from "../dist/modules/settings/components/page/typeSettings/SettingsTypeSettings.type";
 export * from "../dist/modules/theming/_types/IBoxComponent";

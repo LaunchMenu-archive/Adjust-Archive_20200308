@@ -301,6 +301,11 @@ export declare const stylingSettings: {
                 } & {
                     default: string;
                 };
+                search: {
+                    type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                } & {
+                    default: string;
+                };
             };
             spacing: {
                 xxs: {
@@ -1758,6 +1763,11 @@ export declare const baseConfig: {
                         default: string;
                     };
                     right: {
+                        type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                    } & {
+                        default: string;
+                    };
+                    search: {
                         type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
                     } & {
                         default: string;
@@ -3223,6 +3233,11 @@ declare const Module_base: import("@adjust/core/types").ExtendedModuleClass<{
                         default: string;
                     };
                     right: {
+                        type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
+                    } & {
+                        default: string;
+                    };
+                    search: {
                         type: import("@adjust/core/types").ContractID<import("@adjust/core/types").SettingInputContract<string, undefined>>;
                     } & {
                         default: string;

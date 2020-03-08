@@ -79,6 +79,7 @@ export const themeSettings = {
             primary: "themePrimary",
             primaryDark: "themeDarkAlt",
             primaryLight: "themeLight",
+            // TODO: decide on more custom colors
         },
         type: SettingJsonType, // TODO: make an appropriate input
     },
@@ -90,6 +91,8 @@ export const themeSettings = {
             emoji: "react-icons/md/MdMood",
             left: "react-icons/md/MdKeyboardArrowLeft",
             right: "react-icons/md/MdKeyboardArrowRight",
+            search: "react-icons/md/MdSearch",
+            // TODO: add more icons
         },
         {type: SettingStringType} // TODO: make an appropriate input
     ),
@@ -175,7 +178,7 @@ export type IThemeData = SettingsConfigSetData<typeof themeSettings>;
 const mapUndefined = (data: object) =>
     ExtendedObject.map(data, (value, key) =>
         key == "default"
-            ? undefined
+            ? null
             : ExtendedObject.isPlainObject(value)
             ? mapUndefined(value)
             : value

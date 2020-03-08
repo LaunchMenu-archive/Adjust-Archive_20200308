@@ -95,7 +95,7 @@ export default class WindowModule
         });
 
         // Indicate that this window is now open to the parent
-        this.parent.setWindowVisibility(true, this.getData().ID);
+        this.getParent().setWindowVisibility(true, this.getData().ID);
 
         // Set the initial data
         const window = await this.window;
@@ -139,7 +139,7 @@ export default class WindowModule
         // Check if the window has been opened
         if (this.window) {
             // Indicate that this window is now open to the parent
-            this.parent.setWindowVisibility(false, this.getData().ID);
+            this.getParent().setWindowVisibility(false, this.getData().ID);
 
             // Close the window
             this.window = null;

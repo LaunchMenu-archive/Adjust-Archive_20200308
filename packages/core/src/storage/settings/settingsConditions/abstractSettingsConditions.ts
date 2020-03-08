@@ -14,14 +14,19 @@ export abstract class SettingsConditions {
     // Whether or not the settings are disabled
     protected disabled: boolean = false;
 
+    // The name of the conditions
+    protected name: string;
+
     /**
      * Constructs an instance of these settings conditions
      * @param priority The priority of the settings set
      * @param disabled Whether or not the settings are disabled
+     * @param name The name of the conditions
      */
-    constructor(priority: number, disabled: boolean = false) {
+    constructor(priority: number, disabled: boolean = false, name: string = "") {
         this.priority = priority;
         this.disabled = disabled;
+        this.name = name;
     }
 
     // Serialization
@@ -29,11 +34,13 @@ export abstract class SettingsConditions {
      * Creates an instance of this class, given it's serialized data
      * @param data The data to deserialize
      * @param priority The priority of the setting
+     * @param name The name of the conditions
      */
     public static deserialize(
         data: Json,
         priority: number,
-        disabled: boolean
+        disabled: boolean,
+        name: string
     ): SettingsConditions {
         throw Error("This method hasn't been implemented yet by child class");
     }
@@ -45,6 +52,22 @@ export abstract class SettingsConditions {
     public abstract serialize(): Json;
 
     // Usage methods
+    /**
+     * Sets the name for this condition
+     * @param name The name
+     */
+    public setName(name: string): void {
+        this.name = name;
+    }
+
+    /**
+     * Retrieves the name of this condition
+     * @returns The name of this condition
+     */
+    public getName(): string {
+        return this.name;
+    }
+
     /**
      * Retrieves the prioerity of the condition
      * @returns The priority

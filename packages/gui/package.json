@@ -1,7 +1,7 @@
 {
     "name": "@adjust/gui",
     "version": "0.0.0",
-    "description": "Adjust extended with base UI, making use of Material-UI components",
+    "description": "Adjust extended with base UI, making use of UI Fabric components",
     "main": "dist/index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",

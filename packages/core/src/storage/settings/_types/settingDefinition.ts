@@ -5,6 +5,7 @@ import {SettingInputContract} from "../settingInputTypes/_types/SettingInput";
 import {ContractID} from "../../../registry/_types/contractID";
 import {SettingProperty} from "../settingsMetaData/settingProperty";
 import {JSXchild} from "../../../utils/_types/standardTypes";
+import {ITraceableTransformer} from "../../../utils/serialization/_types/ITracableTransformer";
 
 /**
  * Extracts the constraints type from the setting input type
@@ -40,11 +41,11 @@ export type SettingDefinition<V, T extends SettingInputContract<V, any>> = {
     // Meta data for displaying
 
     /** The name of the setting to display to the user */
-    name?: ISettingAttributeEvaluator<JSXchild>;
+    name?: ISettingAttributeEvaluator<ITraceableTransformer<JSXchild> | string>;
     /** A short description of setting */
-    description?: ISettingAttributeEvaluator<JSXchild>;
+    description?: ISettingAttributeEvaluator<ITraceableTransformer<JSXchild> | string>;
     /** A more extensive description if necessary */
-    help?: ISettingAttributeEvaluator<JSXchild>;
+    help?: ISettingAttributeEvaluator<ITraceableTransformer<JSXchild> | string>;
     /** A link to external help resources */
     helpLink?: ISettingAttributeEvaluator<string>;
     /** Whether or not this setting is completely hidden in the GUI */
@@ -56,7 +57,7 @@ export type SettingDefinition<V, T extends SettingInputContract<V, any>> = {
     /** Whether or not the current search filter should exclude this setting */
     searchExcluded?: ISettingAttributeEvaluator<boolean>;
     /** The tags to use in the search excluded function */
-    tags?: ISettingAttributeEvaluator<(string | RegExp)[]>;
+    tags?: ISettingAttributeEvaluator<string[]>;
 };
 
 /**
@@ -82,31 +83,4 @@ export type ParameterizedNormalizedSettingDefinition<
     T extends SettingInputContract<V, any> = any
 > = {
     [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<V, T>[P];
-};
-
-/**
- * The data of a single Setting in the config, with all properties in the form of `SettingProperty` instances
- */
-export type PropertySettingDefinition<V, T extends SettingInputContract<V, any>> = {
-    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<
-        V,
-        T
-    >[P] extends ISettingAttributeEvaluator<infer V>
-        ? (createNew?: boolean) => SettingProperty<V>
-        : SettingDefinition<V, T>[P];
-};
-
-/**
- * The data of a single Setting in the config,  with all properties in the form of `SettingProperty` instances and with default params
- */
-export type ParameterizedPropertySettingDefinition<
-    V extends any = any,
-    T extends SettingInputContract<V, any> = any
-> = {
-    [P in keyof SettingDefinition<V, T>]-?: SettingDefinition<
-        V,
-        T
-    >[P] extends ISettingAttributeEvaluator<infer V>
-        ? (createNew?: boolean) => SettingProperty<V>
-        : SettingDefinition<V, T>[P];
 };

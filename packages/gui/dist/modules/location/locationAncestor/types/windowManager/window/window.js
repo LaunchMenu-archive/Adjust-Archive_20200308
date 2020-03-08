@@ -72,7 +72,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
             preloadModules: [this.getClass().getPath()],
         });
         // Indicate that this window is now open to the parent
-        this.parent.setWindowVisibility(true, this.getData().ID);
+        this.getParent().setWindowVisibility(true, this.getData().ID);
         // Set the initial data
         const window = await this.window;
         window.setContentBounds({
@@ -110,7 +110,7 @@ class WindowModule extends moduleClassCreator_1.createModule(exports.windowConfi
         // Check if the window has been opened
         if (this.window) {
             // Indicate that this window is now open to the parent
-            this.parent.setWindowVisibility(false, this.getData().ID);
+            this.getParent().setWindowVisibility(false, this.getData().ID);
             // Close the window
             this.window = null;
             await core_1.WindowManager.closeWindow(this.getData().ID);

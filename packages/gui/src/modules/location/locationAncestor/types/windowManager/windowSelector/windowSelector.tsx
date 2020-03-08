@@ -71,12 +71,12 @@ export default class WindowSelectorModule
 
     /** @override fowards the data to the selector's parent */
     public async changeWindowName(name: string, windowID: string): Promise<void> {
-        await this.parent.changeWindowName(name, windowID);
+        await this.getParent().changeWindowName(name, windowID);
     }
 
     /** @override fowards the data to the selector's parent */
     public async setWindowVisibility(visible: boolean, windowID: string): Promise<void> {
-        await this.parent.setWindowVisibility(visible, windowID);
+        await this.getParent().setWindowVisibility(visible, windowID);
     }
 
     // Interface methods
@@ -137,7 +137,7 @@ export default class WindowSelectorModule
             });
 
             // If a name was passed, set it
-            if (name) await this.parent.changeWindowName(name, ID);
+            if (name) await this.getParent().changeWindowName(name, ID);
 
             // Close the prompt
             await namePrompt.close();

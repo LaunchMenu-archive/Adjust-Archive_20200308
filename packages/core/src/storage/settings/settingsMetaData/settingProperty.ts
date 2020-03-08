@@ -1,5 +1,8 @@
 import {EventEmitter} from "../../../utils/eventEmitter";
-import {ISettingAttributeEvaluator} from "../_types/ISettingAttributeEvaluator";
+import {
+    ISettingAttributeEvaluator,
+    ISettingAttributeEvaluatorDependency,
+} from "../_types/ISettingAttributeEvaluator";
 import {ExtendedObject} from "../../../utils/extendedObject";
 import {SettingsFile} from "../settingsFile";
 import {SettingsConditions} from "../settingsConditions/abstractSettingsConditions";
@@ -53,17 +56,26 @@ export class SettingProperty<T> extends EventEmitter {
         this.settingsCondition = settingsCondition;
 
         // Normalize the evaluator a bit
-        this.evaluator =
-            evaluator instanceof Function
-                ? {
-                      dependencies: {setting: settingPath},
-                      searchDependent: false,
-                      evaluator,
-                  }
-                : {
-                      searchDependent: false,
-                      ...evaluator,
-                  };
+
+        if (
+            evaluator instanceof Function ||
+            (evaluator instanceof Object && "evaluator" in evaluator)
+        )
+            this.evaluator =
+                evaluator instanceof Function
+                    ? {
+                          dependencies: {setting: settingPath},
+                          searchDependent: false,
+                          evaluator,
+                      }
+                    : {
+                          searchDependent: false,
+                          ...evaluator,
+                      };
+        else {
+            this.value = evaluator;
+            this.evaluator = evaluator;
+        }
 
         // Set up the initial setting values and the setting listeners
         this.setupSettings();
@@ -83,7 +95,7 @@ export class SettingProperty<T> extends EventEmitter {
      */
     protected evaluate(): void {
         if (
-            !("evaluator" in this.evaluator) ||
+            !this.isDynamicEvaluator(this.evaluator) ||
             (this.searchValue === undefined && this.isDependentOnSearch())
         )
             return;
@@ -100,6 +112,20 @@ export class SettingProperty<T> extends EventEmitter {
             this.value = newValue;
             this.emit("change", newValue, oldValue);
         }
+    }
+
+    /**
+     * Retrieves whether or not this is a evaluator function
+     * @returns Whether this is an evaluator function
+     */
+    protected isDynamicEvaluator(
+        evaluator: ISettingAttributeEvaluator<T>
+    ): evaluator is {
+        dependencies: {[key: string]: ISettingAttributeEvaluatorDependency};
+        searchDependent?: boolean;
+        evaluator: (settings: {[key: string]: any}, searchValue: string) => T;
+    } {
+        return this.evaluator instanceof Object && "evaluator" in this.evaluator;
     }
 
     // Search related methods
@@ -130,7 +156,7 @@ export class SettingProperty<T> extends EventEmitter {
      */
     public isDependentOnSearch(): boolean {
         return (
-            ("evaluator" in this.evaluator && this.evaluator.searchDependent) ||
+            (this.isDynamicEvaluator(this.evaluator) && this.evaluator.searchDependent) ||
             this.propertyDependencies.reduce(
                 (prev, cur) => cur.isDependentOnSearch() || prev,
                 false
@@ -246,7 +272,7 @@ export class SettingProperty<T> extends EventEmitter {
      * Sets up the initial setting values and the listeners
      */
     protected setupSettings(): void {
-        if (!("evaluator" in this.evaluator)) return;
+        if (!this.isDynamicEvaluator(this.evaluator)) return;
 
         this.settingPath.split(".").shift();
 
@@ -284,7 +310,7 @@ export class SettingProperty<T> extends EventEmitter {
      * Destrpys this property instance, cleaning up all listeners
      */
     public destroy(): void {
-        if (!("evaluator" in this.evaluator)) return;
+        if (!this.isDynamicEvaluator(this.evaluator)) return;
 
         // Unregister all listeners
         this.listenerUnregistrars.forEach(f => f());

@@ -1,1 +1,1 @@
-{"version":3,"file":"windowSelector.type.js","sourceRoot":"src/","sources":["modules/location/locationAncestor/types/windowManager/windowSelector/windowSelector.type.ts"],"names":[],"mappings":";AAAA,uCAAsC;AAmDtC,mCAAmC;AACtB,QAAA,kBAAkB,GAAG,eAAQ,CAAC,gBAAgB,CACvD,UAAU,CACb,CAAC"}
+{"version":3,"file":"windowSelector.type.js","sourceRoot":"src/","sources":["modules/location/locationAncestor/types/windowManager/windowSelector/windowSelector.type.ts"],"names":[],"mappings":";AAAA,uCAAsC;AA0DtC,mCAAmC;AACtB,QAAA,kBAAkB,GAAG,eAAQ,CAAC,gBAAgB,CACvD,UAAU,CACb,CAAC"}

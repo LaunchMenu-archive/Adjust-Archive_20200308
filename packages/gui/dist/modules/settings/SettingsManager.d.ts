@@ -14,6 +14,9 @@ declare const SettingsManagerModule_base: import("@adjust/core/types").ExtendedM
                 setData(index: ISettingsIndex): Promise<void>;
                 setSearch(search: string | RegExp): Promise<void>;
             }>;
+            searchbar: {
+                close(): Promise<void>;
+            };
         };
     };
     settings: {};
@@ -48,6 +51,14 @@ export declare class SettingsManagerModule extends SettingsManagerModule_base im
      * @modifies tree
      */
     protected createTreeModule(tree: ISettingsIndexModuleTree, path: string[], type: ISettingsIndexModule): void;
+    /**
+     * Filters the modules tree based on the search
+     * @param filter The text to filter based on
+     */
+    protected filterModuleTree(filter: string): void;
+    protected filterModule(filter: string, node: ISettingsIndexModuleTree): ISettingsIndexModuleTree;
+    /** @override */
+    updateSearch(search: string): Promise<void>;
     /** @override */
     selectModule(path: string): Promise<void>;
     /** @override */

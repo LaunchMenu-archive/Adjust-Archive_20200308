@@ -32,6 +32,7 @@ __export(require("./utils/semver"));
 __export(require("./utils/async/AsyncMutualExcluder"));
 __export(require("./utils/async/AsyncSequencer"));
 __export(require("./utils/packageRetriever"));
+__export(require("./storage/data"));
 // Communication
 __export(require("./communication/ipcMain"));
 __export(require("./communication/ipcRenderer"));

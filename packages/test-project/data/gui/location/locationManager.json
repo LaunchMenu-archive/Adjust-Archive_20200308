@@ -48,10 +48,6 @@
                             },
                             {
                                 "settingsID": 0,
-                                "modulePath": "gui\\settings\\components\\SettingsSearchBar.js"
-                            },
-                            {
-                                "settingsID": 0,
                                 "modulePath": "\\singletonTest\\singleton\\singleton.js"
                             },
                             {
@@ -81,6 +77,14 @@
                             {
                                 "settingsID": 0,
                                 "modulePath": "gui\\location\\locationAncestor\\types\\tabManager\\tabHandle\\tabHandle.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\settings\\components\\SettingsSearchBar.js"
+                            },
+                            {
+                                "settingsID": 0,
+                                "modulePath": "gui\\theming\\theme\\themer.js"
                             }
                         ],
                         "path": {

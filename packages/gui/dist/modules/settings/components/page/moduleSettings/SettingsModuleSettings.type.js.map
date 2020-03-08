@@ -1,1 +1,1 @@
-{"version":3,"file":"SettingsModuleSettings.type.js","sourceRoot":"src/","sources":["modules/settings/components/page/moduleSettings/SettingsModuleSettings.type.ts"],"names":[],"mappings":";AAAA,uCAAsC;AAUzB,QAAA,0BAA0B,GAAG,eAAQ,CAAC,gBAAgB,CAEjE,UAAU,CAAC,CAAC"}
+{"version":3,"file":"SettingsModuleSettings.type.js","sourceRoot":"src/","sources":["modules/settings/components/page/moduleSettings/SettingsModuleSettings.type.ts"],"names":[],"mappings":";AAAA,uCAAsC;AAczB,QAAA,0BAA0B,GAAG,eAAQ,CAAC,gBAAgB,CAEjE,UAAU,CAAC,CAAC"}

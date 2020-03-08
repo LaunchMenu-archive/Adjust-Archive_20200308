@@ -29,6 +29,7 @@ export * from "./utils/semver";
 export * from "./utils/async/AsyncMutualExcluder";
 export * from "./utils/async/AsyncSequencer";
 export * from "./utils/packageRetriever";
+export * from "./storage/data";
 
 // Communication
 export * from "./communication/ipcMain";

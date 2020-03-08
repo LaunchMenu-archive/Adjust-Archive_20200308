@@ -21,7 +21,8 @@
                     },
                     "resetTheme": false,
                     "css": null
-                }
+                },
+                "debounce": 300
             }
         }
     ]

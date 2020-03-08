@@ -23,15 +23,22 @@ class SettingsSetProperties {
      */
     setupPropertyObject() {
         const map = (settings, path) => {
-            if (settings.default !== undefined) {
+            if ("default" in settings) {
                 return this.getPropertySettingDefinition(path, settings, this.settingsFile, this.conditions);
             }
             else {
-                return extendedObject_1.ExtendedObject.map(settings, (value, key) => {
-                    if (key == "sectionConfig" || key == "default")
-                        return value;
+                // Map all settings
+                const section = extendedObject_1.ExtendedObject.map(settings, (value, key) => {
+                    if (key == "default")
+                        return value; // should be undefined
+                    if (key == "sectionConfig")
+                        return undefined;
+                    // console.log(value);
                     return map(value, path ? path + "." + key : key);
                 });
+                // Add the section config
+                section.sectionConfig = this.getPropertySectionConfig(path, settings.sectionConfig, this.settingsFile, this.conditions);
+                return section;
             }
         };
         this.propertyObject = map(this.settingsFile.getConfig().settings, "");
@@ -92,6 +99,45 @@ class SettingsSetProperties {
             tags: getProperty(normalized.tags),
         };
     }
+    /**
+     * Retrieves a normalized version of the passed section config
+     * @param path The path to the setting
+     * @param sectionConfig A section config
+     * @returns The normalized version of a section config
+     */
+    static getNormalizedSectionConfig(path, sectionConfig) {
+        return Object.assign({ name: path.split(".").pop(), description: null, help: null, helpLink: null }, sectionConfig);
+    }
+    /**
+     * Retrieves a normalized version of the config data of a settings set with all evaluators replaced with `SettingProperty` instances
+     * @param path The path to the setting set
+     * @param sectionConfig A setting config
+     * @param settingsFile The setting file this definition is an instance of
+     * @param conditions The condition to get the properties for
+     * @returns The normalized version of a setting definition using `SettingProperty` instances
+     */
+    getPropertySectionConfig(path, sectionConfig, settingsFile, conditions) {
+        const normalized = extendedObject_1.ExtendedObject.getClass(this).getNormalizedSectionConfig(path, sectionConfig);
+        const getProperty = value => {
+            let func = ((createNew = false) => {
+                if (createNew || !func.cached) {
+                    const prop = new settingProperty_1.SettingProperty(path, settingsFile, conditions, value);
+                    this.createdProperties.push(prop);
+                    if (!createNew)
+                        func.cached = prop;
+                    return prop;
+                }
+                return func.cached;
+            });
+            return func;
+        };
+        return {
+            name: getProperty(normalized.name),
+            description: getProperty(normalized.description),
+            help: getProperty(normalized.help),
+            helpLink: getProperty(normalized.helpLink),
+        };
+    }
     // Getter methods
     /**
      * Retrieves the property getter functions.
@@ -101,6 +147,14 @@ class SettingsSetProperties {
      */
     getProperties() {
         return this.propertyObject;
+    }
+    // Setter methods
+    /**
+     * Sets the search value for all of the properties
+     * @param search The new search value
+     */
+    setSearch(search) {
+        this.createdProperties.forEach(property => property.setSearchValue(search));
     }
     // Maintencance methods
     /**

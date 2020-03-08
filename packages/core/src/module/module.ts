@@ -68,7 +68,7 @@ export class Module<
 
     // Request
     private readonly requestData: ModuleRequestData<I>;
-    parent: I["parent"];
+    private parent: I["parent"];
     private readonly parents: I["parent"][]; // A list of all 'parents'
 
     // Settings

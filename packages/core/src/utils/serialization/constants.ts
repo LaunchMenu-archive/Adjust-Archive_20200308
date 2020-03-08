@@ -46,9 +46,7 @@ export class Constants {
             // Check whether the constants were properly exported, and obtain the name
             const hostFile = require(this.path);
             ExtendedObject.forEach(hostFile, (exportName, exported) => {
-                if (exported == this) {
-                    this.exportPropertyName = exportName;
-                }
+                if (exported == this) this.exportPropertyName = exportName;
             });
             if (!this.exportPropertyName)
                 throw Error(
@@ -56,8 +54,6 @@ export class Constants {
                 );
         });
     }
-
-    protected lock(): void {}
 
     // Deserialization methods
     /**
